@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -78,135 +72,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((ScriptFloatPropertyCommon)((IScriptFloatPropertyGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ScriptFloatPropertyXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ScriptFloatPropertyXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new ScriptFloatProperty CreateFromXml(
-            XElement node,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static ScriptFloatProperty CreateFromXml(
-            XElement node,
-            out ScriptFloatProperty.ErrorMask errorMask,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptFloatProperty.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static ScriptFloatProperty CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new ScriptFloatProperty();
-            ((ScriptFloatPropertySetterCommon)((IScriptFloatPropertyGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static ScriptFloatProperty CreateFromXml(
-            string path,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ScriptFloatProperty CreateFromXml(
-            string path,
-            out ScriptFloatProperty.ErrorMask errorMask,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ScriptFloatProperty CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static ScriptFloatProperty CreateFromXml(
-            Stream stream,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ScriptFloatProperty CreateFromXml(
-            Stream stream,
-            out ScriptFloatProperty.ErrorMask errorMask,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ScriptFloatProperty CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -548,10 +413,9 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScriptFloatPropertyGetter :
         IScriptPropertyGetter,
         ILoquiObject<IScriptFloatPropertyGetter>,
-        IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ScriptFloatProperty_Registration.Instance;
+        static new ILoquiRegistration Registration => ScriptFloatProperty_Registration.Instance;
         Single Data { get; }
 
     }
@@ -686,131 +550,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IScriptFloatProperty item,
-            XElement node,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IScriptFloatProperty item,
-            XElement node,
-            out ScriptFloatProperty.ErrorMask errorMask,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptFloatProperty.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptFloatProperty item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ScriptFloatPropertySetterCommon)((IScriptFloatPropertyGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptFloatProperty item,
-            string path,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptFloatProperty item,
-            string path,
-            out ScriptFloatProperty.ErrorMask errorMask,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptFloatProperty item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IScriptFloatProperty item,
-            Stream stream,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptFloatProperty item,
-            Stream stream,
-            out ScriptFloatProperty.ErrorMask errorMask,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptFloatProperty item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ScriptFloatProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -990,7 +729,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ScriptFloatPropertyXmlWriteTranslation);
         public static readonly Type BinaryWriteTranslation = typeof(ScriptFloatPropertyBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1041,47 +779,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IScriptFloatProperty)item);
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IScriptFloatProperty item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ScriptFloatPropertyXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IScriptProperty item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (ScriptFloatProperty)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1385,222 +1082,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class ScriptFloatPropertyXmlWriteTranslation :
-        ScriptPropertyXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static ScriptFloatPropertyXmlWriteTranslation Instance = new ScriptFloatPropertyXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IScriptFloatPropertyGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ScriptPropertyXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)ScriptFloatProperty_FieldIndex.Data) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Data),
-                    item: item.Data,
-                    fieldIndex: (int)ScriptFloatProperty_FieldIndex.Data,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IScriptFloatPropertyGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ScriptFloatProperty");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ScriptFloatProperty");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IScriptFloatPropertyGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IScriptPropertyGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IScriptFloatPropertyGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class ScriptFloatPropertyXmlCreateTranslation : ScriptPropertyXmlCreateTranslation
-    {
-        public new readonly static ScriptFloatPropertyXmlCreateTranslation Instance = new ScriptFloatPropertyXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IScriptFloatProperty item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ScriptFloatPropertyXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IScriptFloatProperty item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Data":
-                    errorMask?.PushIndex((int)ScriptFloatProperty_FieldIndex.Data);
-                    try
-                    {
-                        item.Data = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    ScriptPropertyXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class ScriptFloatPropertyXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IScriptFloatPropertyGetter item,
-            XElement node,
-            out ScriptFloatProperty.ErrorMask errorMask,
-            ScriptFloatProperty.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ScriptFloatPropertyXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptFloatProperty.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IScriptFloatPropertyGetter item,
-            string path,
-            out ScriptFloatProperty.ErrorMask errorMask,
-            ScriptFloatProperty.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IScriptFloatPropertyGetter item,
-            Stream stream,
-            out ScriptFloatProperty.ErrorMask errorMask,
-            ScriptFloatProperty.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -1705,21 +1186,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptFloatPropertyGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ScriptFloatPropertyXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ScriptFloatPropertyXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptFloatPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -1731,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single Data => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
+        public Single Data => _data.Slice(0x0, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

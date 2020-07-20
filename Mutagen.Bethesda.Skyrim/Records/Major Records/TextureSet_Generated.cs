@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -140,135 +134,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => TextureSetXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((TextureSetXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new TextureSet CreateFromXml(
-            XElement node,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static TextureSet CreateFromXml(
-            XElement node,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = TextureSet.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static TextureSet CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new TextureSet();
-            ((TextureSetSetterCommon)((ITextureSetGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static TextureSet CreateFromXml(
-            string path,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static TextureSet CreateFromXml(
-            string path,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static TextureSet CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static TextureSet CreateFromXml(
-            Stream stream,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static TextureSet CreateFromXml(
-            Stream stream,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static TextureSet CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -295,7 +160,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -313,7 +178,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -837,7 +702,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = TextureSet_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = TextureSet_Registration.TriggeringRecordType;
         public TextureSet(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -953,10 +818,9 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         IObjectBoundedGetter,
         ILoquiObject<ITextureSetGetter>,
-        IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => TextureSet_Registration.Instance;
+        static new ILoquiRegistration Registration => TextureSet_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         String? Diffuse { get; }
         String? NormalOrGloss { get; }
@@ -1102,131 +966,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ITextureSetInternal item,
-            XElement node,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ITextureSetInternal item,
-            XElement node,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = TextureSet.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this ITextureSetInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ITextureSetInternal item,
-            string path,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ITextureSetInternal item,
-            string path,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ITextureSetInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this ITextureSetInternal item,
-            Stream stream,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ITextureSetInternal item,
-            Stream stream,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ITextureSetInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TextureSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1264,7 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1530,7 +1269,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(TextureSetXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.TXST;
         public static readonly Type BinaryWriteTranslation = typeof(TextureSetBinaryWriteTranslation);
         #region Interface
@@ -1597,86 +1335,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ITextureSetInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            ITextureSetInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            ITextureSetInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    TextureSetXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (TextureSet)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (TextureSet)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1913,7 +1571,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (TextureSet_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (TextureSet_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (TextureSet_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (TextureSet_FieldIndex)((int)index);
@@ -1934,7 +1592,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (TextureSet_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (TextureSet_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (TextureSet_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (TextureSet_FieldIndex)((int)index);
@@ -2309,525 +1967,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class TextureSetXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static TextureSetXmlWriteTranslation Instance = new TextureSetXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            ITextureSetGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.ObjectBounds) ?? true))
-            {
-                var ObjectBoundsItem = item.ObjectBounds;
-                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    node: node,
-                    name: nameof(item.ObjectBounds),
-                    fieldIndex: (int)TextureSet_FieldIndex.ObjectBounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.ObjectBounds));
-            }
-            if ((item.Diffuse != null)
-                && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Diffuse) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Diffuse),
-                    item: item.Diffuse,
-                    fieldIndex: (int)TextureSet_FieldIndex.Diffuse,
-                    errorMask: errorMask);
-            }
-            if ((item.NormalOrGloss != null)
-                && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.NormalOrGloss) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NormalOrGloss),
-                    item: item.NormalOrGloss,
-                    fieldIndex: (int)TextureSet_FieldIndex.NormalOrGloss,
-                    errorMask: errorMask);
-            }
-            if ((item.EnvironmentMaskOrSubsurfaceTint != null)
-                && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EnvironmentMaskOrSubsurfaceTint),
-                    item: item.EnvironmentMaskOrSubsurfaceTint,
-                    fieldIndex: (int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint,
-                    errorMask: errorMask);
-            }
-            if ((item.GlowOrDetailMap != null)
-                && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.GlowOrDetailMap) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.GlowOrDetailMap),
-                    item: item.GlowOrDetailMap,
-                    fieldIndex: (int)TextureSet_FieldIndex.GlowOrDetailMap,
-                    errorMask: errorMask);
-            }
-            if ((item.Height != null)
-                && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Height) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Height),
-                    item: item.Height,
-                    fieldIndex: (int)TextureSet_FieldIndex.Height,
-                    errorMask: errorMask);
-            }
-            if ((item.Environment != null)
-                && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Environment) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Environment),
-                    item: item.Environment,
-                    fieldIndex: (int)TextureSet_FieldIndex.Environment,
-                    errorMask: errorMask);
-            }
-            if ((item.Multilayer != null)
-                && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Multilayer) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Multilayer),
-                    item: item.Multilayer,
-                    fieldIndex: (int)TextureSet_FieldIndex.Multilayer,
-                    errorMask: errorMask);
-            }
-            if ((item.BacklightMaskOrSpecular != null)
-                && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.BacklightMaskOrSpecular) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BacklightMaskOrSpecular),
-                    item: item.BacklightMaskOrSpecular,
-                    fieldIndex: (int)TextureSet_FieldIndex.BacklightMaskOrSpecular,
-                    errorMask: errorMask);
-            }
-            if ((item.Decal != null)
-                && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Decal) ?? true))
-            {
-                if (item.Decal.TryGet(out var DecalItem))
-                {
-                    ((DecalXmlWriteTranslation)((IXmlItem)DecalItem).XmlWriteTranslator).Write(
-                        item: DecalItem,
-                        node: node,
-                        name: nameof(item.Decal),
-                        fieldIndex: (int)TextureSet_FieldIndex.Decal,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Decal));
-                }
-            }
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<TextureSet.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)TextureSet_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            ITextureSetGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.TextureSet");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.TextureSet");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ITextureSetGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ITextureSetGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ITextureSetGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class TextureSetXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static TextureSetXmlCreateTranslation Instance = new TextureSetXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            ITextureSetInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    TextureSetXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            ITextureSetInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "ObjectBounds":
-                    errorMask?.PushIndex((int)TextureSet_FieldIndex.ObjectBounds);
-                    try
-                    {
-                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.ObjectBounds));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Diffuse":
-                    errorMask?.PushIndex((int)TextureSet_FieldIndex.Diffuse);
-                    try
-                    {
-                        item.Diffuse = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NormalOrGloss":
-                    errorMask?.PushIndex((int)TextureSet_FieldIndex.NormalOrGloss);
-                    try
-                    {
-                        item.NormalOrGloss = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EnvironmentMaskOrSubsurfaceTint":
-                    errorMask?.PushIndex((int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
-                    try
-                    {
-                        item.EnvironmentMaskOrSubsurfaceTint = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "GlowOrDetailMap":
-                    errorMask?.PushIndex((int)TextureSet_FieldIndex.GlowOrDetailMap);
-                    try
-                    {
-                        item.GlowOrDetailMap = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Height":
-                    errorMask?.PushIndex((int)TextureSet_FieldIndex.Height);
-                    try
-                    {
-                        item.Height = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Environment":
-                    errorMask?.PushIndex((int)TextureSet_FieldIndex.Environment);
-                    try
-                    {
-                        item.Environment = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Multilayer":
-                    errorMask?.PushIndex((int)TextureSet_FieldIndex.Multilayer);
-                    try
-                    {
-                        item.Multilayer = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BacklightMaskOrSpecular":
-                    errorMask?.PushIndex((int)TextureSet_FieldIndex.BacklightMaskOrSpecular);
-                    try
-                    {
-                        item.BacklightMaskOrSpecular = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Decal":
-                    errorMask?.PushIndex((int)TextureSet_FieldIndex.Decal);
-                    try
-                    {
-                        item.Decal = LoquiXmlTranslation<Decal>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Decal));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)TextureSet_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<TextureSet.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class TextureSetXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this ITextureSetGetter item,
-            XElement node,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((TextureSetXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = TextureSet.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this ITextureSetGetter item,
-            string path,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ITextureSetGetter item,
-            Stream stream,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2918,10 +2057,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -2974,9 +2115,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ITextureSetInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2987,7 +2129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.ObjectBounds);
+                    return (int)TextureSet_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.TX00:
                 {
@@ -2995,7 +2137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Diffuse = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Diffuse);
+                    return (int)TextureSet_FieldIndex.Diffuse;
                 }
                 case RecordTypeInts.TX01:
                 {
@@ -3003,7 +2145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.NormalOrGloss = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.NormalOrGloss);
+                    return (int)TextureSet_FieldIndex.NormalOrGloss;
                 }
                 case RecordTypeInts.TX02:
                 {
@@ -3011,7 +2153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EnvironmentMaskOrSubsurfaceTint = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
+                    return (int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint;
                 }
                 case RecordTypeInts.TX03:
                 {
@@ -3019,7 +2161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.GlowOrDetailMap = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.GlowOrDetailMap);
+                    return (int)TextureSet_FieldIndex.GlowOrDetailMap;
                 }
                 case RecordTypeInts.TX04:
                 {
@@ -3027,7 +2169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Height = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Height);
+                    return (int)TextureSet_FieldIndex.Height;
                 }
                 case RecordTypeInts.TX05:
                 {
@@ -3035,7 +2177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Environment = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Environment);
+                    return (int)TextureSet_FieldIndex.Environment;
                 }
                 case RecordTypeInts.TX06:
                 {
@@ -3043,7 +2185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Multilayer = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Multilayer);
+                    return (int)TextureSet_FieldIndex.Multilayer;
                 }
                 case RecordTypeInts.TX07:
                 {
@@ -3051,23 +2193,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.BacklightMaskOrSpecular = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.BacklightMaskOrSpecular);
+                    return (int)TextureSet_FieldIndex.BacklightMaskOrSpecular;
                 }
                 case RecordTypeInts.DODT:
                 {
                     item.Decal = Mutagen.Bethesda.Skyrim.Decal.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Decal);
+                    return (int)TextureSet_FieldIndex.Decal;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<TextureSet.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Flags);
+                    return (int)TextureSet_FieldIndex.Flags;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3107,21 +2250,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITextureSetGetter)rhs, include);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => TextureSetXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((TextureSetXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -3178,7 +2306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public TextureSet.Flag? Flags => _FlagsLocation.HasValue ? (TextureSet.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(TextureSet.Flag?);
+        public TextureSet.Flag? Flags => _FlagsLocation.HasValue ? (TextureSet.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(TextureSet.Flag?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3205,8 +2333,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new TextureSetBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3232,12 +2361,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3246,57 +2376,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.ObjectBounds);
+                    return (int)TextureSet_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.TX00:
                 {
                     _DiffuseLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Diffuse);
+                    return (int)TextureSet_FieldIndex.Diffuse;
                 }
                 case RecordTypeInts.TX01:
                 {
                     _NormalOrGlossLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.NormalOrGloss);
+                    return (int)TextureSet_FieldIndex.NormalOrGloss;
                 }
                 case RecordTypeInts.TX02:
                 {
                     _EnvironmentMaskOrSubsurfaceTintLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
+                    return (int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint;
                 }
                 case RecordTypeInts.TX03:
                 {
                     _GlowOrDetailMapLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.GlowOrDetailMap);
+                    return (int)TextureSet_FieldIndex.GlowOrDetailMap;
                 }
                 case RecordTypeInts.TX04:
                 {
                     _HeightLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Height);
+                    return (int)TextureSet_FieldIndex.Height;
                 }
                 case RecordTypeInts.TX05:
                 {
                     _EnvironmentLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Environment);
+                    return (int)TextureSet_FieldIndex.Environment;
                 }
                 case RecordTypeInts.TX06:
                 {
                     _MultilayerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Multilayer);
+                    return (int)TextureSet_FieldIndex.Multilayer;
                 }
                 case RecordTypeInts.TX07:
                 {
                     _BacklightMaskOrSpecularLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.BacklightMaskOrSpecular);
+                    return (int)TextureSet_FieldIndex.BacklightMaskOrSpecular;
                 }
                 case RecordTypeInts.DODT:
                 {
                     _DecalLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Decal);
+                    return (int)TextureSet_FieldIndex.Decal;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Flags);
+                    return (int)TextureSet_FieldIndex.Flags;
                 }
                 default:
                     return base.FillRecordType(
@@ -3304,7 +2434,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

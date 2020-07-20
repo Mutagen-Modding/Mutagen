@@ -64,8 +64,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var rdatFrame = frame.GetSubrecordFrame();
             RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
-            var subMeta = frame.GetSubrecord(offset: rdatFrame.Header.TotalLength);
-            int len = rdatFrame.Header.TotalLength;
+            var subMeta = frame.GetSubrecord(offset: rdatFrame.TotalLength);
+            int len = rdatFrame.TotalLength;
             if (IsExpected(dataType, subMeta.RecordType))
             {
                 len += subMeta.TotalLength;
@@ -93,8 +93,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Weather = RegionWeather.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
                     break;
                 case RegionData.RegionDataType.Icon:
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + rdatFrame.Header.TotalLength;
-                    len = len - frame.MetaData.Constants.SubConstants.HeaderLength - rdatFrame.Header.TotalLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + rdatFrame.TotalLength;
+                    len = len - frame.MetaData.Constants.SubConstants.HeaderLength - rdatFrame.TotalLength;
                     if (StringBinaryTranslation.Instance.Parse(
                         frame.SpawnWithLength(len, checkFraming: false),
                         out var iconVal))
@@ -133,11 +133,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (_IconLocation.HasValue)
             {
-                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.MetaData.Constants));
+                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.MetaData.Constants));
             }
             if (_SecondaryIconLocation.HasValue)
             {
-                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _SecondaryIconLocation.Value, _package.MetaData.Constants));
+                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SecondaryIconLocation.Value, _package.MetaData.Constants));
             }
             return default;
         }
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int loc = stream.Position - offset;
             var rdatFrame = stream.ReadSubrecordFrame();
             RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
-            var len = rdatFrame.Header.TotalLength;
+            var len = rdatFrame.TotalLength;
             if (!stream.Complete)
             {
                 var contentMeta = stream.GetSubrecord();
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     _WeatherSpan = this._data.Slice(loc, len);
                     break;
                 case RegionData.RegionDataType.Icon:
-                    _SecondaryIconLocation = loc + rdatFrame.Header.TotalLength;
+                    _SecondaryIconLocation = loc + rdatFrame.TotalLength;
                     break;
                 default:
                     throw new NotImplementedException();

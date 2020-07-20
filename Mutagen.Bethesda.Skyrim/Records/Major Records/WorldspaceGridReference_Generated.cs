@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -52,8 +46,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region References
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WorldspaceReference> _References = new ExtendedList<WorldspaceReference>();
-        public ExtendedList<WorldspaceReference> References
+        private IExtendedList<WorldspaceReference> _References = new ExtendedList<WorldspaceReference>();
+        public IExtendedList<WorldspaceReference> References
         {
             get => this._References;
             protected set => this._References = value;
@@ -91,137 +85,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => WorldspaceGridReferenceXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((WorldspaceGridReferenceXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static WorldspaceGridReference CreateFromXml(
-            XElement node,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static WorldspaceGridReference CreateFromXml(
-            XElement node,
-            out WorldspaceGridReference.ErrorMask errorMask,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = WorldspaceGridReference.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static WorldspaceGridReference CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new WorldspaceGridReference();
-            ((WorldspaceGridReferenceSetterCommon)((IWorldspaceGridReferenceGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static WorldspaceGridReference CreateFromXml(
-            string path,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static WorldspaceGridReference CreateFromXml(
-            string path,
-            out WorldspaceGridReference.ErrorMask errorMask,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static WorldspaceGridReference CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static WorldspaceGridReference CreateFromXml(
-            Stream stream,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static WorldspaceGridReference CreateFromXml(
-            Stream stream,
-            out WorldspaceGridReference.ErrorMask errorMask,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static WorldspaceGridReference CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -597,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = WorldspaceGridReference_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = WorldspaceGridReference_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => WorldspaceGridReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -677,13 +540,12 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceGridReference>
     {
         new P2Int16 GridPosition { get; set; }
-        new ExtendedList<WorldspaceReference> References { get; }
+        new IExtendedList<WorldspaceReference> References { get; }
     }
 
     public partial interface IWorldspaceGridReferenceGetter :
         ILoquiObject,
         ILoquiObject<IWorldspaceGridReferenceGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -852,131 +714,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IWorldspaceGridReference item,
-            XElement node,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IWorldspaceGridReference item,
-            XElement node,
-            out WorldspaceGridReference.ErrorMask errorMask,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = WorldspaceGridReference.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IWorldspaceGridReference item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((WorldspaceGridReferenceSetterCommon)((IWorldspaceGridReferenceGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWorldspaceGridReference item,
-            string path,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWorldspaceGridReference item,
-            string path,
-            out WorldspaceGridReference.ErrorMask errorMask,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWorldspaceGridReference item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IWorldspaceGridReference item,
-            Stream stream,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWorldspaceGridReference item,
-            Stream stream,
-            out WorldspaceGridReference.ErrorMask errorMask,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWorldspaceGridReference item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1162,13 +899,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case WorldspaceGridReference_FieldIndex.GridPosition:
                     return typeof(P2Int16);
                 case WorldspaceGridReference_FieldIndex.References:
-                    return typeof(ExtendedList<WorldspaceReference>);
+                    return typeof(IExtendedList<WorldspaceReference>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(WorldspaceGridReferenceXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.RNAM;
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceGridReferenceBinaryWriteTranslation);
         #region Interface
@@ -1215,34 +951,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.GridPosition = default;
             item.References.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IWorldspaceGridReference item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    WorldspaceGridReferenceXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1536,364 +1244,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class WorldspaceGridReferenceXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static WorldspaceGridReferenceXmlWriteTranslation Instance = new WorldspaceGridReferenceXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IWorldspaceGridReferenceGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)WorldspaceGridReference_FieldIndex.GridPosition) ?? true))
-            {
-                P2Int16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.GridPosition),
-                    item: item.GridPosition,
-                    fieldIndex: (int)WorldspaceGridReference_FieldIndex.GridPosition,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)WorldspaceGridReference_FieldIndex.References) ?? true))
-            {
-                ListXmlTranslation<IWorldspaceReferenceGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.References),
-                    item: item.References,
-                    fieldIndex: (int)WorldspaceGridReference_FieldIndex.References,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)WorldspaceGridReference_FieldIndex.References),
-                    transl: (XElement subNode, IWorldspaceReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((WorldspaceReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IWorldspaceGridReferenceGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.WorldspaceGridReference");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.WorldspaceGridReference");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IWorldspaceGridReferenceGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IWorldspaceGridReferenceGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IWorldspaceGridReferenceGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class WorldspaceGridReferenceXmlCreateTranslation
-    {
-        public readonly static WorldspaceGridReferenceXmlCreateTranslation Instance = new WorldspaceGridReferenceXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IWorldspaceGridReference item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    WorldspaceGridReferenceXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IWorldspaceGridReference item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "GridPosition":
-                    errorMask?.PushIndex((int)WorldspaceGridReference_FieldIndex.GridPosition);
-                    try
-                    {
-                        item.GridPosition = P2Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "References":
-                    errorMask?.PushIndex((int)WorldspaceGridReference_FieldIndex.References);
-                    try
-                    {
-                        if (ListXmlTranslation<WorldspaceReference>.Instance.Parse(
-                            node: node,
-                            enumer: out var ReferencesItem,
-                            transl: LoquiXmlTranslation<WorldspaceReference>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.References.SetTo(ReferencesItem);
-                        }
-                        else
-                        {
-                            item.References.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class WorldspaceGridReferenceXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IWorldspaceGridReferenceGetter item,
-            XElement node,
-            out WorldspaceGridReference.ErrorMask errorMask,
-            WorldspaceGridReference.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((WorldspaceGridReferenceXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = WorldspaceGridReference.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IWorldspaceGridReferenceGetter item,
-            string path,
-            out WorldspaceGridReference.ErrorMask errorMask,
-            WorldspaceGridReference.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IWorldspaceGridReferenceGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IWorldspaceGridReferenceGetter item,
-            Stream stream,
-            out WorldspaceGridReference.ErrorMask errorMask,
-            WorldspaceGridReference.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IWorldspaceGridReferenceGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IWorldspaceGridReferenceGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((WorldspaceGridReferenceXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IWorldspaceGridReferenceGetter item,
-            XElement node,
-            string? name = null,
-            WorldspaceGridReference.TranslationMask? translationMask = null)
-        {
-            ((WorldspaceGridReferenceXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IWorldspaceGridReferenceGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((WorldspaceGridReferenceXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IWorldspaceGridReferenceGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((WorldspaceGridReferenceXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2024,23 +1374,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceGridReferenceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceGridReferenceCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => WorldspaceGridReferenceXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((WorldspaceGridReferenceXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WorldspaceGridReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -2056,7 +1389,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public P2Int16 GridPosition => P2Int16BinaryTranslation.Read(_data.Slice(0x0, 0x4));
         #region References
-        public IReadOnlyList<IWorldspaceReferenceGetter> References => BinaryOverlayList<IWorldspaceReferenceGetter>.FactoryByCountLength(_data.Slice(0x4), _package, 8, countLength: 4, (s, p) => WorldspaceReferenceBinaryOverlay.WorldspaceReferenceFactory(s, p));
+        public IReadOnlyList<IWorldspaceReferenceGetter> References => BinaryOverlayList.FactoryByCountLength<WorldspaceReferenceBinaryOverlay>(_data.Slice(0x4), _package, 8, countLength: 4, (s, p) => WorldspaceReferenceBinaryOverlay.WorldspaceReferenceFactory(s, p));
         protected int ReferencesEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -2083,7 +1416,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new WorldspaceGridReferenceBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.ReferencesEndingPos = 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(0x4)) * 8 + 4;
             ret.CustomFactoryEnd(

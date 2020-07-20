@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -221,135 +215,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ProjectileXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ProjectileXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Projectile CreateFromXml(
-            XElement node,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Projectile CreateFromXml(
-            XElement node,
-            out Projectile.ErrorMask errorMask,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Projectile.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Projectile CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Projectile();
-            ((ProjectileSetterCommon)((IProjectileGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Projectile CreateFromXml(
-            string path,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Projectile CreateFromXml(
-            string path,
-            out Projectile.ErrorMask errorMask,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Projectile CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Projectile CreateFromXml(
-            Stream stream,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Projectile CreateFromXml(
-            Stream stream,
-            out Projectile.ErrorMask errorMask,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Projectile CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -397,7 +262,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -436,7 +301,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -1514,7 +1379,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Projectile_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Projectile_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ProjectileCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1665,11 +1530,10 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedTrapTargetGetter,
         IObjectBoundedGetter,
         ILoquiObject<IProjectileGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Projectile_Registration.Instance;
+        static new ILoquiRegistration Registration => Projectile_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         TranslatedString? Name { get; }
         IModelGetter? Model { get; }
@@ -1836,131 +1700,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IProjectileInternal item,
-            XElement node,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IProjectileInternal item,
-            XElement node,
-            out Projectile.ErrorMask errorMask,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Projectile.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IProjectileInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ProjectileSetterCommon)((IProjectileGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IProjectileInternal item,
-            string path,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IProjectileInternal item,
-            string path,
-            out Projectile.ErrorMask errorMask,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IProjectileInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IProjectileInternal item,
-            Stream stream,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IProjectileInternal item,
-            Stream stream,
-            out Projectile.ErrorMask errorMask,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IProjectileInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Projectile.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1998,7 +1737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -2516,7 +2255,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ProjectileXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.PROJ;
         public static readonly Type BinaryWriteTranslation = typeof(ProjectileBinaryWriteTranslation);
         #region Interface
@@ -2604,88 +2342,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IProjectileInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IProjectileInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IProjectileInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                item.DATADataTypeState |= Projectile.DATADataType.Break0;
-                item.DATADataTypeState |= Projectile.DATADataType.Break1;
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    ProjectileXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Projectile)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Projectile)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -3042,7 +2698,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Projectile_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Projectile_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Projectile_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Projectile_FieldIndex)((int)index);
@@ -3063,7 +2719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Projectile_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Projectile_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Projectile_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Projectile_FieldIndex)((int)index);
@@ -3598,1103 +3254,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class ProjectileXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static ProjectileXmlWriteTranslation Instance = new ProjectileXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IProjectileGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.ObjectBounds) ?? true))
-            {
-                var ObjectBoundsItem = item.ObjectBounds;
-                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    node: node,
-                    name: nameof(item.ObjectBounds),
-                    fieldIndex: (int)Projectile_FieldIndex.ObjectBounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Projectile_FieldIndex.ObjectBounds));
-            }
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Projectile_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((item.Model != null)
-                && (translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.Model) ?? true))
-            {
-                if (item.Model.TryGet(out var ModelItem))
-                {
-                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                        item: ModelItem,
-                        node: node,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)Projectile_FieldIndex.Model,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Projectile_FieldIndex.Model));
-                }
-            }
-            if ((item.Destructible != null)
-                && (translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.Destructible) ?? true))
-            {
-                if (item.Destructible.TryGet(out var DestructibleItem))
-                {
-                    ((DestructibleXmlWriteTranslation)((IXmlItem)DestructibleItem).XmlWriteTranslator).Write(
-                        item: DestructibleItem,
-                        node: node,
-                        name: nameof(item.Destructible),
-                        fieldIndex: (int)Projectile_FieldIndex.Destructible,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Projectile_FieldIndex.Destructible));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Projectile.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Projectile_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.Type) ?? true))
-            {
-                EnumXmlTranslation<Projectile.TypeEnum>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)Projectile_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.Gravity) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Gravity),
-                    item: item.Gravity,
-                    fieldIndex: (int)Projectile_FieldIndex.Gravity,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.Speed) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Speed),
-                    item: item.Speed,
-                    fieldIndex: (int)Projectile_FieldIndex.Speed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.Range) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Range),
-                    item: item.Range,
-                    fieldIndex: (int)Projectile_FieldIndex.Range,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.Light) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Light),
-                    item: item.Light.FormKey,
-                    fieldIndex: (int)Projectile_FieldIndex.Light,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlash) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MuzzleFlash),
-                    item: item.MuzzleFlash.FormKey,
-                    fieldIndex: (int)Projectile_FieldIndex.MuzzleFlash,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.TracerChance) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TracerChance),
-                    item: item.TracerChance,
-                    fieldIndex: (int)Projectile_FieldIndex.TracerChance,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerProximity) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ExplosionAltTriggerProximity),
-                    item: item.ExplosionAltTriggerProximity,
-                    fieldIndex: (int)Projectile_FieldIndex.ExplosionAltTriggerProximity,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerTimer) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ExplosionAltTriggerTimer),
-                    item: item.ExplosionAltTriggerTimer,
-                    fieldIndex: (int)Projectile_FieldIndex.ExplosionAltTriggerTimer,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.Explosion) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Explosion),
-                    item: item.Explosion.FormKey,
-                    fieldIndex: (int)Projectile_FieldIndex.Explosion,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.Sound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Sound),
-                    item: item.Sound.FormKey,
-                    fieldIndex: (int)Projectile_FieldIndex.Sound,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashDuration) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MuzzleFlashDuration),
-                    item: item.MuzzleFlashDuration,
-                    fieldIndex: (int)Projectile_FieldIndex.MuzzleFlashDuration,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.FadeDuration) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FadeDuration),
-                    item: item.FadeDuration,
-                    fieldIndex: (int)Projectile_FieldIndex.FadeDuration,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.ImpactForce) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ImpactForce),
-                    item: item.ImpactForce,
-                    fieldIndex: (int)Projectile_FieldIndex.ImpactForce,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.CountdownSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CountdownSound),
-                    item: item.CountdownSound.FormKey,
-                    fieldIndex: (int)Projectile_FieldIndex.CountdownSound,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.DisaleSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DisaleSound),
-                    item: item.DisaleSound.FormKey,
-                    fieldIndex: (int)Projectile_FieldIndex.DisaleSound,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.DefaultWeaponSource) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DefaultWeaponSource),
-                    item: item.DefaultWeaponSource.FormKey,
-                    fieldIndex: (int)Projectile_FieldIndex.DefaultWeaponSource,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.ConeSpread) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ConeSpread),
-                    item: item.ConeSpread,
-                    fieldIndex: (int)Projectile_FieldIndex.ConeSpread,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.CollisionRadius) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CollisionRadius),
-                    item: item.CollisionRadius,
-                    fieldIndex: (int)Projectile_FieldIndex.CollisionRadius,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.Lifetime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Lifetime),
-                    item: item.Lifetime,
-                    fieldIndex: (int)Projectile_FieldIndex.Lifetime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.RelaunchInterval) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.RelaunchInterval),
-                    item: item.RelaunchInterval,
-                    fieldIndex: (int)Projectile_FieldIndex.RelaunchInterval,
-                    errorMask: errorMask);
-            }
-            if (!item.DATADataTypeState.HasFlag(Projectile.DATADataType.Break0))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.DecalData) ?? true))
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.DecalData),
-                        item: item.DecalData.FormKey,
-                        fieldIndex: (int)Projectile_FieldIndex.DecalData,
-                        errorMask: errorMask);
-                }
-                if (!item.DATADataTypeState.HasFlag(Projectile.DATADataType.Break1))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.CollisionLayer) ?? true))
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.CollisionLayer),
-                            item: item.CollisionLayer.FormKey,
-                            fieldIndex: (int)Projectile_FieldIndex.CollisionLayer,
-                            errorMask: errorMask);
-                    }
-                }
-            }
-            else
-            {
-                node.Add(new XElement("HasDATADataType"));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MuzzleFlashModel),
-                    item: item.MuzzleFlashModel,
-                    fieldIndex: (int)Projectile_FieldIndex.MuzzleFlashModel,
-                    errorMask: errorMask);
-            }
-            if ((item.TextureFilesHashes != null)
-                && (translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TextureFilesHashes),
-                    item: item.TextureFilesHashes.Value,
-                    fieldIndex: (int)Projectile_FieldIndex.TextureFilesHashes,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.SoundLevel) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SoundLevel),
-                    item: item.SoundLevel,
-                    fieldIndex: (int)Projectile_FieldIndex.SoundLevel,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Projectile_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Projectile.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Projectile_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IProjectileGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Projectile");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Projectile");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IProjectileGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IProjectileGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IProjectileGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class ProjectileXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static ProjectileXmlCreateTranslation Instance = new ProjectileXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IProjectileInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ProjectileXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IProjectileInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "ObjectBounds":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.ObjectBounds);
-                    try
-                    {
-                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Projectile_FieldIndex.ObjectBounds));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Name":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.Model);
-                    try
-                    {
-                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Projectile_FieldIndex.Model));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Destructible":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.Destructible);
-                    try
-                    {
-                        item.Destructible = LoquiXmlTranslation<Destructible>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Projectile_FieldIndex.Destructible));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Projectile.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Type":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.Type);
-                    try
-                    {
-                        item.Type = EnumXmlTranslation<Projectile.TypeEnum>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Gravity":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.Gravity);
-                    try
-                    {
-                        item.Gravity = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Speed":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.Speed);
-                    try
-                    {
-                        item.Speed = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Range":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.Range);
-                    try
-                    {
-                        item.Range = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Light":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.Light);
-                    try
-                    {
-                        item.Light = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MuzzleFlash":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.MuzzleFlash);
-                    try
-                    {
-                        item.MuzzleFlash = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TracerChance":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.TracerChance);
-                    try
-                    {
-                        item.TracerChance = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ExplosionAltTriggerProximity":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.ExplosionAltTriggerProximity);
-                    try
-                    {
-                        item.ExplosionAltTriggerProximity = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ExplosionAltTriggerTimer":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.ExplosionAltTriggerTimer);
-                    try
-                    {
-                        item.ExplosionAltTriggerTimer = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Explosion":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.Explosion);
-                    try
-                    {
-                        item.Explosion = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sound":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.Sound);
-                    try
-                    {
-                        item.Sound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MuzzleFlashDuration":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.MuzzleFlashDuration);
-                    try
-                    {
-                        item.MuzzleFlashDuration = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FadeDuration":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.FadeDuration);
-                    try
-                    {
-                        item.FadeDuration = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ImpactForce":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.ImpactForce);
-                    try
-                    {
-                        item.ImpactForce = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CountdownSound":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.CountdownSound);
-                    try
-                    {
-                        item.CountdownSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisaleSound":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.DisaleSound);
-                    try
-                    {
-                        item.DisaleSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DefaultWeaponSource":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.DefaultWeaponSource);
-                    try
-                    {
-                        item.DefaultWeaponSource = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ConeSpread":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.ConeSpread);
-                    try
-                    {
-                        item.ConeSpread = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CollisionRadius":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.CollisionRadius);
-                    try
-                    {
-                        item.CollisionRadius = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Lifetime":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.Lifetime);
-                    try
-                    {
-                        item.Lifetime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RelaunchInterval":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.RelaunchInterval);
-                    try
-                    {
-                        item.RelaunchInterval = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DecalData":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.DecalData);
-                    try
-                    {
-                        item.DecalData = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~Projectile.DATADataType.Break0;
-                    break;
-                case "CollisionLayer":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.CollisionLayer);
-                    try
-                    {
-                        item.CollisionLayer = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~Projectile.DATADataType.Break1;
-                    break;
-                case "MuzzleFlashModel":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.MuzzleFlashModel);
-                    try
-                    {
-                        item.MuzzleFlashModel = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TextureFilesHashes":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.TextureFilesHashes);
-                    try
-                    {
-                        item.TextureFilesHashes = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SoundLevel":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.SoundLevel);
-                    try
-                    {
-                        item.SoundLevel = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Projectile_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Projectile.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class ProjectileXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IProjectileGetter item,
-            XElement node,
-            out Projectile.ErrorMask errorMask,
-            Projectile.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ProjectileXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Projectile.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IProjectileGetter item,
-            string path,
-            out Projectile.ErrorMask errorMask,
-            Projectile.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IProjectileGetter item,
-            Stream stream,
-            out Projectile.ErrorMask errorMask,
-            Projectile.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -4858,10 +3417,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -4914,9 +3475,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IProjectileInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -4927,7 +3489,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.ObjectBounds);
+                    return (int)Projectile_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -4936,14 +3498,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Name);
+                    return (int)Projectile_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Model);
+                    return (int)Projectile_FieldIndex.Model;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -4952,7 +3514,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Destructible);
+                    return (int)Projectile_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -4997,7 +3559,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Projectile.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)Projectile_FieldIndex.RelaunchInterval);
+                        return (int)Projectile_FieldIndex.RelaunchInterval;
                     }
                     item.DecalData = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
@@ -5005,12 +3567,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Projectile.DATADataType.Break1;
-                        return TryGet<int?>.Succeed((int)Projectile_FieldIndex.DecalData);
+                        return (int)Projectile_FieldIndex.DecalData;
                     }
                     item.CollisionLayer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.CollisionLayer);
+                    return (int)Projectile_FieldIndex.CollisionLayer;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -5018,24 +3580,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MuzzleFlashModel = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.MuzzleFlashModel);
+                    return (int)Projectile_FieldIndex.MuzzleFlashModel;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureFilesHashes = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.TextureFilesHashes);
+                    return (int)Projectile_FieldIndex.TextureFilesHashes;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SoundLevel = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.SoundLevel);
+                    return (int)Projectile_FieldIndex.SoundLevel;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -5082,21 +3645,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ProjectileXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ProjectileXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ProjectileBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -5134,17 +3682,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Gravity
         private int _GravityLocation => _DATALocation!.Value + 0x4;
         private bool _Gravity_IsSet => _DATALocation.HasValue;
-        public Single Gravity => _Gravity_IsSet ? SpanExt.GetFloat(_data.Slice(_GravityLocation, 4)) : default;
+        public Single Gravity => _Gravity_IsSet ? _data.Slice(_GravityLocation, 4).Float() : default;
         #endregion
         #region Speed
         private int _SpeedLocation => _DATALocation!.Value + 0x8;
         private bool _Speed_IsSet => _DATALocation.HasValue;
-        public Single Speed => _Speed_IsSet ? SpanExt.GetFloat(_data.Slice(_SpeedLocation, 4)) : default;
+        public Single Speed => _Speed_IsSet ? _data.Slice(_SpeedLocation, 4).Float() : default;
         #endregion
         #region Range
         private int _RangeLocation => _DATALocation!.Value + 0xC;
         private bool _Range_IsSet => _DATALocation.HasValue;
-        public Single Range => _Range_IsSet ? SpanExt.GetFloat(_data.Slice(_RangeLocation, 4)) : default;
+        public Single Range => _Range_IsSet ? _data.Slice(_RangeLocation, 4).Float() : default;
         #endregion
         #region Light
         private int _LightLocation => _DATALocation!.Value + 0x10;
@@ -5159,17 +3707,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region TracerChance
         private int _TracerChanceLocation => _DATALocation!.Value + 0x18;
         private bool _TracerChance_IsSet => _DATALocation.HasValue;
-        public Single TracerChance => _TracerChance_IsSet ? SpanExt.GetFloat(_data.Slice(_TracerChanceLocation, 4)) : default;
+        public Single TracerChance => _TracerChance_IsSet ? _data.Slice(_TracerChanceLocation, 4).Float() : default;
         #endregion
         #region ExplosionAltTriggerProximity
         private int _ExplosionAltTriggerProximityLocation => _DATALocation!.Value + 0x1C;
         private bool _ExplosionAltTriggerProximity_IsSet => _DATALocation.HasValue;
-        public Single ExplosionAltTriggerProximity => _ExplosionAltTriggerProximity_IsSet ? SpanExt.GetFloat(_data.Slice(_ExplosionAltTriggerProximityLocation, 4)) : default;
+        public Single ExplosionAltTriggerProximity => _ExplosionAltTriggerProximity_IsSet ? _data.Slice(_ExplosionAltTriggerProximityLocation, 4).Float() : default;
         #endregion
         #region ExplosionAltTriggerTimer
         private int _ExplosionAltTriggerTimerLocation => _DATALocation!.Value + 0x20;
         private bool _ExplosionAltTriggerTimer_IsSet => _DATALocation.HasValue;
-        public Single ExplosionAltTriggerTimer => _ExplosionAltTriggerTimer_IsSet ? SpanExt.GetFloat(_data.Slice(_ExplosionAltTriggerTimerLocation, 4)) : default;
+        public Single ExplosionAltTriggerTimer => _ExplosionAltTriggerTimer_IsSet ? _data.Slice(_ExplosionAltTriggerTimerLocation, 4).Float() : default;
         #endregion
         #region Explosion
         private int _ExplosionLocation => _DATALocation!.Value + 0x24;
@@ -5184,17 +3732,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region MuzzleFlashDuration
         private int _MuzzleFlashDurationLocation => _DATALocation!.Value + 0x2C;
         private bool _MuzzleFlashDuration_IsSet => _DATALocation.HasValue;
-        public Single MuzzleFlashDuration => _MuzzleFlashDuration_IsSet ? SpanExt.GetFloat(_data.Slice(_MuzzleFlashDurationLocation, 4)) : default;
+        public Single MuzzleFlashDuration => _MuzzleFlashDuration_IsSet ? _data.Slice(_MuzzleFlashDurationLocation, 4).Float() : default;
         #endregion
         #region FadeDuration
         private int _FadeDurationLocation => _DATALocation!.Value + 0x30;
         private bool _FadeDuration_IsSet => _DATALocation.HasValue;
-        public Single FadeDuration => _FadeDuration_IsSet ? SpanExt.GetFloat(_data.Slice(_FadeDurationLocation, 4)) : default;
+        public Single FadeDuration => _FadeDuration_IsSet ? _data.Slice(_FadeDurationLocation, 4).Float() : default;
         #endregion
         #region ImpactForce
         private int _ImpactForceLocation => _DATALocation!.Value + 0x34;
         private bool _ImpactForce_IsSet => _DATALocation.HasValue;
-        public Single ImpactForce => _ImpactForce_IsSet ? SpanExt.GetFloat(_data.Slice(_ImpactForceLocation, 4)) : default;
+        public Single ImpactForce => _ImpactForce_IsSet ? _data.Slice(_ImpactForceLocation, 4).Float() : default;
         #endregion
         #region CountdownSound
         private int _CountdownSoundLocation => _DATALocation!.Value + 0x38;
@@ -5214,22 +3762,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ConeSpread
         private int _ConeSpreadLocation => _DATALocation!.Value + 0x44;
         private bool _ConeSpread_IsSet => _DATALocation.HasValue;
-        public Single ConeSpread => _ConeSpread_IsSet ? SpanExt.GetFloat(_data.Slice(_ConeSpreadLocation, 4)) : default;
+        public Single ConeSpread => _ConeSpread_IsSet ? _data.Slice(_ConeSpreadLocation, 4).Float() : default;
         #endregion
         #region CollisionRadius
         private int _CollisionRadiusLocation => _DATALocation!.Value + 0x48;
         private bool _CollisionRadius_IsSet => _DATALocation.HasValue;
-        public Single CollisionRadius => _CollisionRadius_IsSet ? SpanExt.GetFloat(_data.Slice(_CollisionRadiusLocation, 4)) : default;
+        public Single CollisionRadius => _CollisionRadius_IsSet ? _data.Slice(_CollisionRadiusLocation, 4).Float() : default;
         #endregion
         #region Lifetime
         private int _LifetimeLocation => _DATALocation!.Value + 0x4C;
         private bool _Lifetime_IsSet => _DATALocation.HasValue;
-        public Single Lifetime => _Lifetime_IsSet ? SpanExt.GetFloat(_data.Slice(_LifetimeLocation, 4)) : default;
+        public Single Lifetime => _Lifetime_IsSet ? _data.Slice(_LifetimeLocation, 4).Float() : default;
         #endregion
         #region RelaunchInterval
         private int _RelaunchIntervalLocation => _DATALocation!.Value + 0x50;
         private bool _RelaunchInterval_IsSet => _DATALocation.HasValue;
-        public Single RelaunchInterval => _RelaunchInterval_IsSet ? SpanExt.GetFloat(_data.Slice(_RelaunchIntervalLocation, 4)) : default;
+        public Single RelaunchInterval => _RelaunchInterval_IsSet ? _data.Slice(_RelaunchIntervalLocation, 4).Float() : default;
         #endregion
         #region DecalData
         private int _DecalDataLocation => _DATALocation!.Value + 0x54;
@@ -5278,8 +3826,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new ProjectileBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -5305,12 +3854,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -5319,12 +3869,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.ObjectBounds);
+                    return (int)Projectile_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Name);
+                    return (int)Projectile_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -5332,7 +3882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Model);
+                    return (int)Projectile_FieldIndex.Model;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -5342,7 +3892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Destructible);
+                    return (int)Projectile_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -5356,22 +3906,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.DATADataTypeState |= Projectile.DATADataType.Break1;
                     }
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.CollisionLayer);
+                    return (int)Projectile_FieldIndex.CollisionLayer;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     _MuzzleFlashModelLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.MuzzleFlashModel);
+                    return (int)Projectile_FieldIndex.MuzzleFlashModel;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     _TextureFilesHashesLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.TextureFilesHashes);
+                    return (int)Projectile_FieldIndex.TextureFilesHashes;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     _SoundLevelLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.SoundLevel);
+                    return (int)Projectile_FieldIndex.SoundLevel;
                 }
                 default:
                     return base.FillRecordType(
@@ -5379,7 +3929,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

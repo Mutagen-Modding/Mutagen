@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -59,8 +53,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Fragments
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<QuestScriptFragment> _Fragments = new ExtendedList<QuestScriptFragment>();
-        public ExtendedList<QuestScriptFragment> Fragments
+        private IExtendedList<QuestScriptFragment> _Fragments = new ExtendedList<QuestScriptFragment>();
+        public IExtendedList<QuestScriptFragment> Fragments
         {
             get => this._Fragments;
             protected set => this._Fragments = value;
@@ -73,8 +67,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Aliases
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<QuestFragmentAlias> _Aliases = new ExtendedList<QuestFragmentAlias>();
-        public ExtendedList<QuestFragmentAlias> Aliases
+        private IExtendedList<QuestFragmentAlias> _Aliases = new ExtendedList<QuestFragmentAlias>();
+        public IExtendedList<QuestFragmentAlias> Aliases
         {
             get => this._Aliases;
             protected set => this._Aliases = value;
@@ -112,135 +106,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => QuestAdapterXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((QuestAdapterXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new QuestAdapter CreateFromXml(
-            XElement node,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static QuestAdapter CreateFromXml(
-            XElement node,
-            out QuestAdapter.ErrorMask errorMask,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = QuestAdapter.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static QuestAdapter CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new QuestAdapter();
-            ((QuestAdapterSetterCommon)((IQuestAdapterGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static QuestAdapter CreateFromXml(
-            string path,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static QuestAdapter CreateFromXml(
-            string path,
-            out QuestAdapter.ErrorMask errorMask,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static QuestAdapter CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static QuestAdapter CreateFromXml(
-            Stream stream,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static QuestAdapter CreateFromXml(
-            Stream stream,
-            out QuestAdapter.ErrorMask errorMask,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static QuestAdapter CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -774,7 +639,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = QuestAdapter_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = QuestAdapter_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
@@ -860,18 +725,17 @@ namespace Mutagen.Bethesda.Skyrim
         new QuestAdapter.VersioningBreaks Versioning { get; set; }
         new Byte Unknown { get; set; }
         new String FileName { get; set; }
-        new ExtendedList<QuestScriptFragment> Fragments { get; }
-        new ExtendedList<QuestFragmentAlias> Aliases { get; }
+        new IExtendedList<QuestScriptFragment> Fragments { get; }
+        new IExtendedList<QuestFragmentAlias> Aliases { get; }
     }
 
     public partial interface IQuestAdapterGetter :
         IAVirtualMachineAdapterGetter,
         ILoquiObject<IQuestAdapterGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => QuestAdapter_Registration.Instance;
+        static new ILoquiRegistration Registration => QuestAdapter_Registration.Instance;
         QuestAdapter.VersioningBreaks Versioning { get; }
         Byte Unknown { get; }
         String FileName { get; }
@@ -1010,131 +874,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IQuestAdapter item,
-            XElement node,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IQuestAdapter item,
-            XElement node,
-            out QuestAdapter.ErrorMask errorMask,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = QuestAdapter.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestAdapter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((QuestAdapterSetterCommon)((IQuestAdapterGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestAdapter item,
-            string path,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestAdapter item,
-            string path,
-            out QuestAdapter.ErrorMask errorMask,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestAdapter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IQuestAdapter item,
-            Stream stream,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestAdapter item,
-            Stream stream,
-            out QuestAdapter.ErrorMask errorMask,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestAdapter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            QuestAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1357,15 +1096,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestAdapter_FieldIndex.FileName:
                     return typeof(String);
                 case QuestAdapter_FieldIndex.Fragments:
-                    return typeof(ExtendedList<QuestScriptFragment>);
+                    return typeof(IExtendedList<QuestScriptFragment>);
                 case QuestAdapter_FieldIndex.Aliases:
-                    return typeof(ExtendedList<QuestFragmentAlias>);
+                    return typeof(IExtendedList<QuestFragmentAlias>);
                 default:
                     return AVirtualMachineAdapter_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(QuestAdapterXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.VMAD;
         public static readonly Type BinaryWriteTranslation = typeof(QuestAdapterBinaryWriteTranslation);
         #region Interface
@@ -1421,47 +1159,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IQuestAdapter)item);
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IQuestAdapter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    QuestAdapterXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IAVirtualMachineAdapter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (QuestAdapter)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1900,372 +1597,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class QuestAdapterXmlWriteTranslation :
-        AVirtualMachineAdapterXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static QuestAdapterXmlWriteTranslation Instance = new QuestAdapterXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IQuestAdapterGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            AVirtualMachineAdapterXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Versioning) ?? true))
-            {
-                EnumXmlTranslation<QuestAdapter.VersioningBreaks>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Versioning),
-                    item: item.Versioning,
-                    fieldIndex: (int)QuestAdapter_FieldIndex.Versioning,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Unknown) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)QuestAdapter_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.FileName) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FileName),
-                    item: item.FileName,
-                    fieldIndex: (int)QuestAdapter_FieldIndex.FileName,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Fragments) ?? true))
-            {
-                ListXmlTranslation<IQuestScriptFragmentGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Fragments),
-                    item: item.Fragments,
-                    fieldIndex: (int)QuestAdapter_FieldIndex.Fragments,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)QuestAdapter_FieldIndex.Fragments),
-                    transl: (XElement subNode, IQuestScriptFragmentGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((QuestScriptFragmentXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Aliases) ?? true))
-            {
-                ListXmlTranslation<IQuestFragmentAliasGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Aliases),
-                    item: item.Aliases,
-                    fieldIndex: (int)QuestAdapter_FieldIndex.Aliases,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)QuestAdapter_FieldIndex.Aliases),
-                    transl: (XElement subNode, IQuestFragmentAliasGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((QuestFragmentAliasXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IQuestAdapterGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.QuestAdapter");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.QuestAdapter");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IQuestAdapterGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IAVirtualMachineAdapterGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IQuestAdapterGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class QuestAdapterXmlCreateTranslation : AVirtualMachineAdapterXmlCreateTranslation
-    {
-        public new readonly static QuestAdapterXmlCreateTranslation Instance = new QuestAdapterXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IQuestAdapter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    QuestAdapterXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IQuestAdapter item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Versioning":
-                    errorMask?.PushIndex((int)QuestAdapter_FieldIndex.Versioning);
-                    try
-                    {
-                        item.Versioning = EnumXmlTranslation<QuestAdapter.VersioningBreaks>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)QuestAdapter_FieldIndex.Unknown);
-                    try
-                    {
-                        item.Unknown = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FileName":
-                    errorMask?.PushIndex((int)QuestAdapter_FieldIndex.FileName);
-                    try
-                    {
-                        item.FileName = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fragments":
-                    errorMask?.PushIndex((int)QuestAdapter_FieldIndex.Fragments);
-                    try
-                    {
-                        if (ListXmlTranslation<QuestScriptFragment>.Instance.Parse(
-                            node: node,
-                            enumer: out var FragmentsItem,
-                            transl: LoquiXmlTranslation<QuestScriptFragment>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Fragments.SetTo(FragmentsItem);
-                        }
-                        else
-                        {
-                            item.Fragments.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Aliases":
-                    errorMask?.PushIndex((int)QuestAdapter_FieldIndex.Aliases);
-                    try
-                    {
-                        if (ListXmlTranslation<QuestFragmentAlias>.Instance.Parse(
-                            node: node,
-                            enumer: out var AliasesItem,
-                            transl: LoquiXmlTranslation<QuestFragmentAlias>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Aliases.SetTo(AliasesItem);
-                        }
-                        else
-                        {
-                            item.Aliases.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    AVirtualMachineAdapterXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class QuestAdapterXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IQuestAdapterGetter item,
-            XElement node,
-            out QuestAdapter.ErrorMask errorMask,
-            QuestAdapter.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((QuestAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = QuestAdapter.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IQuestAdapterGetter item,
-            string path,
-            out QuestAdapter.ErrorMask errorMask,
-            QuestAdapter.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IQuestAdapterGetter item,
-            Stream stream,
-            out QuestAdapter.ErrorMask errorMask,
-            QuestAdapter.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2480,21 +1811,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => QuestAdapterXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((QuestAdapterXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => QuestAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2550,7 +1866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new QuestAdapterBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.CustomFileNameEndPos();
             ret.CustomFragmentsEndPos();

@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -118,8 +112,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -162,9 +156,9 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<IStaticGetter> IBookGetter.InventoryArt => this.InventoryArt;
         #endregion
         #region Description
-        public String? Description { get; set; }
+        public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IBookGetter.Description => this.Description;
+        TranslatedString? IBookGetter.Description => this.Description;
         #endregion
         #region DATADataTypeState
         public Book.DATADataType DATADataTypeState { get; set; } = default;
@@ -196,135 +190,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((BookCommon)((IBookGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => BookXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((BookXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Book CreateFromXml(
-            XElement node,
-            Book.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Book CreateFromXml(
-            XElement node,
-            out Book.ErrorMask errorMask,
-            Book.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Book.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Book CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Book();
-            ((BookSetterCommon)((IBookGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Book CreateFromXml(
-            string path,
-            Book.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Book CreateFromXml(
-            string path,
-            out Book.ErrorMask errorMask,
-            Book.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Book CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Book.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Book CreateFromXml(
-            Stream stream,
-            Book.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Book CreateFromXml(
-            Stream stream,
-            out Book.ErrorMask errorMask,
-            Book.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Book CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Book.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -362,7 +227,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -388,7 +253,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -1225,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Book_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Book_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1340,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Destructible? Destructible { get; set; }
         new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
         new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new Book.Flag Flags { get; set; }
         new Book.BookType Type { get; set; }
         new UInt16 Unused { get; set; }
@@ -1348,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new FormLinkNullable<Static> InventoryArt { get; set; }
-        new String? Description { get; set; }
+        new TranslatedString? Description { get; set; }
         new Book.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1369,11 +1234,10 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IWeightValueGetter,
         ILoquiObject<IBookGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Book_Registration.Instance;
+        static new ILoquiRegistration Registration => Book_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
         TranslatedString? Name { get; }
@@ -1391,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim
         UInt32 Value { get; }
         Single Weight { get; }
         IFormLinkNullable<IStaticGetter> InventoryArt { get; }
-        String? Description { get; }
+        TranslatedString? Description { get; }
         Book.DATADataType DATADataTypeState { get; }
 
     }
@@ -1527,131 +1391,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IBookInternal item,
-            XElement node,
-            Book.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IBookInternal item,
-            XElement node,
-            out Book.ErrorMask errorMask,
-            Book.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Book.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IBookInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((BookSetterCommon)((IBookGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IBookInternal item,
-            string path,
-            Book.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IBookInternal item,
-            string path,
-            out Book.ErrorMask errorMask,
-            Book.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IBookInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Book.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IBookInternal item,
-            Stream stream,
-            Book.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IBookInternal item,
-            Stream stream,
-            out Book.ErrorMask errorMask,
-            Book.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IBookInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Book.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1689,7 +1428,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -2028,7 +1767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Book_FieldIndex.PutDownSound:
                     return typeof(FormLinkNullable<SoundDescriptor>);
                 case Book_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Book_FieldIndex.Flags:
                     return typeof(Book.Flag);
                 case Book_FieldIndex.Type:
@@ -2044,7 +1783,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Book_FieldIndex.InventoryArt:
                     return typeof(FormLinkNullable<Static>);
                 case Book_FieldIndex.Description:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Book_FieldIndex.DATADataTypeState:
                     return typeof(Book.DATADataType);
                 default:
@@ -2052,7 +1791,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(BookXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.BOOK;
         public static readonly Type BinaryWriteTranslation = typeof(BookBinaryWriteTranslation);
         #region Interface
@@ -2127,86 +1865,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IBookInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IBookInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IBookInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    BookXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Book)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Book)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2534,7 +2192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Book_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Book_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Book_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Book_FieldIndex)((int)index);
@@ -2555,7 +2213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Book_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Book_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Book_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Book_FieldIndex)((int)index);
@@ -3136,781 +2794,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class BookXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static BookXmlWriteTranslation Instance = new BookXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IBookGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.VirtualMachineAdapter != null)
-                && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.VirtualMachineAdapter) ?? true))
-            {
-                if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
-                {
-                    ((VirtualMachineAdapterXmlWriteTranslation)((IXmlItem)VirtualMachineAdapterItem).XmlWriteTranslator).Write(
-                        item: VirtualMachineAdapterItem,
-                        node: node,
-                        name: nameof(item.VirtualMachineAdapter),
-                        fieldIndex: (int)Book_FieldIndex.VirtualMachineAdapter,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.VirtualMachineAdapter));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.ObjectBounds) ?? true))
-            {
-                var ObjectBoundsItem = item.ObjectBounds;
-                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    node: node,
-                    name: nameof(item.ObjectBounds),
-                    fieldIndex: (int)Book_FieldIndex.ObjectBounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.ObjectBounds));
-            }
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Book_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((item.Model != null)
-                && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.Model) ?? true))
-            {
-                if (item.Model.TryGet(out var ModelItem))
-                {
-                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                        item: ModelItem,
-                        node: node,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)Book_FieldIndex.Model,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.Model));
-                }
-            }
-            if ((item.Icons != null)
-                && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.Icons) ?? true))
-            {
-                if (item.Icons.TryGet(out var IconsItem))
-                {
-                    ((IconsXmlWriteTranslation)((IXmlItem)IconsItem).XmlWriteTranslator).Write(
-                        item: IconsItem,
-                        node: node,
-                        name: nameof(item.Icons),
-                        fieldIndex: (int)Book_FieldIndex.Icons,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.Icons));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.BookText) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BookText),
-                    item: item.BookText,
-                    fieldIndex: (int)Book_FieldIndex.BookText,
-                    errorMask: errorMask);
-            }
-            if ((item.Destructible != null)
-                && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.Destructible) ?? true))
-            {
-                if (item.Destructible.TryGet(out var DestructibleItem))
-                {
-                    ((DestructibleXmlWriteTranslation)((IXmlItem)DestructibleItem).XmlWriteTranslator).Write(
-                        item: DestructibleItem,
-                        node: node,
-                        name: nameof(item.Destructible),
-                        fieldIndex: (int)Book_FieldIndex.Destructible,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.Destructible));
-                }
-            }
-            if ((item.PickUpSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.PickUpSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PickUpSound),
-                    item: item.PickUpSound.FormKey,
-                    fieldIndex: (int)Book_FieldIndex.PickUpSound,
-                    errorMask: errorMask);
-            }
-            if ((item.PutDownSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.PutDownSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PutDownSound),
-                    item: item.PutDownSound.FormKey,
-                    fieldIndex: (int)Book_FieldIndex.PutDownSound,
-                    errorMask: errorMask);
-            }
-            if ((item.Keywords != null)
-                && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.Keywords) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IKeywordGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Keywords),
-                    item: item.Keywords,
-                    fieldIndex: (int)Book_FieldIndex.Keywords,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.Keywords),
-                    transl: (XElement subNode, IFormLink<IKeywordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Book.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Book_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Type) ?? true))
-            {
-                EnumXmlTranslation<Book.BookType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)Book_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Unused) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unused),
-                    item: item.Unused,
-                    fieldIndex: (int)Book_FieldIndex.Unused,
-                    errorMask: errorMask);
-            }
-            if ((item.Teaches != null)
-                && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.Teaches) ?? true))
-            {
-                if (item.Teaches.TryGet(out var TeachesItem))
-                {
-                    ((BookTeachTargetXmlWriteTranslation)((IXmlItem)TeachesItem).XmlWriteTranslator).Write(
-                        item: TeachesItem,
-                        node: node,
-                        name: nameof(item.Teaches),
-                        fieldIndex: (int)Book_FieldIndex.Teaches,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.Teaches));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Value) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Value),
-                    item: item.Value,
-                    fieldIndex: (int)Book_FieldIndex.Value,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Weight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Weight),
-                    item: item.Weight,
-                    fieldIndex: (int)Book_FieldIndex.Weight,
-                    errorMask: errorMask);
-            }
-            if ((item.InventoryArt.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.InventoryArt) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.InventoryArt),
-                    item: item.InventoryArt.FormKey,
-                    fieldIndex: (int)Book_FieldIndex.InventoryArt,
-                    errorMask: errorMask);
-            }
-            if ((item.Description != null)
-                && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.Description) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Description),
-                    item: item.Description,
-                    fieldIndex: (int)Book_FieldIndex.Description,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Book.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Book_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IBookGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Book");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Book");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IBookGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IBookGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IBookGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class BookXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static BookXmlCreateTranslation Instance = new BookXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IBookInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    BookXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IBookInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "VirtualMachineAdapter":
-                    errorMask?.PushIndex((int)Book_FieldIndex.VirtualMachineAdapter);
-                    try
-                    {
-                        item.VirtualMachineAdapter = LoquiXmlTranslation<VirtualMachineAdapter>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.VirtualMachineAdapter));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ObjectBounds":
-                    errorMask?.PushIndex((int)Book_FieldIndex.ObjectBounds);
-                    try
-                    {
-                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.ObjectBounds));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Name":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Model);
-                    try
-                    {
-                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.Model));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Icons":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Icons);
-                    try
-                    {
-                        item.Icons = LoquiXmlTranslation<Icons>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.Icons));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BookText":
-                    errorMask?.PushIndex((int)Book_FieldIndex.BookText);
-                    try
-                    {
-                        item.BookText = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Destructible":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Destructible);
-                    try
-                    {
-                        item.Destructible = LoquiXmlTranslation<Destructible>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.Destructible));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PickUpSound":
-                    errorMask?.PushIndex((int)Book_FieldIndex.PickUpSound);
-                    try
-                    {
-                        item.PickUpSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PutDownSound":
-                    errorMask?.PushIndex((int)Book_FieldIndex.PutDownSound);
-                    try
-                    {
-                        item.PutDownSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Keywords":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Keywords);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
-                            node: node,
-                            enumer: out var KeywordsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Keywords = KeywordsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Keywords = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Book.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Type":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Type);
-                    try
-                    {
-                        item.Type = EnumXmlTranslation<Book.BookType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unused":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Unused);
-                    try
-                    {
-                        item.Unused = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Teaches":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Teaches);
-                    try
-                    {
-                        item.Teaches = LoquiXmlTranslation<BookTeachTarget>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.Teaches));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Value":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Value);
-                    try
-                    {
-                        item.Value = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weight":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Weight);
-                    try
-                    {
-                        item.Weight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "InventoryArt":
-                    errorMask?.PushIndex((int)Book_FieldIndex.InventoryArt);
-                    try
-                    {
-                        item.InventoryArt = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Description":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Description);
-                    try
-                    {
-                        item.Description = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Book_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Book.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class BookXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IBookGetter item,
-            XElement node,
-            out Book.ErrorMask errorMask,
-            Book.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((BookXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Book.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IBookGetter item,
-            string path,
-            out Book.ErrorMask errorMask,
-            Book.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IBookGetter item,
-            Stream stream,
-            out Book.ErrorMask errorMask,
-            Book.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -4055,7 +2938,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
         }
 
         public void Write(
@@ -4071,10 +2955,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -4127,9 +3013,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IBookInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -4140,12 +3027,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.VirtualMachineAdapter);
+                    return (int)Book_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.ObjectBounds);
+                    return (int)Book_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -4154,21 +3041,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Name);
+                    return (int)Book_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Model);
+                    return (int)Book_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Icons);
+                    return (int)Book_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -4177,7 +3064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.BookText);
+                    return (int)Book_FieldIndex.BookText;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -4186,7 +3073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Destructible);
+                    return (int)Book_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.YNAM:
                 {
@@ -4194,7 +3081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PickUpSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.PickUpSound);
+                    return (int)Book_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
@@ -4202,7 +3089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PutDownSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.PutDownSound);
+                    return (int)Book_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -4214,8 +3101,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Keywords);
+                        .CastExtendedList<IFormLink<Keyword>>();
+                    return (int)Book_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -4231,7 +3118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: item);
                     item.Value = dataFrame.ReadUInt32();
                     item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Weight);
+                    return (int)Book_FieldIndex.Weight;
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -4239,20 +3126,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.InventoryArt = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.InventoryArt);
+                    return (int)Book_FieldIndex.InventoryArt;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Description);
+                    return (int)Book_FieldIndex.Description;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -4307,21 +3196,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => BookXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((BookXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => BookBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -4357,12 +3231,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region PickUpSound
         private int? _PickUpSoundLocation;
         public bool PickUpSound_IsSet => _PickUpSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
         public bool PutDownSound_IsSet => _PutDownSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
         private int? _DATALocation;
@@ -4393,16 +3267,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Weight
         private int _WeightLocation => _DATALocation!.Value + 0xC;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
+        public Single Weight => _Weight_IsSet ? _data.Slice(_WeightLocation, 4).Float() : default;
         #endregion
         #region InventoryArt
         private int? _InventoryArtLocation;
         public bool InventoryArt_IsSet => _InventoryArtLocation.HasValue;
-        public IFormLinkNullable<IStaticGetter> InventoryArt => _InventoryArtLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _InventoryArtLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        public IFormLinkNullable<IStaticGetter> InventoryArt => _InventoryArtLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InventoryArtLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public TranslatedString? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -4429,8 +3303,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new BookBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -4456,12 +3331,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -4470,17 +3346,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.VirtualMachineAdapter);
+                    return (int)Book_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.ObjectBounds);
+                    return (int)Book_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Name);
+                    return (int)Book_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -4488,7 +3364,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Model);
+                    return (int)Book_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -4496,12 +3372,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Icons);
+                    return (int)Book_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _BookTextLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.BookText);
+                    return (int)Book_FieldIndex.BookText;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -4511,22 +3387,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Destructible);
+                    return (int)Book_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     _PickUpSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.PickUpSound);
+                    return (int)Book_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     _PutDownSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.PutDownSound);
+                    return (int)Book_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -4534,22 +3410,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Keywords);
+                    return (int)Book_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Weight);
+                    return (int)Book_FieldIndex.Weight;
                 }
                 case RecordTypeInts.INAM:
                 {
                     _InventoryArtLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.InventoryArt);
+                    return (int)Book_FieldIndex.InventoryArt;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Description);
+                    return (int)Book_FieldIndex.Description;
                 }
                 default:
                     return base.FillRecordType(
@@ -4557,7 +3433,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -145,135 +139,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => GrassXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((GrassXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Grass CreateFromXml(
-            XElement node,
-            Grass.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Grass CreateFromXml(
-            XElement node,
-            out Grass.ErrorMask errorMask,
-            Grass.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Grass.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Grass CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Grass();
-            ((GrassSetterCommon)((IGrassGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Grass CreateFromXml(
-            string path,
-            Grass.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Grass CreateFromXml(
-            string path,
-            out Grass.ErrorMask errorMask,
-            Grass.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Grass CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Grass.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Grass CreateFromXml(
-            Stream stream,
-            Grass.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Grass CreateFromXml(
-            Stream stream,
-            out Grass.ErrorMask errorMask,
-            Grass.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Grass CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Grass.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -305,7 +170,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -328,7 +193,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -982,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Grass_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Grass_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => GrassCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1113,11 +978,10 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         ILoquiObject<IGrassGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Grass_Registration.Instance;
+        static new ILoquiRegistration Registration => Grass_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         IModelGetter? Model { get; }
         Byte Density { get; }
@@ -1268,131 +1132,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IGrassInternal item,
-            XElement node,
-            Grass.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IGrassInternal item,
-            XElement node,
-            out Grass.ErrorMask errorMask,
-            Grass.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Grass.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IGrassInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((GrassSetterCommon)((IGrassGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IGrassInternal item,
-            string path,
-            Grass.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IGrassInternal item,
-            string path,
-            out Grass.ErrorMask errorMask,
-            Grass.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IGrassInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Grass.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IGrassInternal item,
-            Stream stream,
-            Grass.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IGrassInternal item,
-            Stream stream,
-            out Grass.ErrorMask errorMask,
-            Grass.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IGrassInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Grass.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1430,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1756,7 +1495,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(GrassXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.GRAS;
         public static readonly Type BinaryWriteTranslation = typeof(GrassBinaryWriteTranslation);
         #region Interface
@@ -1828,86 +1566,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IGrassInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IGrassInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IGrassInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    GrassXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Grass)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Grass)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2156,7 +1814,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Grass_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Grass_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Grass_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Grass_FieldIndex)((int)index);
@@ -2177,7 +1835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Grass_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Grass_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Grass_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Grass_FieldIndex)((int)index);
@@ -2562,652 +2220,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class GrassXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static GrassXmlWriteTranslation Instance = new GrassXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IGrassGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.ObjectBounds) ?? true))
-            {
-                var ObjectBoundsItem = item.ObjectBounds;
-                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    node: node,
-                    name: nameof(item.ObjectBounds),
-                    fieldIndex: (int)Grass_FieldIndex.ObjectBounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.ObjectBounds));
-            }
-            if ((item.Model != null)
-                && (translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
-            {
-                if (item.Model.TryGet(out var ModelItem))
-                {
-                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                        item: ModelItem,
-                        node: node,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)Grass_FieldIndex.Model,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.Model));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Density) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Density),
-                    item: item.Density,
-                    fieldIndex: (int)Grass_FieldIndex.Density,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.MinSlope) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MinSlope),
-                    item: item.MinSlope,
-                    fieldIndex: (int)Grass_FieldIndex.MinSlope,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.MaxSlope) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaxSlope),
-                    item: item.MaxSlope,
-                    fieldIndex: (int)Grass_FieldIndex.MaxSlope,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Unknown) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)Grass_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitsFromWater) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.UnitsFromWater),
-                    item: item.UnitsFromWater,
-                    fieldIndex: (int)Grass_FieldIndex.UnitsFromWater,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Unknown2) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown2),
-                    item: item.Unknown2,
-                    fieldIndex: (int)Grass_FieldIndex.Unknown2,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitsFromWaterType) ?? true))
-            {
-                EnumXmlTranslation<Grass.UnitsFromWaterTypeEnum>.Instance.Write(
-                    node: node,
-                    name: nameof(item.UnitsFromWaterType),
-                    item: item.UnitsFromWaterType,
-                    fieldIndex: (int)Grass_FieldIndex.UnitsFromWaterType,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.PositionRange) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PositionRange),
-                    item: item.PositionRange,
-                    fieldIndex: (int)Grass_FieldIndex.PositionRange,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.HeightRange) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HeightRange),
-                    item: item.HeightRange,
-                    fieldIndex: (int)Grass_FieldIndex.HeightRange,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.ColorRange) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ColorRange),
-                    item: item.ColorRange,
-                    fieldIndex: (int)Grass_FieldIndex.ColorRange,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.WavePeriod) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WavePeriod),
-                    item: item.WavePeriod,
-                    fieldIndex: (int)Grass_FieldIndex.WavePeriod,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Grass.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Grass_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Unknown3) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown3),
-                    item: item.Unknown3,
-                    fieldIndex: (int)Grass_FieldIndex.Unknown3,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Grass.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Grass_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IGrassGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Grass");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Grass");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IGrassGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IGrassGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IGrassGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class GrassXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static GrassXmlCreateTranslation Instance = new GrassXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IGrassInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    GrassXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IGrassInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "ObjectBounds":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.ObjectBounds);
-                    try
-                    {
-                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.ObjectBounds));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.Model);
-                    try
-                    {
-                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.Model));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Density":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.Density);
-                    try
-                    {
-                        item.Density = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MinSlope":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.MinSlope);
-                    try
-                    {
-                        item.MinSlope = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaxSlope":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.MaxSlope);
-                    try
-                    {
-                        item.MaxSlope = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.Unknown);
-                    try
-                    {
-                        item.Unknown = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnitsFromWater":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.UnitsFromWater);
-                    try
-                    {
-                        item.UnitsFromWater = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown2":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.Unknown2);
-                    try
-                    {
-                        item.Unknown2 = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnitsFromWaterType":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.UnitsFromWaterType);
-                    try
-                    {
-                        item.UnitsFromWaterType = EnumXmlTranslation<Grass.UnitsFromWaterTypeEnum>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PositionRange":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.PositionRange);
-                    try
-                    {
-                        item.PositionRange = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HeightRange":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.HeightRange);
-                    try
-                    {
-                        item.HeightRange = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ColorRange":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.ColorRange);
-                    try
-                    {
-                        item.ColorRange = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WavePeriod":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.WavePeriod);
-                    try
-                    {
-                        item.WavePeriod = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Grass.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown3":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.Unknown3);
-                    try
-                    {
-                        item.Unknown3 = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            fallbackLength: 3,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Grass_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Grass.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class GrassXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IGrassGetter item,
-            XElement node,
-            out Grass.ErrorMask errorMask,
-            Grass.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((GrassXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Grass.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IGrassGetter item,
-            string path,
-            out Grass.ErrorMask errorMask,
-            Grass.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IGrassGetter item,
-            Stream stream,
-            out Grass.ErrorMask errorMask,
-            Grass.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3294,10 +2306,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -3350,9 +2364,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IGrassInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3363,14 +2378,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.ObjectBounds);
+                    return (int)Grass_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
+                    return (int)Grass_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3389,12 +2404,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.WavePeriod = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.Flags = EnumBinaryTranslation<Grass.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Unknown3);
+                    return (int)Grass_FieldIndex.Unknown3;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3440,21 +2456,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => GrassCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GrassCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GrassCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => GrassXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((GrassXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GrassBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -3513,22 +2514,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region PositionRange
         private int _PositionRangeLocation => _DATALocation!.Value + 0xC;
         private bool _PositionRange_IsSet => _DATALocation.HasValue;
-        public Single PositionRange => _PositionRange_IsSet ? SpanExt.GetFloat(_data.Slice(_PositionRangeLocation, 4)) : default;
+        public Single PositionRange => _PositionRange_IsSet ? _data.Slice(_PositionRangeLocation, 4).Float() : default;
         #endregion
         #region HeightRange
         private int _HeightRangeLocation => _DATALocation!.Value + 0x10;
         private bool _HeightRange_IsSet => _DATALocation.HasValue;
-        public Single HeightRange => _HeightRange_IsSet ? SpanExt.GetFloat(_data.Slice(_HeightRangeLocation, 4)) : default;
+        public Single HeightRange => _HeightRange_IsSet ? _data.Slice(_HeightRangeLocation, 4).Float() : default;
         #endregion
         #region ColorRange
         private int _ColorRangeLocation => _DATALocation!.Value + 0x14;
         private bool _ColorRange_IsSet => _DATALocation.HasValue;
-        public Single ColorRange => _ColorRange_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorRangeLocation, 4)) : default;
+        public Single ColorRange => _ColorRange_IsSet ? _data.Slice(_ColorRangeLocation, 4).Float() : default;
         #endregion
         #region WavePeriod
         private int _WavePeriodLocation => _DATALocation!.Value + 0x18;
         private bool _WavePeriod_IsSet => _DATALocation.HasValue;
-        public Single WavePeriod => _WavePeriod_IsSet ? SpanExt.GetFloat(_data.Slice(_WavePeriodLocation, 4)) : default;
+        public Single WavePeriod => _WavePeriod_IsSet ? _data.Slice(_WavePeriodLocation, 4).Float() : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0x1C;
@@ -3565,8 +2566,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new GrassBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3592,12 +2594,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3606,7 +2609,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.ObjectBounds);
+                    return (int)Grass_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3614,12 +2617,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
+                    return (int)Grass_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Unknown3);
+                    return (int)Grass_FieldIndex.Unknown3;
                 }
                 default:
                     return base.FillRecordType(
@@ -3627,7 +2630,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

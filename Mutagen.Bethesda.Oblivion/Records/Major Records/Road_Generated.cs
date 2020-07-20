@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -51,8 +45,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RoadPoint>? _Points;
-        public ExtendedList<RoadPoint>? Points
+        private IExtendedList<RoadPoint>? _Points;
+        public IExtendedList<RoadPoint>? Points
         {
             get => this._Points;
             set => this._Points = value;
@@ -93,135 +87,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => RoadXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((RoadXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Road CreateFromXml(
-            XElement node,
-            Road.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Road CreateFromXml(
-            XElement node,
-            out Road.ErrorMask errorMask,
-            Road.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Road.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Road CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Road();
-            ((RoadSetterCommon)((IRoadGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Road CreateFromXml(
-            string path,
-            Road.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Road CreateFromXml(
-            string path,
-            out Road.ErrorMask errorMask,
-            Road.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Road CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Road.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Road CreateFromXml(
-            Stream stream,
-            Road.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Road CreateFromXml(
-            Stream stream,
-            out Road.ErrorMask errorMask,
-            Road.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Road CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Road.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
@@ -238,14 +103,14 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem OblivionMajorRecordFlags,
                 TItem Points)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
@@ -568,7 +433,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Road_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Road_Registration.TriggeringRecordType;
         public Road(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -657,7 +522,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IRoadInternal>
     {
-        new ExtendedList<RoadPoint>? Points { get; set; }
+        new IExtendedList<RoadPoint>? Points { get; set; }
     }
 
     public partial interface IRoadInternal :
@@ -670,10 +535,9 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRoadGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IRoadGetter>,
-        IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Road_Registration.Instance;
+        static new ILoquiRegistration Registration => Road_Registration.Instance;
         IReadOnlyList<IRoadPointGetter>? Points { get; }
 
     }
@@ -809,131 +673,6 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IRoadInternal item,
-            XElement node,
-            Road.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IRoadInternal item,
-            XElement node,
-            out Road.ErrorMask errorMask,
-            Road.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Road.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IRoadInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((RoadSetterCommon)((IRoadGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRoadInternal item,
-            string path,
-            Road.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRoadInternal item,
-            string path,
-            out Road.ErrorMask errorMask,
-            Road.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRoadInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Road.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IRoadInternal item,
-            Stream stream,
-            Road.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRoadInternal item,
-            Stream stream,
-            out Road.ErrorMask errorMask,
-            Road.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRoadInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Road.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -971,7 +710,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         OblivionMajorRecordFlags = 4,
         Points = 5,
@@ -1109,13 +848,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Road_FieldIndex.Points:
-                    return typeof(ExtendedList<RoadPoint>);
+                    return typeof(IExtendedList<RoadPoint>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(RoadXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.ROAD;
         public static readonly Type BinaryWriteTranslation = typeof(RoadBinaryWriteTranslation);
         #region Interface
@@ -1172,86 +910,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IRoadInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IRoadInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IRoadInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    RoadXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IOblivionMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Road)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Road)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1424,7 +1082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Road_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (Road_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
+                case OblivionMajorRecord_FieldIndex.VersionControl:
                     return (Road_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Road_FieldIndex)((int)index);
@@ -1443,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Road_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Road_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Road_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Road_FieldIndex)((int)index);
@@ -1716,259 +1374,6 @@ namespace Mutagen.Bethesda.Oblivion
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public partial class RoadXmlWriteTranslation :
-        OblivionMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static RoadXmlWriteTranslation Instance = new RoadXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IRoadGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Points != null)
-                && (translationMask?.GetShouldTranslate((int)Road_FieldIndex.Points) ?? true))
-            {
-                ListXmlTranslation<IRoadPointGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Points),
-                    item: item.Points,
-                    fieldIndex: (int)Road_FieldIndex.Points,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Road_FieldIndex.Points),
-                    transl: (XElement subNode, IRoadPointGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((RoadPointXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IRoadGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Road");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Road");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IRoadGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IRoadGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IRoadGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class RoadXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
-    {
-        public new readonly static RoadXmlCreateTranslation Instance = new RoadXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IRoadInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RoadXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IRoadInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Points":
-                    errorMask?.PushIndex((int)Road_FieldIndex.Points);
-                    try
-                    {
-                        if (ListXmlTranslation<RoadPoint>.Instance.Parse(
-                            node: node,
-                            enumer: out var PointsItem,
-                            transl: LoquiXmlTranslation<RoadPoint>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Points = PointsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Points = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    OblivionMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Oblivion
-{
-    #region Xml Write Mixins
-    public static class RoadXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IRoadGetter item,
-            XElement node,
-            out Road.ErrorMask errorMask,
-            Road.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((RoadXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Road.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IRoadGetter item,
-            string path,
-            out Road.ErrorMask errorMask,
-            Road.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IRoadGetter item,
-            Stream stream,
-            out Road.ErrorMask errorMask,
-            Road.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -2018,10 +1423,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -2074,9 +1481,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRoadInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2089,12 +1497,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     RoadBinaryCreateTranslation.FillBinaryPointsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)Road_FieldIndex.Points);
+                    return (int)Road_FieldIndex.Points;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -2138,21 +1547,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadGetter)rhs, include);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => RoadXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((RoadXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RoadBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2198,8 +1592,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new RoadBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2225,12 +1620,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2244,7 +1640,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)Road_FieldIndex.Points);
+                    return (int)Road_FieldIndex.Points;
                 }
                 default:
                     return base.FillRecordType(
@@ -2252,7 +1648,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

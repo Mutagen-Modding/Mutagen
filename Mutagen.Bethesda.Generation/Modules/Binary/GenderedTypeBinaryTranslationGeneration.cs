@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor readerAccessor,
             Accessor itemAccessor,
-            Accessor errorMaskAccessor, 
+            Accessor errorMaskAccessor,
             Accessor translationAccessor)
         {
             GenderedType gender = typeGen as GenderedType;
@@ -89,17 +89,49 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"maleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}MaleConverter");
                 }
-                if (loqui != null)
+
+                bool needsRecordConv = gender.SubTypeGeneration.NeedsRecordConverter();
+                if (subTransl.AllowDirectParse(objGen, gender.SubTypeGeneration, false))
                 {
-                    args.Add($"transl: {loqui.ObjectTypeName}{loqui.GenericTypes(getter: false)}.TryCreateFromBinary");
+                    if (loqui != null)
+                    {
+                        args.Add($"transl: {loqui.ObjectTypeName}{loqui.GenericTypes(getter: false)}.TryCreateFromBinary");
+                    }
+                    else
+                    {
+                        args.Add($"transl: {subTransl.GetTranslatorInstance(gender.SubTypeGeneration, getter: false)}.Parse");
+                        if (gender.ItemHasBeenSet)
+                        {
+                            args.Add($"skipMarker: false");
+                        }
+                    }
                 }
                 else
                 {
-                    args.Add($"transl: {subTransl.GetTranslatorInstance(gender.SubTypeGeneration, getter: false)}.Parse");
-                    if (gender.ItemHasBeenSet)
+                    args.Add(gen =>
                     {
-                        args.Add($"skipMarker: false");
-                    }
+                        gen.AppendLine($"transl: (MutagenFrame r, out {gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} genSubItem{(needsRecordConv ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                        using (new BraceWrapper(gen))
+                        {
+                            subTransl.GenerateCopyInRet(
+                                fg: gen,
+                                objGen: objGen,
+                                targetGen: gender.SubTypeGeneration,
+                                typeGen: gender.SubTypeGeneration,
+                                readerAccessor: "r",
+                                translationAccessor: null,
+                                retAccessor: "return ",
+                                outItemAccessor: new Accessor("genSubItem"),
+                                asyncMode: AsyncMode.Off,
+                                errorMaskAccessor: "listErrMask",
+                                converterAccessor: "conv",
+                                inline: false);
+                        }
+                        if (gender.ItemHasBeenSet)
+                        {
+                            args.Add($"skipMarker: false");
+                        }
+                    });
                 }
                 if (notNull)
                 {
@@ -109,14 +141,14 @@ namespace Mutagen.Bethesda.Generation
         }
 
         public override void GenerateCopyInRet(
-            FileGeneration fg, 
+            FileGeneration fg,
             ObjectGeneration objGen,
-            TypeGeneration targetGen, 
+            TypeGeneration targetGen,
             TypeGeneration typeGen,
-            Accessor readerAccessor, 
+            Accessor readerAccessor,
             AsyncMode asyncMode,
-            Accessor retAccessor, 
-            Accessor outItemAccessor, 
+            Accessor retAccessor,
+            Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor,
             Accessor converterAccessor,
@@ -126,11 +158,11 @@ namespace Mutagen.Bethesda.Generation
         }
 
         public override void GenerateWrite(
-            FileGeneration fg, 
-            ObjectGeneration objGen, 
-            TypeGeneration typeGen, 
-            Accessor writerAccessor, 
-            Accessor itemAccessor, 
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor writerAccessor,
+            Accessor itemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor,
             Accessor converterAccessor)
@@ -279,7 +311,7 @@ namespace Mutagen.Bethesda.Generation
             else if (!data.HasTrigger
                 && !gendered.ItemHasBeenSet)
             {
-                var subLen = (await subBin.ExpectedLength(objGen, gendered.SubTypeGeneration)).Value; 
+                var subLen = (await subBin.ExpectedLength(objGen, gendered.SubTypeGeneration)).Value;
                 if (dataType == null)
                 {
                     if (data.HasTrigger)

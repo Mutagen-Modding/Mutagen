@@ -61,12 +61,6 @@ namespace Mutagen.Bethesda.Skyrim
             NonPlayable = 0x02,
             NonBolt = 0x04,
         }
-
-        public float Weight
-        {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
-        }
     }
 
     namespace Internals
@@ -81,8 +75,6 @@ namespace Mutagen.Bethesda.Skyrim
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             TranslatedString ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
             #endregion
-
-            public float Weight => throw new NotImplementedException();
         }
     }
 }

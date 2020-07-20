@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Binary
             T? maleObj = null, femaleObj = null;
             for (int i = 0; i < 2; i++)
             {
-                var subHeader = package.MetaData.Constants.GetSubrecord(stream);
+                var subHeader = stream.GetSubrecord();
                 var recType = subHeader.RecordType;
                 if (maleRecordConverter.ToConversions.TryGetValue(recType, out var _))
                 {
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Binary
             where T : class
         {
             int? maleLoc = null, femaleLoc = null;
-            var find = UtilityTranslation.FindNextSubrecords(stream.RemainingSpan, package.MetaData.Constants, out var lenParsed, male, female);
+            var find = UtilityTranslation.FindNextSubrecords(stream.RemainingMemory, package.MetaData.Constants, out var lenParsed, male, female);
             if (find[0] != null)
             {
                 maleLoc = find[0];
@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Binary
             where T : notnull
         {
             int? maleLoc = null, femaleLoc = null;
-            var find = UtilityTranslation.FindNextSubrecords(stream.RemainingSpan, package.MetaData.Constants, out var lenParsed, male, female);
+            var find = UtilityTranslation.FindNextSubrecords(stream.RemainingMemory, package.MetaData.Constants, out var lenParsed, male, female);
             if (find[0] != null)
             {
                 maleLoc = find[0];

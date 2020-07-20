@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -153,135 +147,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ImpactXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ImpactXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Impact CreateFromXml(
-            XElement node,
-            Impact.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Impact CreateFromXml(
-            XElement node,
-            out Impact.ErrorMask errorMask,
-            Impact.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Impact.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Impact CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Impact();
-            ((ImpactSetterCommon)((IImpactGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Impact CreateFromXml(
-            string path,
-            Impact.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Impact CreateFromXml(
-            string path,
-            out Impact.ErrorMask errorMask,
-            Impact.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Impact CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Impact.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Impact CreateFromXml(
-            Stream stream,
-            Impact.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Impact CreateFromXml(
-            Stream stream,
-            out Impact.ErrorMask errorMask,
-            Impact.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Impact CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Impact.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -313,7 +178,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -336,7 +201,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -990,7 +855,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Impact_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Impact_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ImpactCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1119,11 +984,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IModeledGetter,
         ILoquiObject<IImpactGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Impact_Registration.Instance;
+        static new ILoquiRegistration Registration => Impact_Registration.Instance;
         IModelGetter? Model { get; }
         Single Duration { get; }
         Impact.OrientationType Orientation { get; }
@@ -1274,131 +1138,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IImpactInternal item,
-            XElement node,
-            Impact.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IImpactInternal item,
-            XElement node,
-            out Impact.ErrorMask errorMask,
-            Impact.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Impact.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IImpactInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ImpactSetterCommon)((IImpactGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IImpactInternal item,
-            string path,
-            Impact.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IImpactInternal item,
-            string path,
-            out Impact.ErrorMask errorMask,
-            Impact.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IImpactInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Impact.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IImpactInternal item,
-            Stream stream,
-            Impact.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IImpactInternal item,
-            Stream stream,
-            out Impact.ErrorMask errorMask,
-            Impact.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IImpactInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Impact.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1436,7 +1175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1762,7 +1501,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ImpactXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.IPCT;
         public static readonly Type BinaryWriteTranslation = typeof(ImpactBinaryWriteTranslation);
         #region Interface
@@ -1834,86 +1572,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IImpactInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IImpactInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IImpactInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    ImpactXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Impact)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Impact)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2180,7 +1838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Impact_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Impact_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Impact_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Impact_FieldIndex)((int)index);
@@ -2201,7 +1859,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Impact_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Impact_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Impact_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Impact_FieldIndex)((int)index);
@@ -2628,659 +2286,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class ImpactXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static ImpactXmlWriteTranslation Instance = new ImpactXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IImpactGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Model != null)
-                && (translationMask?.GetShouldTranslate((int)Impact_FieldIndex.Model) ?? true))
-            {
-                if (item.Model.TryGet(out var ModelItem))
-                {
-                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                        item: ModelItem,
-                        node: node,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)Impact_FieldIndex.Model,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Impact_FieldIndex.Model));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Impact_FieldIndex.Duration) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Duration),
-                    item: item.Duration,
-                    fieldIndex: (int)Impact_FieldIndex.Duration,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Impact_FieldIndex.Orientation) ?? true))
-            {
-                EnumXmlTranslation<Impact.OrientationType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Orientation),
-                    item: item.Orientation,
-                    fieldIndex: (int)Impact_FieldIndex.Orientation,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Impact_FieldIndex.AngleThreshold) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AngleThreshold),
-                    item: item.AngleThreshold,
-                    fieldIndex: (int)Impact_FieldIndex.AngleThreshold,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Impact_FieldIndex.PlacementRadius) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PlacementRadius),
-                    item: item.PlacementRadius,
-                    fieldIndex: (int)Impact_FieldIndex.PlacementRadius,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Impact_FieldIndex.SoundLevel) ?? true))
-            {
-                EnumXmlTranslation<SoundLevel>.Instance.Write(
-                    node: node,
-                    name: nameof(item.SoundLevel),
-                    item: item.SoundLevel,
-                    fieldIndex: (int)Impact_FieldIndex.SoundLevel,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Impact_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Impact.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Impact_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Impact_FieldIndex.Result) ?? true))
-            {
-                EnumXmlTranslation<Impact.ResultType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Result),
-                    item: item.Result,
-                    fieldIndex: (int)Impact_FieldIndex.Result,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Impact_FieldIndex.Unknown) ?? true))
-            {
-                Int16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)Impact_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((item.Decal != null)
-                && (translationMask?.GetShouldTranslate((int)Impact_FieldIndex.Decal) ?? true))
-            {
-                if (item.Decal.TryGet(out var DecalItem))
-                {
-                    ((DecalXmlWriteTranslation)((IXmlItem)DecalItem).XmlWriteTranslator).Write(
-                        item: DecalItem,
-                        node: node,
-                        name: nameof(item.Decal),
-                        fieldIndex: (int)Impact_FieldIndex.Decal,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Impact_FieldIndex.Decal));
-                }
-            }
-            if ((item.TextureSet.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TextureSet),
-                    item: item.TextureSet.FormKey,
-                    fieldIndex: (int)Impact_FieldIndex.TextureSet,
-                    errorMask: errorMask);
-            }
-            if ((item.SecondaryTextureSet.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Impact_FieldIndex.SecondaryTextureSet) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SecondaryTextureSet),
-                    item: item.SecondaryTextureSet.FormKey,
-                    fieldIndex: (int)Impact_FieldIndex.SecondaryTextureSet,
-                    errorMask: errorMask);
-            }
-            if ((item.Sound1.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound1) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Sound1),
-                    item: item.Sound1.FormKey,
-                    fieldIndex: (int)Impact_FieldIndex.Sound1,
-                    errorMask: errorMask);
-            }
-            if ((item.Sound2.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound2) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Sound2),
-                    item: item.Sound2.FormKey,
-                    fieldIndex: (int)Impact_FieldIndex.Sound2,
-                    errorMask: errorMask);
-            }
-            if ((item.Hazard.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Impact_FieldIndex.Hazard) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Hazard),
-                    item: item.Hazard.FormKey,
-                    fieldIndex: (int)Impact_FieldIndex.Hazard,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Impact.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Impact_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IImpactGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Impact");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Impact");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IImpactGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IImpactGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IImpactGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class ImpactXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static ImpactXmlCreateTranslation Instance = new ImpactXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IImpactInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ImpactXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IImpactInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Model":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.Model);
-                    try
-                    {
-                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Impact_FieldIndex.Model));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Duration":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.Duration);
-                    try
-                    {
-                        item.Duration = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Orientation":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.Orientation);
-                    try
-                    {
-                        item.Orientation = EnumXmlTranslation<Impact.OrientationType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AngleThreshold":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.AngleThreshold);
-                    try
-                    {
-                        item.AngleThreshold = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PlacementRadius":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.PlacementRadius);
-                    try
-                    {
-                        item.PlacementRadius = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SoundLevel":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.SoundLevel);
-                    try
-                    {
-                        item.SoundLevel = EnumXmlTranslation<SoundLevel>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Impact.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Result":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.Result);
-                    try
-                    {
-                        item.Result = EnumXmlTranslation<Impact.ResultType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.Unknown);
-                    try
-                    {
-                        item.Unknown = Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Decal":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.Decal);
-                    try
-                    {
-                        item.Decal = LoquiXmlTranslation<Decal>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Impact_FieldIndex.Decal));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TextureSet":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.TextureSet);
-                    try
-                    {
-                        item.TextureSet = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SecondaryTextureSet":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.SecondaryTextureSet);
-                    try
-                    {
-                        item.SecondaryTextureSet = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sound1":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.Sound1);
-                    try
-                    {
-                        item.Sound1 = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sound2":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.Sound2);
-                    try
-                    {
-                        item.Sound2 = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Hazard":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.Hazard);
-                    try
-                    {
-                        item.Hazard = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Impact_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Impact.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class ImpactXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IImpactGetter item,
-            XElement node,
-            out Impact.ErrorMask errorMask,
-            Impact.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ImpactXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Impact.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IImpactGetter item,
-            string path,
-            out Impact.ErrorMask errorMask,
-            Impact.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IImpactGetter item,
-            Stream stream,
-            out Impact.ErrorMask errorMask,
-            Impact.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3386,10 +2391,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -3442,9 +2449,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IImpactInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3457,7 +2465,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Model);
+                    return (int)Impact_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3471,12 +2479,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Flags = EnumBinaryTranslation<Impact.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Result = EnumBinaryTranslation<Impact.ResultType>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Unknown = dataFrame.ReadInt16();
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Unknown);
+                    return (int)Impact_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.DODT:
                 {
                     item.Decal = Mutagen.Bethesda.Skyrim.Decal.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Decal);
+                    return (int)Impact_FieldIndex.Decal;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -3484,7 +2492,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TextureSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.TextureSet);
+                    return (int)Impact_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.ENAM:
                 {
@@ -3492,7 +2500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SecondaryTextureSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.SecondaryTextureSet);
+                    return (int)Impact_FieldIndex.SecondaryTextureSet;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -3500,7 +2508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Sound1 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Sound1);
+                    return (int)Impact_FieldIndex.Sound1;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -3508,7 +2516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Sound2 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Sound2);
+                    return (int)Impact_FieldIndex.Sound2;
                 }
                 case RecordTypeInts.NAM2:
                 {
@@ -3516,12 +2524,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Hazard = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Hazard);
+                    return (int)Impact_FieldIndex.Hazard;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3568,21 +2577,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ImpactXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ImpactXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ImpactBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3600,7 +2594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Duration
         private int _DurationLocation => _DATALocation!.Value;
         private bool _Duration_IsSet => _DATALocation.HasValue;
-        public Single Duration => _Duration_IsSet ? SpanExt.GetFloat(_data.Slice(_DurationLocation, 4)) : default;
+        public Single Duration => _Duration_IsSet ? _data.Slice(_DurationLocation, 4).Float() : default;
         #endregion
         #region Orientation
         private int _OrientationLocation => _DATALocation!.Value + 0x4;
@@ -3610,12 +2604,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AngleThreshold
         private int _AngleThresholdLocation => _DATALocation!.Value + 0x8;
         private bool _AngleThreshold_IsSet => _DATALocation.HasValue;
-        public Single AngleThreshold => _AngleThreshold_IsSet ? SpanExt.GetFloat(_data.Slice(_AngleThresholdLocation, 4)) : default;
+        public Single AngleThreshold => _AngleThreshold_IsSet ? _data.Slice(_AngleThresholdLocation, 4).Float() : default;
         #endregion
         #region PlacementRadius
         private int _PlacementRadiusLocation => _DATALocation!.Value + 0xC;
         private bool _PlacementRadius_IsSet => _DATALocation.HasValue;
-        public Single PlacementRadius => _PlacementRadius_IsSet ? SpanExt.GetFloat(_data.Slice(_PlacementRadiusLocation, 4)) : default;
+        public Single PlacementRadius => _PlacementRadius_IsSet ? _data.Slice(_PlacementRadiusLocation, 4).Float() : default;
         #endregion
         #region SoundLevel
         private int _SoundLevelLocation => _DATALocation!.Value + 0x10;
@@ -3645,27 +2639,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region TextureSet
         private int? _TextureSetLocation;
         public bool TextureSet_IsSet => _TextureSetLocation.HasValue;
-        public IFormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region SecondaryTextureSet
         private int? _SecondaryTextureSetLocation;
         public bool SecondaryTextureSet_IsSet => _SecondaryTextureSetLocation.HasValue;
-        public IFormLinkNullable<ITextureSetGetter> SecondaryTextureSet => _SecondaryTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SecondaryTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullable<ITextureSetGetter> SecondaryTextureSet => _SecondaryTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SecondaryTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region Sound1
         private int? _Sound1Location;
         public bool Sound1_IsSet => _Sound1Location.HasValue;
-        public IFormLinkNullable<ISoundGetter> Sound1 => _Sound1Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _Sound1Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullable<ISoundGetter> Sound1 => _Sound1Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound1Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Sound2
         private int? _Sound2Location;
         public bool Sound2_IsSet => _Sound2Location.HasValue;
-        public IFormLinkNullable<ISoundGetter> Sound2 => _Sound2Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _Sound2Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullable<ISoundGetter> Sound2 => _Sound2Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound2Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Hazard
         private int? _HazardLocation;
         public bool Hazard_IsSet => _HazardLocation.HasValue;
-        public IFormLinkNullable<IHazardGetter> Hazard => _HazardLocation.HasValue ? new FormLinkNullable<IHazardGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HazardLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHazardGetter>.Null;
+        public IFormLinkNullable<IHazardGetter> Hazard => _HazardLocation.HasValue ? new FormLinkNullable<IHazardGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HazardLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHazardGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3692,8 +2686,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new ImpactBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3719,12 +2714,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3736,42 +2732,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Model);
+                    return (int)Impact_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Unknown);
+                    return (int)Impact_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.DODT:
                 {
                     _DecalLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Decal);
+                    return (int)Impact_FieldIndex.Decal;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _TextureSetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.TextureSet);
+                    return (int)Impact_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     _SecondaryTextureSetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.SecondaryTextureSet);
+                    return (int)Impact_FieldIndex.SecondaryTextureSet;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _Sound1Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Sound1);
+                    return (int)Impact_FieldIndex.Sound1;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     _Sound2Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Sound2);
+                    return (int)Impact_FieldIndex.Sound2;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     _HazardLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Hazard);
+                    return (int)Impact_FieldIndex.Hazard;
                 }
                 default:
                     return base.FillRecordType(
@@ -3779,7 +2775,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

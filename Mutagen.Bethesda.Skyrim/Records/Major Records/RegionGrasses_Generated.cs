@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -50,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RegionGrass>? _Grasses;
-        public ExtendedList<RegionGrass>? Grasses
+        private IExtendedList<RegionGrass>? _Grasses;
+        public IExtendedList<RegionGrass>? Grasses
         {
             get => this._Grasses;
             set => this._Grasses = value;
@@ -89,135 +83,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((RegionGrassesCommon)((IRegionGrassesGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => RegionGrassesXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((RegionGrassesXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new RegionGrasses CreateFromXml(
-            XElement node,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static RegionGrasses CreateFromXml(
-            XElement node,
-            out RegionGrasses.ErrorMask errorMask,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RegionGrasses.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static RegionGrasses CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new RegionGrasses();
-            ((RegionGrassesSetterCommon)((IRegionGrassesGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static RegionGrasses CreateFromXml(
-            string path,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static RegionGrasses CreateFromXml(
-            string path,
-            out RegionGrasses.ErrorMask errorMask,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static RegionGrasses CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static RegionGrasses CreateFromXml(
-            Stream stream,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static RegionGrasses CreateFromXml(
-            Stream stream,
-            out RegionGrasses.ErrorMask errorMask,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static RegionGrasses CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -638,17 +503,16 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionData,
         ILoquiObjectSetter<IRegionGrasses>
     {
-        new ExtendedList<RegionGrass>? Grasses { get; set; }
+        new IExtendedList<RegionGrass>? Grasses { get; set; }
     }
 
     public partial interface IRegionGrassesGetter :
         IRegionDataGetter,
         ILoquiObject<IRegionGrassesGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => RegionGrasses_Registration.Instance;
+        static new ILoquiRegistration Registration => RegionGrasses_Registration.Instance;
         IReadOnlyList<IRegionGrassGetter>? Grasses { get; }
 
     }
@@ -783,131 +647,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IRegionGrasses item,
-            XElement node,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IRegionGrasses item,
-            XElement node,
-            out RegionGrasses.ErrorMask errorMask,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RegionGrasses.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionGrasses item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((RegionGrassesSetterCommon)((IRegionGrassesGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionGrasses item,
-            string path,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionGrasses item,
-            string path,
-            out RegionGrasses.ErrorMask errorMask,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionGrasses item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IRegionGrasses item,
-            Stream stream,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionGrasses item,
-            Stream stream,
-            out RegionGrasses.ErrorMask errorMask,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionGrasses item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            RegionGrasses.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1081,13 +820,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case RegionGrasses_FieldIndex.Grasses:
-                    return typeof(ExtendedList<RegionGrass>);
+                    return typeof(IExtendedList<RegionGrass>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(RegionGrassesXmlWriteTranslation);
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1150,47 +888,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IRegionGrasses)item);
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IRegionGrasses item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RegionGrassesXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IRegionData item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (RegionGrasses)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1552,244 +1249,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class RegionGrassesXmlWriteTranslation :
-        RegionDataXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static RegionGrassesXmlWriteTranslation Instance = new RegionGrassesXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IRegionGrassesGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            RegionDataXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Grasses != null)
-                && (translationMask?.GetShouldTranslate((int)RegionGrasses_FieldIndex.Grasses) ?? true))
-            {
-                ListXmlTranslation<IRegionGrassGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Grasses),
-                    item: item.Grasses,
-                    fieldIndex: (int)RegionGrasses_FieldIndex.Grasses,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)RegionGrasses_FieldIndex.Grasses),
-                    transl: (XElement subNode, IRegionGrassGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((RegionGrassXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IRegionGrassesGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.RegionGrasses");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.RegionGrasses");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IRegionGrassesGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IRegionDataGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IRegionGrassesGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class RegionGrassesXmlCreateTranslation : RegionDataXmlCreateTranslation
-    {
-        public new readonly static RegionGrassesXmlCreateTranslation Instance = new RegionGrassesXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IRegionGrasses item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RegionGrassesXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IRegionGrasses item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Grasses":
-                    errorMask?.PushIndex((int)RegionGrasses_FieldIndex.Grasses);
-                    try
-                    {
-                        if (ListXmlTranslation<RegionGrass>.Instance.Parse(
-                            node: node,
-                            enumer: out var GrassesItem,
-                            transl: LoquiXmlTranslation<RegionGrass>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Grasses = GrassesItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Grasses = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    RegionDataXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class RegionGrassesXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IRegionGrassesGetter item,
-            XElement node,
-            out RegionGrasses.ErrorMask errorMask,
-            RegionGrasses.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((RegionGrassesXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RegionGrasses.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IRegionGrassesGetter item,
-            string path,
-            out RegionGrasses.ErrorMask errorMask,
-            RegionGrasses.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IRegionGrassesGetter item,
-            Stream stream,
-            out RegionGrasses.ErrorMask errorMask,
-            RegionGrasses.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -1867,10 +1326,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRegionGrasses item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1885,14 +1345,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionGrass>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: RegionGrass.TryCreateFromBinary)
-                        .ToExtendedList<RegionGrass>();
-                    return TryGet<int?>.Succeed((int)RegionGrasses_FieldIndex.Grasses);
+                        .CastExtendedList<RegionGrass>();
+                    return (int)RegionGrasses_FieldIndex.Grasses;
                 }
                 default:
                     return RegionDataBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -1938,21 +1399,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionGrassesCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassesCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassesCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => RegionGrassesXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((RegionGrassesXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionGrassesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2011,12 +1457,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2026,13 +1473,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Grasses = BinaryOverlayList<RegionGrassBinaryOverlay>.FactoryByStartIndex(
+                    this.Grasses = BinaryOverlayList.FactoryByStartIndex<RegionGrassBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => RegionGrassBinaryOverlay.RegionGrassFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)RegionGrasses_FieldIndex.Grasses);
+                    return (int)RegionGrasses_FieldIndex.Grasses;
                 }
                 default:
                     return base.FillRecordType(
@@ -2040,7 +1487,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

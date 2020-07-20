@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda
         /// Attempts to locate link target's FormKey in given Link Cache.
         /// </summary>
         /// <param name="package">Link Cache to resolve against</param>
-        /// <param name="major">Located FormKey if successful</param>
+        /// <param name="formKey">Located FormKey if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
         public bool TryResolveFormKey(ILinkCache package, [MaybeNullWhen(false)]out FormKey formKey)
         {

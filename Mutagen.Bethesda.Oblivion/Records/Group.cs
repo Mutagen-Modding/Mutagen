@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public partial interface IGroupGetter<out T> : IGroupCommon<T>
-        where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+        where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {
     }
 
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
                 MutagenWriter writer,
                 IGroupGetter<T> item)
-                where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+                where T : class, IOblivionMajorRecordGetter, IBinaryItem
             {
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer,

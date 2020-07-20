@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -50,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Boolean> _Data = new ExtendedList<Boolean>();
-        public ExtendedList<Boolean> Data
+        private IExtendedList<Boolean> _Data = new ExtendedList<Boolean>();
+        public IExtendedList<Boolean> Data
         {
             get => this._Data;
             protected set => this._Data = value;
@@ -89,135 +83,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((ScriptBoolListPropertyCommon)((IScriptBoolListPropertyGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ScriptBoolListPropertyXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ScriptBoolListPropertyXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new ScriptBoolListProperty CreateFromXml(
-            XElement node,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static ScriptBoolListProperty CreateFromXml(
-            XElement node,
-            out ScriptBoolListProperty.ErrorMask errorMask,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptBoolListProperty.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static ScriptBoolListProperty CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new ScriptBoolListProperty();
-            ((ScriptBoolListPropertySetterCommon)((IScriptBoolListPropertyGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static ScriptBoolListProperty CreateFromXml(
-            string path,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ScriptBoolListProperty CreateFromXml(
-            string path,
-            out ScriptBoolListProperty.ErrorMask errorMask,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ScriptBoolListProperty CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static ScriptBoolListProperty CreateFromXml(
-            Stream stream,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ScriptBoolListProperty CreateFromXml(
-            Stream stream,
-            out ScriptBoolListProperty.ErrorMask errorMask,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ScriptBoolListProperty CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -626,16 +491,15 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptProperty,
         ILoquiObjectSetter<IScriptBoolListProperty>
     {
-        new ExtendedList<Boolean> Data { get; }
+        new IExtendedList<Boolean> Data { get; }
     }
 
     public partial interface IScriptBoolListPropertyGetter :
         IScriptPropertyGetter,
         ILoquiObject<IScriptBoolListPropertyGetter>,
-        IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ScriptBoolListProperty_Registration.Instance;
+        static new ILoquiRegistration Registration => ScriptBoolListProperty_Registration.Instance;
         IReadOnlyList<Boolean> Data { get; }
 
     }
@@ -770,131 +634,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IScriptBoolListProperty item,
-            XElement node,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IScriptBoolListProperty item,
-            XElement node,
-            out ScriptBoolListProperty.ErrorMask errorMask,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptBoolListProperty.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptBoolListProperty item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ScriptBoolListPropertySetterCommon)((IScriptBoolListPropertyGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptBoolListProperty item,
-            string path,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptBoolListProperty item,
-            string path,
-            out ScriptBoolListProperty.ErrorMask errorMask,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptBoolListProperty item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IScriptBoolListProperty item,
-            Stream stream,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptBoolListProperty item,
-            Stream stream,
-            out ScriptBoolListProperty.ErrorMask errorMask,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptBoolListProperty item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ScriptBoolListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1068,13 +807,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ScriptBoolListProperty_FieldIndex.Data:
-                    return typeof(ExtendedList<Boolean>);
+                    return typeof(IExtendedList<Boolean>);
                 default:
                     return ScriptProperty_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ScriptBoolListPropertyXmlWriteTranslation);
         public static readonly Type BinaryWriteTranslation = typeof(ScriptBoolListPropertyBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1125,47 +863,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IScriptBoolListProperty)item);
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IScriptBoolListProperty item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ScriptBoolListPropertyXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IScriptProperty item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (ScriptBoolListProperty)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1499,241 +1196,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class ScriptBoolListPropertyXmlWriteTranslation :
-        ScriptPropertyXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static ScriptBoolListPropertyXmlWriteTranslation Instance = new ScriptBoolListPropertyXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IScriptBoolListPropertyGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ScriptPropertyXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)ScriptBoolListProperty_FieldIndex.Data) ?? true))
-            {
-                ListXmlTranslation<Boolean>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Data),
-                    item: item.Data,
-                    fieldIndex: (int)ScriptBoolListProperty_FieldIndex.Data,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ScriptBoolListProperty_FieldIndex.Data),
-                    transl: (XElement subNode, Boolean subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        BooleanXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IScriptBoolListPropertyGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ScriptBoolListProperty");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ScriptBoolListProperty");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IScriptBoolListPropertyGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IScriptPropertyGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IScriptBoolListPropertyGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class ScriptBoolListPropertyXmlCreateTranslation : ScriptPropertyXmlCreateTranslation
-    {
-        public new readonly static ScriptBoolListPropertyXmlCreateTranslation Instance = new ScriptBoolListPropertyXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IScriptBoolListProperty item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ScriptBoolListPropertyXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IScriptBoolListProperty item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Data":
-                    errorMask?.PushIndex((int)ScriptBoolListProperty_FieldIndex.Data);
-                    try
-                    {
-                        if (ListXmlTranslation<Boolean>.Instance.Parse(
-                            node: node,
-                            enumer: out var DataItem,
-                            transl: BooleanXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Data.SetTo(DataItem);
-                        }
-                        else
-                        {
-                            item.Data.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    ScriptPropertyXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class ScriptBoolListPropertyXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IScriptBoolListPropertyGetter item,
-            XElement node,
-            out ScriptBoolListProperty.ErrorMask errorMask,
-            ScriptBoolListProperty.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ScriptBoolListPropertyXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptBoolListProperty.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IScriptBoolListPropertyGetter item,
-            string path,
-            out ScriptBoolListProperty.ErrorMask errorMask,
-            ScriptBoolListProperty.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IScriptBoolListPropertyGetter item,
-            Stream stream,
-            out ScriptBoolListProperty.ErrorMask errorMask,
-            ScriptBoolListProperty.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -1844,21 +1306,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptBoolListPropertyGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ScriptBoolListPropertyXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ScriptBoolListPropertyXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptBoolListPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -1871,7 +1318,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region Data
-        public IReadOnlyList<Boolean> Data => BinaryOverlayList<Boolean>.FactoryByCountLength(_data, _package, 1, countLength: 4, (s, p) => s[0] == 1);
+        public IReadOnlyList<Boolean> Data => BinaryOverlayList.FactoryByCountLength<Boolean>(_data, _package, 1, countLength: 4, (s, p) => s[0] == 1);
         protected int DataEndingPos;
         #endregion
         partial void CustomFactoryEnd(

@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -140,8 +134,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -297,135 +291,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => WeaponXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((WeaponXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Weapon CreateFromXml(
-            XElement node,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Weapon CreateFromXml(
-            XElement node,
-            out Weapon.ErrorMask errorMask,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Weapon.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Weapon CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Weapon();
-            ((WeaponSetterCommon)((IWeaponGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Weapon CreateFromXml(
-            string path,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Weapon CreateFromXml(
-            string path,
-            out Weapon.ErrorMask errorMask,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Weapon CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Weapon CreateFromXml(
-            Stream stream,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Weapon CreateFromXml(
-            Stream stream,
-            out Weapon.ErrorMask errorMask,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Weapon CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -472,7 +337,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -510,7 +375,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -1683,7 +1548,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Weapon_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Weapon_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => WeaponCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1802,7 +1667,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<MaterialType> AlternateBlockMaterial { get; set; }
         new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
         new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new TranslatedString? Description { get; set; }
         new Model? ScopeModel { get; set; }
         new MemorySlice<Byte>? Unused { get; set; }
@@ -1842,11 +1707,10 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         ILoquiObject<IWeaponGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Weapon_Registration.Instance;
+        static new ILoquiRegistration Registration => Weapon_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
         TranslatedString? Name { get; }
@@ -2016,131 +1880,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IWeaponInternal item,
-            XElement node,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IWeaponInternal item,
-            XElement node,
-            out Weapon.ErrorMask errorMask,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Weapon.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IWeaponInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((WeaponSetterCommon)((IWeaponGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWeaponInternal item,
-            string path,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWeaponInternal item,
-            string path,
-            out Weapon.ErrorMask errorMask,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWeaponInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IWeaponInternal item,
-            Stream stream,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWeaponInternal item,
-            Stream stream,
-            out Weapon.ErrorMask errorMask,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWeaponInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Weapon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -2178,7 +1917,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -2645,7 +2384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weapon_FieldIndex.PutDownSound:
                     return typeof(FormLinkNullable<SoundDescriptor>);
                 case Weapon_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Weapon_FieldIndex.Description:
                     return typeof(TranslatedString);
                 case Weapon_FieldIndex.ScopeModel:
@@ -2685,7 +2424,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(WeaponXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.WEAP;
         public static RecordTypeConverter ScopeModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
@@ -2782,86 +2520,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IWeaponInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IWeaponInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IWeaponInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    WeaponXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Weapon)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Weapon)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -3317,7 +2975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Weapon_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Weapon_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Weapon_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Weapon_FieldIndex)((int)index);
@@ -3338,7 +2996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Weapon_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Weapon_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Weapon_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Weapon_FieldIndex)((int)index);
@@ -4180,1139 +3838,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class WeaponXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static WeaponXmlWriteTranslation Instance = new WeaponXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IWeaponGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.VirtualMachineAdapter != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.VirtualMachineAdapter) ?? true))
-            {
-                if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
-                {
-                    ((VirtualMachineAdapterXmlWriteTranslation)((IXmlItem)VirtualMachineAdapterItem).XmlWriteTranslator).Write(
-                        item: VirtualMachineAdapterItem,
-                        node: node,
-                        name: nameof(item.VirtualMachineAdapter),
-                        fieldIndex: (int)Weapon_FieldIndex.VirtualMachineAdapter,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.VirtualMachineAdapter));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectBounds) ?? true))
-            {
-                var ObjectBoundsItem = item.ObjectBounds;
-                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    node: node,
-                    name: nameof(item.ObjectBounds),
-                    fieldIndex: (int)Weapon_FieldIndex.ObjectBounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.ObjectBounds));
-            }
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Weapon_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((item.Model != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Model) ?? true))
-            {
-                if (item.Model.TryGet(out var ModelItem))
-                {
-                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                        item: ModelItem,
-                        node: node,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)Weapon_FieldIndex.Model,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Model));
-                }
-            }
-            if ((item.Icons != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Icons) ?? true))
-            {
-                if (item.Icons.TryGet(out var IconsItem))
-                {
-                    ((IconsXmlWriteTranslation)((IXmlItem)IconsItem).XmlWriteTranslator).Write(
-                        item: IconsItem,
-                        node: node,
-                        name: nameof(item.Icons),
-                        fieldIndex: (int)Weapon_FieldIndex.Icons,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Icons));
-                }
-            }
-            if ((item.ObjectEffect.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectEffect) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ObjectEffect),
-                    item: item.ObjectEffect.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.ObjectEffect,
-                    errorMask: errorMask);
-            }
-            if ((item.EnchantmentAmount != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentAmount) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EnchantmentAmount),
-                    item: item.EnchantmentAmount.Value,
-                    fieldIndex: (int)Weapon_FieldIndex.EnchantmentAmount,
-                    errorMask: errorMask);
-            }
-            if ((item.Destructible != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Destructible) ?? true))
-            {
-                if (item.Destructible.TryGet(out var DestructibleItem))
-                {
-                    ((DestructibleXmlWriteTranslation)((IXmlItem)DestructibleItem).XmlWriteTranslator).Write(
-                        item: DestructibleItem,
-                        node: node,
-                        name: nameof(item.Destructible),
-                        fieldIndex: (int)Weapon_FieldIndex.Destructible,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Destructible));
-                }
-            }
-            if ((item.EquipmentType.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.EquipmentType) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EquipmentType),
-                    item: item.EquipmentType.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.EquipmentType,
-                    errorMask: errorMask);
-            }
-            if ((item.BlockBashImpact.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.BlockBashImpact) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BlockBashImpact),
-                    item: item.BlockBashImpact.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.BlockBashImpact,
-                    errorMask: errorMask);
-            }
-            if ((item.AlternateBlockMaterial.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.AlternateBlockMaterial) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AlternateBlockMaterial),
-                    item: item.AlternateBlockMaterial.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.AlternateBlockMaterial,
-                    errorMask: errorMask);
-            }
-            if ((item.PickUpSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.PickUpSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PickUpSound),
-                    item: item.PickUpSound.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.PickUpSound,
-                    errorMask: errorMask);
-            }
-            if ((item.PutDownSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.PutDownSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PutDownSound),
-                    item: item.PutDownSound.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.PutDownSound,
-                    errorMask: errorMask);
-            }
-            if ((item.Keywords != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Keywords) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IKeywordGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Keywords),
-                    item: item.Keywords,
-                    fieldIndex: (int)Weapon_FieldIndex.Keywords,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Keywords),
-                    transl: (XElement subNode, IFormLink<IKeywordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.Description != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Description) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Description),
-                    item: item.Description,
-                    fieldIndex: (int)Weapon_FieldIndex.Description,
-                    errorMask: errorMask);
-            }
-            if ((item.ScopeModel != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.ScopeModel) ?? true))
-            {
-                if (item.ScopeModel.TryGet(out var ScopeModelItem))
-                {
-                    ((ModelXmlWriteTranslation)((IXmlItem)ScopeModelItem).XmlWriteTranslator).Write(
-                        item: ScopeModelItem,
-                        node: node,
-                        name: nameof(item.ScopeModel),
-                        fieldIndex: (int)Weapon_FieldIndex.ScopeModel,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.ScopeModel));
-                }
-            }
-            if ((item.Unused != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Unused) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unused),
-                    item: item.Unused.Value,
-                    fieldIndex: (int)Weapon_FieldIndex.Unused,
-                    errorMask: errorMask);
-            }
-            if ((item.ImpactDataSet.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.ImpactDataSet) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ImpactDataSet),
-                    item: item.ImpactDataSet.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.ImpactDataSet,
-                    errorMask: errorMask);
-            }
-            if ((item.FirstPersonModel.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.FirstPersonModel) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FirstPersonModel),
-                    item: item.FirstPersonModel.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.FirstPersonModel,
-                    errorMask: errorMask);
-            }
-            if ((item.AttackSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AttackSound),
-                    item: item.AttackSound.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.AttackSound,
-                    errorMask: errorMask);
-            }
-            if ((item.AttackSound2D.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound2D) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AttackSound2D),
-                    item: item.AttackSound2D.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.AttackSound2D,
-                    errorMask: errorMask);
-            }
-            if ((item.AttackLoopSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackLoopSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AttackLoopSound),
-                    item: item.AttackLoopSound.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.AttackLoopSound,
-                    errorMask: errorMask);
-            }
-            if ((item.AttackFailSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackFailSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AttackFailSound),
-                    item: item.AttackFailSound.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.AttackFailSound,
-                    errorMask: errorMask);
-            }
-            if ((item.IdleSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.IdleSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.IdleSound),
-                    item: item.IdleSound.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.IdleSound,
-                    errorMask: errorMask);
-            }
-            if ((item.EquipSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.EquipSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EquipSound),
-                    item: item.EquipSound.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.EquipSound,
-                    errorMask: errorMask);
-            }
-            if ((item.UnequipSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.UnequipSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.UnequipSound),
-                    item: item.UnequipSound.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.UnequipSound,
-                    errorMask: errorMask);
-            }
-            if ((item.BasicStats != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.BasicStats) ?? true))
-            {
-                if (item.BasicStats.TryGet(out var BasicStatsItem))
-                {
-                    ((WeaponBasicStatsXmlWriteTranslation)((IXmlItem)BasicStatsItem).XmlWriteTranslator).Write(
-                        item: BasicStatsItem,
-                        node: node,
-                        name: nameof(item.BasicStats),
-                        fieldIndex: (int)Weapon_FieldIndex.BasicStats,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.BasicStats));
-                }
-            }
-            if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Data) ?? true))
-            {
-                if (item.Data.TryGet(out var DataItem))
-                {
-                    ((WeaponDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                        item: DataItem,
-                        node: node,
-                        name: nameof(item.Data),
-                        fieldIndex: (int)Weapon_FieldIndex.Data,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Data));
-                }
-            }
-            if ((item.Critical != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Critical) ?? true))
-            {
-                if (item.Critical.TryGet(out var CriticalItem))
-                {
-                    ((CriticalDataXmlWriteTranslation)((IXmlItem)CriticalItem).XmlWriteTranslator).Write(
-                        item: CriticalItem,
-                        node: node,
-                        name: nameof(item.Critical),
-                        fieldIndex: (int)Weapon_FieldIndex.Critical,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Critical));
-                }
-            }
-            if ((item.DetectionSoundLevel != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.DetectionSoundLevel) ?? true))
-            {
-                EnumXmlTranslation<SoundLevel>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DetectionSoundLevel),
-                    item: item.DetectionSoundLevel,
-                    fieldIndex: (int)Weapon_FieldIndex.DetectionSoundLevel,
-                    errorMask: errorMask);
-            }
-            if ((item.Template.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Template) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Template),
-                    item: item.Template.FormKey,
-                    fieldIndex: (int)Weapon_FieldIndex.Template,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IWeaponGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Weapon");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Weapon");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IWeaponGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IWeaponGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IWeaponGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class WeaponXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static WeaponXmlCreateTranslation Instance = new WeaponXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IWeaponInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    WeaponXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IWeaponInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "VirtualMachineAdapter":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.VirtualMachineAdapter);
-                    try
-                    {
-                        item.VirtualMachineAdapter = LoquiXmlTranslation<VirtualMachineAdapter>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.VirtualMachineAdapter));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ObjectBounds":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.ObjectBounds);
-                    try
-                    {
-                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.ObjectBounds));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Name":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.Model);
-                    try
-                    {
-                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Model));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Icons":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.Icons);
-                    try
-                    {
-                        item.Icons = LoquiXmlTranslation<Icons>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Icons));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ObjectEffect":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.ObjectEffect);
-                    try
-                    {
-                        item.ObjectEffect = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EnchantmentAmount":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.EnchantmentAmount);
-                    try
-                    {
-                        item.EnchantmentAmount = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Destructible":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.Destructible);
-                    try
-                    {
-                        item.Destructible = LoquiXmlTranslation<Destructible>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Destructible));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EquipmentType":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.EquipmentType);
-                    try
-                    {
-                        item.EquipmentType = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BlockBashImpact":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.BlockBashImpact);
-                    try
-                    {
-                        item.BlockBashImpact = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AlternateBlockMaterial":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.AlternateBlockMaterial);
-                    try
-                    {
-                        item.AlternateBlockMaterial = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PickUpSound":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.PickUpSound);
-                    try
-                    {
-                        item.PickUpSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PutDownSound":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.PutDownSound);
-                    try
-                    {
-                        item.PutDownSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Keywords":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.Keywords);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
-                            node: node,
-                            enumer: out var KeywordsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Keywords = KeywordsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Keywords = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Description":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.Description);
-                    try
-                    {
-                        item.Description = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ScopeModel":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.ScopeModel);
-                    try
-                    {
-                        item.ScopeModel = LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.ScopeModel));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unused":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.Unused);
-                    try
-                    {
-                        item.Unused = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ImpactDataSet":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.ImpactDataSet);
-                    try
-                    {
-                        item.ImpactDataSet = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FirstPersonModel":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.FirstPersonModel);
-                    try
-                    {
-                        item.FirstPersonModel = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AttackSound":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.AttackSound);
-                    try
-                    {
-                        item.AttackSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AttackSound2D":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.AttackSound2D);
-                    try
-                    {
-                        item.AttackSound2D = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AttackLoopSound":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.AttackLoopSound);
-                    try
-                    {
-                        item.AttackLoopSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AttackFailSound":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.AttackFailSound);
-                    try
-                    {
-                        item.AttackFailSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "IdleSound":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.IdleSound);
-                    try
-                    {
-                        item.IdleSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EquipSound":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.EquipSound);
-                    try
-                    {
-                        item.EquipSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnequipSound":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.UnequipSound);
-                    try
-                    {
-                        item.UnequipSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BasicStats":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.BasicStats);
-                    try
-                    {
-                        item.BasicStats = LoquiXmlTranslation<WeaponBasicStats>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.BasicStats));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Data":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.Data);
-                    try
-                    {
-                        item.Data = LoquiXmlTranslation<WeaponData>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Data));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Critical":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.Critical);
-                    try
-                    {
-                        item.Critical = LoquiXmlTranslation<CriticalData>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Critical));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DetectionSoundLevel":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.DetectionSoundLevel);
-                    try
-                    {
-                        item.DetectionSoundLevel = EnumXmlTranslation<SoundLevel>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Template":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.Template);
-                    try
-                    {
-                        item.Template = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class WeaponXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IWeaponGetter item,
-            XElement node,
-            out Weapon.ErrorMask errorMask,
-            Weapon.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((WeaponXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Weapon.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IWeaponGetter item,
-            string path,
-            out Weapon.ErrorMask errorMask,
-            Weapon.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IWeaponGetter item,
-            Stream stream,
-            out Weapon.ErrorMask errorMask,
-            Weapon.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -5508,10 +4033,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -5564,9 +4091,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IWeaponInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -5577,12 +4105,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.VirtualMachineAdapter);
+                    return (int)Weapon_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ObjectBounds);
+                    return (int)Weapon_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -5591,21 +4119,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Name);
+                    return (int)Weapon_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Model);
+                    return (int)Weapon_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Icons);
+                    return (int)Weapon_FieldIndex.Icons;
                 }
                 case RecordTypeInts.EITM:
                 {
@@ -5613,13 +4141,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ObjectEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ObjectEffect);
+                    return (int)Weapon_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EnchantmentAmount = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EnchantmentAmount);
+                    return (int)Weapon_FieldIndex.EnchantmentAmount;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -5628,7 +4156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Destructible);
+                    return (int)Weapon_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.ETYP:
                 {
@@ -5636,7 +4164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EquipmentType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipmentType);
+                    return (int)Weapon_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
@@ -5644,7 +4172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.BlockBashImpact = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.BlockBashImpact);
+                    return (int)Weapon_FieldIndex.BlockBashImpact;
                 }
                 case RecordTypeInts.BAMT:
                 {
@@ -5652,7 +4180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AlternateBlockMaterial = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AlternateBlockMaterial);
+                    return (int)Weapon_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.YNAM:
                 {
@@ -5660,7 +4188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PickUpSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PickUpSound);
+                    return (int)Weapon_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
@@ -5668,7 +4196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PutDownSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PutDownSound);
+                    return (int)Weapon_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -5680,8 +4208,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Keywords);
+                        .CastExtendedList<IFormLink<Keyword>>();
+                    return (int)Weapon_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -5690,20 +4218,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Description);
+                    return (int)Weapon_FieldIndex.Description;
                 }
                 case RecordTypeInts.MOD3:
                 {
                     item.ScopeModel = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: Weapon_Registration.ScopeModelConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ScopeModel);
+                    return (int)Weapon_FieldIndex.ScopeModel;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Unused);
+                    return (int)Weapon_FieldIndex.Unused;
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -5711,7 +4239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImpactDataSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ImpactDataSet);
+                    return (int)Weapon_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.WNAM:
                 {
@@ -5719,7 +4247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FirstPersonModel = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.FirstPersonModel);
+                    return (int)Weapon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -5727,7 +4255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AttackSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound);
+                    return (int)Weapon_FieldIndex.AttackSound;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -5735,7 +4263,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AttackSound2D = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound2D);
+                    return (int)Weapon_FieldIndex.AttackSound2D;
                 }
                 case RecordTypeInts.NAM7:
                 {
@@ -5743,7 +4271,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AttackLoopSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackLoopSound);
+                    return (int)Weapon_FieldIndex.AttackLoopSound;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -5751,7 +4279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AttackFailSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackFailSound);
+                    return (int)Weapon_FieldIndex.AttackFailSound;
                 }
                 case RecordTypeInts.UNAM:
                 {
@@ -5759,7 +4287,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.IdleSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.IdleSound);
+                    return (int)Weapon_FieldIndex.IdleSound;
                 }
                 case RecordTypeInts.NAM9:
                 {
@@ -5767,7 +4295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EquipSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipSound);
+                    return (int)Weapon_FieldIndex.EquipSound;
                 }
                 case RecordTypeInts.NAM8:
                 {
@@ -5775,28 +4303,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.UnequipSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.UnequipSound);
+                    return (int)Weapon_FieldIndex.UnequipSound;
                 }
                 case RecordTypeInts.DATA:
                 {
                     item.BasicStats = Mutagen.Bethesda.Skyrim.WeaponBasicStats.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.BasicStats);
+                    return (int)Weapon_FieldIndex.BasicStats;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     item.Data = Mutagen.Bethesda.Skyrim.WeaponData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Data);
+                    return (int)Weapon_FieldIndex.Data;
                 }
                 case RecordTypeInts.CRDT:
                 {
                     item.Critical = Mutagen.Bethesda.Skyrim.CriticalData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Critical);
+                    return (int)Weapon_FieldIndex.Critical;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DetectionSoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.DetectionSoundLevel);
+                    return (int)Weapon_FieldIndex.DetectionSoundLevel;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -5804,12 +4332,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Template = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Template);
+                    return (int)Weapon_FieldIndex.Template;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -5856,21 +4385,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeaponCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeaponCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => WeaponXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((WeaponXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeaponBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -5902,7 +4416,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ObjectEffect
         private int? _ObjectEffectLocation;
         public bool ObjectEffect_IsSet => _ObjectEffectLocation.HasValue;
-        public IFormLinkNullable<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ObjectEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectRecordGetter>.Null;
+        public IFormLinkNullable<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectRecordGetter>.Null;
         #endregion
         #region EnchantmentAmount
         private int? _EnchantmentAmountLocation;
@@ -5912,27 +4426,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region EquipmentType
         private int? _EquipmentTypeLocation;
         public bool EquipmentType_IsSet => _EquipmentTypeLocation.HasValue;
-        public IFormLinkNullable<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        public IFormLinkNullable<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
         #region BlockBashImpact
         private int? _BlockBashImpactLocation;
         public bool BlockBashImpact_IsSet => _BlockBashImpactLocation.HasValue;
-        public IFormLinkNullable<IImpactDataSetGetter> BlockBashImpact => _BlockBashImpactLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BlockBashImpactLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
+        public IFormLinkNullable<IImpactDataSetGetter> BlockBashImpact => _BlockBashImpactLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BlockBashImpactLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
         #endregion
         #region AlternateBlockMaterial
         private int? _AlternateBlockMaterialLocation;
         public bool AlternateBlockMaterial_IsSet => _AlternateBlockMaterialLocation.HasValue;
-        public IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial => _AlternateBlockMaterialLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AlternateBlockMaterialLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial => _AlternateBlockMaterialLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AlternateBlockMaterialLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
         #endregion
         #region PickUpSound
         private int? _PickUpSoundLocation;
         public bool PickUpSound_IsSet => _PickUpSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
         public bool PutDownSound_IsSet => _PutDownSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
         #region Description
@@ -5947,47 +4461,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;
         public bool ImpactDataSet_IsSet => _ImpactDataSetLocation.HasValue;
-        public IFormLinkNullable<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
+        public IFormLinkNullable<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
         #endregion
         #region FirstPersonModel
         private int? _FirstPersonModelLocation;
         public bool FirstPersonModel_IsSet => _FirstPersonModelLocation.HasValue;
-        public IFormLinkNullable<IStaticGetter> FirstPersonModel => _FirstPersonModelLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FirstPersonModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        public IFormLinkNullable<IStaticGetter> FirstPersonModel => _FirstPersonModelLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FirstPersonModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         #region AttackSound
         private int? _AttackSoundLocation;
         public bool AttackSound_IsSet => _AttackSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> AttackSound => _AttackSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttackSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> AttackSound => _AttackSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region AttackSound2D
         private int? _AttackSound2DLocation;
         public bool AttackSound2D_IsSet => _AttackSound2DLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> AttackSound2D => _AttackSound2DLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttackSound2DLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> AttackSound2D => _AttackSound2DLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackSound2DLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region AttackLoopSound
         private int? _AttackLoopSoundLocation;
         public bool AttackLoopSound_IsSet => _AttackLoopSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> AttackLoopSound => _AttackLoopSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttackLoopSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> AttackLoopSound => _AttackLoopSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackLoopSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region AttackFailSound
         private int? _AttackFailSoundLocation;
         public bool AttackFailSound_IsSet => _AttackFailSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> AttackFailSound => _AttackFailSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttackFailSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> AttackFailSound => _AttackFailSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackFailSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region IdleSound
         private int? _IdleSoundLocation;
         public bool IdleSound_IsSet => _IdleSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> IdleSound => _IdleSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IdleSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> IdleSound => _IdleSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region EquipSound
         private int? _EquipSoundLocation;
         public bool EquipSound_IsSet => _EquipSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> EquipSound => _EquipSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> EquipSound => _EquipSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region UnequipSound
         private int? _UnequipSoundLocation;
         public bool UnequipSound_IsSet => _UnequipSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> UnequipSound => _UnequipSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _UnequipSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> UnequipSound => _UnequipSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnequipSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region BasicStats
         private RangeInt32? _BasicStatsLocation;
@@ -6006,12 +4520,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region DetectionSoundLevel
         private int? _DetectionSoundLevelLocation;
-        public SoundLevel? DetectionSoundLevel => _DetectionSoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DetectionSoundLevelLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel?);
+        public SoundLevel? DetectionSoundLevel => _DetectionSoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DetectionSoundLevelLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel?);
         #endregion
         #region Template
         private int? _TemplateLocation;
         public bool Template_IsSet => _TemplateLocation.HasValue;
-        public IFormLinkNullable<IWeaponGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWeaponGetter>.Null;
+        public IFormLinkNullable<IWeaponGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWeaponGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -6038,8 +4552,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new WeaponBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -6065,12 +4580,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -6079,17 +4595,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.VirtualMachineAdapter);
+                    return (int)Weapon_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ObjectBounds);
+                    return (int)Weapon_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Name);
+                    return (int)Weapon_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -6097,7 +4613,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Model);
+                    return (int)Weapon_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -6105,17 +4621,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Icons);
+                    return (int)Weapon_FieldIndex.Icons;
                 }
                 case RecordTypeInts.EITM:
                 {
                     _ObjectEffectLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ObjectEffect);
+                    return (int)Weapon_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
                 {
                     _EnchantmentAmountLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EnchantmentAmount);
+                    return (int)Weapon_FieldIndex.EnchantmentAmount;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -6125,37 +4641,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Destructible);
+                    return (int)Weapon_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.ETYP:
                 {
                     _EquipmentTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipmentType);
+                    return (int)Weapon_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
                     _BlockBashImpactLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.BlockBashImpact);
+                    return (int)Weapon_FieldIndex.BlockBashImpact;
                 }
                 case RecordTypeInts.BAMT:
                 {
                     _AlternateBlockMaterialLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AlternateBlockMaterial);
+                    return (int)Weapon_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     _PickUpSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PickUpSound);
+                    return (int)Weapon_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     _PutDownSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PutDownSound);
+                    return (int)Weapon_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -6163,12 +4679,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Keywords);
+                    return (int)Weapon_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Description);
+                    return (int)Weapon_FieldIndex.Description;
                 }
                 case RecordTypeInts.MOD3:
                 {
@@ -6176,82 +4692,82 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: Weapon_Registration.ScopeModelConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ScopeModel);
+                    return (int)Weapon_FieldIndex.ScopeModel;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     _UnusedLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Unused);
+                    return (int)Weapon_FieldIndex.Unused;
                 }
                 case RecordTypeInts.INAM:
                 {
                     _ImpactDataSetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ImpactDataSet);
+                    return (int)Weapon_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     _FirstPersonModelLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.FirstPersonModel);
+                    return (int)Weapon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _AttackSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound);
+                    return (int)Weapon_FieldIndex.AttackSound;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     _AttackSound2DLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound2D);
+                    return (int)Weapon_FieldIndex.AttackSound2D;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     _AttackLoopSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackLoopSound);
+                    return (int)Weapon_FieldIndex.AttackLoopSound;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     _AttackFailSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackFailSound);
+                    return (int)Weapon_FieldIndex.AttackFailSound;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     _IdleSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.IdleSound);
+                    return (int)Weapon_FieldIndex.IdleSound;
                 }
                 case RecordTypeInts.NAM9:
                 {
                     _EquipSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipSound);
+                    return (int)Weapon_FieldIndex.EquipSound;
                 }
                 case RecordTypeInts.NAM8:
                 {
                     _UnequipSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.UnequipSound);
+                    return (int)Weapon_FieldIndex.UnequipSound;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _BasicStatsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.BasicStats);
+                    return (int)Weapon_FieldIndex.BasicStats;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Data);
+                    return (int)Weapon_FieldIndex.Data;
                 }
                 case RecordTypeInts.CRDT:
                 {
                     _CriticalLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Critical);
+                    return (int)Weapon_FieldIndex.Critical;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     _DetectionSoundLevelLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.DetectionSoundLevel);
+                    return (int)Weapon_FieldIndex.DetectionSoundLevel;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _TemplateLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Template);
+                    return (int)Weapon_FieldIndex.Template;
                 }
                 default:
                     return base.FillRecordType(
@@ -6259,7 +4775,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

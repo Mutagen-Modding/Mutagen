@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -75,6 +69,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLink<IMaterialObjectGetter> IStaticGetter.Material => this.Material;
         #endregion
+        #region Flags
+        public Static.Flag Flags { get; set; } = default;
+        #endregion
+        #region Unused
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unused = new byte[3];
+        public MemorySlice<Byte> Unused
+        {
+            get => _Unused;
+            set => this._Unused = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IStaticGetter.Unused => this.Unused;
+        #endregion
         #region Lod
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Lod? _Lod;
@@ -119,135 +127,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => StaticXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((StaticXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Static CreateFromXml(
-            XElement node,
-            Static.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Static CreateFromXml(
-            XElement node,
-            out Static.ErrorMask errorMask,
-            Static.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Static.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Static CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Static();
-            ((StaticSetterCommon)((IStaticGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Static CreateFromXml(
-            string path,
-            Static.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Static CreateFromXml(
-            string path,
-            out Static.ErrorMask errorMask,
-            Static.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Static CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Static.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Static CreateFromXml(
-            Stream stream,
-            Static.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Static CreateFromXml(
-            Stream stream,
-            out Static.ErrorMask errorMask,
-            Static.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Static CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Static.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -262,6 +141,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.MaxAngle = initialValue;
                 this.Material = initialValue;
+                this.Flags = initialValue;
+                this.Unused = initialValue;
                 this.Lod = new MaskItem<TItem, Lod.Mask<TItem>?>(initialValue, new Lod.Mask<TItem>(initialValue));
                 this.DNAMDataTypeState = initialValue;
             }
@@ -269,7 +150,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -277,12 +158,14 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Model,
                 TItem MaxAngle,
                 TItem Material,
+                TItem Flags,
+                TItem Unused,
                 TItem Lod,
                 TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -291,6 +174,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.MaxAngle = MaxAngle;
                 this.Material = Material;
+                this.Flags = Flags;
+                this.Unused = Unused;
                 this.Lod = new MaskItem<TItem, Lod.Mask<TItem>?>(Lod, new Lod.Mask<TItem>(Lod));
                 this.DNAMDataTypeState = DNAMDataTypeState;
             }
@@ -308,6 +193,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem MaxAngle;
             public TItem Material;
+            public TItem Flags;
+            public TItem Unused;
             public MaskItem<TItem, Lod.Mask<TItem>?>? Lod { get; set; }
             public TItem DNAMDataTypeState;
             #endregion
@@ -327,6 +214,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.MaxAngle, rhs.MaxAngle)) return false;
                 if (!object.Equals(this.Material, rhs.Material)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 if (!object.Equals(this.Lod, rhs.Lod)) return false;
                 if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
@@ -338,6 +227,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Model);
                 hash.Add(this.MaxAngle);
                 hash.Add(this.Material);
+                hash.Add(this.Flags);
+                hash.Add(this.Unused);
                 hash.Add(this.Lod);
                 hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
@@ -362,6 +253,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (!eval(this.MaxAngle)) return false;
                 if (!eval(this.Material)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Unused)) return false;
                 if (Lod != null)
                 {
                     if (!eval(this.Lod.Overall)) return false;
@@ -388,6 +281,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (eval(this.MaxAngle)) return true;
                 if (eval(this.Material)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Unused)) return true;
                 if (Lod != null)
                 {
                     if (eval(this.Lod.Overall)) return true;
@@ -413,6 +308,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.MaxAngle = eval(this.MaxAngle);
                 obj.Material = eval(this.Material);
+                obj.Flags = eval(this.Flags);
+                obj.Unused = eval(this.Unused);
                 obj.Lod = this.Lod == null ? null : new MaskItem<R, Lod.Mask<R>?>(eval(this.Lod.Overall), this.Lod.Specific?.Translate(eval));
                 obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
@@ -453,6 +350,14 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Material, "Material");
                     }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Unused ?? true)
+                    {
+                        fg.AppendItem(Unused, "Unused");
+                    }
                     if (printMask?.Lod?.Overall ?? true)
                     {
                         Lod?.ToString(fg);
@@ -477,6 +382,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public Exception? MaxAngle;
             public Exception? Material;
+            public Exception? Flags;
+            public Exception? Unused;
             public MaskItem<Exception?, Lod.ErrorMask?>? Lod;
             public Exception? DNAMDataTypeState;
             #endregion
@@ -495,6 +402,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return MaxAngle;
                     case Static_FieldIndex.Material:
                         return Material;
+                    case Static_FieldIndex.Flags:
+                        return Flags;
+                    case Static_FieldIndex.Unused:
+                        return Unused;
                     case Static_FieldIndex.Lod:
                         return Lod;
                     case Static_FieldIndex.DNAMDataTypeState:
@@ -520,6 +431,12 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Static_FieldIndex.Material:
                         this.Material = ex;
+                        break;
+                    case Static_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Static_FieldIndex.Unused:
+                        this.Unused = ex;
                         break;
                     case Static_FieldIndex.Lod:
                         this.Lod = new MaskItem<Exception?, Lod.ErrorMask?>(ex, null);
@@ -550,6 +467,12 @@ namespace Mutagen.Bethesda.Skyrim
                     case Static_FieldIndex.Material:
                         this.Material = (Exception?)obj;
                         break;
+                    case Static_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Static_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
+                        break;
                     case Static_FieldIndex.Lod:
                         this.Lod = (MaskItem<Exception?, Lod.ErrorMask?>?)obj;
                         break;
@@ -569,6 +492,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Model != null) return true;
                 if (MaxAngle != null) return true;
                 if (Material != null) return true;
+                if (Flags != null) return true;
+                if (Unused != null) return true;
                 if (Lod != null) return true;
                 if (DNAMDataTypeState != null) return true;
                 return false;
@@ -610,6 +535,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Model?.ToString(fg);
                 fg.AppendItem(MaxAngle, "MaxAngle");
                 fg.AppendItem(Material, "Material");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Unused, "Unused");
                 Lod?.ToString(fg);
                 fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
             }
@@ -624,6 +551,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.MaxAngle = this.MaxAngle.Combine(rhs.MaxAngle);
                 ret.Material = this.Material.Combine(rhs.Material);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
                 ret.Lod = this.Lod.Combine(rhs.Lod, (l, r) => l.Combine(r));
                 ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
@@ -652,6 +581,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Model.TranslationMask?> Model;
             public bool MaxAngle;
             public bool Material;
+            public bool Flags;
+            public bool Unused;
             public MaskItem<bool, Lod.TranslationMask?> Lod;
             public bool DNAMDataTypeState;
             #endregion
@@ -664,6 +595,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.MaxAngle = defaultOn;
                 this.Material = defaultOn;
+                this.Flags = defaultOn;
+                this.Unused = defaultOn;
                 this.Lod = new MaskItem<bool, Lod.TranslationMask?>(defaultOn, null);
                 this.DNAMDataTypeState = defaultOn;
             }
@@ -677,6 +610,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
                 ret.Add((MaxAngle, null));
                 ret.Add((Material, null));
+                ret.Add((Flags, null));
+                ret.Add((Unused, null));
                 ret.Add((Lod?.Overall ?? true, Lod?.Specific?.GetCrystal()));
                 ret.Add((DNAMDataTypeState, null));
             }
@@ -684,7 +619,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Static_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Static_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => StaticCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -796,6 +731,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Single MaxAngle { get; set; }
         new FormLink<MaterialObject> Material { get; set; }
+        new Static.Flag Flags { get; set; }
+        new MemorySlice<Byte> Unused { get; set; }
         new Lod? Lod { get; set; }
         new Static.DNAMDataType DNAMDataTypeState { get; set; }
         #region Mutagen
@@ -818,15 +755,16 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         ILoquiObject<IStaticGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Static_Registration.Instance;
+        static new ILoquiRegistration Registration => Static_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         IModelGetter? Model { get; }
         Single MaxAngle { get; }
         IFormLink<IMaterialObjectGetter> Material { get; }
+        Static.Flag Flags { get; }
+        ReadOnlyMemorySlice<Byte> Unused { get; }
         ILodGetter? Lod { get; }
         Static.DNAMDataType DNAMDataTypeState { get; }
 
@@ -967,131 +905,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IStaticInternal item,
-            XElement node,
-            Static.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IStaticInternal item,
-            XElement node,
-            out Static.ErrorMask errorMask,
-            Static.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Static.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IStaticInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((StaticSetterCommon)((IStaticGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IStaticInternal item,
-            string path,
-            Static.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IStaticInternal item,
-            string path,
-            out Static.ErrorMask errorMask,
-            Static.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IStaticInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Static.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IStaticInternal item,
-            Stream stream,
-            Static.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IStaticInternal item,
-            Stream stream,
-            out Static.ErrorMask errorMask,
-            Static.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IStaticInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Static.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1129,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1137,8 +950,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Model = 7,
         MaxAngle = 8,
         Material = 9,
-        Lod = 10,
-        DNAMDataTypeState = 11,
+        Flags = 10,
+        Unused = 11,
+        Lod = 12,
+        DNAMDataTypeState = 13,
     }
     #endregion
 
@@ -1156,9 +971,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "89036057-4570-493d-a5f7-4c5718f67a06";
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Static.Mask<>);
 
@@ -1196,6 +1011,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Static_FieldIndex.MaxAngle;
                 case "MATERIAL":
                     return (ushort)Static_FieldIndex.Material;
+                case "FLAGS":
+                    return (ushort)Static_FieldIndex.Flags;
+                case "UNUSED":
+                    return (ushort)Static_FieldIndex.Unused;
                 case "LOD":
                     return (ushort)Static_FieldIndex.Lod;
                 case "DNAMDATATYPESTATE":
@@ -1214,6 +1033,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Static_FieldIndex.Model:
                 case Static_FieldIndex.MaxAngle:
                 case Static_FieldIndex.Material:
+                case Static_FieldIndex.Flags:
+                case Static_FieldIndex.Unused:
                 case Static_FieldIndex.Lod:
                 case Static_FieldIndex.DNAMDataTypeState:
                     return false;
@@ -1233,6 +1054,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return true;
                 case Static_FieldIndex.MaxAngle:
                 case Static_FieldIndex.Material:
+                case Static_FieldIndex.Flags:
+                case Static_FieldIndex.Unused:
                 case Static_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
@@ -1249,6 +1072,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Static_FieldIndex.Model:
                 case Static_FieldIndex.MaxAngle:
                 case Static_FieldIndex.Material:
+                case Static_FieldIndex.Flags:
+                case Static_FieldIndex.Unused:
                 case Static_FieldIndex.Lod:
                 case Static_FieldIndex.DNAMDataTypeState:
                     return false;
@@ -1270,6 +1095,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "MaxAngle";
                 case Static_FieldIndex.Material:
                     return "Material";
+                case Static_FieldIndex.Flags:
+                    return "Flags";
+                case Static_FieldIndex.Unused:
+                    return "Unused";
                 case Static_FieldIndex.Lod:
                     return "Lod";
                 case Static_FieldIndex.DNAMDataTypeState:
@@ -1288,6 +1117,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Static_FieldIndex.Model:
                 case Static_FieldIndex.MaxAngle:
                 case Static_FieldIndex.Material:
+                case Static_FieldIndex.Flags:
+                case Static_FieldIndex.Unused:
                 case Static_FieldIndex.Lod:
                 case Static_FieldIndex.DNAMDataTypeState:
                     return false;
@@ -1305,6 +1136,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Static_FieldIndex.Model:
                 case Static_FieldIndex.MaxAngle:
                 case Static_FieldIndex.Material:
+                case Static_FieldIndex.Flags:
+                case Static_FieldIndex.Unused:
                 case Static_FieldIndex.Lod:
                 case Static_FieldIndex.DNAMDataTypeState:
                     return false;
@@ -1326,6 +1159,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Single);
                 case Static_FieldIndex.Material:
                     return typeof(FormLink<MaterialObject>);
+                case Static_FieldIndex.Flags:
+                    return typeof(Static.Flag);
+                case Static_FieldIndex.Unused:
+                    return typeof(MemorySlice<Byte>);
                 case Static_FieldIndex.Lod:
                     return typeof(Lod);
                 case Static_FieldIndex.DNAMDataTypeState:
@@ -1335,7 +1172,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(StaticXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.STAT;
         public static readonly Type BinaryWriteTranslation = typeof(StaticBinaryWriteTranslation);
         #region Interface
@@ -1383,6 +1219,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.MaxAngle = Static._MaxAngle_Default;
             item.Material = FormLink<MaterialObject>.Null;
+            item.Flags = default;
+            item.Unused = new byte[3];
             item.Lod = null;
             item.DNAMDataTypeState = default;
             base.Clear(item);
@@ -1397,86 +1235,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IStaticInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IStaticInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IStaticInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    StaticXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Static)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Static)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1550,6 +1308,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.MaxAngle = item.MaxAngle.EqualsWithin(rhs.MaxAngle);
             ret.Material = object.Equals(item.Material, rhs.Material);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
             ret.Lod = EqualsMaskHelper.EqualsHelper(
                 item.Lod,
                 rhs.Lod,
@@ -1624,6 +1384,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Material, "Material");
             }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Unused ?? true)
+            {
+                fg.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+            }
             if ((printMask?.Lod?.Overall ?? true)
                 && item.Lod.TryGet(out var LodItem))
             {
@@ -1657,6 +1425,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.MaxAngle = true;
             mask.Material = true;
+            mask.Flags = true;
+            mask.Unused = true;
             var itemLod = item.Lod;
             mask.Lod = new MaskItem<bool, Lod.Mask<bool>?>(itemLod != null, itemLod?.GetHasBeenSetMask());
             mask.DNAMDataTypeState = true;
@@ -1673,7 +1443,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Static_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Static_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Static_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Static_FieldIndex)((int)index);
@@ -1694,7 +1464,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Static_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Static_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Static_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Static_FieldIndex)((int)index);
@@ -1715,6 +1485,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!lhs.MaxAngle.EqualsWithin(rhs.MaxAngle)) return false;
             if (!lhs.Material.Equals(rhs.Material)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
             if (!object.Equals(lhs.Lod, rhs.Lod)) return false;
             if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             return true;
@@ -1748,6 +1520,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             hash.Add(item.MaxAngle);
             hash.Add(item.Material);
+            hash.Add(item.Flags);
+            hash.Add(item.Unused);
             if (item.Lod.TryGet(out var Loditem))
             {
                 hash.Add(Loditem);
@@ -1892,6 +1666,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Material) ?? true))
             {
                 item.Material = rhs.Material.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Unused) ?? true))
+            {
+                item.Unused = rhs.Unused.ToArray();
             }
             if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Lod) ?? true))
             {
@@ -2045,391 +1827,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class StaticXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static StaticXmlWriteTranslation Instance = new StaticXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IStaticGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)Static_FieldIndex.ObjectBounds) ?? true))
-            {
-                var ObjectBoundsItem = item.ObjectBounds;
-                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    node: node,
-                    name: nameof(item.ObjectBounds),
-                    fieldIndex: (int)Static_FieldIndex.ObjectBounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.ObjectBounds));
-            }
-            if ((item.Model != null)
-                && (translationMask?.GetShouldTranslate((int)Static_FieldIndex.Model) ?? true))
-            {
-                if (item.Model.TryGet(out var ModelItem))
-                {
-                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                        item: ModelItem,
-                        node: node,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)Static_FieldIndex.Model,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Model));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Static_FieldIndex.MaxAngle) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaxAngle),
-                    item: item.MaxAngle,
-                    fieldIndex: (int)Static_FieldIndex.MaxAngle,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Static_FieldIndex.Material) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Material),
-                    item: item.Material.FormKey,
-                    fieldIndex: (int)Static_FieldIndex.Material,
-                    errorMask: errorMask);
-            }
-            if ((item.Lod != null)
-                && (translationMask?.GetShouldTranslate((int)Static_FieldIndex.Lod) ?? true))
-            {
-                if (item.Lod.TryGet(out var LodItem))
-                {
-                    ((LodXmlWriteTranslation)((IXmlItem)LodItem).XmlWriteTranslator).Write(
-                        item: LodItem,
-                        node: node,
-                        name: nameof(item.Lod),
-                        fieldIndex: (int)Static_FieldIndex.Lod,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Lod));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Static_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Static.DNAMDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DNAMDataTypeState),
-                    item: item.DNAMDataTypeState,
-                    fieldIndex: (int)Static_FieldIndex.DNAMDataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IStaticGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Static");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Static");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IStaticGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IStaticGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IStaticGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class StaticXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static StaticXmlCreateTranslation Instance = new StaticXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IStaticInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    StaticXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IStaticInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "ObjectBounds":
-                    errorMask?.PushIndex((int)Static_FieldIndex.ObjectBounds);
-                    try
-                    {
-                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.ObjectBounds));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    errorMask?.PushIndex((int)Static_FieldIndex.Model);
-                    try
-                    {
-                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Model));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaxAngle":
-                    errorMask?.PushIndex((int)Static_FieldIndex.MaxAngle);
-                    try
-                    {
-                        item.MaxAngle = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Material":
-                    errorMask?.PushIndex((int)Static_FieldIndex.Material);
-                    try
-                    {
-                        item.Material = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    break;
-                case "Unused":
-                    break;
-                case "Lod":
-                    errorMask?.PushIndex((int)Static_FieldIndex.Lod);
-                    try
-                    {
-                        item.Lod = LoquiXmlTranslation<Lod>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Lod));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DNAMDataTypeState":
-                    errorMask?.PushIndex((int)Static_FieldIndex.DNAMDataTypeState);
-                    try
-                    {
-                        item.DNAMDataTypeState = EnumXmlTranslation<Static.DNAMDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class StaticXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IStaticGetter item,
-            XElement node,
-            out Static.ErrorMask errorMask,
-            Static.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((StaticXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Static.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IStaticGetter item,
-            string path,
-            out Static.ErrorMask errorMask,
-            Static.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IStaticGetter item,
-            Stream stream,
-            out Static.ErrorMask errorMask,
-            Static.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2477,6 +1874,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Material);
+                if (writer.MetaData.FormVersion!.Value >= 44)
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Static.Flag>.Instance.Write(
+                        writer,
+                        item.Flags,
+                        length: 1);
+                }
+                if (writer.MetaData.FormVersion!.Value >= 44)
+                {
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Unused);
+                }
             }
             if (item.Lod.TryGet(out var LodItem))
             {
@@ -2500,10 +1910,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -2556,9 +1968,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IStaticInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2569,14 +1982,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.ObjectBounds);
+                    return (int)Static_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Model);
+                    return (int)Static_FieldIndex.Model;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -2586,17 +1999,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Material = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Material);
+                    if (frame.MetaData.FormVersion!.Value >= 44)
+                    {
+                        item.Flags = EnumBinaryTranslation<Static.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    }
+                    if (frame.MetaData.FormVersion!.Value >= 44)
+                    {
+                        item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
+                    }
+                    return (int)Static_FieldIndex.Unused;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     item.Lod = Mutagen.Bethesda.Skyrim.Lod.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Lod);
+                    return (int)Static_FieldIndex.Lod;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -2643,21 +2065,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StaticCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StaticCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => StaticXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((StaticXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => StaticBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2681,12 +2088,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region MaxAngle
         private int _MaxAngleLocation => _DNAMLocation!.Value;
         private bool _MaxAngle_IsSet => _DNAMLocation.HasValue;
-        public Single MaxAngle => _MaxAngle_IsSet ? SpanExt.GetFloat(_data.Slice(_MaxAngleLocation, 4)) : default;
+        public Single MaxAngle => _MaxAngle_IsSet ? _data.Slice(_MaxAngleLocation, 4).Float() : default;
         #endregion
         #region Material
         private int _MaterialLocation => _DNAMLocation!.Value + 0x4;
         private bool _Material_IsSet => _DNAMLocation.HasValue;
         public IFormLink<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DNAMLocation!.Value + 0x8;
+        private bool _Flags_IsSet => _DNAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 44;
+        public Static.Flag Flags => _Flags_IsSet ? (Static.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        int FlagsVersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -1 : 0;
+        #endregion
+        #region Unused
+        private int _UnusedLocation => _DNAMLocation!.Value + FlagsVersioningOffset + 0x9;
+        private bool _Unused_IsSet => _DNAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 44;
+        public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _data.Span.Slice(_UnusedLocation, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        int UnusedVersioningOffset => FlagsVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 44 ? -3 : 0);
         #endregion
         #region Lod
         private RangeInt32? _LodLocation;
@@ -2718,8 +2137,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new StaticBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2745,12 +2165,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2759,7 +2180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.ObjectBounds);
+                    return (int)Static_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -2767,17 +2188,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Model);
+                    return (int)Static_FieldIndex.Model;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Material);
+                    return (int)Static_FieldIndex.Unused;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _LodLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Lod);
+                    return (int)Static_FieldIndex.Lod;
                 }
                 default:
                     return base.FillRecordType(
@@ -2785,7 +2206,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

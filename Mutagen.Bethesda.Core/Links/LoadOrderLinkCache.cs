@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda
 
         private readonly LoadOrder<TMod> _loadOrder;
         private readonly bool _hasAny;
-        private readonly GameMode _gameMode;
+        private readonly GameCategory _gameCategory;
 
         private int _processedUntypedDepth = 0;
         private readonly Cache<IMajorRecordCommonGetter, FormKey> _loadOrderUntypedMajorRecords;
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda
             this._loadOrderMajorRecords = new Dictionary<Type, InternalTypedCache>();
             var firstMod = _loadOrder.FirstOrDefault(m => m.Mod != null);
             this._hasAny = firstMod?.Mod != null;
-            this._gameMode = firstMod?.Mod?.GameMode ?? GameMode.Oblivion;
+            this._gameCategory = firstMod?.Mod?.GameRelease.ToCategory() ?? GameCategory.Oblivion;
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda
                     }
                     else
                     {
-                        var interfaceMappings = LinkInterfaceMapping.InterfaceToObjectTypes(_gameMode);
+                        var interfaceMappings = LinkInterfaceMapping.InterfaceToObjectTypes(_gameCategory);
                         if (!interfaceMappings.TryGetValue(typeof(TMajor), out var objs))
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {typeof(TMajor).Name}");
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda
                     }
 
                     // Add records from that mod that aren't already cached
-                    if (LinkInterfaceMapping.InterfaceToObjectTypes(_gameMode).TryGetValue(typeof(TMajor), out var objs))
+                    if (LinkInterfaceMapping.InterfaceToObjectTypes(_gameCategory).TryGetValue(typeof(TMajor), out var objs))
                     {
                         foreach (var objType in objs)
                         {

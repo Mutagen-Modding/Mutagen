@@ -17,11 +17,6 @@ namespace Mutagen.Bethesda.Binary
         public ObjectType ObjectType { get; }
         
         /// <summary>
-        /// GameMode associated with the constants
-        /// </summary>
-        public GameMode GameMode { get; }
-        
-        /// <summary>
         /// The length that the header itself takes
         /// </summary>
         public sbyte HeaderLength { get; }
@@ -54,17 +49,14 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="gameMode">GameMode to associate with the constants</param>
         /// <param name="type">Type of object to associate the constants with</param>
         /// <param name="headerLength">Length of the header</param>
         /// <param name="lengthLength">Number of bytes containing content length information</param>
         public RecordHeaderConstants(
-            GameMode gameMode,
             ObjectType type,
             sbyte headerLength,
             sbyte lengthLength)
         {
-            this.GameMode = gameMode;
             this.ObjectType = type;
             this.HeaderLength = headerLength;
             this.LengthLength = lengthLength;
@@ -74,8 +66,8 @@ namespace Mutagen.Bethesda.Binary
             this.HeaderIncludedInLength = type == ObjectType.Group;
         }
 
-        public VariableHeader VariableMeta(ReadOnlySpan<byte> span) => new VariableHeader(this, span);
-        public VariableHeader GetVariableMeta(IBinaryReadStream stream, int offset = 0) => new VariableHeader(this, stream.GetSpan(this.HeaderLength, offset));
-        public VariableHeader ReadVariableMeta(IBinaryReadStream stream) => new VariableHeader(this, stream.ReadSpan(this.HeaderLength));
+        public VariableHeader VariableMeta(ReadOnlyMemorySlice<byte> span) => new VariableHeader(this, span);
+        public VariableHeader GetVariableMeta(IBinaryReadStream stream, int offset = 0) => new VariableHeader(this, stream.GetMemory(this.HeaderLength, offset));
+        public VariableHeader ReadVariableMeta(IBinaryReadStream stream) => new VariableHeader(this, stream.ReadMemory(this.HeaderLength));
     }
 }

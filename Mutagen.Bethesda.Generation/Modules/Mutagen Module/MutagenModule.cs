@@ -31,7 +31,6 @@ namespace Mutagen.Bethesda.Generation
             this.SubModules.Add(new MajorRecordEnumerationModule());
             this.SubModules.Add(new ContainerParentModule());
             this.SubModules.Add(new MajorRecordFlagModule());
-            this.SubModules.Add(new SpecialEditionModule());
             this.SubModules.Add(new DataTypeModule());
             this.SubModules.Add(new LinkInterfaceModule());
             this.SubModules.Add(new WarmupModule());

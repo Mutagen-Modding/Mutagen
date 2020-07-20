@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -95,135 +89,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => AnimatedObjectXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((AnimatedObjectXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new AnimatedObject CreateFromXml(
-            XElement node,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static AnimatedObject CreateFromXml(
-            XElement node,
-            out AnimatedObject.ErrorMask errorMask,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = AnimatedObject.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static AnimatedObject CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new AnimatedObject();
-            ((AnimatedObjectSetterCommon)((IAnimatedObjectGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static AnimatedObject CreateFromXml(
-            string path,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static AnimatedObject CreateFromXml(
-            string path,
-            out AnimatedObject.ErrorMask errorMask,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static AnimatedObject CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static AnimatedObject CreateFromXml(
-            Stream stream,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static AnimatedObject CreateFromXml(
-            Stream stream,
-            out AnimatedObject.ErrorMask errorMask,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static AnimatedObject CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
@@ -241,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem OblivionMajorRecordFlags,
                 TItem Model,
@@ -249,7 +114,7 @@ namespace Mutagen.Bethesda.Oblivion
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
@@ -530,7 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = AnimatedObject_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = AnimatedObject_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AnimatedObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -639,11 +504,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAnimatedObjectGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IAnimatedObjectGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => AnimatedObject_Registration.Instance;
+        static new ILoquiRegistration Registration => AnimatedObject_Registration.Instance;
         IModelGetter? Model { get; }
         IFormLinkNullable<IIdleAnimationGetter> IdleAnimation { get; }
 
@@ -780,131 +644,6 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IAnimatedObjectInternal item,
-            XElement node,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IAnimatedObjectInternal item,
-            XElement node,
-            out AnimatedObject.ErrorMask errorMask,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = AnimatedObject.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IAnimatedObjectInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((AnimatedObjectSetterCommon)((IAnimatedObjectGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAnimatedObjectInternal item,
-            string path,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAnimatedObjectInternal item,
-            string path,
-            out AnimatedObject.ErrorMask errorMask,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAnimatedObjectInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IAnimatedObjectInternal item,
-            Stream stream,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAnimatedObjectInternal item,
-            Stream stream,
-            out AnimatedObject.ErrorMask errorMask,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAnimatedObjectInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            AnimatedObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -942,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         OblivionMajorRecordFlags = 4,
         Model = 5,
@@ -1099,7 +838,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(AnimatedObjectXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.ANIO;
         public static readonly Type BinaryWriteTranslation = typeof(AnimatedObjectBinaryWriteTranslation);
         #region Interface
@@ -1157,86 +895,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IAnimatedObjectInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IAnimatedObjectInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IAnimatedObjectInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    AnimatedObjectXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IOblivionMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (AnimatedObject)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (AnimatedObject)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1403,7 +1061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (AnimatedObject_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (AnimatedObject_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
+                case OblivionMajorRecord_FieldIndex.VersionControl:
                     return (AnimatedObject_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (AnimatedObject_FieldIndex)((int)index);
@@ -1422,7 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (AnimatedObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (AnimatedObject_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (AnimatedObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (AnimatedObject_FieldIndex)((int)index);
@@ -1705,271 +1363,6 @@ namespace Mutagen.Bethesda.Oblivion
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public partial class AnimatedObjectXmlWriteTranslation :
-        OblivionMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static AnimatedObjectXmlWriteTranslation Instance = new AnimatedObjectXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IAnimatedObjectGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Model != null)
-                && (translationMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.Model) ?? true))
-            {
-                if (item.Model.TryGet(out var ModelItem))
-                {
-                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                        item: ModelItem,
-                        node: node,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)AnimatedObject_FieldIndex.Model,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)AnimatedObject_FieldIndex.Model));
-                }
-            }
-            if ((item.IdleAnimation.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.IdleAnimation) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.IdleAnimation),
-                    item: item.IdleAnimation.FormKey,
-                    fieldIndex: (int)AnimatedObject_FieldIndex.IdleAnimation,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IAnimatedObjectGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.AnimatedObject");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.AnimatedObject");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IAnimatedObjectGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IAnimatedObjectGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IAnimatedObjectGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class AnimatedObjectXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
-    {
-        public new readonly static AnimatedObjectXmlCreateTranslation Instance = new AnimatedObjectXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IAnimatedObjectInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    AnimatedObjectXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IAnimatedObjectInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Model":
-                    errorMask?.PushIndex((int)AnimatedObject_FieldIndex.Model);
-                    try
-                    {
-                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)AnimatedObject_FieldIndex.Model));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "IdleAnimation":
-                    errorMask?.PushIndex((int)AnimatedObject_FieldIndex.IdleAnimation);
-                    try
-                    {
-                        item.IdleAnimation = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    OblivionMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Oblivion
-{
-    #region Xml Write Mixins
-    public static class AnimatedObjectXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IAnimatedObjectGetter item,
-            XElement node,
-            out AnimatedObject.ErrorMask errorMask,
-            AnimatedObject.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((AnimatedObjectXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = AnimatedObject.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IAnimatedObjectGetter item,
-            string path,
-            out AnimatedObject.ErrorMask errorMask,
-            AnimatedObject.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IAnimatedObjectGetter item,
-            Stream stream,
-            out AnimatedObject.ErrorMask errorMask,
-            AnimatedObject.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -2014,10 +1407,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -2070,9 +1465,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAnimatedObjectInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2085,7 +1481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.Model);
+                    return (int)AnimatedObject_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -2093,12 +1489,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.IdleAnimation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.IdleAnimation);
+                    return (int)AnimatedObject_FieldIndex.IdleAnimation;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -2145,21 +1542,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AnimatedObjectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AnimatedObjectCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => AnimatedObjectXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((AnimatedObjectXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AnimatedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2175,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region IdleAnimation
         private int? _IdleAnimationLocation;
         public bool IdleAnimation_IsSet => _IdleAnimationLocation.HasValue;
-        public IFormLinkNullable<IIdleAnimationGetter> IdleAnimation => _IdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullable<IIdleAnimationGetter> IdleAnimation => _IdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2202,8 +1584,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new AnimatedObjectBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2229,12 +1612,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2246,12 +1630,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.Model);
+                    return (int)AnimatedObject_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _IdleAnimationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.IdleAnimation);
+                    return (int)AnimatedObject_FieldIndex.IdleAnimation;
                 }
                 default:
                     return base.FillRecordType(
@@ -2259,7 +1643,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

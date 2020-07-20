@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -51,8 +45,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -65,8 +59,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RelatedPaths
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<CameraPath>> _RelatedPaths = new ExtendedList<IFormLink<CameraPath>>();
-        public ExtendedList<IFormLink<CameraPath>> RelatedPaths
+        private IExtendedList<IFormLink<CameraPath>> _RelatedPaths = new ExtendedList<IFormLink<CameraPath>>();
+        public IExtendedList<IFormLink<CameraPath>> RelatedPaths
         {
             get => this._RelatedPaths;
             protected set => this._RelatedPaths = value;
@@ -85,8 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Shots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<CameraShot>> _Shots = new ExtendedList<IFormLink<CameraShot>>();
-        public ExtendedList<IFormLink<CameraShot>> Shots
+        private IExtendedList<IFormLink<CameraShot>> _Shots = new ExtendedList<IFormLink<CameraShot>>();
+        public IExtendedList<IFormLink<CameraShot>> Shots
         {
             get => this._Shots;
             protected set => this._Shots = value;
@@ -127,135 +121,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => CameraPathXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((CameraPathXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new CameraPath CreateFromXml(
-            XElement node,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static CameraPath CreateFromXml(
-            XElement node,
-            out CameraPath.ErrorMask errorMask,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CameraPath.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static CameraPath CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new CameraPath();
-            ((CameraPathSetterCommon)((ICameraPathGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static CameraPath CreateFromXml(
-            string path,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static CameraPath CreateFromXml(
-            string path,
-            out CameraPath.ErrorMask errorMask,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static CameraPath CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static CameraPath CreateFromXml(
-            Stream stream,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static CameraPath CreateFromXml(
-            Stream stream,
-            out CameraPath.ErrorMask errorMask,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static CameraPath CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -276,7 +141,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -288,7 +153,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -862,7 +727,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = CameraPath_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = CameraPath_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CameraPathCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -957,11 +822,11 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<ICameraPathInternal>
     {
-        new ExtendedList<Condition> Conditions { get; }
-        new ExtendedList<IFormLink<CameraPath>> RelatedPaths { get; }
+        new IExtendedList<Condition> Conditions { get; }
+        new IExtendedList<IFormLink<CameraPath>> RelatedPaths { get; }
         new CameraPath.ZoomType Zoom { get; set; }
         new Boolean ZoomMustHaveCameraShots { get; set; }
-        new ExtendedList<IFormLink<CameraShot>> Shots { get; }
+        new IExtendedList<IFormLink<CameraShot>> Shots { get; }
     }
 
     public partial interface ICameraPathInternal :
@@ -974,11 +839,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICameraPathGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<ICameraPathGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => CameraPath_Registration.Instance;
+        static new ILoquiRegistration Registration => CameraPath_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IReadOnlyList<IFormLink<ICameraPathGetter>> RelatedPaths { get; }
         CameraPath.ZoomType Zoom { get; }
@@ -1118,131 +982,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ICameraPathInternal item,
-            XElement node,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ICameraPathInternal item,
-            XElement node,
-            out CameraPath.ErrorMask errorMask,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CameraPath.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this ICameraPathInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((CameraPathSetterCommon)((ICameraPathGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICameraPathInternal item,
-            string path,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICameraPathInternal item,
-            string path,
-            out CameraPath.ErrorMask errorMask,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICameraPathInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this ICameraPathInternal item,
-            Stream stream,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICameraPathInternal item,
-            Stream stream,
-            out CameraPath.ErrorMask errorMask,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICameraPathInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            CameraPath.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1280,7 +1019,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1461,21 +1200,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case CameraPath_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case CameraPath_FieldIndex.RelatedPaths:
-                    return typeof(ExtendedList<IFormLink<CameraPath>>);
+                    return typeof(IExtendedList<IFormLink<CameraPath>>);
                 case CameraPath_FieldIndex.Zoom:
                     return typeof(CameraPath.ZoomType);
                 case CameraPath_FieldIndex.ZoomMustHaveCameraShots:
                     return typeof(Boolean);
                 case CameraPath_FieldIndex.Shots:
-                    return typeof(ExtendedList<IFormLink<CameraShot>>);
+                    return typeof(IExtendedList<IFormLink<CameraShot>>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(CameraPathXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.CPTH;
         public static readonly Type BinaryWriteTranslation = typeof(CameraPathBinaryWriteTranslation);
         #region Interface
@@ -1536,86 +1274,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ICameraPathInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            ICameraPathInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            ICameraPathInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    CameraPathXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (CameraPath)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (CameraPath)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1842,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (CameraPath_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (CameraPath_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (CameraPath_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (CameraPath_FieldIndex)((int)index);
@@ -1863,7 +1521,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (CameraPath_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (CameraPath_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (CameraPath_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (CameraPath_FieldIndex)((int)index);
@@ -2195,404 +1853,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class CameraPathXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static CameraPathXmlWriteTranslation Instance = new CameraPathXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            ICameraPathGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Conditions) ?? true))
-            {
-                ListXmlTranslation<IConditionGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Conditions),
-                    item: item.Conditions,
-                    fieldIndex: (int)CameraPath_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)CameraPath_FieldIndex.Conditions),
-                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)CameraPath_FieldIndex.RelatedPaths) ?? true))
-            {
-                ListXmlTranslation<IFormLink<ICameraPathGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.RelatedPaths),
-                    item: item.RelatedPaths,
-                    fieldIndex: (int)CameraPath_FieldIndex.RelatedPaths,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)CameraPath_FieldIndex.RelatedPaths),
-                    transl: (XElement subNode, IFormLink<ICameraPathGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Zoom) ?? true))
-            {
-                EnumXmlTranslation<CameraPath.ZoomType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Zoom),
-                    item: item.Zoom,
-                    fieldIndex: (int)CameraPath_FieldIndex.Zoom,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CameraPath_FieldIndex.ZoomMustHaveCameraShots) ?? true))
-            {
-                BooleanXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ZoomMustHaveCameraShots),
-                    item: item.ZoomMustHaveCameraShots,
-                    fieldIndex: (int)CameraPath_FieldIndex.ZoomMustHaveCameraShots,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Shots) ?? true))
-            {
-                ListXmlTranslation<IFormLink<ICameraShotGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Shots),
-                    item: item.Shots,
-                    fieldIndex: (int)CameraPath_FieldIndex.Shots,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)CameraPath_FieldIndex.Shots),
-                    transl: (XElement subNode, IFormLink<ICameraShotGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            ICameraPathGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.CameraPath");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.CameraPath");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ICameraPathGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ICameraPathGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ICameraPathGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class CameraPathXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static CameraPathXmlCreateTranslation Instance = new CameraPathXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            ICameraPathInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    CameraPathXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            ICameraPathInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Conditions":
-                    errorMask?.PushIndex((int)CameraPath_FieldIndex.Conditions);
-                    try
-                    {
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RelatedPaths":
-                    errorMask?.PushIndex((int)CameraPath_FieldIndex.RelatedPaths);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<CameraPath>>.Instance.Parse(
-                            node: node,
-                            enumer: out var RelatedPathsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.RelatedPaths.SetTo(RelatedPathsItem);
-                        }
-                        else
-                        {
-                            item.RelatedPaths.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Zoom":
-                    errorMask?.PushIndex((int)CameraPath_FieldIndex.Zoom);
-                    try
-                    {
-                        item.Zoom = EnumXmlTranslation<CameraPath.ZoomType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ZoomMustHaveCameraShots":
-                    errorMask?.PushIndex((int)CameraPath_FieldIndex.ZoomMustHaveCameraShots);
-                    try
-                    {
-                        item.ZoomMustHaveCameraShots = BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Shots":
-                    errorMask?.PushIndex((int)CameraPath_FieldIndex.Shots);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<CameraShot>>.Instance.Parse(
-                            node: node,
-                            enumer: out var ShotsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Shots.SetTo(ShotsItem);
-                        }
-                        else
-                        {
-                            item.Shots.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class CameraPathXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this ICameraPathGetter item,
-            XElement node,
-            out CameraPath.ErrorMask errorMask,
-            CameraPath.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((CameraPathXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CameraPath.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this ICameraPathGetter item,
-            string path,
-            out CameraPath.ErrorMask errorMask,
-            CameraPath.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ICameraPathGetter item,
-            Stream stream,
-            out CameraPath.ErrorMask errorMask,
-            CameraPath.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2687,10 +1947,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -2743,9 +2005,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ICameraPathInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2758,7 +2021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     CameraPathBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.Conditions);
+                    return (int)CameraPath_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -2767,14 +2030,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<CameraPath>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.RelatedPaths);
+                    return (int)CameraPath_FieldIndex.RelatedPaths;
                 }
                 case RecordTypeInts.DATA:
                 {
                     CameraPathBinaryCreateTranslation.FillBinaryZoomCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.Zoom);
+                    return (int)CameraPath_FieldIndex.Zoom;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2783,12 +2046,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.Shots);
+                    return (int)CameraPath_FieldIndex.Shots;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -2843,21 +2107,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraPathCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraPathCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => CameraPathXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((CameraPathXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CameraPathBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2911,8 +2160,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new CameraPathBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2938,12 +2188,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2957,19 +2208,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.Conditions);
+                    return (int)CameraPath_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RelatedPaths = BinaryOverlayList<IFormLink<ICameraPathGetter>>.FactoryByStartIndex(
+                    this.RelatedPaths = BinaryOverlayList.FactoryByStartIndex<IFormLink<ICameraPathGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new FormLink<ICameraPathGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.RelatedPaths);
+                    return (int)CameraPath_FieldIndex.RelatedPaths;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -2977,11 +2228,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.Zoom);
+                    return (int)CameraPath_FieldIndex.Zoom;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.Shots = BinaryOverlayList<IFormLink<ICameraShotGetter>>.FactoryByArray(
+                    this.Shots = BinaryOverlayList.FactoryByArray<IFormLink<ICameraShotGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<ICameraShotGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -2991,7 +2242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.Shots);
+                    return (int)CameraPath_FieldIndex.Shots;
                 }
                 default:
                     return base.FillRecordType(
@@ -2999,7 +2250,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

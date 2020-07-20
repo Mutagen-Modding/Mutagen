@@ -15,14 +15,8 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -84,137 +78,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public override int GetHashCode() => ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => AIPackageLocationXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((AIPackageLocationXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static AIPackageLocation CreateFromXml(
-            XElement node,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static AIPackageLocation CreateFromXml(
-            XElement node,
-            out AIPackageLocation.ErrorMask errorMask,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackageLocation.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static AIPackageLocation CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new AIPackageLocation();
-            ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static AIPackageLocation CreateFromXml(
-            string path,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static AIPackageLocation CreateFromXml(
-            string path,
-            out AIPackageLocation.ErrorMask errorMask,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static AIPackageLocation CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static AIPackageLocation CreateFromXml(
-            Stream stream,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static AIPackageLocation CreateFromXml(
-            Stream stream,
-            out AIPackageLocation.ErrorMask errorMask,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static AIPackageLocation CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -542,7 +405,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = AIPackageLocation_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = AIPackageLocation_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => AIPackageLocationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -629,7 +492,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAIPackageLocationGetter :
         ILoquiObject,
         ILoquiObject<IAIPackageLocationGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -799,131 +661,6 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IAIPackageLocation item,
-            XElement node,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IAIPackageLocation item,
-            XElement node,
-            out AIPackageLocation.ErrorMask errorMask,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackageLocation.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IAIPackageLocation item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAIPackageLocation item,
-            string path,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAIPackageLocation item,
-            string path,
-            out AIPackageLocation.ErrorMask errorMask,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAIPackageLocation item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IAIPackageLocation item,
-            Stream stream,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAIPackageLocation item,
-            Stream stream,
-            out AIPackageLocation.ErrorMask errorMask,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAIPackageLocation item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1125,7 +862,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(AIPackageLocationXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.PLDT;
         public static readonly Type BinaryWriteTranslation = typeof(AIPackageLocationBinaryWriteTranslation);
         #region Interface
@@ -1173,34 +909,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LocationReference = FormLink<IPlaced>.Null;
             item.Radius = default;
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IAIPackageLocation item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    AIPackageLocationXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1465,370 +1173,6 @@ namespace Mutagen.Bethesda.Oblivion
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public partial class AIPackageLocationXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static AIPackageLocationXmlWriteTranslation Instance = new AIPackageLocationXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IAIPackageLocationGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Type) ?? true))
-            {
-                EnumXmlTranslation<AIPackageLocation.LocationType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)AIPackageLocation_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.LocationReference) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LocationReference),
-                    item: item.LocationReference.FormKey,
-                    fieldIndex: (int)AIPackageLocation_FieldIndex.LocationReference,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Radius) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Radius),
-                    item: item.Radius,
-                    fieldIndex: (int)AIPackageLocation_FieldIndex.Radius,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IAIPackageLocationGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.AIPackageLocation");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.AIPackageLocation");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IAIPackageLocationGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IAIPackageLocationGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IAIPackageLocationGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class AIPackageLocationXmlCreateTranslation
-    {
-        public readonly static AIPackageLocationXmlCreateTranslation Instance = new AIPackageLocationXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IAIPackageLocation item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    AIPackageLocationXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IAIPackageLocation item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Type":
-                    errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Type);
-                    try
-                    {
-                        item.Type = EnumXmlTranslation<AIPackageLocation.LocationType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LocationReference":
-                    errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.LocationReference);
-                    try
-                    {
-                        item.LocationReference = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Radius":
-                    errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Radius);
-                    try
-                    {
-                        item.Radius = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Oblivion
-{
-    #region Xml Write Mixins
-    public static class AIPackageLocationXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IAIPackageLocationGetter item,
-            XElement node,
-            out AIPackageLocation.ErrorMask errorMask,
-            AIPackageLocation.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((AIPackageLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = AIPackageLocation.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IAIPackageLocationGetter item,
-            string path,
-            out AIPackageLocation.ErrorMask errorMask,
-            AIPackageLocation.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IAIPackageLocationGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IAIPackageLocationGetter item,
-            Stream stream,
-            out AIPackageLocation.ErrorMask errorMask,
-            AIPackageLocation.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IAIPackageLocationGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IAIPackageLocationGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((AIPackageLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IAIPackageLocationGetter item,
-            XElement node,
-            string? name = null,
-            AIPackageLocation.TranslationMask? translationMask = null)
-        {
-            ((AIPackageLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IAIPackageLocationGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((AIPackageLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IAIPackageLocationGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((AIPackageLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -1953,23 +1297,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageLocationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageLocationCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => AIPackageLocationXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((AIPackageLocationXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AIPackageLocationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -1985,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public AIPackageLocation.LocationType Type => (AIPackageLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
         public IFormLink<IPlacedGetter> LocationReference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public Single Radius => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
+        public Single Radius => _data.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2010,7 +1337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new AIPackageLocationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(

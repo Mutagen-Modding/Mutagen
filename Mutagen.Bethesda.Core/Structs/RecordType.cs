@@ -13,6 +13,7 @@ namespace Mutagen.Bethesda
     /// A struct representing a four character header for a record.
     /// These are used commonly in the binary format to delineate records and subrecords.
     /// </summary>
+    [DebuggerDisplay("{Type}")]
     public struct RecordType : IEquatable<RecordType>, IEquatable<string>
     {
         /// <summary>

@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -56,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MapInfos
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NavigationMapInfo> _MapInfos = new ExtendedList<NavigationMapInfo>();
-        public ExtendedList<NavigationMapInfo> MapInfos
+        private IExtendedList<NavigationMapInfo> _MapInfos = new ExtendedList<NavigationMapInfo>();
+        public IExtendedList<NavigationMapInfo> MapInfos
         {
             get => this._MapInfos;
             protected set => this._MapInfos = value;
@@ -120,135 +114,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => NavigationMeshInfoMapXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((NavigationMeshInfoMapXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new NavigationMeshInfoMap CreateFromXml(
-            XElement node,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static NavigationMeshInfoMap CreateFromXml(
-            XElement node,
-            out NavigationMeshInfoMap.ErrorMask errorMask,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = NavigationMeshInfoMap.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static NavigationMeshInfoMap CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new NavigationMeshInfoMap();
-            ((NavigationMeshInfoMapSetterCommon)((INavigationMeshInfoMapGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static NavigationMeshInfoMap CreateFromXml(
-            string path,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static NavigationMeshInfoMap CreateFromXml(
-            string path,
-            out NavigationMeshInfoMap.ErrorMask errorMask,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static NavigationMeshInfoMap CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static NavigationMeshInfoMap CreateFromXml(
-            Stream stream,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static NavigationMeshInfoMap CreateFromXml(
-            Stream stream,
-            out NavigationMeshInfoMap.ErrorMask errorMask,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static NavigationMeshInfoMap CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -268,7 +133,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -279,7 +144,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -689,7 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = NavigationMeshInfoMap_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = NavigationMeshInfoMap_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => NavigationMeshInfoMapCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -785,7 +650,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavigationMeshInfoMapInternal>
     {
         new UInt32? NavMeshVersion { get; set; }
-        new ExtendedList<NavigationMapInfo> MapInfos { get; }
+        new IExtendedList<NavigationMapInfo> MapInfos { get; }
         new PreferredPathing? PreferredPathing { get; set; }
         new MemorySlice<Byte>? NVSI { get; set; }
     }
@@ -800,11 +665,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INavigationMeshInfoMapGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<INavigationMeshInfoMapGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => NavigationMeshInfoMap_Registration.Instance;
+        static new ILoquiRegistration Registration => NavigationMeshInfoMap_Registration.Instance;
         UInt32? NavMeshVersion { get; }
         IReadOnlyList<INavigationMapInfoGetter> MapInfos { get; }
         IPreferredPathingGetter? PreferredPathing { get; }
@@ -943,131 +807,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this INavigationMeshInfoMapInternal item,
-            XElement node,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this INavigationMeshInfoMapInternal item,
-            XElement node,
-            out NavigationMeshInfoMap.ErrorMask errorMask,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = NavigationMeshInfoMap.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this INavigationMeshInfoMapInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((NavigationMeshInfoMapSetterCommon)((INavigationMeshInfoMapGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INavigationMeshInfoMapInternal item,
-            string path,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INavigationMeshInfoMapInternal item,
-            string path,
-            out NavigationMeshInfoMap.ErrorMask errorMask,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INavigationMeshInfoMapInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this INavigationMeshInfoMapInternal item,
-            Stream stream,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INavigationMeshInfoMapInternal item,
-            Stream stream,
-            out NavigationMeshInfoMap.ErrorMask errorMask,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INavigationMeshInfoMapInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1105,7 +844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1278,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case NavigationMeshInfoMap_FieldIndex.NavMeshVersion:
                     return typeof(UInt32);
                 case NavigationMeshInfoMap_FieldIndex.MapInfos:
-                    return typeof(ExtendedList<NavigationMapInfo>);
+                    return typeof(IExtendedList<NavigationMapInfo>);
                 case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
                     return typeof(PreferredPathing);
                 case NavigationMeshInfoMap_FieldIndex.NVSI:
@@ -1288,7 +1027,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(NavigationMeshInfoMapXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.NAVI;
         public static readonly Type BinaryWriteTranslation = typeof(NavigationMeshInfoMapBinaryWriteTranslation);
         #region Interface
@@ -1348,86 +1086,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (INavigationMeshInfoMapInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            INavigationMeshInfoMapInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            INavigationMeshInfoMapInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    NavigationMeshInfoMapXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (NavigationMeshInfoMap)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (NavigationMeshInfoMap)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1626,7 +1284,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (NavigationMeshInfoMap_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (NavigationMeshInfoMap_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (NavigationMeshInfoMap_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (NavigationMeshInfoMap_FieldIndex)((int)index);
@@ -1647,7 +1305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (NavigationMeshInfoMap_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (NavigationMeshInfoMap_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (NavigationMeshInfoMap_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (NavigationMeshInfoMap_FieldIndex)((int)index);
@@ -1979,347 +1637,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class NavigationMeshInfoMapXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static NavigationMeshInfoMapXmlWriteTranslation Instance = new NavigationMeshInfoMapXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            INavigationMeshInfoMapGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.NavMeshVersion != null)
-                && (translationMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NavMeshVersion),
-                    item: item.NavMeshVersion.Value,
-                    fieldIndex: (int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.MapInfos) ?? true))
-            {
-                ListXmlTranslation<INavigationMapInfoGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MapInfos),
-                    item: item.MapInfos,
-                    fieldIndex: (int)NavigationMeshInfoMap_FieldIndex.MapInfos,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.MapInfos),
-                    transl: (XElement subNode, INavigationMapInfoGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((NavigationMapInfoXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.PreferredPathing != null)
-                && (translationMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing) ?? true))
-            {
-                if (item.PreferredPathing.TryGet(out var PreferredPathingItem))
-                {
-                    ((PreferredPathingXmlWriteTranslation)((IXmlItem)PreferredPathingItem).XmlWriteTranslator).Write(
-                        item: PreferredPathingItem,
-                        node: node,
-                        name: nameof(item.PreferredPathing),
-                        fieldIndex: (int)NavigationMeshInfoMap_FieldIndex.PreferredPathing,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing));
-                }
-            }
-            if ((item.NVSI != null)
-                && (translationMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NVSI) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NVSI),
-                    item: item.NVSI.Value,
-                    fieldIndex: (int)NavigationMeshInfoMap_FieldIndex.NVSI,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            INavigationMeshInfoMapGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.NavigationMeshInfoMap");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.NavigationMeshInfoMap");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (INavigationMeshInfoMapGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (INavigationMeshInfoMapGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (INavigationMeshInfoMapGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class NavigationMeshInfoMapXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static NavigationMeshInfoMapXmlCreateTranslation Instance = new NavigationMeshInfoMapXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            INavigationMeshInfoMapInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    NavigationMeshInfoMapXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            INavigationMeshInfoMapInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "NavMeshVersion":
-                    errorMask?.PushIndex((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion);
-                    try
-                    {
-                        item.NavMeshVersion = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MapInfos":
-                    errorMask?.PushIndex((int)NavigationMeshInfoMap_FieldIndex.MapInfos);
-                    try
-                    {
-                        if (ListXmlTranslation<NavigationMapInfo>.Instance.Parse(
-                            node: node,
-                            enumer: out var MapInfosItem,
-                            transl: LoquiXmlTranslation<NavigationMapInfo>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.MapInfos.SetTo(MapInfosItem);
-                        }
-                        else
-                        {
-                            item.MapInfos.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PreferredPathing":
-                    errorMask?.PushIndex((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing);
-                    try
-                    {
-                        item.PreferredPathing = LoquiXmlTranslation<PreferredPathing>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NVSI":
-                    errorMask?.PushIndex((int)NavigationMeshInfoMap_FieldIndex.NVSI);
-                    try
-                    {
-                        item.NVSI = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class NavigationMeshInfoMapXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this INavigationMeshInfoMapGetter item,
-            XElement node,
-            out NavigationMeshInfoMap.ErrorMask errorMask,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((NavigationMeshInfoMapXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = NavigationMeshInfoMap.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this INavigationMeshInfoMapGetter item,
-            string path,
-            out NavigationMeshInfoMap.ErrorMask errorMask,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this INavigationMeshInfoMapGetter item,
-            Stream stream,
-            out NavigationMeshInfoMap.ErrorMask errorMask,
-            NavigationMeshInfoMap.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2379,10 +1696,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -2435,9 +1754,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             INavigationMeshInfoMapInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2449,7 +1769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NavMeshVersion = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion);
+                    return (int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion;
                 }
                 case RecordTypeInts.NVMI:
                 {
@@ -2459,23 +1779,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.NVMI,
                             recordTypeConverter: recordTypeConverter,
                             transl: NavigationMapInfo.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.MapInfos);
+                    return (int)NavigationMeshInfoMap_FieldIndex.MapInfos;
                 }
                 case RecordTypeInts.NVPP:
                 {
                     item.PreferredPathing = Mutagen.Bethesda.Skyrim.PreferredPathing.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing);
+                    return (int)NavigationMeshInfoMap_FieldIndex.PreferredPathing;
                 }
                 case RecordTypeInts.NVSI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NVSI = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NVSI);
+                    return (int)NavigationMeshInfoMap_FieldIndex.NVSI;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -2521,21 +1842,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => NavigationMeshInfoMapCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshInfoMapCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshInfoMapCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => NavigationMeshInfoMapXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((NavigationMeshInfoMapXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NavigationMeshInfoMapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2587,8 +1893,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new NavigationMeshInfoMapBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2614,12 +1921,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2628,11 +1936,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NVER:
                 {
                     _NavMeshVersionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion);
+                    return (int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion;
                 }
                 case RecordTypeInts.NVMI:
                 {
-                    this.MapInfos = BinaryOverlayList<NavigationMapInfoBinaryOverlay>.FactoryByArray(
+                    this.MapInfos = BinaryOverlayList.FactoryByArray<NavigationMapInfoBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -2642,17 +1950,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.MapInfos);
+                    return (int)NavigationMeshInfoMap_FieldIndex.MapInfos;
                 }
                 case RecordTypeInts.NVPP:
                 {
                     _PreferredPathingLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing);
+                    return (int)NavigationMeshInfoMap_FieldIndex.PreferredPathing;
                 }
                 case RecordTypeInts.NVSI:
                 {
                     _NVSILocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NVSI);
+                    return (int)NavigationMeshInfoMap_FieldIndex.NVSI;
                 }
                 default:
                     return base.FillRecordType(
@@ -2660,7 +1968,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

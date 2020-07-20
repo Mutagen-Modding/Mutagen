@@ -46,27 +46,29 @@ namespace Mutagen.Bethesda
             R record,
             MutagenFrame frame);
 
-        public delegate TryGet<int?> RecordTypeFill<R>(
+        public delegate ParseResult RecordTypeFill<R>(
             R record,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter);
 
-        public delegate TryGet<int?> SubrecordFill<R>(
+        public delegate ParseResult SubrecordFill<R>(
             R record,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter);
 
-        public delegate TryGet<int?> ModRecordTypeFill<R, G>(
-            R record,
+        public delegate ParseResult ModRecordTypeFill<TRecord, TImportMask>(
+            TRecord record,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            G importMask,
+            TImportMask importMask,
             RecordTypeConverter? recordTypeConverter);
 
         public static M MajorRecordParse<M>(
@@ -87,6 +89,8 @@ namespace Mutagen.Bethesda
             {
                 targetFrame = frame.Decompress();
             }
+            Dictionary<RecordType, int>? recordParseCount = null;
+            frame.MetaData.FormVersion = record.FormVersion;
             while (!targetFrame.Complete)
             {
                 var subMeta = targetFrame.GetSubrecord();
@@ -94,16 +98,26 @@ namespace Mutagen.Bethesda
                 var parsed = fillTyped(
                     record: record,
                     frame: targetFrame,
+                    recordParseCount: recordParseCount,
                     nextRecordType: subMeta.RecordType,
                     contentLength: subMeta.ContentLength,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
+                if (parsed.DuplicateParseMarker != null)
+                {
+                    if (recordParseCount == null)
+                    {
+                        recordParseCount = new Dictionary<RecordType, int>();
+                    }
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                }
                 if (targetFrame.Position < finalPos)
                 {
                     targetFrame.Position = finalPos;
                 }
             }
             frame.SetToFinalPosition();
+            frame.MetaData.FormVersion = null;
             return record;
         }
 
@@ -129,6 +143,7 @@ namespace Mutagen.Bethesda
             fillStructs?.Invoke(
                 record: record,
                 frame: frame);
+            Dictionary<RecordType, int>? recordParseCount = null;
             while (!frame.Complete)
             {
                 var subMeta = frame.GetSubrecord();
@@ -136,10 +151,19 @@ namespace Mutagen.Bethesda
                 var parsed = fillTyped(
                     record: record,
                     frame: frame,
+                    recordParseCount: recordParseCount,
                     nextRecordType: subMeta.RecordType,
                     contentLength: subMeta.ContentLength,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
+                if (parsed.DuplicateParseMarker != null)
+                {
+                    if (recordParseCount == null)
+                    {
+                        recordParseCount = new Dictionary<RecordType, int>();
+                    }
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                }
                 if (frame.Position < finalPos)
                 {
                     frame.Position = finalPos;
@@ -171,6 +195,7 @@ namespace Mutagen.Bethesda
                 record: record,
                 frame: frame);
             int? lastParsed = null;
+            Dictionary<RecordType, int>? recordParseCount = null;
             while (!frame.Complete)
             {
                 var subMeta = frame.GetSubrecord();
@@ -179,15 +204,24 @@ namespace Mutagen.Bethesda
                     record: record,
                     frame: frame,
                     lastParsed: lastParsed,
+                    recordParseCount: recordParseCount,
                     nextRecordType: subMeta.RecordType,
                     contentLength: subMeta.ContentLength,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
                 if (frame.Position < finalPos)
                 {
                     frame.Position = finalPos;
                 }
-                lastParsed = parsed.Value;
+                if (parsed.DuplicateParseMarker != null)
+                {
+                    if (recordParseCount == null)
+                    {
+                        recordParseCount = new Dictionary<RecordType, int>();
+                    }
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                }
+                lastParsed = parsed.ParsedIndex;
             }
             return record;
         }
@@ -219,10 +253,11 @@ namespace Mutagen.Bethesda
                 var parsed = fillTyped(
                     record: record,
                     frame: frame,
+                    recordParseCount: null,
                     nextRecordType: nextRecordType,
                     contentLength: contentLength,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
                 if (frame.Position < finalPos)
                 {
                     frame.Position = finalPos;
@@ -232,15 +267,16 @@ namespace Mutagen.Bethesda
             return record;
         }
 
-        public static M ModParse<M, G>(
-            M record,
+        public static TMod ModParse<TMod, TImportMask>(
+            TMod record,
             MutagenFrame frame,
-            G importMask,
+            TImportMask importMask,
             RecordTypeConverter? recordTypeConverter,
-            RecordStructFill<M> fillStructs,
-            ModRecordTypeFill<M, G> fillTyped)
+            RecordStructFill<TMod> fillStructs,
+            ModRecordTypeFill<TMod, TImportMask> fillTyped)
+            where TMod : IMod
         {
-            var modHeader = frame.Reader.GetMod();
+            var modHeader = frame.Reader.GetModHeader();
             fillTyped(
                 record: record,
                 frame: frame,
@@ -248,6 +284,7 @@ namespace Mutagen.Bethesda
                 nextRecordType: modHeader.RecordType,
                 contentLength: checked((int)modHeader.ContentLength),
                 recordTypeConverter: recordTypeConverter);
+            frame.Reader.MetaData.MasterReferences = new MasterReferenceReader(record.ModKey, record.MasterReferences);
             while (!frame.Complete)
             {
                 var groupHeader = frame.GetGroup();
@@ -269,7 +306,7 @@ namespace Mutagen.Bethesda
                     nextRecordType: groupHeader.ContainedRecordType,
                     contentLength: len,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
                 if (frame.Position < finalPos)
                 {
                     frame.Position = finalPos;
@@ -354,24 +391,6 @@ namespace Mutagen.Bethesda
             return stream;
         }
 
-        public static void FillEdidLinkCache<T>(IModGetter mod, RecordType recordType, BinaryOverlayFactoryPackage package)
-            where T : IMajorRecordCommonGetter
-        {
-            var group = mod.GetGroupGetter<T>();
-            var cache = new Dictionary<RecordType, object>();
-            package.EdidLinkCache[recordType] = cache;
-            foreach (var item in group)
-            {
-                var edid = item.Value.EditorID;
-                if (edid == null) continue;
-                if (edid.Length != Constants.HeaderLength)
-                {
-                    throw new ArgumentException($"EDID link record type {recordType} had an EDID of improper length: {edid}");
-                }
-                cache[new RecordType(edid)] = item.Value;
-            }
-        }
-
         /// <summary>
         /// Parses span data and enumerates pairs of record type -> locations
         /// 
@@ -400,8 +419,9 @@ namespace Mutagen.Bethesda
         /// <param name="span">Bytes containing subrecords</param>
         /// <param name="meta">Metadata to use in subrecord parsing</param>
         /// <param name="recordType">Repeating type to locate</param>
+        /// <param name="lenParsed">The amount of data located subrecords cover</param>
         /// <returns>Array of locations of located target types</returns>
-        public static int[] FindRepeatingSubrecord(ReadOnlySpan<byte> span, GameConstants meta, RecordType recordType, out int lenParsed)
+        public static int[] ParseRepeatingSubrecord(ReadOnlyMemorySlice<byte> span, GameConstants meta, RecordType recordType, out int lenParsed)
         {
             lenParsed = 0;
             List<int> list = new List<int>();
@@ -425,7 +445,7 @@ namespace Mutagen.Bethesda
         /// <param name="recordTypes">Record types to locate</param>
         /// <param name="meta">Metadata to use in subrecord parsing</param>
         /// <returns>Array of found record locations</returns>
-        public static int?[] FindFirstSubrecords(ReadOnlySpan<byte> data, GameConstants meta, params RecordType[] recordTypes)
+        public static int?[] FindFirstSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, params RecordType[] recordTypes)
         {
             int loc = 0;
             int?[] ret = new int?[recordTypes.Length];
@@ -475,7 +495,7 @@ namespace Mutagen.Bethesda
         /// <param name="meta">Metadata to use in subrecord parsing</param>
         /// <param name="lenParsed">Amount of data contained in located records</param>
         /// <returns>Array of found record locations</returns>
-        public static int?[] FindNextSubrecords(ReadOnlySpan<byte> data, GameConstants meta, out int lenParsed, params RecordType[] recordTypes)
+        public static int?[] FindNextSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, out int lenParsed, params RecordType[] recordTypes)
         {
             return FindNextSubrecords(
                 data: data,
@@ -500,7 +520,7 @@ namespace Mutagen.Bethesda
         /// <param name="stopOnAlreadyEncounteredRecord">Whether to stop looking if encountering a record type that has already been seen</param>
         /// <returns>Array of found record locations</returns>
         public static int?[] FindNextSubrecords(
-            ReadOnlySpan<byte> data,
+            ReadOnlyMemorySlice<byte> data,
             GameConstants meta,
             out int lenParsed,
             bool stopOnAlreadyEncounteredRecord,
@@ -554,7 +574,7 @@ namespace Mutagen.Bethesda
         }
 
         public static int? FindFirstSubrecord(
-            ReadOnlySpan<byte> data,
+            ReadOnlyMemorySlice<byte> data,
             GameConstants meta,
             RecordType recordType,
             bool navigateToContent = false,
@@ -578,7 +598,7 @@ namespace Mutagen.Bethesda
         }
 
         public static int? FindFirstSubrecord(
-            ReadOnlySpan<byte> data,
+            ReadOnlyMemorySlice<byte> data,
             GameConstants meta,
             ICollectionGetter<RecordType> recordTypes,
             bool navigateToContent = false,
@@ -602,7 +622,7 @@ namespace Mutagen.Bethesda
         }
 
         public static int[] FindAllOfSubrecord(
-            ReadOnlySpan<byte> data,
+            ReadOnlyMemorySlice<byte> data,
             GameConstants meta,
             RecordType recordType,
             bool navigateToContent = false)
@@ -629,7 +649,7 @@ namespace Mutagen.Bethesda
         }
 
         public static int[] FindAllOfSubrecords(
-            ReadOnlySpan<byte> data,
+            ReadOnlyMemorySlice<byte> data,
             GameConstants meta,
             ICollectionGetter<RecordType> recordTypes,
             bool navigateToContent = false)
@@ -720,12 +740,12 @@ namespace Mutagen.Bethesda
 
         public static void SkipPastAll(IBinaryReadStream stream, GameConstants meta, RecordType recordType)
         {
-            while (meta.TryReadSubrecordFrame(stream, recordType, out var _))
+            while (stream.TryReadSubrecordFrame(meta, recordType, out var _))
             {
             }
         }
 
-        public static int SkipPastAll(ReadOnlySpan<byte> data, GameConstants constants, RecordType toSkip, out int numRecordsPassed)
+        public static int SkipPastAll(ReadOnlyMemorySlice<byte> data, GameConstants constants, RecordType toSkip, out int numRecordsPassed)
         {
             var pos = 0;
             numRecordsPassed = 0;
@@ -751,11 +771,11 @@ namespace Mutagen.Bethesda
             RecordType overflowType)
         {
             if (!loc.HasValue) return null;
-            var header = constants.SubrecordMemoryFrame(bytes[loc.Value..]);
-            if (header.Header.RecordType == overflowType)
+            var header = constants.SubrecordFrame(bytes[loc.Value..]);
+            if (header.RecordType == overflowType)
             {
                 return bytes.Slice(
-                    loc.Value + header.Header.TotalLength + header.Header.HeaderLength,
+                    loc.Value + header.TotalLength + header.HeaderLength,
                     checked((int)BinaryPrimitives.ReadUInt32LittleEndian(header.Content)));
             }
             else
@@ -768,7 +788,7 @@ namespace Mutagen.Bethesda
             int? existingLoc,
             OverlayStream stream,
             int offset,
-            ReadOnlySpan<byte> data,
+            ReadOnlyMemorySlice<byte> data,
             GameConstants constants)
         {
             if (existingLoc.HasValue)

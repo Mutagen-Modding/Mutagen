@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -47,8 +41,8 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region LipMode
-        public Boolean LipMode { get; set; } = default;
+        #region ForceNames
+        public Boolean ForceNames { get; set; } = default;
         #endregion
         #region Aah_LipBigAah
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -256,137 +250,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => FaceFxPhonemesXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((FaceFxPhonemesXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static FaceFxPhonemes CreateFromXml(
-            XElement node,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static FaceFxPhonemes CreateFromXml(
-            XElement node,
-            out FaceFxPhonemes.ErrorMask errorMask,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = FaceFxPhonemes.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static FaceFxPhonemes CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new FaceFxPhonemes();
-            ((FaceFxPhonemesSetterCommon)((IFaceFxPhonemesGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static FaceFxPhonemes CreateFromXml(
-            string path,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static FaceFxPhonemes CreateFromXml(
-            string path,
-            out FaceFxPhonemes.ErrorMask errorMask,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static FaceFxPhonemes CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static FaceFxPhonemes CreateFromXml(
-            Stream stream,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static FaceFxPhonemes CreateFromXml(
-            Stream stream,
-            out FaceFxPhonemes.ErrorMask errorMask,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static FaceFxPhonemes CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public class Mask<TItem> :
             IMask<TItem>,
@@ -395,7 +258,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.LipMode = initialValue;
+                this.ForceNames = initialValue;
                 this.Aah_LipBigAah = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
                 this.BigAah_LipDST = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
                 this.BMP_LipEee = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
@@ -415,7 +278,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                TItem LipMode,
+                TItem ForceNames,
                 TItem Aah_LipBigAah,
                 TItem BigAah_LipDST,
                 TItem BMP_LipEee,
@@ -433,7 +296,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Th,
                 TItem W)
             {
-                this.LipMode = LipMode;
+                this.ForceNames = ForceNames;
                 this.Aah_LipBigAah = new MaskItem<TItem, Phoneme.Mask<TItem>?>(Aah_LipBigAah, new Phoneme.Mask<TItem>(Aah_LipBigAah));
                 this.BigAah_LipDST = new MaskItem<TItem, Phoneme.Mask<TItem>?>(BigAah_LipDST, new Phoneme.Mask<TItem>(BigAah_LipDST));
                 this.BMP_LipEee = new MaskItem<TItem, Phoneme.Mask<TItem>?>(BMP_LipEee, new Phoneme.Mask<TItem>(BMP_LipEee));
@@ -461,7 +324,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem LipMode;
+            public TItem ForceNames;
             public MaskItem<TItem, Phoneme.Mask<TItem>?>? Aah_LipBigAah { get; set; }
             public MaskItem<TItem, Phoneme.Mask<TItem>?>? BigAah_LipDST { get; set; }
             public MaskItem<TItem, Phoneme.Mask<TItem>?>? BMP_LipEee { get; set; }
@@ -490,7 +353,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.LipMode, rhs.LipMode)) return false;
+                if (!object.Equals(this.ForceNames, rhs.ForceNames)) return false;
                 if (!object.Equals(this.Aah_LipBigAah, rhs.Aah_LipBigAah)) return false;
                 if (!object.Equals(this.BigAah_LipDST, rhs.BigAah_LipDST)) return false;
                 if (!object.Equals(this.BMP_LipEee, rhs.BMP_LipEee)) return false;
@@ -512,7 +375,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.LipMode);
+                hash.Add(this.ForceNames);
                 hash.Add(this.Aah_LipBigAah);
                 hash.Add(this.BigAah_LipDST);
                 hash.Add(this.BMP_LipEee);
@@ -537,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.LipMode)) return false;
+                if (!eval(this.ForceNames)) return false;
                 if (Aah_LipBigAah != null)
                 {
                     if (!eval(this.Aah_LipBigAah.Overall)) return false;
@@ -625,7 +488,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.LipMode)) return true;
+                if (eval(this.ForceNames)) return true;
                 if (Aah_LipBigAah != null)
                 {
                     if (eval(this.Aah_LipBigAah.Overall)) return true;
@@ -720,7 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.LipMode = eval(this.LipMode);
+                obj.ForceNames = eval(this.ForceNames);
                 obj.Aah_LipBigAah = this.Aah_LipBigAah == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.Aah_LipBigAah.Overall), this.Aah_LipBigAah.Specific?.Translate(eval));
                 obj.BigAah_LipDST = this.BigAah_LipDST == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.BigAah_LipDST.Overall), this.BigAah_LipDST.Specific?.Translate(eval));
                 obj.BMP_LipEee = this.BMP_LipEee == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.BMP_LipEee.Overall), this.BMP_LipEee.Specific?.Translate(eval));
@@ -759,9 +622,9 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.LipMode ?? true)
+                    if (printMask?.ForceNames ?? true)
                     {
-                        fg.AppendItem(LipMode, "LipMode");
+                        fg.AppendItem(ForceNames, "ForceNames");
                     }
                     if (printMask?.Aah_LipBigAah?.Overall ?? true)
                     {
@@ -852,7 +715,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? LipMode;
+            public Exception? ForceNames;
             public MaskItem<Exception?, Phoneme.ErrorMask?>? Aah_LipBigAah;
             public MaskItem<Exception?, Phoneme.ErrorMask?>? BigAah_LipDST;
             public MaskItem<Exception?, Phoneme.ErrorMask?>? BMP_LipEee;
@@ -877,8 +740,8 @@ namespace Mutagen.Bethesda.Skyrim
                 FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceFxPhonemes_FieldIndex.LipMode:
-                        return LipMode;
+                    case FaceFxPhonemes_FieldIndex.ForceNames:
+                        return ForceNames;
                     case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                         return Aah_LipBigAah;
                     case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
@@ -921,8 +784,8 @@ namespace Mutagen.Bethesda.Skyrim
                 FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceFxPhonemes_FieldIndex.LipMode:
-                        this.LipMode = ex;
+                    case FaceFxPhonemes_FieldIndex.ForceNames:
+                        this.ForceNames = ex;
                         break;
                     case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                         this.Aah_LipBigAah = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
@@ -982,8 +845,8 @@ namespace Mutagen.Bethesda.Skyrim
                 FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceFxPhonemes_FieldIndex.LipMode:
-                        this.LipMode = (Exception?)obj;
+                    case FaceFxPhonemes_FieldIndex.ForceNames:
+                        this.ForceNames = (Exception?)obj;
                         break;
                     case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                         this.Aah_LipBigAah = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
@@ -1041,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (LipMode != null) return true;
+                if (ForceNames != null) return true;
                 if (Aah_LipBigAah != null) return true;
                 if (BigAah_LipDST != null) return true;
                 if (BMP_LipEee != null) return true;
@@ -1092,7 +955,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(LipMode, "LipMode");
+                fg.AppendItem(ForceNames, "ForceNames");
                 Aah_LipBigAah?.ToString(fg);
                 BigAah_LipDST?.ToString(fg);
                 BMP_LipEee?.ToString(fg);
@@ -1117,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.LipMode = this.LipMode.Combine(rhs.LipMode);
+                ret.ForceNames = this.ForceNames.Combine(rhs.ForceNames);
                 ret.Aah_LipBigAah = this.Aah_LipBigAah.Combine(rhs.Aah_LipBigAah, (l, r) => l.Combine(r));
                 ret.BigAah_LipDST = this.BigAah_LipDST.Combine(rhs.BigAah_LipDST, (l, r) => l.Combine(r));
                 ret.BMP_LipEee = this.BMP_LipEee.Combine(rhs.BMP_LipEee, (l, r) => l.Combine(r));
@@ -1155,7 +1018,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool LipMode;
+            public bool ForceNames;
             public MaskItem<bool, Phoneme.TranslationMask?> Aah_LipBigAah;
             public MaskItem<bool, Phoneme.TranslationMask?> BigAah_LipDST;
             public MaskItem<bool, Phoneme.TranslationMask?> BMP_LipEee;
@@ -1177,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.LipMode = defaultOn;
+                this.ForceNames = defaultOn;
                 this.Aah_LipBigAah = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
                 this.BigAah_LipDST = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
                 this.BMP_LipEee = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
@@ -1209,7 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((LipMode, null));
+                ret.Add((ForceNames, null));
                 ret.Add((Aah_LipBigAah?.Overall ?? true, Aah_LipBigAah?.Specific?.GetCrystal()));
                 ret.Add((BigAah_LipDST?.Overall ?? true, BigAah_LipDST?.Specific?.GetCrystal()));
                 ret.Add((BMP_LipEee?.Overall ?? true, BMP_LipEee?.Specific?.GetCrystal()));
@@ -1300,7 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFaceFxPhonemesGetter,
         ILoquiObjectSetter<IFaceFxPhonemes>
     {
-        new Boolean LipMode { get; set; }
+        new Boolean ForceNames { get; set; }
         new Phoneme? Aah_LipBigAah { get; set; }
         new Phoneme? BigAah_LipDST { get; set; }
         new Phoneme? BMP_LipEee { get; set; }
@@ -1322,7 +1185,6 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFaceFxPhonemesGetter :
         ILoquiObject,
         ILoquiObject<IFaceFxPhonemesGetter>,
-        IXmlItem,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1332,7 +1194,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => FaceFxPhonemes_Registration.Instance;
-        Boolean LipMode { get; }
+        Boolean ForceNames { get; }
         IPhonemeGetter? Aah_LipBigAah { get; }
         IPhonemeGetter? BigAah_LipDST { get; }
         IPhonemeGetter? BMP_LipEee { get; }
@@ -1506,131 +1368,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IFaceFxPhonemes item,
-            XElement node,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IFaceFxPhonemes item,
-            XElement node,
-            out FaceFxPhonemes.ErrorMask errorMask,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = FaceFxPhonemes.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IFaceFxPhonemes item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((FaceFxPhonemesSetterCommon)((IFaceFxPhonemesGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFaceFxPhonemes item,
-            string path,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFaceFxPhonemes item,
-            string path,
-            out FaceFxPhonemes.ErrorMask errorMask,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFaceFxPhonemes item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IFaceFxPhonemes item,
-            Stream stream,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFaceFxPhonemes item,
-            Stream stream,
-            out FaceFxPhonemes.ErrorMask errorMask,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFaceFxPhonemes item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1666,7 +1403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum FaceFxPhonemes_FieldIndex
     {
-        LipMode = 0,
+        ForceNames = 0,
         Aah_LipBigAah = 1,
         BigAah_LipDST = 2,
         BMP_LipEee = 3,
@@ -1732,8 +1469,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "LIPMODE":
-                    return (ushort)FaceFxPhonemes_FieldIndex.LipMode;
+                case "FORCENAMES":
+                    return (ushort)FaceFxPhonemes_FieldIndex.ForceNames;
                 case "AAH_LIPBIGAAH":
                     return (ushort)FaceFxPhonemes_FieldIndex.Aah_LipBigAah;
                 case "BIGAAH_LIPDST":
@@ -1776,7 +1513,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.ForceNames:
                 case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                 case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
                 case FaceFxPhonemes_FieldIndex.BMP_LipEee:
@@ -1821,7 +1558,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case FaceFxPhonemes_FieldIndex.Th:
                 case FaceFxPhonemes_FieldIndex.W:
                     return true;
-                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.ForceNames:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1833,7 +1570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.ForceNames:
                 case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                 case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
                 case FaceFxPhonemes_FieldIndex.BMP_LipEee:
@@ -1861,8 +1598,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.LipMode:
-                    return "LipMode";
+                case FaceFxPhonemes_FieldIndex.ForceNames:
+                    return "ForceNames";
                 case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                     return "Aah_LipBigAah";
                 case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
@@ -1905,7 +1642,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.ForceNames:
                 case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                 case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
                 case FaceFxPhonemes_FieldIndex.BMP_LipEee:
@@ -1933,7 +1670,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.ForceNames:
                 case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                 case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
                 case FaceFxPhonemes_FieldIndex.BMP_LipEee:
@@ -1961,7 +1698,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.ForceNames:
                     return typeof(Boolean);
                 case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                     return typeof(Phoneme);
@@ -2000,7 +1737,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(FaceFxPhonemesXmlWriteTranslation);
         public static readonly Type BinaryWriteTranslation = typeof(FaceFxPhonemesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2043,7 +1779,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IFaceFxPhonemes item)
         {
             ClearPartial();
-            item.LipMode = default;
+            item.ForceNames = default;
             item.Aah_LipBigAah = null;
             item.BigAah_LipDST = null;
             item.BMP_LipEee = null;
@@ -2061,34 +1797,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Th = null;
             item.W = null;
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IFaceFxPhonemes item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FaceFxPhonemesXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2131,7 +1839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.LipMode = item.LipMode == rhs.LipMode;
+            ret.ForceNames = item.ForceNames == rhs.ForceNames;
             ret.Aah_LipBigAah = EqualsMaskHelper.EqualsHelper(
                 item.Aah_LipBigAah,
                 rhs.Aah_LipBigAah,
@@ -2258,9 +1966,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             FaceFxPhonemes.Mask<bool>? printMask = null)
         {
-            if (printMask?.LipMode ?? true)
+            if (printMask?.ForceNames ?? true)
             {
-                fg.AppendItem(item.LipMode, "LipMode");
+                fg.AppendItem(item.ForceNames, "ForceNames");
             }
             if ((printMask?.Aah_LipBigAah?.Overall ?? true)
                 && item.Aah_LipBigAah.TryGet(out var Aah_LipBigAahItem))
@@ -2387,7 +2095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFaceFxPhonemesGetter item,
             FaceFxPhonemes.Mask<bool> mask)
         {
-            mask.LipMode = true;
+            mask.ForceNames = true;
             var itemAah_LipBigAah = item.Aah_LipBigAah;
             mask.Aah_LipBigAah = new MaskItem<bool, Phoneme.Mask<bool>?>(itemAah_LipBigAah != null, itemAah_LipBigAah?.GetHasBeenSetMask());
             var itemBigAah_LipDST = item.BigAah_LipDST;
@@ -2429,7 +2137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.LipMode != rhs.LipMode) return false;
+            if (lhs.ForceNames != rhs.ForceNames) return false;
             if (!object.Equals(lhs.Aah_LipBigAah, rhs.Aah_LipBigAah)) return false;
             if (!object.Equals(lhs.BigAah_LipDST, rhs.BigAah_LipDST)) return false;
             if (!object.Equals(lhs.BMP_LipEee, rhs.BMP_LipEee)) return false;
@@ -2452,7 +2160,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IFaceFxPhonemesGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.LipMode);
+            hash.Add(item.ForceNames);
             if (item.Aah_LipBigAah.TryGet(out var Aah_LipBigAahitem))
             {
                 hash.Add(Aah_LipBigAahitem);
@@ -2549,9 +2257,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.LipMode) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ForceNames) ?? true))
             {
-                item.LipMode = rhs.LipMode;
+                item.ForceNames = rhs.ForceNames;
             }
             if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah) ?? true))
             {
@@ -3045,844 +2753,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class FaceFxPhonemesXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static FaceFxPhonemesXmlWriteTranslation Instance = new FaceFxPhonemesXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IFaceFxPhonemesGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.LipMode) ?? true))
-            {
-                BooleanXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LipMode),
-                    item: item.LipMode,
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.LipMode,
-                    errorMask: errorMask);
-            }
-            if ((item.Aah_LipBigAah != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah) ?? true))
-            {
-                if (item.Aah_LipBigAah.TryGet(out var Aah_LipBigAahItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)Aah_LipBigAahItem).XmlWriteTranslator).Write(
-                        item: Aah_LipBigAahItem,
-                        node: node,
-                        name: nameof(item.Aah_LipBigAah),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah));
-                }
-            }
-            if ((item.BigAah_LipDST != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST) ?? true))
-            {
-                if (item.BigAah_LipDST.TryGet(out var BigAah_LipDSTItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)BigAah_LipDSTItem).XmlWriteTranslator).Write(
-                        item: BigAah_LipDSTItem,
-                        node: node,
-                        name: nameof(item.BigAah_LipDST),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.BigAah_LipDST,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST));
-                }
-            }
-            if ((item.BMP_LipEee != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.BMP_LipEee) ?? true))
-            {
-                if (item.BMP_LipEee.TryGet(out var BMP_LipEeeItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)BMP_LipEeeItem).XmlWriteTranslator).Write(
-                        item: BMP_LipEeeItem,
-                        node: node,
-                        name: nameof(item.BMP_LipEee),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.BMP_LipEee,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.BMP_LipEee));
-                }
-            }
-            if ((item.ChJSh_LipFV != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV) ?? true))
-            {
-                if (item.ChJSh_LipFV.TryGet(out var ChJSh_LipFVItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)ChJSh_LipFVItem).XmlWriteTranslator).Write(
-                        item: ChJSh_LipFVItem,
-                        node: node,
-                        name: nameof(item.ChJSh_LipFV),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV));
-                }
-            }
-            if ((item.DST_LipK != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.DST_LipK) ?? true))
-            {
-                if (item.DST_LipK.TryGet(out var DST_LipKItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)DST_LipKItem).XmlWriteTranslator).Write(
-                        item: DST_LipKItem,
-                        node: node,
-                        name: nameof(item.DST_LipK),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.DST_LipK,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.DST_LipK));
-                }
-            }
-            if ((item.Eee_LipL != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Eee_LipL) ?? true))
-            {
-                if (item.Eee_LipL.TryGet(out var Eee_LipLItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)Eee_LipLItem).XmlWriteTranslator).Write(
-                        item: Eee_LipLItem,
-                        node: node,
-                        name: nameof(item.Eee_LipL),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.Eee_LipL,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Eee_LipL));
-                }
-            }
-            if ((item.Eh_LipR != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Eh_LipR) ?? true))
-            {
-                if (item.Eh_LipR.TryGet(out var Eh_LipRItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)Eh_LipRItem).XmlWriteTranslator).Write(
-                        item: Eh_LipRItem,
-                        node: node,
-                        name: nameof(item.Eh_LipR),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.Eh_LipR,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Eh_LipR));
-                }
-            }
-            if ((item.FV_LipTh != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.FV_LipTh) ?? true))
-            {
-                if (item.FV_LipTh.TryGet(out var FV_LipThItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)FV_LipThItem).XmlWriteTranslator).Write(
-                        item: FV_LipThItem,
-                        node: node,
-                        name: nameof(item.FV_LipTh),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.FV_LipTh,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.FV_LipTh));
-                }
-            }
-            if ((item.I != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.I) ?? true))
-            {
-                if (item.I.TryGet(out var IItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)IItem).XmlWriteTranslator).Write(
-                        item: IItem,
-                        node: node,
-                        name: nameof(item.I),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.I,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.I));
-                }
-            }
-            if ((item.K != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.K) ?? true))
-            {
-                if (item.K.TryGet(out var KItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)KItem).XmlWriteTranslator).Write(
-                        item: KItem,
-                        node: node,
-                        name: nameof(item.K),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.K,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.K));
-                }
-            }
-            if ((item.N != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.N) ?? true))
-            {
-                if (item.N.TryGet(out var NItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)NItem).XmlWriteTranslator).Write(
-                        item: NItem,
-                        node: node,
-                        name: nameof(item.N),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.N,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.N));
-                }
-            }
-            if ((item.Oh != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Oh) ?? true))
-            {
-                if (item.Oh.TryGet(out var OhItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)OhItem).XmlWriteTranslator).Write(
-                        item: OhItem,
-                        node: node,
-                        name: nameof(item.Oh),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.Oh,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Oh));
-                }
-            }
-            if ((item.OohQ != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.OohQ) ?? true))
-            {
-                if (item.OohQ.TryGet(out var OohQItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)OohQItem).XmlWriteTranslator).Write(
-                        item: OohQItem,
-                        node: node,
-                        name: nameof(item.OohQ),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.OohQ,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.OohQ));
-                }
-            }
-            if ((item.R != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.R) ?? true))
-            {
-                if (item.R.TryGet(out var RItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)RItem).XmlWriteTranslator).Write(
-                        item: RItem,
-                        node: node,
-                        name: nameof(item.R),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.R,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.R));
-                }
-            }
-            if ((item.Th != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Th) ?? true))
-            {
-                if (item.Th.TryGet(out var ThItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)ThItem).XmlWriteTranslator).Write(
-                        item: ThItem,
-                        node: node,
-                        name: nameof(item.Th),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.Th,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Th));
-                }
-            }
-            if ((item.W != null)
-                && (translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.W) ?? true))
-            {
-                if (item.W.TryGet(out var WItem))
-                {
-                    ((PhonemeXmlWriteTranslation)((IXmlItem)WItem).XmlWriteTranslator).Write(
-                        item: WItem,
-                        node: node,
-                        name: nameof(item.W),
-                        fieldIndex: (int)FaceFxPhonemes_FieldIndex.W,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.W));
-                }
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IFaceFxPhonemesGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.FaceFxPhonemes");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.FaceFxPhonemes");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IFaceFxPhonemesGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IFaceFxPhonemesGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IFaceFxPhonemesGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class FaceFxPhonemesXmlCreateTranslation
-    {
-        public readonly static FaceFxPhonemesXmlCreateTranslation Instance = new FaceFxPhonemesXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IFaceFxPhonemes item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FaceFxPhonemesXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IFaceFxPhonemes item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "LipMode":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.LipMode);
-                    try
-                    {
-                        item.LipMode = BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Aah_LipBigAah":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah);
-                    try
-                    {
-                        item.Aah_LipBigAah = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BigAah_LipDST":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST);
-                    try
-                    {
-                        item.BigAah_LipDST = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BMP_LipEee":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.BMP_LipEee);
-                    try
-                    {
-                        item.BMP_LipEee = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.BMP_LipEee));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ChJSh_LipFV":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV);
-                    try
-                    {
-                        item.ChJSh_LipFV = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DST_LipK":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.DST_LipK);
-                    try
-                    {
-                        item.DST_LipK = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.DST_LipK));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Eee_LipL":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Eee_LipL);
-                    try
-                    {
-                        item.Eee_LipL = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Eee_LipL));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Eh_LipR":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Eh_LipR);
-                    try
-                    {
-                        item.Eh_LipR = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Eh_LipR));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FV_LipTh":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.FV_LipTh);
-                    try
-                    {
-                        item.FV_LipTh = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.FV_LipTh));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "I":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.I);
-                    try
-                    {
-                        item.I = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.I));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "K":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.K);
-                    try
-                    {
-                        item.K = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.K));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "N":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.N);
-                    try
-                    {
-                        item.N = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.N));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Oh":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Oh);
-                    try
-                    {
-                        item.Oh = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Oh));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "OohQ":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.OohQ);
-                    try
-                    {
-                        item.OohQ = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.OohQ));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "R":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.R);
-                    try
-                    {
-                        item.R = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.R));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Th":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.Th);
-                    try
-                    {
-                        item.Th = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.Th));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "W":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.W);
-                    try
-                    {
-                        item.W = LoquiXmlTranslation<Phoneme>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)FaceFxPhonemes_FieldIndex.W));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class FaceFxPhonemesXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IFaceFxPhonemesGetter item,
-            XElement node,
-            out FaceFxPhonemes.ErrorMask errorMask,
-            FaceFxPhonemes.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((FaceFxPhonemesXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = FaceFxPhonemes.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IFaceFxPhonemesGetter item,
-            string path,
-            out FaceFxPhonemes.ErrorMask errorMask,
-            FaceFxPhonemes.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IFaceFxPhonemesGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IFaceFxPhonemesGetter item,
-            Stream stream,
-            out FaceFxPhonemes.ErrorMask errorMask,
-            FaceFxPhonemes.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IFaceFxPhonemesGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IFaceFxPhonemesGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((FaceFxPhonemesXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IFaceFxPhonemesGetter item,
-            XElement node,
-            string? name = null,
-            FaceFxPhonemes.TranslationMask? translationMask = null)
-        {
-            ((FaceFxPhonemesXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IFaceFxPhonemesGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((FaceFxPhonemesXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IFaceFxPhonemesGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((FaceFxPhonemesXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3979,23 +2849,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFaceFxPhonemesGetter)rhs, include);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => FaceFxPhonemesXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((FaceFxPhonemesXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FaceFxPhonemesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

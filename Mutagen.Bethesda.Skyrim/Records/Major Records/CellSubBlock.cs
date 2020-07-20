@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             partial void CellsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
-                this.Cells = BinaryOverlayList<CellBinaryOverlay>.FactoryByArray(
+                this.Cells = BinaryOverlayList.FactoryByArray<CellBinaryOverlay>(
                     mem: stream.RemainingMemory,
                     package: _package,
                     recordTypeConverter: null,

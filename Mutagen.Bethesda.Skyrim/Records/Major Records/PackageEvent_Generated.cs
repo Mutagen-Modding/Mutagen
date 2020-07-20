@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -109,8 +103,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ATopicReference> _Topics = new ExtendedList<ATopicReference>();
-        public ExtendedList<ATopicReference> Topics
+        private IExtendedList<ATopicReference> _Topics = new ExtendedList<ATopicReference>();
+        public IExtendedList<ATopicReference> Topics
         {
             get => this._Topics;
             protected set => this._Topics = value;
@@ -148,137 +142,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PackageEventXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PackageEventXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static PackageEvent CreateFromXml(
-            XElement node,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static PackageEvent CreateFromXml(
-            XElement node,
-            out PackageEvent.ErrorMask errorMask,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PackageEvent.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static PackageEvent CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new PackageEvent();
-            ((PackageEventSetterCommon)((IPackageEventGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static PackageEvent CreateFromXml(
-            string path,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PackageEvent CreateFromXml(
-            string path,
-            out PackageEvent.ErrorMask errorMask,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PackageEvent CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static PackageEvent CreateFromXml(
-            Stream stream,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PackageEvent CreateFromXml(
-            Stream stream,
-            out PackageEvent.ErrorMask errorMask,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PackageEvent CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -878,13 +741,12 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? SCTX { get; set; }
         new MemorySlice<Byte>? QNAM { get; set; }
         new MemorySlice<Byte>? TNAM { get; set; }
-        new ExtendedList<ATopicReference> Topics { get; }
+        new IExtendedList<ATopicReference> Topics { get; }
     }
 
     public partial interface IPackageEventGetter :
         ILoquiObject,
         ILoquiObject<IPackageEventGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -1058,131 +920,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPackageEvent item,
-            XElement node,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPackageEvent item,
-            XElement node,
-            out PackageEvent.ErrorMask errorMask,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PackageEvent.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageEvent item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((PackageEventSetterCommon)((IPackageEventGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageEvent item,
-            string path,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageEvent item,
-            string path,
-            out PackageEvent.ErrorMask errorMask,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageEvent item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IPackageEvent item,
-            Stream stream,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageEvent item,
-            Stream stream,
-            out PackageEvent.ErrorMask errorMask,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageEvent item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1428,13 +1165,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PackageEvent_FieldIndex.TNAM:
                     return typeof(MemorySlice<Byte>);
                 case PackageEvent_FieldIndex.Topics:
-                    return typeof(ExtendedList<ATopicReference>);
+                    return typeof(IExtendedList<ATopicReference>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(PackageEventXmlWriteTranslation);
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1502,34 +1238,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TNAM = default;
             item.Topics.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IPackageEvent item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PackageEventXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1951,505 +1659,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class PackageEventXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static PackageEventXmlWriteTranslation Instance = new PackageEventXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IPackageEventGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((item.Idle.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.Idle) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Idle),
-                    item: item.Idle.FormKey,
-                    fieldIndex: (int)PackageEvent_FieldIndex.Idle,
-                    errorMask: errorMask);
-            }
-            if ((item.SCHR != null)
-                && (translationMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCHR) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SCHR),
-                    item: item.SCHR.Value,
-                    fieldIndex: (int)PackageEvent_FieldIndex.SCHR,
-                    errorMask: errorMask);
-            }
-            if ((item.SCDA != null)
-                && (translationMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCDA) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SCDA),
-                    item: item.SCDA.Value,
-                    fieldIndex: (int)PackageEvent_FieldIndex.SCDA,
-                    errorMask: errorMask);
-            }
-            if ((item.SCTX != null)
-                && (translationMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCTX) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SCTX),
-                    item: item.SCTX.Value,
-                    fieldIndex: (int)PackageEvent_FieldIndex.SCTX,
-                    errorMask: errorMask);
-            }
-            if ((item.QNAM != null)
-                && (translationMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.QNAM) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.QNAM),
-                    item: item.QNAM.Value,
-                    fieldIndex: (int)PackageEvent_FieldIndex.QNAM,
-                    errorMask: errorMask);
-            }
-            if ((item.TNAM != null)
-                && (translationMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.TNAM) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TNAM),
-                    item: item.TNAM.Value,
-                    fieldIndex: (int)PackageEvent_FieldIndex.TNAM,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.Topics) ?? true))
-            {
-                ListXmlTranslation<IATopicReferenceGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Topics),
-                    item: item.Topics,
-                    fieldIndex: (int)PackageEvent_FieldIndex.Topics,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PackageEvent_FieldIndex.Topics),
-                    transl: (XElement subNode, IATopicReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ATopicReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IPackageEventGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.PackageEvent");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.PackageEvent");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPackageEventGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IPackageEventGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IPackageEventGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class PackageEventXmlCreateTranslation
-    {
-        public readonly static PackageEventXmlCreateTranslation Instance = new PackageEventXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IPackageEvent item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PackageEventXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IPackageEvent item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Idle":
-                    errorMask?.PushIndex((int)PackageEvent_FieldIndex.Idle);
-                    try
-                    {
-                        item.Idle = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SCHR":
-                    errorMask?.PushIndex((int)PackageEvent_FieldIndex.SCHR);
-                    try
-                    {
-                        item.SCHR = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SCDA":
-                    errorMask?.PushIndex((int)PackageEvent_FieldIndex.SCDA);
-                    try
-                    {
-                        item.SCDA = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SCTX":
-                    errorMask?.PushIndex((int)PackageEvent_FieldIndex.SCTX);
-                    try
-                    {
-                        item.SCTX = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "QNAM":
-                    errorMask?.PushIndex((int)PackageEvent_FieldIndex.QNAM);
-                    try
-                    {
-                        item.QNAM = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TNAM":
-                    errorMask?.PushIndex((int)PackageEvent_FieldIndex.TNAM);
-                    try
-                    {
-                        item.TNAM = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Topics":
-                    errorMask?.PushIndex((int)PackageEvent_FieldIndex.Topics);
-                    try
-                    {
-                        if (ListXmlTranslation<ATopicReference>.Instance.Parse(
-                            node: node,
-                            enumer: out var TopicsItem,
-                            transl: LoquiXmlTranslation<ATopicReference>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Topics.SetTo(TopicsItem);
-                        }
-                        else
-                        {
-                            item.Topics.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class PackageEventXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IPackageEventGetter item,
-            XElement node,
-            out PackageEvent.ErrorMask errorMask,
-            PackageEvent.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((PackageEventXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PackageEvent.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IPackageEventGetter item,
-            string path,
-            out PackageEvent.ErrorMask errorMask,
-            PackageEvent.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPackageEventGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPackageEventGetter item,
-            Stream stream,
-            out PackageEvent.ErrorMask errorMask,
-            PackageEvent.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPackageEventGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPackageEventGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((PackageEventXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IPackageEventGetter item,
-            XElement node,
-            string? name = null,
-            PackageEvent.TranslationMask? translationMask = null)
-        {
-            ((PackageEventXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IPackageEventGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PackageEventXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPackageEventGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PackageEventXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2538,10 +1747,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPackageEvent item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2551,58 +1761,58 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.Idle) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.Idle) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Idle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.Idle);
+                    return (int)PackageEvent_FieldIndex.Idle;
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCHR) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCHR) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCHR = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.SCHR);
+                    return (int)PackageEvent_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.SCDA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCDA) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCDA) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCDA = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.SCDA);
+                    return (int)PackageEvent_FieldIndex.SCDA;
                 }
                 case RecordTypeInts.SCTX:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCTX) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCTX) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCTX = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.SCTX);
+                    return (int)PackageEvent_FieldIndex.SCTX;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.QNAM) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.QNAM) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.QNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.QNAM);
+                    return (int)PackageEvent_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.TNAM) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.TNAM) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.TNAM);
+                    return (int)PackageEvent_FieldIndex.TNAM;
                 }
                 case RecordTypeInts.PDTO:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.Topics) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.Topics) return ParseResult.Stop;
                     PackageEventBinaryCreateTranslation.FillBinaryTopicsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.Topics);
+                    return (int)PackageEvent_FieldIndex.Topics;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2667,23 +1877,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageEventCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageEventCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PackageEventXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PackageEventXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PackageEventBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -2700,7 +1893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Idle
         private int? _IdleLocation;
         public bool Idle_IsSet => _IdleLocation.HasValue;
-        public IFormLinkNullable<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullable<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
         #endregion
         #region SCHR
         private int? _SCHRLocation;
@@ -2775,12 +1968,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2788,53 +1982,53 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.Idle) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.Idle) return ParseResult.Stop;
                     _IdleLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.Idle);
+                    return (int)PackageEvent_FieldIndex.Idle;
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCHR) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCHR) return ParseResult.Stop;
                     _SCHRLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.SCHR);
+                    return (int)PackageEvent_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.SCDA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCDA) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCDA) return ParseResult.Stop;
                     _SCDALocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.SCDA);
+                    return (int)PackageEvent_FieldIndex.SCDA;
                 }
                 case RecordTypeInts.SCTX:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCTX) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCTX) return ParseResult.Stop;
                     _SCTXLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.SCTX);
+                    return (int)PackageEvent_FieldIndex.SCTX;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.QNAM) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.QNAM) return ParseResult.Stop;
                     _QNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.QNAM);
+                    return (int)PackageEvent_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.TNAM) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.TNAM) return ParseResult.Stop;
                     _TNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.TNAM);
+                    return (int)PackageEvent_FieldIndex.TNAM;
                 }
                 case RecordTypeInts.PDTO:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.Topics) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.Topics) return ParseResult.Stop;
                     TopicsCustomParse(
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)PackageEvent_FieldIndex.Topics);
+                    return (int)PackageEvent_FieldIndex.Topics;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

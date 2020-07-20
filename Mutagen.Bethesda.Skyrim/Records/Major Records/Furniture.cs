@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Skyrim
                         if (loc == null) continue;
 
                         var subMeta = stream.MetaData.Constants.SubrecordFrame(stream.RemainingMemory.Slice(loc.Value));
-                        switch (subMeta.Header.RecordTypeInt)
+                        switch (subMeta.RecordTypeInt)
                         {
                             case 0x304D414E: // NAM0
                                 marker.DisabledEntryPoints = new EntryPoints()
@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 marker.MarkerKeyword = FormKeyBinaryTranslation.Instance.Parse(subMeta.Content, stream.MetaData.MasterReferences!);
                                 break;
                             default:
-                                throw new ArgumentException($"Unexpected record type: {subMeta.Header.RecordType}");
+                                throw new ArgumentException($"Unexpected record type: {subMeta.RecordType}");
                         }
                     }
 
@@ -241,8 +241,8 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void FillBinaryMarkers(IMutagenReadStream stream, Func<int, FurnitureMarker> getter)
             {
-                var locs = UtilityTranslation.FindRepeatingSubrecord(
-                    stream.RemainingSpan,
+                var locs = UtilityTranslation.ParseRepeatingSubrecord(
+                    stream.RemainingMemory,
                     stream.MetaData.Constants,
                     RecordTypes.FNPR,
                     out var parsed);
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var marker = getter(i);
 
                     var loc = locs[i];
-                    var subMeta = stream.MetaData.Constants.SubrecordFrame(stream.RemainingSpan.Slice(loc));
+                    var subMeta = stream.MetaData.Constants.SubrecordFrame(stream.RemainingMemory.Slice(loc));
                     marker.EntryPoints = new EntryPoints()
                     {
                         Type = (Furniture.AnimationType)BinaryPrimitives.ReadUInt16LittleEndian(subMeta.Content),

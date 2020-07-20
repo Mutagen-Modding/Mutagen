@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -84,135 +78,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => PlacedHazardXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PlacedHazardXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new PlacedHazard CreateFromXml(
-            XElement node,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static PlacedHazard CreateFromXml(
-            XElement node,
-            out PlacedHazard.ErrorMask errorMask,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PlacedHazard.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static PlacedHazard CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new PlacedHazard();
-            ((PlacedHazardSetterCommon)((IPlacedHazardGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static PlacedHazard CreateFromXml(
-            string path,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PlacedHazard CreateFromXml(
-            string path,
-            out PlacedHazard.ErrorMask errorMask,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PlacedHazard CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static PlacedHazard CreateFromXml(
-            Stream stream,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PlacedHazard CreateFromXml(
-            Stream stream,
-            out PlacedHazard.ErrorMask errorMask,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PlacedHazard CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             APlacedTrap.Mask<TItem>,
@@ -229,7 +94,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -249,14 +114,12 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem LocationReference,
                 TItem DistantLodData,
                 TItem Scale,
-                TItem Position,
-                TItem Rotation,
-                TItem DATADataTypeState,
+                TItem Placement,
                 TItem Hazard)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2,
@@ -276,9 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
                 LocationReference: LocationReference,
                 DistantLodData: DistantLodData,
                 Scale: Scale,
-                Position: Position,
-                Rotation: Rotation,
-                DATADataTypeState: DATADataTypeState)
+                Placement: Placement)
             {
                 this.Hazard = Hazard;
             }
@@ -523,7 +384,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PlacedHazard_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PlacedHazard_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedHazardCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -631,11 +492,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedHazardGetter :
         IAPlacedTrapGetter,
         ILoquiObject<IPlacedHazardGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PlacedHazard_Registration.Instance;
+        static new ILoquiRegistration Registration => PlacedHazard_Registration.Instance;
         IFormLink<IHazardGetter> Hazard { get; }
 
     }
@@ -771,131 +631,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPlacedHazardInternal item,
-            XElement node,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPlacedHazardInternal item,
-            XElement node,
-            out PlacedHazard.ErrorMask errorMask,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PlacedHazard.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IPlacedHazardInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((PlacedHazardSetterCommon)((IPlacedHazardGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPlacedHazardInternal item,
-            string path,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPlacedHazardInternal item,
-            string path,
-            out PlacedHazard.ErrorMask errorMask,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPlacedHazardInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IPlacedHazardInternal item,
-            Stream stream,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPlacedHazardInternal item,
-            Stream stream,
-            out PlacedHazard.ErrorMask errorMask,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPlacedHazardInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PlacedHazard.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -933,7 +668,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -953,10 +688,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         LocationReference = 19,
         DistantLodData = 20,
         Scale = 21,
-        Position = 22,
-        Rotation = 23,
-        DATADataTypeState = 24,
-        Hazard = 25,
+        Placement = 22,
+        Hazard = 23,
     }
     #endregion
 
@@ -976,7 +709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(PlacedHazard.Mask<>);
 
@@ -1097,7 +830,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(PlacedHazardXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.PHZD;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedHazardBinaryWriteTranslation);
         #region Interface
@@ -1159,99 +891,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IPlacedHazardInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IPlacedHazardInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    APlacedTrapSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IPlacedHazardInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    PlacedHazardXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IAPlacedTrapInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (PlacedHazard)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (PlacedHazard)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (PlacedHazard)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1413,7 +1052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (PlacedHazard_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.FormKey:
                     return (PlacedHazard_FieldIndex)((int)index);
-                case APlacedTrap_FieldIndex.Version:
+                case APlacedTrap_FieldIndex.VersionControl:
                     return (PlacedHazard_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.EditorID:
                     return (PlacedHazard_FieldIndex)((int)index);
@@ -1453,11 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (PlacedHazard_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.Scale:
                     return (PlacedHazard_FieldIndex)((int)index);
-                case APlacedTrap_FieldIndex.Position:
-                    return (PlacedHazard_FieldIndex)((int)index);
-                case APlacedTrap_FieldIndex.Rotation:
-                    return (PlacedHazard_FieldIndex)((int)index);
-                case APlacedTrap_FieldIndex.DATADataTypeState:
+                case APlacedTrap_FieldIndex.Placement:
                     return (PlacedHazard_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1472,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (PlacedHazard_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (PlacedHazard_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (PlacedHazard_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (PlacedHazard_FieldIndex)((int)index);
@@ -1493,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (PlacedHazard_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (PlacedHazard_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (PlacedHazard_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (PlacedHazard_FieldIndex)((int)index);
@@ -1779,252 +1414,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class PlacedHazardXmlWriteTranslation :
-        APlacedTrapXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static PlacedHazardXmlWriteTranslation Instance = new PlacedHazardXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IPlacedHazardGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            APlacedTrapXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)PlacedHazard_FieldIndex.Hazard) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Hazard),
-                    item: item.Hazard.FormKey,
-                    fieldIndex: (int)PlacedHazard_FieldIndex.Hazard,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IPlacedHazardGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.PlacedHazard");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.PlacedHazard");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPlacedHazardGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IAPlacedTrapGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPlacedHazardGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPlacedHazardGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPlacedHazardGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class PlacedHazardXmlCreateTranslation : APlacedTrapXmlCreateTranslation
-    {
-        public new readonly static PlacedHazardXmlCreateTranslation Instance = new PlacedHazardXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IPlacedHazardInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PlacedHazardXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IPlacedHazardInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Hazard":
-                    errorMask?.PushIndex((int)PlacedHazard_FieldIndex.Hazard);
-                    try
-                    {
-                        item.Hazard = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    APlacedTrapXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class PlacedHazardXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IPlacedHazardGetter item,
-            XElement node,
-            out PlacedHazard.ErrorMask errorMask,
-            PlacedHazard.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((PlacedHazardXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PlacedHazard.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IPlacedHazardGetter item,
-            string path,
-            out PlacedHazard.ErrorMask errorMask,
-            PlacedHazard.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPlacedHazardGetter item,
-            Stream stream,
-            out PlacedHazard.ErrorMask errorMask,
-            PlacedHazard.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2038,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedHazardGetter item,
             MutagenWriter writer)
         {
-            APlacedTrapBinaryWriteTranslation.WriteEmbedded(
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
         }
@@ -2164,21 +1553,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedHazardCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedHazardCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => PlacedHazardXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PlacedHazardXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedHazardBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2215,8 +1589,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new PlacedHazardBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,

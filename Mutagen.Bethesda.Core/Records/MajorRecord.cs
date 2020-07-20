@@ -49,8 +49,9 @@ namespace Mutagen.Bethesda
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IMajorRecordCommonGetter.IsCompressed => this.IsCompressed;
 
-        protected abstract int? VersionAbstract { get; }
-        int? IMajorRecordCommonGetter.Version => VersionAbstract;
+        protected abstract ushort? FormVersionAbstract { get; }
+        ushort? IMajorRecordCommonGetter.FormVersion => FormVersionAbstract;
+        ushort? IFormVersionGetter.FormVersion => FormVersionAbstract;
 
         object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker)
         {
@@ -66,8 +67,9 @@ namespace Mutagen.Bethesda.Internals
     {
         public bool IsCompressed => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.CompressedFlag);
 
-        protected abstract int? VersionAbstract { get; }
-        int? IMajorRecordCommonGetter.Version => VersionAbstract;
+        protected abstract ushort? FormVersionAbstract { get; }
+        ushort? IMajorRecordCommonGetter.FormVersion => FormVersionAbstract;
+        ushort? IFormVersionGetter.FormVersion => FormVersionAbstract;
 
         object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker)
         {

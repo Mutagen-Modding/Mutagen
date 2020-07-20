@@ -25,13 +25,14 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse(
             MutagenFrame frame,
             bool parseWhole,
-            out string item)
+            out string item,
+            StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
-            item = Parse(frame, parseWhole: parseWhole);
+            item = Parse(frame, parseWhole: parseWhole, stringBinaryType: binaryType);
             return true;
         }
 
-        public virtual string Parse(
+        public string Parse(
             MutagenFrame frame,
             bool parseWhole = true,
             StringBinaryType stringBinaryType = StringBinaryType.NullTerminate)
@@ -63,7 +64,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public virtual TranslatedString Parse(
+        public TranslatedString Parse(
             MutagenFrame frame,
             StringsSource source,
             StringBinaryType stringBinaryType,
@@ -76,13 +77,24 @@ namespace Mutagen.Bethesda.Binary
                     throw new ArgumentException($"String in Strings File format had unexpected length: {frame.Remaining} != 4");
                 }
                 uint key = frame.ReadUInt32();
-                if (key == 0) return string.Empty;
+                if (key == 0) return new TranslatedString(directString: null);
                 return frame.MetaData.StringsLookup.CreateString(source, key);
             }
             else
             {
                 return Parse(frame, parseWhole, stringBinaryType);
             }
+        }
+
+        public bool Parse(
+            MutagenFrame frame,
+            StringsSource source,
+            StringBinaryType binaryType,
+            out TranslatedString item,
+            bool parseWhole = true)
+        {
+            item = Parse(frame, source, binaryType, parseWhole);
+            return true;
         }
 
         public TranslatedString Parse(
@@ -97,7 +109,7 @@ namespace Mutagen.Bethesda.Binary
                     throw new ArgumentException($"String in Strings File format had unexpected length: {data.Length} != 4");
                 }
                 uint key = BinaryPrimitives.ReadUInt32LittleEndian(data);
-                if (key == 0) return string.Empty;
+                if (key == 0) return new TranslatedString(directString: null);
                 return lookup.CreateString(source, key);
             }
             else
@@ -184,7 +196,7 @@ namespace Mutagen.Bethesda.Binary
             if (writer.MetaData.StringsWriter == null)
             {
                 writer.Write(
-                    item.String,
+                    item.String ?? string.Empty,
                     binaryType: binaryType);
             }
             else
@@ -206,13 +218,32 @@ namespace Mutagen.Bethesda.Binary
                 if (writer.MetaData.StringsWriter == null)
                 {
                     writer.Write(
-                        item.String,
+                        item.String ?? string.Empty,
                         binaryType: binaryType);
                 }
                 else
                 {
                     writer.Write(writer.MetaData.StringsWriter.Register(item, source));
                 }
+            }
+        }
+
+        public void WriteNullable(
+            MutagenWriter writer,
+            ITranslatedStringGetter? item,
+            StringBinaryType binaryType,
+            StringsSource source)
+        {
+            if (item == null) return;
+            if (writer.MetaData.StringsWriter == null)
+            {
+                writer.Write(
+                    item.String ?? string.Empty,
+                    binaryType: binaryType);
+            }
+            else
+            {
+                writer.Write(writer.MetaData.StringsWriter.Register(item, source));
             }
         }
 

@@ -40,21 +40,34 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public bool InWorldspace { get; set; }
 
+        /// <summary>
+        /// Tracker of current major record version
+        /// </summary>
+        public ushort? FormVersion { get; set; }
+
+        /// <summary>
+        /// ModKey of the mod being parsed
+        /// </summary>
+        public ModKey ModKey { get; set; }
+
         public ParsingBundle(GameConstants constants)
         {
             this.Constants = constants;
         }
 
-        public ParsingBundle Spawn(GameMode mode)
+        public static implicit operator ParsingBundle(GameRelease release)
         {
-            return new ParsingBundle(mode)
-            {
-                MasterReferences = this.MasterReferences,
-                RecordInfoCache = this.RecordInfoCache,
-                StringsLookup = this.StringsLookup,
-                Parallel = this.Parallel,
-                InWorldspace = this.InWorldspace,
-            };
+            return new ParsingBundle(GameConstants.Get(release));
+        }
+
+        public static implicit operator ParsingBundle(GameConstants constants)
+        {
+            return new ParsingBundle(constants);
+        }
+
+        public static implicit operator GameConstants(ParsingBundle bundle)
+        {
+            return bundle.Constants;
         }
     }
 }

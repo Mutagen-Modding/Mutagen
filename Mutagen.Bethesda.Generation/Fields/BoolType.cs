@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Generation
                 BoolAsMarker = new RecordType(boolAsMarker.Value);
                 this.HasBeenSetProperty.OnNext((false, true));
             }
-            this.TryCreateFieldData().RecordType = BoolAsMarker;
+            this.GetFieldData().RecordType = BoolAsMarker;
             ByteLength = node.GetAttribute<int>(Constants.ByteLength, 1);
         }
     }

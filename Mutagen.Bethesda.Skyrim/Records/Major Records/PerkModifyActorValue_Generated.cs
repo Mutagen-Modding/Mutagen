@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -84,135 +78,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((PerkModifyActorValueCommon)((IPerkModifyActorValueGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => PerkModifyActorValueXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PerkModifyActorValueXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new PerkModifyActorValue CreateFromXml(
-            XElement node,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static PerkModifyActorValue CreateFromXml(
-            XElement node,
-            out PerkModifyActorValue.ErrorMask errorMask,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PerkModifyActorValue.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static PerkModifyActorValue CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new PerkModifyActorValue();
-            ((PerkModifyActorValueSetterCommon)((IPerkModifyActorValueGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static PerkModifyActorValue CreateFromXml(
-            string path,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PerkModifyActorValue CreateFromXml(
-            string path,
-            out PerkModifyActorValue.ErrorMask errorMask,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PerkModifyActorValue CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static PerkModifyActorValue CreateFromXml(
-            Stream stream,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PerkModifyActorValue CreateFromXml(
-            Stream stream,
-            out PerkModifyActorValue.ErrorMask errorMask,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PerkModifyActorValue CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -544,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PerkModifyActorValue_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PerkModifyActorValue_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -624,10 +489,9 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkModifyActorValueGetter :
         IAPerkEntryPointEffectGetter,
         ILoquiObject<IPerkModifyActorValueGetter>,
-        IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PerkModifyActorValue_Registration.Instance;
+        static new ILoquiRegistration Registration => PerkModifyActorValue_Registration.Instance;
         ActorValueExtended ActorValue { get; }
         Single Value { get; }
         PerkModifyActorValue.ModificationType Modification { get; }
@@ -764,131 +628,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPerkModifyActorValue item,
-            XElement node,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPerkModifyActorValue item,
-            XElement node,
-            out PerkModifyActorValue.ErrorMask errorMask,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PerkModifyActorValue.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IPerkModifyActorValue item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((PerkModifyActorValueSetterCommon)((IPerkModifyActorValueGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPerkModifyActorValue item,
-            string path,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPerkModifyActorValue item,
-            string path,
-            out PerkModifyActorValue.ErrorMask errorMask,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPerkModifyActorValue item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IPerkModifyActorValue item,
-            Stream stream,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPerkModifyActorValue item,
-            Stream stream,
-            out PerkModifyActorValue.ErrorMask errorMask,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPerkModifyActorValue item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PerkModifyActorValue.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1096,7 +835,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(PerkModifyActorValueXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.PRKE;
         public static readonly Type BinaryWriteTranslation = typeof(PerkModifyActorValueBinaryWriteTranslation);
         #region Interface
@@ -1155,60 +893,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IPerkModifyActorValue)item);
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IPerkModifyActorValue item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PerkModifyActorValueXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IAPerkEntryPointEffect item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (PerkModifyActorValue)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IAPerkEffect item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (PerkModifyActorValue)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1601,291 +1285,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class PerkModifyActorValueXmlWriteTranslation :
-        APerkEntryPointEffectXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static PerkModifyActorValueXmlWriteTranslation Instance = new PerkModifyActorValueXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IPerkModifyActorValueGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            APerkEntryPointEffectXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)PerkModifyActorValue_FieldIndex.ActorValue) ?? true))
-            {
-                EnumXmlTranslation<ActorValueExtended>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ActorValue),
-                    item: item.ActorValue,
-                    fieldIndex: (int)PerkModifyActorValue_FieldIndex.ActorValue,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PerkModifyActorValue_FieldIndex.Value) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Value),
-                    item: item.Value,
-                    fieldIndex: (int)PerkModifyActorValue_FieldIndex.Value,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PerkModifyActorValue_FieldIndex.Modification) ?? true))
-            {
-                EnumXmlTranslation<PerkModifyActorValue.ModificationType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Modification),
-                    item: item.Modification,
-                    fieldIndex: (int)PerkModifyActorValue_FieldIndex.Modification,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IPerkModifyActorValueGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.PerkModifyActorValue");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.PerkModifyActorValue");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPerkModifyActorValueGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IAPerkEntryPointEffectGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPerkModifyActorValueGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IAPerkEffectGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPerkModifyActorValueGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class PerkModifyActorValueXmlCreateTranslation : APerkEntryPointEffectXmlCreateTranslation
-    {
-        public new readonly static PerkModifyActorValueXmlCreateTranslation Instance = new PerkModifyActorValueXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IPerkModifyActorValue item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PerkModifyActorValueXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IPerkModifyActorValue item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "ActorValue":
-                    errorMask?.PushIndex((int)PerkModifyActorValue_FieldIndex.ActorValue);
-                    try
-                    {
-                        item.ActorValue = EnumXmlTranslation<ActorValueExtended>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Value":
-                    errorMask?.PushIndex((int)PerkModifyActorValue_FieldIndex.Value);
-                    try
-                    {
-                        item.Value = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Modification":
-                    errorMask?.PushIndex((int)PerkModifyActorValue_FieldIndex.Modification);
-                    try
-                    {
-                        item.Modification = EnumXmlTranslation<PerkModifyActorValue.ModificationType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    APerkEntryPointEffectXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class PerkModifyActorValueXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IPerkModifyActorValueGetter item,
-            XElement node,
-            out PerkModifyActorValue.ErrorMask errorMask,
-            PerkModifyActorValue.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((PerkModifyActorValueXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PerkModifyActorValue.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IPerkModifyActorValueGetter item,
-            string path,
-            out PerkModifyActorValue.ErrorMask errorMask,
-            PerkModifyActorValue.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPerkModifyActorValueGetter item,
-            Stream stream,
-            out PerkModifyActorValue.ErrorMask errorMask,
-            PerkModifyActorValue.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2015,21 +1414,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkModifyActorValueGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => PerkModifyActorValueXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PerkModifyActorValueXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkModifyActorValueBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2042,7 +1426,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public ActorValueExtended ActorValue => (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2, 0x4));
-        public Single Value => SpanExt.GetFloat(_data.Slice(0x6, 0x4));
+        public Single Value => _data.Slice(0x6, 0x4).Float();
         public PerkModifyActorValue.ModificationType Modification => (PerkModifyActorValue.ModificationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xA, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

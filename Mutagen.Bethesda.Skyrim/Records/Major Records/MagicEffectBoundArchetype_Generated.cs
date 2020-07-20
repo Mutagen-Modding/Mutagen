@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -67,135 +61,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((MagicEffectBoundArchetypeCommon)((IMagicEffectBoundArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => MagicEffectBoundArchetypeXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((MagicEffectBoundArchetypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new MagicEffectBoundArchetype CreateFromXml(
-            XElement node,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static MagicEffectBoundArchetype CreateFromXml(
-            XElement node,
-            out MagicEffectBoundArchetype.ErrorMask errorMask,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffectBoundArchetype.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static MagicEffectBoundArchetype CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new MagicEffectBoundArchetype();
-            ((MagicEffectBoundArchetypeSetterCommon)((IMagicEffectBoundArchetypeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static MagicEffectBoundArchetype CreateFromXml(
-            string path,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffectBoundArchetype CreateFromXml(
-            string path,
-            out MagicEffectBoundArchetype.ErrorMask errorMask,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffectBoundArchetype CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static MagicEffectBoundArchetype CreateFromXml(
-            Stream stream,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffectBoundArchetype CreateFromXml(
-            Stream stream,
-            out MagicEffectBoundArchetype.ErrorMask errorMask,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffectBoundArchetype CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -504,10 +369,9 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMagicEffectBoundArchetypeGetter :
         IMagicEffectArchetypeGetter,
         ILoquiObject<IMagicEffectBoundArchetypeGetter>,
-        IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => MagicEffectBoundArchetype_Registration.Instance;
+        static new ILoquiRegistration Registration => MagicEffectBoundArchetype_Registration.Instance;
 
     }
 
@@ -641,131 +505,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IMagicEffectBoundArchetypeInternal item,
-            XElement node,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IMagicEffectBoundArchetypeInternal item,
-            XElement node,
-            out MagicEffectBoundArchetype.ErrorMask errorMask,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffectBoundArchetype.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectBoundArchetypeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((MagicEffectBoundArchetypeSetterCommon)((IMagicEffectBoundArchetypeGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectBoundArchetypeInternal item,
-            string path,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectBoundArchetypeInternal item,
-            string path,
-            out MagicEffectBoundArchetype.ErrorMask errorMask,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectBoundArchetypeInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectBoundArchetypeInternal item,
-            Stream stream,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectBoundArchetypeInternal item,
-            Stream stream,
-            out MagicEffectBoundArchetype.ErrorMask errorMask,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectBoundArchetypeInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -929,7 +668,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(MagicEffectBoundArchetypeXmlWriteTranslation);
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectBoundArchetypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -979,47 +717,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IMagicEffectBoundArchetypeInternal)item);
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IMagicEffectBoundArchetypeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    MagicEffectBoundArchetypeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IMagicEffectArchetypeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (MagicEffectBoundArchetype)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1334,195 +1031,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class MagicEffectBoundArchetypeXmlWriteTranslation :
-        MagicEffectArchetypeXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static MagicEffectBoundArchetypeXmlWriteTranslation Instance = new MagicEffectBoundArchetypeXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IMagicEffectBoundArchetypeGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            MagicEffectArchetypeXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IMagicEffectBoundArchetypeGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.MagicEffectBoundArchetype");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.MagicEffectBoundArchetype");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IMagicEffectBoundArchetypeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMagicEffectArchetypeGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IMagicEffectBoundArchetypeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class MagicEffectBoundArchetypeXmlCreateTranslation : MagicEffectArchetypeXmlCreateTranslation
-    {
-        public new readonly static MagicEffectBoundArchetypeXmlCreateTranslation Instance = new MagicEffectBoundArchetypeXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IMagicEffectBoundArchetypeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    MagicEffectBoundArchetypeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IMagicEffectBoundArchetypeInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    MagicEffectArchetypeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class MagicEffectBoundArchetypeXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IMagicEffectBoundArchetypeGetter item,
-            XElement node,
-            out MagicEffectBoundArchetype.ErrorMask errorMask,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((MagicEffectBoundArchetypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffectBoundArchetype.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IMagicEffectBoundArchetypeGetter item,
-            string path,
-            out MagicEffectBoundArchetype.ErrorMask errorMask,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IMagicEffectBoundArchetypeGetter item,
-            Stream stream,
-            out MagicEffectBoundArchetype.ErrorMask errorMask,
-            MagicEffectBoundArchetype.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -1604,21 +1112,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectBoundArchetypeGetter)rhs, include);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => MagicEffectBoundArchetypeXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((MagicEffectBoundArchetypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectBoundArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

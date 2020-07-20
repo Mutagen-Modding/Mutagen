@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -55,8 +49,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -97,137 +91,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => QuestObjectiveTargetXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((QuestObjectiveTargetXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static QuestObjectiveTarget CreateFromXml(
-            XElement node,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static QuestObjectiveTarget CreateFromXml(
-            XElement node,
-            out QuestObjectiveTarget.ErrorMask errorMask,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = QuestObjectiveTarget.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static QuestObjectiveTarget CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new QuestObjectiveTarget();
-            ((QuestObjectiveTargetSetterCommon)((IQuestObjectiveTargetGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static QuestObjectiveTarget CreateFromXml(
-            string path,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static QuestObjectiveTarget CreateFromXml(
-            string path,
-            out QuestObjectiveTarget.ErrorMask errorMask,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static QuestObjectiveTarget CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static QuestObjectiveTarget CreateFromXml(
-            Stream stream,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static QuestObjectiveTarget CreateFromXml(
-            Stream stream,
-            out QuestObjectiveTarget.ErrorMask errorMask,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static QuestObjectiveTarget CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -659,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = QuestObjectiveTarget_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = QuestObjectiveTarget_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => QuestObjectiveTargetCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -744,14 +607,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Int32 AliasIndex { get; set; }
         new Quest.TargetFlag Flags { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
         new QuestObjectiveTarget.QSTADataType QSTADataTypeState { get; set; }
     }
 
     public partial interface IQuestObjectiveTargetGetter :
         ILoquiObject,
         ILoquiObject<IQuestObjectiveTargetGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -922,131 +784,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IQuestObjectiveTarget item,
-            XElement node,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IQuestObjectiveTarget item,
-            XElement node,
-            out QuestObjectiveTarget.ErrorMask errorMask,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = QuestObjectiveTarget.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestObjectiveTarget item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((QuestObjectiveTargetSetterCommon)((IQuestObjectiveTargetGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestObjectiveTarget item,
-            string path,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestObjectiveTarget item,
-            string path,
-            out QuestObjectiveTarget.ErrorMask errorMask,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestObjectiveTarget item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IQuestObjectiveTarget item,
-            Stream stream,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestObjectiveTarget item,
-            Stream stream,
-            out QuestObjectiveTarget.ErrorMask errorMask,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestObjectiveTarget item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1254,7 +991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestObjectiveTarget_FieldIndex.Flags:
                     return typeof(Quest.TargetFlag);
                 case QuestObjectiveTarget_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case QuestObjectiveTarget_FieldIndex.QSTADataTypeState:
                     return typeof(QuestObjectiveTarget.QSTADataType);
                 default:
@@ -1262,7 +999,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(QuestObjectiveTargetXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.QSTA;
         public static readonly Type BinaryWriteTranslation = typeof(QuestObjectiveTargetBinaryWriteTranslation);
         #region Interface
@@ -1311,34 +1047,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Conditions.Clear();
             item.QSTADataTypeState = default;
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IQuestObjectiveTarget item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    QuestObjectiveTargetXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1655,418 +1363,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class QuestObjectiveTargetXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static QuestObjectiveTargetXmlWriteTranslation Instance = new QuestObjectiveTargetXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IQuestObjectiveTargetGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.AliasIndex) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AliasIndex),
-                    item: item.AliasIndex,
-                    fieldIndex: (int)QuestObjectiveTarget_FieldIndex.AliasIndex,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Quest.TargetFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)QuestObjectiveTarget_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.Conditions) ?? true))
-            {
-                ListXmlTranslation<IConditionGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Conditions),
-                    item: item.Conditions,
-                    fieldIndex: (int)QuestObjectiveTarget_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)QuestObjectiveTarget_FieldIndex.Conditions),
-                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.QSTADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<QuestObjectiveTarget.QSTADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.QSTADataTypeState),
-                    item: item.QSTADataTypeState,
-                    fieldIndex: (int)QuestObjectiveTarget_FieldIndex.QSTADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IQuestObjectiveTargetGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.QuestObjectiveTarget");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.QuestObjectiveTarget");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IQuestObjectiveTargetGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IQuestObjectiveTargetGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IQuestObjectiveTargetGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class QuestObjectiveTargetXmlCreateTranslation
-    {
-        public readonly static QuestObjectiveTargetXmlCreateTranslation Instance = new QuestObjectiveTargetXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IQuestObjectiveTarget item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    QuestObjectiveTargetXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IQuestObjectiveTarget item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "AliasIndex":
-                    errorMask?.PushIndex((int)QuestObjectiveTarget_FieldIndex.AliasIndex);
-                    try
-                    {
-                        item.AliasIndex = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)QuestObjectiveTarget_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Quest.TargetFlag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conditions":
-                    errorMask?.PushIndex((int)QuestObjectiveTarget_FieldIndex.Conditions);
-                    try
-                    {
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "QSTADataTypeState":
-                    errorMask?.PushIndex((int)QuestObjectiveTarget_FieldIndex.QSTADataTypeState);
-                    try
-                    {
-                        item.QSTADataTypeState = EnumXmlTranslation<QuestObjectiveTarget.QSTADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class QuestObjectiveTargetXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IQuestObjectiveTargetGetter item,
-            XElement node,
-            out QuestObjectiveTarget.ErrorMask errorMask,
-            QuestObjectiveTarget.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((QuestObjectiveTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = QuestObjectiveTarget.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IQuestObjectiveTargetGetter item,
-            string path,
-            out QuestObjectiveTarget.ErrorMask errorMask,
-            QuestObjectiveTarget.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IQuestObjectiveTargetGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IQuestObjectiveTargetGetter item,
-            Stream stream,
-            out QuestObjectiveTarget.ErrorMask errorMask,
-            QuestObjectiveTarget.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IQuestObjectiveTargetGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IQuestObjectiveTargetGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((QuestObjectiveTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IQuestObjectiveTargetGetter item,
-            XElement node,
-            string? name = null,
-            QuestObjectiveTarget.TranslationMask? translationMask = null)
-        {
-            ((QuestObjectiveTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IQuestObjectiveTargetGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((QuestObjectiveTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IQuestObjectiveTargetGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((QuestObjectiveTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2148,10 +1444,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IQuestObjectiveTarget item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2161,22 +1458,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.QSTA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestObjectiveTarget_FieldIndex.Flags) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestObjectiveTarget_FieldIndex.Flags) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.AliasIndex = dataFrame.ReadInt32();
                     item.Flags = EnumBinaryTranslation<Quest.TargetFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    return TryGet<int?>.Succeed((int)QuestObjectiveTarget_FieldIndex.Flags);
+                    return (int)QuestObjectiveTarget_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:
                 {
                     QuestObjectiveTargetBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)QuestObjectiveTarget_FieldIndex.Conditions);
+                    return (int)QuestObjectiveTarget_FieldIndex.Conditions;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2240,23 +1537,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestObjectiveTargetCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestObjectiveTargetCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestObjectiveTargetCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => QuestObjectiveTargetXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((QuestObjectiveTargetXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestObjectiveTargetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2336,12 +1616,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2349,9 +1630,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.QSTA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestObjectiveTarget_FieldIndex.Flags) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestObjectiveTarget_FieldIndex.Flags) return ParseResult.Stop;
                     _QSTALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)QuestObjectiveTarget_FieldIndex.Flags);
+                    return (int)QuestObjectiveTarget_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:
                 {
@@ -2361,10 +1642,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)QuestObjectiveTarget_FieldIndex.Conditions);
+                    return (int)QuestObjectiveTarget_FieldIndex.Conditions;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

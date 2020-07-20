@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PlacedObject" recordType="REFR" baseClass="SkyrimMajorRecord" objType="Record" GUID="15cab6c0-7390-410a-b2a8-7ee0e58569a6" ID="30">
-    <Interface>IPositionRotation</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <FormLink name="Base" refName="SkyrimMajorRecord" recordType="NAME" />
       <P3Float name="BoundHalfExtents" recordType="XMBO" />
       <RefDirect name="Primitive" refName="PlacedPrimitive" />
       <ByteArray name="XORD" recordType="XORD" />
-      <RefDirect name="OcclusionPlane" refName="Placement" recordType="XOCP" />
+      <RefDirect name="OcclusionPlane" refName="Bounding" recordType="XOCP" />
       <RefList name="Portals" refName="Portal" recordType="XPOD" />
-      <RefDirect name="RoomPortal" refName="Placement" recordType="XPTL" />
+      <RefDirect name="RoomPortal" refName="Bounding" recordType="XPTL" />
       <CustomLogic name="BoundData" recordType="XRMR" />
       <Int16 name="Unknown" binary="NoGeneration" />
       <FormLink name="LightingTemplate" recordType="LNAM" refName="Light" binary="NoGeneration" />
@@ -76,12 +75,7 @@
         <Interface>IPlacedThing</Interface>
       </FormLink>
       <ByteArray name="DistantLodData" recordType="XLOD" />
-      <Data>
-        <Fields>
-          <P3Float name="Position" />
-          <P3Float name="Rotation" />
-        </Fields>
-      </Data>
+      <RefDirect name="Placement" refName="Placement" />
     </Fields>
     <LinkInterface>ILinkedReference</LinkInterface>
     <LinkInterface>IPlaced</LinkInterface>
@@ -97,7 +91,7 @@
       <Enum name="Type" enumName="PlacedPrimitive.TypeEnum" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="Placement" objType="Subrecord" GUID="2de6bd62-66a1-461b-b6a3-4130cc82c908" ID="301">
+  <Object name="Bounding" objType="Subrecord" GUID="2de6bd62-66a1-461b-b6a3-4130cc82c908" ID="301">
     <Fields>
       <Float name="Width" />
       <Float name="Height" />

@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -85,8 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CuePoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Single>? _CuePoints;
-        public ExtendedList<Single>? CuePoints
+        private IExtendedList<Single>? _CuePoints;
+        public IExtendedList<Single>? CuePoints
         {
             get => this._CuePoints;
             set => this._CuePoints = value;
@@ -99,8 +93,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition>? _Conditions;
-        public ExtendedList<Condition>? Conditions
+        private IExtendedList<Condition>? _Conditions;
+        public IExtendedList<Condition>? Conditions
         {
             get => this._Conditions;
             set => this._Conditions = value;
@@ -113,8 +107,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Tracks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<MusicTrack>>? _Tracks;
-        public ExtendedList<IFormLink<MusicTrack>>? Tracks
+        private IExtendedList<IFormLink<MusicTrack>>? _Tracks;
+        public IExtendedList<IFormLink<MusicTrack>>? Tracks
         {
             get => this._Tracks;
             set => this._Tracks = value;
@@ -155,135 +149,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => MusicTrackXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((MusicTrackXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new MusicTrack CreateFromXml(
-            XElement node,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static MusicTrack CreateFromXml(
-            XElement node,
-            out MusicTrack.ErrorMask errorMask,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MusicTrack.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static MusicTrack CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new MusicTrack();
-            ((MusicTrackSetterCommon)((IMusicTrackGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static MusicTrack CreateFromXml(
-            string path,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static MusicTrack CreateFromXml(
-            string path,
-            out MusicTrack.ErrorMask errorMask,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static MusicTrack CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static MusicTrack CreateFromXml(
-            Stream stream,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static MusicTrack CreateFromXml(
-            Stream stream,
-            out MusicTrack.ErrorMask errorMask,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static MusicTrack CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -308,7 +173,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -324,7 +189,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -1010,7 +875,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = MusicTrack_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = MusicTrack_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MusicTrackCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1111,9 +976,9 @@ namespace Mutagen.Bethesda.Skyrim
         new String? TrackFilename { get; set; }
         new String? FinaleFilename { get; set; }
         new MusicTrackLoopData? LoopData { get; set; }
-        new ExtendedList<Single>? CuePoints { get; set; }
-        new ExtendedList<Condition>? Conditions { get; set; }
-        new ExtendedList<IFormLink<MusicTrack>>? Tracks { get; set; }
+        new IExtendedList<Single>? CuePoints { get; set; }
+        new IExtendedList<Condition>? Conditions { get; set; }
+        new IExtendedList<IFormLink<MusicTrack>>? Tracks { get; set; }
     }
 
     public partial interface IMusicTrackInternal :
@@ -1126,11 +991,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMusicTrackGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IMusicTrackGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => MusicTrack_Registration.Instance;
+        static new ILoquiRegistration Registration => MusicTrack_Registration.Instance;
         MusicTrack.TypeEnum Type { get; }
         Single? Duration { get; }
         Single? FadeOut { get; }
@@ -1274,131 +1138,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IMusicTrackInternal item,
-            XElement node,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IMusicTrackInternal item,
-            XElement node,
-            out MusicTrack.ErrorMask errorMask,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MusicTrack.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IMusicTrackInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((MusicTrackSetterCommon)((IMusicTrackGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMusicTrackInternal item,
-            string path,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMusicTrackInternal item,
-            string path,
-            out MusicTrack.ErrorMask errorMask,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMusicTrackInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IMusicTrackInternal item,
-            Stream stream,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMusicTrackInternal item,
-            Stream stream,
-            out MusicTrack.ErrorMask errorMask,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMusicTrackInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            MusicTrack.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1436,7 +1175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1669,17 +1408,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MusicTrack_FieldIndex.LoopData:
                     return typeof(MusicTrackLoopData);
                 case MusicTrack_FieldIndex.CuePoints:
-                    return typeof(ExtendedList<Single>);
+                    return typeof(IExtendedList<Single>);
                 case MusicTrack_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case MusicTrack_FieldIndex.Tracks:
-                    return typeof(ExtendedList<IFormLink<MusicTrack>>);
+                    return typeof(IExtendedList<IFormLink<MusicTrack>>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(MusicTrackXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.MUST;
         public static readonly Type BinaryWriteTranslation = typeof(MusicTrackBinaryWriteTranslation);
         #region Interface
@@ -1744,86 +1482,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IMusicTrackInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IMusicTrackInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IMusicTrackInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    MusicTrackXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (MusicTrack)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (MusicTrack)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2098,7 +1756,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (MusicTrack_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (MusicTrack_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (MusicTrack_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (MusicTrack_FieldIndex)((int)index);
@@ -2119,7 +1777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (MusicTrack_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (MusicTrack_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (MusicTrack_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (MusicTrack_FieldIndex)((int)index);
@@ -2537,525 +2195,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class MusicTrackXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static MusicTrackXmlWriteTranslation Instance = new MusicTrackXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IMusicTrackGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Type) ?? true))
-            {
-                EnumXmlTranslation<MusicTrack.TypeEnum>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)MusicTrack_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if ((item.Duration != null)
-                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Duration) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Duration),
-                    item: item.Duration.Value,
-                    fieldIndex: (int)MusicTrack_FieldIndex.Duration,
-                    errorMask: errorMask);
-            }
-            if ((item.FadeOut != null)
-                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.FadeOut) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FadeOut),
-                    item: item.FadeOut.Value,
-                    fieldIndex: (int)MusicTrack_FieldIndex.FadeOut,
-                    errorMask: errorMask);
-            }
-            if ((item.TrackFilename != null)
-                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.TrackFilename) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TrackFilename),
-                    item: item.TrackFilename,
-                    fieldIndex: (int)MusicTrack_FieldIndex.TrackFilename,
-                    errorMask: errorMask);
-            }
-            if ((item.FinaleFilename != null)
-                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.FinaleFilename) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FinaleFilename),
-                    item: item.FinaleFilename,
-                    fieldIndex: (int)MusicTrack_FieldIndex.FinaleFilename,
-                    errorMask: errorMask);
-            }
-            if ((item.LoopData != null)
-                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.LoopData) ?? true))
-            {
-                if (item.LoopData.TryGet(out var LoopDataItem))
-                {
-                    ((MusicTrackLoopDataXmlWriteTranslation)((IXmlItem)LoopDataItem).XmlWriteTranslator).Write(
-                        item: LoopDataItem,
-                        node: node,
-                        name: nameof(item.LoopData),
-                        fieldIndex: (int)MusicTrack_FieldIndex.LoopData,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)MusicTrack_FieldIndex.LoopData));
-                }
-            }
-            if ((item.CuePoints != null)
-                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.CuePoints) ?? true))
-            {
-                ListXmlTranslation<Single>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CuePoints),
-                    item: item.CuePoints,
-                    fieldIndex: (int)MusicTrack_FieldIndex.CuePoints,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)MusicTrack_FieldIndex.CuePoints),
-                    transl: (XElement subNode, Single subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.Conditions != null)
-                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Conditions) ?? true))
-            {
-                ListXmlTranslation<IConditionGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Conditions),
-                    item: item.Conditions,
-                    fieldIndex: (int)MusicTrack_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)MusicTrack_FieldIndex.Conditions),
-                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Tracks != null)
-                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Tracks) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IMusicTrackGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Tracks),
-                    item: item.Tracks,
-                    fieldIndex: (int)MusicTrack_FieldIndex.Tracks,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)MusicTrack_FieldIndex.Tracks),
-                    transl: (XElement subNode, IFormLink<IMusicTrackGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IMusicTrackGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.MusicTrack");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.MusicTrack");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IMusicTrackGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IMusicTrackGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IMusicTrackGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class MusicTrackXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static MusicTrackXmlCreateTranslation Instance = new MusicTrackXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IMusicTrackInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    MusicTrackXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IMusicTrackInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Type":
-                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.Type);
-                    try
-                    {
-                        item.Type = EnumXmlTranslation<MusicTrack.TypeEnum>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Duration":
-                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.Duration);
-                    try
-                    {
-                        item.Duration = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FadeOut":
-                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.FadeOut);
-                    try
-                    {
-                        item.FadeOut = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TrackFilename":
-                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.TrackFilename);
-                    try
-                    {
-                        item.TrackFilename = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FinaleFilename":
-                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.FinaleFilename);
-                    try
-                    {
-                        item.FinaleFilename = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LoopData":
-                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.LoopData);
-                    try
-                    {
-                        item.LoopData = LoquiXmlTranslation<MusicTrackLoopData>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)MusicTrack_FieldIndex.LoopData));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CuePoints":
-                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.CuePoints);
-                    try
-                    {
-                        if (ListXmlTranslation<Single>.Instance.Parse(
-                            node: node,
-                            enumer: out var CuePointsItem,
-                            transl: FloatXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.CuePoints = CuePointsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.CuePoints = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conditions":
-                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.Conditions);
-                    try
-                    {
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions = ConditionsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Conditions = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Tracks":
-                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.Tracks);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<MusicTrack>>.Instance.Parse(
-                            node: node,
-                            enumer: out var TracksItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Tracks = TracksItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Tracks = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class MusicTrackXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IMusicTrackGetter item,
-            XElement node,
-            out MusicTrack.ErrorMask errorMask,
-            MusicTrack.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((MusicTrackXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MusicTrack.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IMusicTrackGetter item,
-            string path,
-            out MusicTrack.ErrorMask errorMask,
-            MusicTrack.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IMusicTrackGetter item,
-            Stream stream,
-            out MusicTrack.ErrorMask errorMask,
-            MusicTrack.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3150,10 +2289,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -3206,9 +2347,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IMusicTrackInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3220,19 +2362,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<MusicTrack.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Type);
+                    return (int)MusicTrack_FieldIndex.Type;
                 }
                 case RecordTypeInts.FLTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Duration = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Duration);
+                    return (int)MusicTrack_FieldIndex.Duration;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FadeOut = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.FadeOut);
+                    return (int)MusicTrack_FieldIndex.FadeOut;
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -3240,7 +2382,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TrackFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.TrackFilename);
+                    return (int)MusicTrack_FieldIndex.TrackFilename;
                 }
                 case RecordTypeInts.BNAM:
                 {
@@ -3248,12 +2390,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FinaleFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.FinaleFilename);
+                    return (int)MusicTrack_FieldIndex.FinaleFilename;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     item.LoopData = Mutagen.Bethesda.Skyrim.MusicTrackLoopData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.LoopData);
+                    return (int)MusicTrack_FieldIndex.LoopData;
                 }
                 case RecordTypeInts.FNAM:
                 {
@@ -3262,8 +2404,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Single>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FloatBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<Single>();
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.CuePoints);
+                        .CastExtendedList<Single>();
+                    return (int)MusicTrack_FieldIndex.CuePoints;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -3271,7 +2413,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     MusicTrackBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Conditions);
+                    return (int)MusicTrack_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -3280,13 +2422,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<MusicTrack>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<MusicTrack>>();
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Tracks);
+                        .CastExtendedList<IFormLink<MusicTrack>>();
+                    return (int)MusicTrack_FieldIndex.Tracks;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3337,21 +2480,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTrackCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTrackCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => MusicTrackXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((MusicTrackXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MusicTrackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3365,15 +2493,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Type
         private int? _TypeLocation;
-        public MusicTrack.TypeEnum Type => _TypeLocation.HasValue ? (MusicTrack.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(MusicTrack.TypeEnum);
+        public MusicTrack.TypeEnum Type => _TypeLocation.HasValue ? (MusicTrack.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(MusicTrack.TypeEnum);
         #endregion
         #region Duration
         private int? _DurationLocation;
-        public Single? Duration => _DurationLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _DurationLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? Duration => _DurationLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DurationLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region FadeOut
         private int? _FadeOutLocation;
-        public Single? FadeOut => _FadeOutLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _FadeOutLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? FadeOut => _FadeOutLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FadeOutLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region TrackFilename
         private int? _TrackFilenameLocation;
@@ -3423,8 +2551,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new MusicTrackBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3450,12 +2579,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3464,44 +2594,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNAM:
                 {
                     _TypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Type);
+                    return (int)MusicTrack_FieldIndex.Type;
                 }
                 case RecordTypeInts.FLTV:
                 {
                     _DurationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Duration);
+                    return (int)MusicTrack_FieldIndex.Duration;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _FadeOutLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.FadeOut);
+                    return (int)MusicTrack_FieldIndex.FadeOut;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     _TrackFilenameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.TrackFilename);
+                    return (int)MusicTrack_FieldIndex.TrackFilename;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     _FinaleFilenameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.FinaleFilename);
+                    return (int)MusicTrack_FieldIndex.FinaleFilename;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     _LoopDataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.LoopData);
+                    return (int)MusicTrack_FieldIndex.LoopData;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.CuePoints = BinaryOverlayList<Single>.FactoryByStartIndex(
+                    this.CuePoints = BinaryOverlayList.FactoryByStartIndex<Single>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => SpanExt.GetFloat(s));
+                        getter: (s, p) => s.Float());
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.CuePoints);
+                    return (int)MusicTrack_FieldIndex.CuePoints;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -3512,19 +2642,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Conditions);
+                    return (int)MusicTrack_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Tracks = BinaryOverlayList<IFormLink<IMusicTrackGetter>>.FactoryByStartIndex(
+                    this.Tracks = BinaryOverlayList.FactoryByStartIndex<IFormLink<IMusicTrackGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IMusicTrackGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Tracks);
+                    return (int)MusicTrack_FieldIndex.Tracks;
                 }
                 default:
                     return base.FillRecordType(
@@ -3532,7 +2662,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

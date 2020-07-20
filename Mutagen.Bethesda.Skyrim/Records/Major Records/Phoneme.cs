@@ -298,6 +298,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PhonemeBinaryOverlay
         {
+            public string Name => throw new NotImplementedException();
+
             public float IY => throw new NotImplementedException();
 
             public float IH => throw new NotImplementedException();

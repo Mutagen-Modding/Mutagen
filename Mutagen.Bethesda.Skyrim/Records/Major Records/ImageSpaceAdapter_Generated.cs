@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -66,8 +60,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region BlurRadius
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _BlurRadius;
-        public ExtendedList<KeyFrame>? BlurRadius
+        private IExtendedList<KeyFrame>? _BlurRadius;
+        public IExtendedList<KeyFrame>? BlurRadius
         {
             get => this._BlurRadius;
             set => this._BlurRadius = value;
@@ -80,8 +74,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DoubleVisionStrength
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _DoubleVisionStrength;
-        public ExtendedList<KeyFrame>? DoubleVisionStrength
+        private IExtendedList<KeyFrame>? _DoubleVisionStrength;
+        public IExtendedList<KeyFrame>? DoubleVisionStrength
         {
             get => this._DoubleVisionStrength;
             set => this._DoubleVisionStrength = value;
@@ -94,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TintColor
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ColorFrame>? _TintColor;
-        public ExtendedList<ColorFrame>? TintColor
+        private IExtendedList<ColorFrame>? _TintColor;
+        public IExtendedList<ColorFrame>? TintColor
         {
             get => this._TintColor;
             set => this._TintColor = value;
@@ -108,8 +102,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FadeColor
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ColorFrame>? _FadeColor;
-        public ExtendedList<ColorFrame>? FadeColor
+        private IExtendedList<ColorFrame>? _FadeColor;
+        public IExtendedList<ColorFrame>? FadeColor
         {
             get => this._FadeColor;
             set => this._FadeColor = value;
@@ -122,8 +116,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RadialBlurStrength
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _RadialBlurStrength;
-        public ExtendedList<KeyFrame>? RadialBlurStrength
+        private IExtendedList<KeyFrame>? _RadialBlurStrength;
+        public IExtendedList<KeyFrame>? RadialBlurStrength
         {
             get => this._RadialBlurStrength;
             set => this._RadialBlurStrength = value;
@@ -136,8 +130,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RadialBlurRampUp
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _RadialBlurRampUp;
-        public ExtendedList<KeyFrame>? RadialBlurRampUp
+        private IExtendedList<KeyFrame>? _RadialBlurRampUp;
+        public IExtendedList<KeyFrame>? RadialBlurRampUp
         {
             get => this._RadialBlurRampUp;
             set => this._RadialBlurRampUp = value;
@@ -150,8 +144,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RadialBlurStart
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _RadialBlurStart;
-        public ExtendedList<KeyFrame>? RadialBlurStart
+        private IExtendedList<KeyFrame>? _RadialBlurStart;
+        public IExtendedList<KeyFrame>? RadialBlurStart
         {
             get => this._RadialBlurStart;
             set => this._RadialBlurStart = value;
@@ -164,8 +158,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RadialBlurRampDown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _RadialBlurRampDown;
-        public ExtendedList<KeyFrame>? RadialBlurRampDown
+        private IExtendedList<KeyFrame>? _RadialBlurRampDown;
+        public IExtendedList<KeyFrame>? RadialBlurRampDown
         {
             get => this._RadialBlurRampDown;
             set => this._RadialBlurRampDown = value;
@@ -178,8 +172,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RadialBlurDownStart
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _RadialBlurDownStart;
-        public ExtendedList<KeyFrame>? RadialBlurDownStart
+        private IExtendedList<KeyFrame>? _RadialBlurDownStart;
+        public IExtendedList<KeyFrame>? RadialBlurDownStart
         {
             get => this._RadialBlurDownStart;
             set => this._RadialBlurDownStart = value;
@@ -192,8 +186,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DepthOfFieldStrength
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _DepthOfFieldStrength;
-        public ExtendedList<KeyFrame>? DepthOfFieldStrength
+        private IExtendedList<KeyFrame>? _DepthOfFieldStrength;
+        public IExtendedList<KeyFrame>? DepthOfFieldStrength
         {
             get => this._DepthOfFieldStrength;
             set => this._DepthOfFieldStrength = value;
@@ -206,8 +200,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DepthOfFieldDistance
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _DepthOfFieldDistance;
-        public ExtendedList<KeyFrame>? DepthOfFieldDistance
+        private IExtendedList<KeyFrame>? _DepthOfFieldDistance;
+        public IExtendedList<KeyFrame>? DepthOfFieldDistance
         {
             get => this._DepthOfFieldDistance;
             set => this._DepthOfFieldDistance = value;
@@ -220,8 +214,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DepthOfFieldRange
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _DepthOfFieldRange;
-        public ExtendedList<KeyFrame>? DepthOfFieldRange
+        private IExtendedList<KeyFrame>? _DepthOfFieldRange;
+        public IExtendedList<KeyFrame>? DepthOfFieldRange
         {
             get => this._DepthOfFieldRange;
             set => this._DepthOfFieldRange = value;
@@ -234,8 +228,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MotionBlurStrength
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _MotionBlurStrength;
-        public ExtendedList<KeyFrame>? MotionBlurStrength
+        private IExtendedList<KeyFrame>? _MotionBlurStrength;
+        public IExtendedList<KeyFrame>? MotionBlurStrength
         {
             get => this._MotionBlurStrength;
             set => this._MotionBlurStrength = value;
@@ -248,8 +242,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrEyeAdaptSpeedMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrEyeAdaptSpeedMult;
-        public ExtendedList<KeyFrame>? HdrEyeAdaptSpeedMult
+        private IExtendedList<KeyFrame>? _HdrEyeAdaptSpeedMult;
+        public IExtendedList<KeyFrame>? HdrEyeAdaptSpeedMult
         {
             get => this._HdrEyeAdaptSpeedMult;
             set => this._HdrEyeAdaptSpeedMult = value;
@@ -262,8 +256,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrEyeAdaptSpeedAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrEyeAdaptSpeedAdd;
-        public ExtendedList<KeyFrame>? HdrEyeAdaptSpeedAdd
+        private IExtendedList<KeyFrame>? _HdrEyeAdaptSpeedAdd;
+        public IExtendedList<KeyFrame>? HdrEyeAdaptSpeedAdd
         {
             get => this._HdrEyeAdaptSpeedAdd;
             set => this._HdrEyeAdaptSpeedAdd = value;
@@ -276,8 +270,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrBloomBlurRadiusMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrBloomBlurRadiusMult;
-        public ExtendedList<KeyFrame>? HdrBloomBlurRadiusMult
+        private IExtendedList<KeyFrame>? _HdrBloomBlurRadiusMult;
+        public IExtendedList<KeyFrame>? HdrBloomBlurRadiusMult
         {
             get => this._HdrBloomBlurRadiusMult;
             set => this._HdrBloomBlurRadiusMult = value;
@@ -290,8 +284,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrBloomBlurRadiusAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrBloomBlurRadiusAdd;
-        public ExtendedList<KeyFrame>? HdrBloomBlurRadiusAdd
+        private IExtendedList<KeyFrame>? _HdrBloomBlurRadiusAdd;
+        public IExtendedList<KeyFrame>? HdrBloomBlurRadiusAdd
         {
             get => this._HdrBloomBlurRadiusAdd;
             set => this._HdrBloomBlurRadiusAdd = value;
@@ -304,8 +298,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrBloomThresholdMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrBloomThresholdMult;
-        public ExtendedList<KeyFrame>? HdrBloomThresholdMult
+        private IExtendedList<KeyFrame>? _HdrBloomThresholdMult;
+        public IExtendedList<KeyFrame>? HdrBloomThresholdMult
         {
             get => this._HdrBloomThresholdMult;
             set => this._HdrBloomThresholdMult = value;
@@ -318,8 +312,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrBloomThresholdAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrBloomThresholdAdd;
-        public ExtendedList<KeyFrame>? HdrBloomThresholdAdd
+        private IExtendedList<KeyFrame>? _HdrBloomThresholdAdd;
+        public IExtendedList<KeyFrame>? HdrBloomThresholdAdd
         {
             get => this._HdrBloomThresholdAdd;
             set => this._HdrBloomThresholdAdd = value;
@@ -332,8 +326,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrBloomScaleMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrBloomScaleMult;
-        public ExtendedList<KeyFrame>? HdrBloomScaleMult
+        private IExtendedList<KeyFrame>? _HdrBloomScaleMult;
+        public IExtendedList<KeyFrame>? HdrBloomScaleMult
         {
             get => this._HdrBloomScaleMult;
             set => this._HdrBloomScaleMult = value;
@@ -346,8 +340,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrBloomScaleAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrBloomScaleAdd;
-        public ExtendedList<KeyFrame>? HdrBloomScaleAdd
+        private IExtendedList<KeyFrame>? _HdrBloomScaleAdd;
+        public IExtendedList<KeyFrame>? HdrBloomScaleAdd
         {
             get => this._HdrBloomScaleAdd;
             set => this._HdrBloomScaleAdd = value;
@@ -360,8 +354,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrTargetLumMinMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrTargetLumMinMult;
-        public ExtendedList<KeyFrame>? HdrTargetLumMinMult
+        private IExtendedList<KeyFrame>? _HdrTargetLumMinMult;
+        public IExtendedList<KeyFrame>? HdrTargetLumMinMult
         {
             get => this._HdrTargetLumMinMult;
             set => this._HdrTargetLumMinMult = value;
@@ -374,8 +368,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrTargetLumMinAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrTargetLumMinAdd;
-        public ExtendedList<KeyFrame>? HdrTargetLumMinAdd
+        private IExtendedList<KeyFrame>? _HdrTargetLumMinAdd;
+        public IExtendedList<KeyFrame>? HdrTargetLumMinAdd
         {
             get => this._HdrTargetLumMinAdd;
             set => this._HdrTargetLumMinAdd = value;
@@ -388,8 +382,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrTargetLumMaxMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrTargetLumMaxMult;
-        public ExtendedList<KeyFrame>? HdrTargetLumMaxMult
+        private IExtendedList<KeyFrame>? _HdrTargetLumMaxMult;
+        public IExtendedList<KeyFrame>? HdrTargetLumMaxMult
         {
             get => this._HdrTargetLumMaxMult;
             set => this._HdrTargetLumMaxMult = value;
@@ -402,8 +396,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrTargetLumMaxAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrTargetLumMaxAdd;
-        public ExtendedList<KeyFrame>? HdrTargetLumMaxAdd
+        private IExtendedList<KeyFrame>? _HdrTargetLumMaxAdd;
+        public IExtendedList<KeyFrame>? HdrTargetLumMaxAdd
         {
             get => this._HdrTargetLumMaxAdd;
             set => this._HdrTargetLumMaxAdd = value;
@@ -416,8 +410,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrSunlightScaleMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrSunlightScaleMult;
-        public ExtendedList<KeyFrame>? HdrSunlightScaleMult
+        private IExtendedList<KeyFrame>? _HdrSunlightScaleMult;
+        public IExtendedList<KeyFrame>? HdrSunlightScaleMult
         {
             get => this._HdrSunlightScaleMult;
             set => this._HdrSunlightScaleMult = value;
@@ -430,8 +424,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrSunlightScaleAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrSunlightScaleAdd;
-        public ExtendedList<KeyFrame>? HdrSunlightScaleAdd
+        private IExtendedList<KeyFrame>? _HdrSunlightScaleAdd;
+        public IExtendedList<KeyFrame>? HdrSunlightScaleAdd
         {
             get => this._HdrSunlightScaleAdd;
             set => this._HdrSunlightScaleAdd = value;
@@ -444,8 +438,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrSkyScaleMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrSkyScaleMult;
-        public ExtendedList<KeyFrame>? HdrSkyScaleMult
+        private IExtendedList<KeyFrame>? _HdrSkyScaleMult;
+        public IExtendedList<KeyFrame>? HdrSkyScaleMult
         {
             get => this._HdrSkyScaleMult;
             set => this._HdrSkyScaleMult = value;
@@ -458,8 +452,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HdrSkyScaleAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _HdrSkyScaleAdd;
-        public ExtendedList<KeyFrame>? HdrSkyScaleAdd
+        private IExtendedList<KeyFrame>? _HdrSkyScaleAdd;
+        public IExtendedList<KeyFrame>? HdrSkyScaleAdd
         {
             get => this._HdrSkyScaleAdd;
             set => this._HdrSkyScaleAdd = value;
@@ -472,8 +466,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown08
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown08;
-        public ExtendedList<KeyFrame>? Unknown08
+        private IExtendedList<KeyFrame>? _Unknown08;
+        public IExtendedList<KeyFrame>? Unknown08
         {
             get => this._Unknown08;
             set => this._Unknown08 = value;
@@ -486,8 +480,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown48
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown48;
-        public ExtendedList<KeyFrame>? Unknown48
+        private IExtendedList<KeyFrame>? _Unknown48;
+        public IExtendedList<KeyFrame>? Unknown48
         {
             get => this._Unknown48;
             set => this._Unknown48 = value;
@@ -500,8 +494,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown09
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown09;
-        public ExtendedList<KeyFrame>? Unknown09
+        private IExtendedList<KeyFrame>? _Unknown09;
+        public IExtendedList<KeyFrame>? Unknown09
         {
             get => this._Unknown09;
             set => this._Unknown09 = value;
@@ -514,8 +508,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown49
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown49;
-        public ExtendedList<KeyFrame>? Unknown49
+        private IExtendedList<KeyFrame>? _Unknown49;
+        public IExtendedList<KeyFrame>? Unknown49
         {
             get => this._Unknown49;
             set => this._Unknown49 = value;
@@ -528,8 +522,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown0A
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown0A;
-        public ExtendedList<KeyFrame>? Unknown0A
+        private IExtendedList<KeyFrame>? _Unknown0A;
+        public IExtendedList<KeyFrame>? Unknown0A
         {
             get => this._Unknown0A;
             set => this._Unknown0A = value;
@@ -542,8 +536,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown4A
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown4A;
-        public ExtendedList<KeyFrame>? Unknown4A
+        private IExtendedList<KeyFrame>? _Unknown4A;
+        public IExtendedList<KeyFrame>? Unknown4A
         {
             get => this._Unknown4A;
             set => this._Unknown4A = value;
@@ -556,8 +550,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown0B
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown0B;
-        public ExtendedList<KeyFrame>? Unknown0B
+        private IExtendedList<KeyFrame>? _Unknown0B;
+        public IExtendedList<KeyFrame>? Unknown0B
         {
             get => this._Unknown0B;
             set => this._Unknown0B = value;
@@ -570,8 +564,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown4B
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown4B;
-        public ExtendedList<KeyFrame>? Unknown4B
+        private IExtendedList<KeyFrame>? _Unknown4B;
+        public IExtendedList<KeyFrame>? Unknown4B
         {
             get => this._Unknown4B;
             set => this._Unknown4B = value;
@@ -584,8 +578,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown0C
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown0C;
-        public ExtendedList<KeyFrame>? Unknown0C
+        private IExtendedList<KeyFrame>? _Unknown0C;
+        public IExtendedList<KeyFrame>? Unknown0C
         {
             get => this._Unknown0C;
             set => this._Unknown0C = value;
@@ -598,8 +592,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown4C
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown4C;
-        public ExtendedList<KeyFrame>? Unknown4C
+        private IExtendedList<KeyFrame>? _Unknown4C;
+        public IExtendedList<KeyFrame>? Unknown4C
         {
             get => this._Unknown4C;
             set => this._Unknown4C = value;
@@ -612,8 +606,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown0D
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown0D;
-        public ExtendedList<KeyFrame>? Unknown0D
+        private IExtendedList<KeyFrame>? _Unknown0D;
+        public IExtendedList<KeyFrame>? Unknown0D
         {
             get => this._Unknown0D;
             set => this._Unknown0D = value;
@@ -626,8 +620,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown4D
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown4D;
-        public ExtendedList<KeyFrame>? Unknown4D
+        private IExtendedList<KeyFrame>? _Unknown4D;
+        public IExtendedList<KeyFrame>? Unknown4D
         {
             get => this._Unknown4D;
             set => this._Unknown4D = value;
@@ -640,8 +634,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown0E
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown0E;
-        public ExtendedList<KeyFrame>? Unknown0E
+        private IExtendedList<KeyFrame>? _Unknown0E;
+        public IExtendedList<KeyFrame>? Unknown0E
         {
             get => this._Unknown0E;
             set => this._Unknown0E = value;
@@ -654,8 +648,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown4E
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown4E;
-        public ExtendedList<KeyFrame>? Unknown4E
+        private IExtendedList<KeyFrame>? _Unknown4E;
+        public IExtendedList<KeyFrame>? Unknown4E
         {
             get => this._Unknown4E;
             set => this._Unknown4E = value;
@@ -668,8 +662,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown0F
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown0F;
-        public ExtendedList<KeyFrame>? Unknown0F
+        private IExtendedList<KeyFrame>? _Unknown0F;
+        public IExtendedList<KeyFrame>? Unknown0F
         {
             get => this._Unknown0F;
             set => this._Unknown0F = value;
@@ -682,8 +676,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown4F
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown4F;
-        public ExtendedList<KeyFrame>? Unknown4F
+        private IExtendedList<KeyFrame>? _Unknown4F;
+        public IExtendedList<KeyFrame>? Unknown4F
         {
             get => this._Unknown4F;
             set => this._Unknown4F = value;
@@ -696,8 +690,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown10
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown10;
-        public ExtendedList<KeyFrame>? Unknown10
+        private IExtendedList<KeyFrame>? _Unknown10;
+        public IExtendedList<KeyFrame>? Unknown10
         {
             get => this._Unknown10;
             set => this._Unknown10 = value;
@@ -710,8 +704,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown50
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown50;
-        public ExtendedList<KeyFrame>? Unknown50
+        private IExtendedList<KeyFrame>? _Unknown50;
+        public IExtendedList<KeyFrame>? Unknown50
         {
             get => this._Unknown50;
             set => this._Unknown50 = value;
@@ -724,8 +718,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CinematicSaturationMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _CinematicSaturationMult;
-        public ExtendedList<KeyFrame>? CinematicSaturationMult
+        private IExtendedList<KeyFrame>? _CinematicSaturationMult;
+        public IExtendedList<KeyFrame>? CinematicSaturationMult
         {
             get => this._CinematicSaturationMult;
             set => this._CinematicSaturationMult = value;
@@ -738,8 +732,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CinematicSaturationAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _CinematicSaturationAdd;
-        public ExtendedList<KeyFrame>? CinematicSaturationAdd
+        private IExtendedList<KeyFrame>? _CinematicSaturationAdd;
+        public IExtendedList<KeyFrame>? CinematicSaturationAdd
         {
             get => this._CinematicSaturationAdd;
             set => this._CinematicSaturationAdd = value;
@@ -752,8 +746,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CinematicBrightnessMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _CinematicBrightnessMult;
-        public ExtendedList<KeyFrame>? CinematicBrightnessMult
+        private IExtendedList<KeyFrame>? _CinematicBrightnessMult;
+        public IExtendedList<KeyFrame>? CinematicBrightnessMult
         {
             get => this._CinematicBrightnessMult;
             set => this._CinematicBrightnessMult = value;
@@ -766,8 +760,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CinematicBrightnessAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _CinematicBrightnessAdd;
-        public ExtendedList<KeyFrame>? CinematicBrightnessAdd
+        private IExtendedList<KeyFrame>? _CinematicBrightnessAdd;
+        public IExtendedList<KeyFrame>? CinematicBrightnessAdd
         {
             get => this._CinematicBrightnessAdd;
             set => this._CinematicBrightnessAdd = value;
@@ -780,8 +774,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CinematicContrastMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _CinematicContrastMult;
-        public ExtendedList<KeyFrame>? CinematicContrastMult
+        private IExtendedList<KeyFrame>? _CinematicContrastMult;
+        public IExtendedList<KeyFrame>? CinematicContrastMult
         {
             get => this._CinematicContrastMult;
             set => this._CinematicContrastMult = value;
@@ -794,8 +788,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CinematicContrastAdd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _CinematicContrastAdd;
-        public ExtendedList<KeyFrame>? CinematicContrastAdd
+        private IExtendedList<KeyFrame>? _CinematicContrastAdd;
+        public IExtendedList<KeyFrame>? CinematicContrastAdd
         {
             get => this._CinematicContrastAdd;
             set => this._CinematicContrastAdd = value;
@@ -808,8 +802,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown14
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown14;
-        public ExtendedList<KeyFrame>? Unknown14
+        private IExtendedList<KeyFrame>? _Unknown14;
+        public IExtendedList<KeyFrame>? Unknown14
         {
             get => this._Unknown14;
             set => this._Unknown14 = value;
@@ -822,8 +816,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown54
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<KeyFrame>? _Unknown54;
-        public ExtendedList<KeyFrame>? Unknown54
+        private IExtendedList<KeyFrame>? _Unknown54;
+        public IExtendedList<KeyFrame>? Unknown54
         {
             get => this._Unknown54;
             set => this._Unknown54 = value;
@@ -864,135 +858,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ImageSpaceAdapterXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ImageSpaceAdapterXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new ImageSpaceAdapter CreateFromXml(
-            XElement node,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static ImageSpaceAdapter CreateFromXml(
-            XElement node,
-            out ImageSpaceAdapter.ErrorMask errorMask,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ImageSpaceAdapter.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static ImageSpaceAdapter CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new ImageSpaceAdapter();
-            ((ImageSpaceAdapterSetterCommon)((IImageSpaceAdapterGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static ImageSpaceAdapter CreateFromXml(
-            string path,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ImageSpaceAdapter CreateFromXml(
-            string path,
-            out ImageSpaceAdapter.ErrorMask errorMask,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ImageSpaceAdapter CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static ImageSpaceAdapter CreateFromXml(
-            Stream stream,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ImageSpaceAdapter CreateFromXml(
-            Stream stream,
-            out ImageSpaceAdapter.ErrorMask errorMask,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ImageSpaceAdapter CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -1072,7 +937,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -1140,7 +1005,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -7128,7 +6993,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ImageSpaceAdapter_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = ImageSpaceAdapter_Registration.TriggeringRecordType;
         public ImageSpaceAdapter(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -7226,61 +7091,61 @@ namespace Mutagen.Bethesda.Skyrim
         new ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; set; }
         new P2Float RadialBlurCenter { get; set; }
         new ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; set; }
-        new ExtendedList<KeyFrame>? BlurRadius { get; set; }
-        new ExtendedList<KeyFrame>? DoubleVisionStrength { get; set; }
-        new ExtendedList<ColorFrame>? TintColor { get; set; }
-        new ExtendedList<ColorFrame>? FadeColor { get; set; }
-        new ExtendedList<KeyFrame>? RadialBlurStrength { get; set; }
-        new ExtendedList<KeyFrame>? RadialBlurRampUp { get; set; }
-        new ExtendedList<KeyFrame>? RadialBlurStart { get; set; }
-        new ExtendedList<KeyFrame>? RadialBlurRampDown { get; set; }
-        new ExtendedList<KeyFrame>? RadialBlurDownStart { get; set; }
-        new ExtendedList<KeyFrame>? DepthOfFieldStrength { get; set; }
-        new ExtendedList<KeyFrame>? DepthOfFieldDistance { get; set; }
-        new ExtendedList<KeyFrame>? DepthOfFieldRange { get; set; }
-        new ExtendedList<KeyFrame>? MotionBlurStrength { get; set; }
-        new ExtendedList<KeyFrame>? HdrEyeAdaptSpeedMult { get; set; }
-        new ExtendedList<KeyFrame>? HdrEyeAdaptSpeedAdd { get; set; }
-        new ExtendedList<KeyFrame>? HdrBloomBlurRadiusMult { get; set; }
-        new ExtendedList<KeyFrame>? HdrBloomBlurRadiusAdd { get; set; }
-        new ExtendedList<KeyFrame>? HdrBloomThresholdMult { get; set; }
-        new ExtendedList<KeyFrame>? HdrBloomThresholdAdd { get; set; }
-        new ExtendedList<KeyFrame>? HdrBloomScaleMult { get; set; }
-        new ExtendedList<KeyFrame>? HdrBloomScaleAdd { get; set; }
-        new ExtendedList<KeyFrame>? HdrTargetLumMinMult { get; set; }
-        new ExtendedList<KeyFrame>? HdrTargetLumMinAdd { get; set; }
-        new ExtendedList<KeyFrame>? HdrTargetLumMaxMult { get; set; }
-        new ExtendedList<KeyFrame>? HdrTargetLumMaxAdd { get; set; }
-        new ExtendedList<KeyFrame>? HdrSunlightScaleMult { get; set; }
-        new ExtendedList<KeyFrame>? HdrSunlightScaleAdd { get; set; }
-        new ExtendedList<KeyFrame>? HdrSkyScaleMult { get; set; }
-        new ExtendedList<KeyFrame>? HdrSkyScaleAdd { get; set; }
-        new ExtendedList<KeyFrame>? Unknown08 { get; set; }
-        new ExtendedList<KeyFrame>? Unknown48 { get; set; }
-        new ExtendedList<KeyFrame>? Unknown09 { get; set; }
-        new ExtendedList<KeyFrame>? Unknown49 { get; set; }
-        new ExtendedList<KeyFrame>? Unknown0A { get; set; }
-        new ExtendedList<KeyFrame>? Unknown4A { get; set; }
-        new ExtendedList<KeyFrame>? Unknown0B { get; set; }
-        new ExtendedList<KeyFrame>? Unknown4B { get; set; }
-        new ExtendedList<KeyFrame>? Unknown0C { get; set; }
-        new ExtendedList<KeyFrame>? Unknown4C { get; set; }
-        new ExtendedList<KeyFrame>? Unknown0D { get; set; }
-        new ExtendedList<KeyFrame>? Unknown4D { get; set; }
-        new ExtendedList<KeyFrame>? Unknown0E { get; set; }
-        new ExtendedList<KeyFrame>? Unknown4E { get; set; }
-        new ExtendedList<KeyFrame>? Unknown0F { get; set; }
-        new ExtendedList<KeyFrame>? Unknown4F { get; set; }
-        new ExtendedList<KeyFrame>? Unknown10 { get; set; }
-        new ExtendedList<KeyFrame>? Unknown50 { get; set; }
-        new ExtendedList<KeyFrame>? CinematicSaturationMult { get; set; }
-        new ExtendedList<KeyFrame>? CinematicSaturationAdd { get; set; }
-        new ExtendedList<KeyFrame>? CinematicBrightnessMult { get; set; }
-        new ExtendedList<KeyFrame>? CinematicBrightnessAdd { get; set; }
-        new ExtendedList<KeyFrame>? CinematicContrastMult { get; set; }
-        new ExtendedList<KeyFrame>? CinematicContrastAdd { get; set; }
-        new ExtendedList<KeyFrame>? Unknown14 { get; set; }
-        new ExtendedList<KeyFrame>? Unknown54 { get; set; }
+        new IExtendedList<KeyFrame>? BlurRadius { get; set; }
+        new IExtendedList<KeyFrame>? DoubleVisionStrength { get; set; }
+        new IExtendedList<ColorFrame>? TintColor { get; set; }
+        new IExtendedList<ColorFrame>? FadeColor { get; set; }
+        new IExtendedList<KeyFrame>? RadialBlurStrength { get; set; }
+        new IExtendedList<KeyFrame>? RadialBlurRampUp { get; set; }
+        new IExtendedList<KeyFrame>? RadialBlurStart { get; set; }
+        new IExtendedList<KeyFrame>? RadialBlurRampDown { get; set; }
+        new IExtendedList<KeyFrame>? RadialBlurDownStart { get; set; }
+        new IExtendedList<KeyFrame>? DepthOfFieldStrength { get; set; }
+        new IExtendedList<KeyFrame>? DepthOfFieldDistance { get; set; }
+        new IExtendedList<KeyFrame>? DepthOfFieldRange { get; set; }
+        new IExtendedList<KeyFrame>? MotionBlurStrength { get; set; }
+        new IExtendedList<KeyFrame>? HdrEyeAdaptSpeedMult { get; set; }
+        new IExtendedList<KeyFrame>? HdrEyeAdaptSpeedAdd { get; set; }
+        new IExtendedList<KeyFrame>? HdrBloomBlurRadiusMult { get; set; }
+        new IExtendedList<KeyFrame>? HdrBloomBlurRadiusAdd { get; set; }
+        new IExtendedList<KeyFrame>? HdrBloomThresholdMult { get; set; }
+        new IExtendedList<KeyFrame>? HdrBloomThresholdAdd { get; set; }
+        new IExtendedList<KeyFrame>? HdrBloomScaleMult { get; set; }
+        new IExtendedList<KeyFrame>? HdrBloomScaleAdd { get; set; }
+        new IExtendedList<KeyFrame>? HdrTargetLumMinMult { get; set; }
+        new IExtendedList<KeyFrame>? HdrTargetLumMinAdd { get; set; }
+        new IExtendedList<KeyFrame>? HdrTargetLumMaxMult { get; set; }
+        new IExtendedList<KeyFrame>? HdrTargetLumMaxAdd { get; set; }
+        new IExtendedList<KeyFrame>? HdrSunlightScaleMult { get; set; }
+        new IExtendedList<KeyFrame>? HdrSunlightScaleAdd { get; set; }
+        new IExtendedList<KeyFrame>? HdrSkyScaleMult { get; set; }
+        new IExtendedList<KeyFrame>? HdrSkyScaleAdd { get; set; }
+        new IExtendedList<KeyFrame>? Unknown08 { get; set; }
+        new IExtendedList<KeyFrame>? Unknown48 { get; set; }
+        new IExtendedList<KeyFrame>? Unknown09 { get; set; }
+        new IExtendedList<KeyFrame>? Unknown49 { get; set; }
+        new IExtendedList<KeyFrame>? Unknown0A { get; set; }
+        new IExtendedList<KeyFrame>? Unknown4A { get; set; }
+        new IExtendedList<KeyFrame>? Unknown0B { get; set; }
+        new IExtendedList<KeyFrame>? Unknown4B { get; set; }
+        new IExtendedList<KeyFrame>? Unknown0C { get; set; }
+        new IExtendedList<KeyFrame>? Unknown4C { get; set; }
+        new IExtendedList<KeyFrame>? Unknown0D { get; set; }
+        new IExtendedList<KeyFrame>? Unknown4D { get; set; }
+        new IExtendedList<KeyFrame>? Unknown0E { get; set; }
+        new IExtendedList<KeyFrame>? Unknown4E { get; set; }
+        new IExtendedList<KeyFrame>? Unknown0F { get; set; }
+        new IExtendedList<KeyFrame>? Unknown4F { get; set; }
+        new IExtendedList<KeyFrame>? Unknown10 { get; set; }
+        new IExtendedList<KeyFrame>? Unknown50 { get; set; }
+        new IExtendedList<KeyFrame>? CinematicSaturationMult { get; set; }
+        new IExtendedList<KeyFrame>? CinematicSaturationAdd { get; set; }
+        new IExtendedList<KeyFrame>? CinematicBrightnessMult { get; set; }
+        new IExtendedList<KeyFrame>? CinematicBrightnessAdd { get; set; }
+        new IExtendedList<KeyFrame>? CinematicContrastMult { get; set; }
+        new IExtendedList<KeyFrame>? CinematicContrastAdd { get; set; }
+        new IExtendedList<KeyFrame>? Unknown14 { get; set; }
+        new IExtendedList<KeyFrame>? Unknown54 { get; set; }
         new ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
@@ -7294,10 +7159,9 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IImageSpaceAdapterGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IImageSpaceAdapterGetter>,
-        IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ImageSpaceAdapter_Registration.Instance;
+        static new ILoquiRegistration Registration => ImageSpaceAdapter_Registration.Instance;
         ImageSpaceAdapter.Flag Flags { get; }
         Single Duration { get; }
         ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; }
@@ -7493,131 +7357,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IImageSpaceAdapterInternal item,
-            XElement node,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IImageSpaceAdapterInternal item,
-            XElement node,
-            out ImageSpaceAdapter.ErrorMask errorMask,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ImageSpaceAdapter.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IImageSpaceAdapterInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ImageSpaceAdapterSetterCommon)((IImageSpaceAdapterGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IImageSpaceAdapterInternal item,
-            string path,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IImageSpaceAdapterInternal item,
-            string path,
-            out ImageSpaceAdapter.ErrorMask errorMask,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IImageSpaceAdapterInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IImageSpaceAdapterInternal item,
-            Stream stream,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IImageSpaceAdapterInternal item,
-            Stream stream,
-            out ImageSpaceAdapter.ErrorMask errorMask,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IImageSpaceAdapterInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ImageSpaceAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -7655,7 +7394,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -8406,115 +8145,115 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
                     return typeof(ImageSpaceAdapter.DepthOfFieldFlag);
                 case ImageSpaceAdapter_FieldIndex.BlurRadius:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.DoubleVisionStrength:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.TintColor:
-                    return typeof(ExtendedList<ColorFrame>);
+                    return typeof(IExtendedList<ColorFrame>);
                 case ImageSpaceAdapter_FieldIndex.FadeColor:
-                    return typeof(ExtendedList<ColorFrame>);
+                    return typeof(IExtendedList<ColorFrame>);
                 case ImageSpaceAdapter_FieldIndex.RadialBlurStrength:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.RadialBlurRampUp:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.RadialBlurStart:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.RadialBlurRampDown:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.RadialBlurDownStart:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.DepthOfFieldRange:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.MotionBlurStrength:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown08:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown48:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown09:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown49:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown0A:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown4A:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown0B:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown4B:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown0C:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown4C:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown0D:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown4D:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown0E:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown4E:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown0F:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown4F:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown10:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown50:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.CinematicSaturationMult:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.CinematicContrastMult:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.CinematicContrastAdd:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown14:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.Unknown54:
-                    return typeof(ExtendedList<KeyFrame>);
+                    return typeof(IExtendedList<KeyFrame>);
                 case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
                     return typeof(ImageSpaceAdapter.DNAMDataType);
                 default:
@@ -8522,7 +8261,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ImageSpaceAdapterXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.IMAD;
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceAdapterBinaryWriteTranslation);
         #region Interface
@@ -8639,86 +8377,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IImageSpaceAdapterInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IImageSpaceAdapterInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IImageSpaceAdapterInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    ImageSpaceAdapterXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (ImageSpaceAdapter)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (ImageSpaceAdapter)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -10439,7 +10097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ImageSpaceAdapter_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (ImageSpaceAdapter_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (ImageSpaceAdapter_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (ImageSpaceAdapter_FieldIndex)((int)index);
@@ -10460,7 +10118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ImageSpaceAdapter_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (ImageSpaceAdapter_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (ImageSpaceAdapter_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (ImageSpaceAdapter_FieldIndex)((int)index);
@@ -12605,3067 +12263,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class ImageSpaceAdapterXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static ImageSpaceAdapterXmlWriteTranslation Instance = new ImageSpaceAdapterXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IImageSpaceAdapterGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<ImageSpaceAdapter.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Duration) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Duration),
-                    item: item.Duration,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Duration,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurFlags) ?? true))
-            {
-                EnumXmlTranslation<ImageSpaceAdapter.RadialBlurFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.RadialBlurFlags),
-                    item: item.RadialBlurFlags,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.RadialBlurFlags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter) ?? true))
-            {
-                P2FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.RadialBlurCenter),
-                    item: item.RadialBlurCenter,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags) ?? true))
-            {
-                EnumXmlTranslation<ImageSpaceAdapter.DepthOfFieldFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DepthOfFieldFlags),
-                    item: item.DepthOfFieldFlags,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags,
-                    errorMask: errorMask);
-            }
-            if ((item.BlurRadius != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.BlurRadius) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.BlurRadius),
-                    item: item.BlurRadius,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.BlurRadius,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.BlurRadius),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.DoubleVisionStrength != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DoubleVisionStrength),
-                    item: item.DoubleVisionStrength,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.TintColor != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.TintColor) ?? true))
-            {
-                ListXmlTranslation<IColorFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.TintColor),
-                    item: item.TintColor,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.TintColor,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.TintColor),
-                    transl: (XElement subNode, IColorFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ColorFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.FadeColor != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.FadeColor) ?? true))
-            {
-                ListXmlTranslation<IColorFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.FadeColor),
-                    item: item.FadeColor,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.FadeColor,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.FadeColor),
-                    transl: (XElement subNode, IColorFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ColorFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.RadialBlurStrength != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.RadialBlurStrength),
-                    item: item.RadialBlurStrength,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.RadialBlurRampUp != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.RadialBlurRampUp),
-                    item: item.RadialBlurRampUp,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.RadialBlurStart != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.RadialBlurStart),
-                    item: item.RadialBlurStart,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.RadialBlurStart,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.RadialBlurRampDown != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.RadialBlurRampDown),
-                    item: item.RadialBlurRampDown,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.RadialBlurDownStart != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.RadialBlurDownStart),
-                    item: item.RadialBlurDownStart,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.DepthOfFieldStrength != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DepthOfFieldStrength),
-                    item: item.DepthOfFieldStrength,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.DepthOfFieldDistance != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DepthOfFieldDistance),
-                    item: item.DepthOfFieldDistance,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.DepthOfFieldRange != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DepthOfFieldRange),
-                    item: item.DepthOfFieldRange,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.MotionBlurStrength != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MotionBlurStrength),
-                    item: item.MotionBlurStrength,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrEyeAdaptSpeedMult != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrEyeAdaptSpeedMult),
-                    item: item.HdrEyeAdaptSpeedMult,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrEyeAdaptSpeedAdd != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrEyeAdaptSpeedAdd),
-                    item: item.HdrEyeAdaptSpeedAdd,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrBloomBlurRadiusMult != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrBloomBlurRadiusMult),
-                    item: item.HdrBloomBlurRadiusMult,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrBloomBlurRadiusAdd != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrBloomBlurRadiusAdd),
-                    item: item.HdrBloomBlurRadiusAdd,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrBloomThresholdMult != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrBloomThresholdMult),
-                    item: item.HdrBloomThresholdMult,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrBloomThresholdAdd != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrBloomThresholdAdd),
-                    item: item.HdrBloomThresholdAdd,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrBloomScaleMult != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrBloomScaleMult),
-                    item: item.HdrBloomScaleMult,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrBloomScaleAdd != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrBloomScaleAdd),
-                    item: item.HdrBloomScaleAdd,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrTargetLumMinMult != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrTargetLumMinMult),
-                    item: item.HdrTargetLumMinMult,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrTargetLumMinAdd != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrTargetLumMinAdd),
-                    item: item.HdrTargetLumMinAdd,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrTargetLumMaxMult != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrTargetLumMaxMult),
-                    item: item.HdrTargetLumMaxMult,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrTargetLumMaxAdd != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrTargetLumMaxAdd),
-                    item: item.HdrTargetLumMaxAdd,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrSunlightScaleMult != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrSunlightScaleMult),
-                    item: item.HdrSunlightScaleMult,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrSunlightScaleAdd != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrSunlightScaleAdd),
-                    item: item.HdrSunlightScaleAdd,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrSkyScaleMult != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrSkyScaleMult),
-                    item: item.HdrSkyScaleMult,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.HdrSkyScaleAdd != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HdrSkyScaleAdd),
-                    item: item.HdrSkyScaleAdd,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown08 != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown08) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown08),
-                    item: item.Unknown08,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown08,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown08),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown48 != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown48) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown48),
-                    item: item.Unknown48,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown48,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown48),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown09 != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown09) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown09),
-                    item: item.Unknown09,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown09,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown09),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown49 != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown49) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown49),
-                    item: item.Unknown49,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown49,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown49),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown0A != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0A) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown0A),
-                    item: item.Unknown0A,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown0A,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0A),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown4A != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4A) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown4A),
-                    item: item.Unknown4A,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown4A,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4A),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown0B != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0B) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown0B),
-                    item: item.Unknown0B,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown0B,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0B),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown4B != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4B) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown4B),
-                    item: item.Unknown4B,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown4B,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4B),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown0C != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0C) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown0C),
-                    item: item.Unknown0C,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown0C,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0C),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown4C != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4C) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown4C),
-                    item: item.Unknown4C,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown4C,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4C),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown0D != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0D) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown0D),
-                    item: item.Unknown0D,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown0D,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0D),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown4D != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4D) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown4D),
-                    item: item.Unknown4D,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown4D,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4D),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown0E != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0E) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown0E),
-                    item: item.Unknown0E,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown0E,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0E),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown4E != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4E) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown4E),
-                    item: item.Unknown4E,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown4E,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4E),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown0F != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0F) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown0F),
-                    item: item.Unknown0F,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown0F,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0F),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown4F != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4F) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown4F),
-                    item: item.Unknown4F,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown4F,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4F),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown10 != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown10) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown10),
-                    item: item.Unknown10,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown10,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown10),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown50 != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown50) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown50),
-                    item: item.Unknown50,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown50,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown50),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.CinematicSaturationMult != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CinematicSaturationMult),
-                    item: item.CinematicSaturationMult,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.CinematicSaturationAdd != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CinematicSaturationAdd),
-                    item: item.CinematicSaturationAdd,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.CinematicBrightnessMult != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CinematicBrightnessMult),
-                    item: item.CinematicBrightnessMult,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.CinematicBrightnessAdd != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CinematicBrightnessAdd),
-                    item: item.CinematicBrightnessAdd,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.CinematicContrastMult != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CinematicContrastMult),
-                    item: item.CinematicContrastMult,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.CinematicContrastAdd != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CinematicContrastAdd),
-                    item: item.CinematicContrastAdd,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown14 != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown14) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown14),
-                    item: item.Unknown14,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown14,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown14),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Unknown54 != null)
-                && (translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown54) ?? true))
-            {
-                ListXmlTranslation<IKeyFrameGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown54),
-                    item: item.Unknown54,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.Unknown54,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown54),
-                    transl: (XElement subNode, IKeyFrameGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((KeyFrameXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<ImageSpaceAdapter.DNAMDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DNAMDataTypeState),
-                    item: item.DNAMDataTypeState,
-                    fieldIndex: (int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IImageSpaceAdapterGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ImageSpaceAdapter");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ImageSpaceAdapter");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IImageSpaceAdapterGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IImageSpaceAdapterGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IImageSpaceAdapterGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class ImageSpaceAdapterXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static ImageSpaceAdapterXmlCreateTranslation Instance = new ImageSpaceAdapterXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IImageSpaceAdapterInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ImageSpaceAdapterXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IImageSpaceAdapterInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Flags":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<ImageSpaceAdapter.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Duration":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Duration);
-                    try
-                    {
-                        item.Duration = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RadialBlurFlags":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurFlags);
-                    try
-                    {
-                        item.RadialBlurFlags = EnumXmlTranslation<ImageSpaceAdapter.RadialBlurFlag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RadialBlurCenter":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter);
-                    try
-                    {
-                        item.RadialBlurCenter = P2FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DepthOfFieldFlags":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags);
-                    try
-                    {
-                        item.DepthOfFieldFlags = EnumXmlTranslation<ImageSpaceAdapter.DepthOfFieldFlag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BlurRadius":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.BlurRadius);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var BlurRadiusItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.BlurRadius = BlurRadiusItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.BlurRadius = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DoubleVisionStrength":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var DoubleVisionStrengthItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.DoubleVisionStrength = DoubleVisionStrengthItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.DoubleVisionStrength = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TintColor":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.TintColor);
-                    try
-                    {
-                        if (ListXmlTranslation<ColorFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var TintColorItem,
-                            transl: LoquiXmlTranslation<ColorFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.TintColor = TintColorItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.TintColor = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FadeColor":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.FadeColor);
-                    try
-                    {
-                        if (ListXmlTranslation<ColorFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var FadeColorItem,
-                            transl: LoquiXmlTranslation<ColorFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.FadeColor = FadeColorItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.FadeColor = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RadialBlurStrength":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var RadialBlurStrengthItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.RadialBlurStrength = RadialBlurStrengthItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.RadialBlurStrength = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RadialBlurRampUp":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var RadialBlurRampUpItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.RadialBlurRampUp = RadialBlurRampUpItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.RadialBlurRampUp = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RadialBlurStart":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var RadialBlurStartItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.RadialBlurStart = RadialBlurStartItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.RadialBlurStart = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RadialBlurRampDown":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var RadialBlurRampDownItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.RadialBlurRampDown = RadialBlurRampDownItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.RadialBlurRampDown = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RadialBlurDownStart":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var RadialBlurDownStartItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.RadialBlurDownStart = RadialBlurDownStartItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.RadialBlurDownStart = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DepthOfFieldStrength":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var DepthOfFieldStrengthItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.DepthOfFieldStrength = DepthOfFieldStrengthItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.DepthOfFieldStrength = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DepthOfFieldDistance":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var DepthOfFieldDistanceItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.DepthOfFieldDistance = DepthOfFieldDistanceItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.DepthOfFieldDistance = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DepthOfFieldRange":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var DepthOfFieldRangeItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.DepthOfFieldRange = DepthOfFieldRangeItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.DepthOfFieldRange = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MotionBlurStrength":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var MotionBlurStrengthItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.MotionBlurStrength = MotionBlurStrengthItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.MotionBlurStrength = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrEyeAdaptSpeedMult":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrEyeAdaptSpeedMultItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrEyeAdaptSpeedMult = HdrEyeAdaptSpeedMultItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrEyeAdaptSpeedMult = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrEyeAdaptSpeedAdd":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrEyeAdaptSpeedAddItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrEyeAdaptSpeedAdd = HdrEyeAdaptSpeedAddItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrEyeAdaptSpeedAdd = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrBloomBlurRadiusMult":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrBloomBlurRadiusMultItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrBloomBlurRadiusMult = HdrBloomBlurRadiusMultItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrBloomBlurRadiusMult = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrBloomBlurRadiusAdd":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrBloomBlurRadiusAddItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrBloomBlurRadiusAdd = HdrBloomBlurRadiusAddItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrBloomBlurRadiusAdd = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrBloomThresholdMult":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrBloomThresholdMultItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrBloomThresholdMult = HdrBloomThresholdMultItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrBloomThresholdMult = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrBloomThresholdAdd":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrBloomThresholdAddItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrBloomThresholdAdd = HdrBloomThresholdAddItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrBloomThresholdAdd = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrBloomScaleMult":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrBloomScaleMultItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrBloomScaleMult = HdrBloomScaleMultItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrBloomScaleMult = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrBloomScaleAdd":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrBloomScaleAddItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrBloomScaleAdd = HdrBloomScaleAddItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrBloomScaleAdd = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrTargetLumMinMult":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrTargetLumMinMultItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrTargetLumMinMult = HdrTargetLumMinMultItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrTargetLumMinMult = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrTargetLumMinAdd":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrTargetLumMinAddItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrTargetLumMinAdd = HdrTargetLumMinAddItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrTargetLumMinAdd = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrTargetLumMaxMult":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrTargetLumMaxMultItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrTargetLumMaxMult = HdrTargetLumMaxMultItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrTargetLumMaxMult = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrTargetLumMaxAdd":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrTargetLumMaxAddItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrTargetLumMaxAdd = HdrTargetLumMaxAddItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrTargetLumMaxAdd = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrSunlightScaleMult":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrSunlightScaleMultItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrSunlightScaleMult = HdrSunlightScaleMultItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrSunlightScaleMult = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrSunlightScaleAdd":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrSunlightScaleAddItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrSunlightScaleAdd = HdrSunlightScaleAddItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrSunlightScaleAdd = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrSkyScaleMult":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrSkyScaleMultItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrSkyScaleMult = HdrSkyScaleMultItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrSkyScaleMult = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrSkyScaleAdd":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var HdrSkyScaleAddItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HdrSkyScaleAdd = HdrSkyScaleAddItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.HdrSkyScaleAdd = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown08":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown08);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown08Item,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown08 = Unknown08Item.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown08 = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown48":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown48);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown48Item,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown48 = Unknown48Item.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown48 = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown09":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown09);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown09Item,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown09 = Unknown09Item.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown09 = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown49":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown49);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown49Item,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown49 = Unknown49Item.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown49 = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown0A":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0A);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown0AItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown0A = Unknown0AItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown0A = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown4A":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4A);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown4AItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown4A = Unknown4AItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown4A = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown0B":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0B);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown0BItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown0B = Unknown0BItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown0B = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown4B":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4B);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown4BItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown4B = Unknown4BItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown4B = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown0C":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0C);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown0CItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown0C = Unknown0CItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown0C = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown4C":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4C);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown4CItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown4C = Unknown4CItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown4C = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown0D":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0D);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown0DItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown0D = Unknown0DItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown0D = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown4D":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4D);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown4DItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown4D = Unknown4DItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown4D = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown0E":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0E);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown0EItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown0E = Unknown0EItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown0E = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown4E":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4E);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown4EItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown4E = Unknown4EItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown4E = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown0F":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown0F);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown0FItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown0F = Unknown0FItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown0F = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown4F":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown4F);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown4FItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown4F = Unknown4FItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown4F = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown10":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown10);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown10Item,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown10 = Unknown10Item.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown10 = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown50":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown50);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown50Item,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown50 = Unknown50Item.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown50 = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CinematicSaturationMult":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var CinematicSaturationMultItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.CinematicSaturationMult = CinematicSaturationMultItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.CinematicSaturationMult = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CinematicSaturationAdd":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var CinematicSaturationAddItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.CinematicSaturationAdd = CinematicSaturationAddItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.CinematicSaturationAdd = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CinematicBrightnessMult":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var CinematicBrightnessMultItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.CinematicBrightnessMult = CinematicBrightnessMultItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.CinematicBrightnessMult = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CinematicBrightnessAdd":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var CinematicBrightnessAddItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.CinematicBrightnessAdd = CinematicBrightnessAddItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.CinematicBrightnessAdd = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CinematicContrastMult":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var CinematicContrastMultItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.CinematicContrastMult = CinematicContrastMultItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.CinematicContrastMult = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CinematicContrastAdd":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var CinematicContrastAddItem,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.CinematicContrastAdd = CinematicContrastAddItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.CinematicContrastAdd = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown14":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown14);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown14Item,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown14 = Unknown14Item.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown14 = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown54":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.Unknown54);
-                    try
-                    {
-                        if (ListXmlTranslation<KeyFrame>.Instance.Parse(
-                            node: node,
-                            enumer: out var Unknown54Item,
-                            transl: LoquiXmlTranslation<KeyFrame>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown54 = Unknown54Item.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Unknown54 = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DNAMDataTypeState":
-                    errorMask?.PushIndex((int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState);
-                    try
-                    {
-                        item.DNAMDataTypeState = EnumXmlTranslation<ImageSpaceAdapter.DNAMDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class ImageSpaceAdapterXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IImageSpaceAdapterGetter item,
-            XElement node,
-            out ImageSpaceAdapter.ErrorMask errorMask,
-            ImageSpaceAdapter.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ImageSpaceAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ImageSpaceAdapter.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IImageSpaceAdapterGetter item,
-            string path,
-            out ImageSpaceAdapter.ErrorMask errorMask,
-            ImageSpaceAdapter.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IImageSpaceAdapterGetter item,
-            Stream stream,
-            out ImageSpaceAdapter.ErrorMask errorMask,
-            ImageSpaceAdapter.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -16437,10 +13034,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -16493,9 +13092,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IImageSpaceAdapterInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -16521,7 +13121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts3Custom(
                         frame: dataFrame,
                         item: item);
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags);
+                    return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags;
                 }
                 case RecordTypeInts.BNAM:
                 {
@@ -16530,8 +13130,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.BlurRadius);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.BlurRadius;
                 }
                 case RecordTypeInts.VNAM:
                 {
@@ -16540,8 +13140,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -16550,8 +13150,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ColorFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: ColorFrame.TryCreateFromBinary)
-                        .ToExtendedList<ColorFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.TintColor);
+                        .CastExtendedList<ColorFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.TintColor;
                 }
                 case RecordTypeInts.NAM3:
                 {
@@ -16560,8 +13160,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ColorFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: ColorFrame.TryCreateFromBinary)
-                        .ToExtendedList<ColorFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.FadeColor);
+                        .CastExtendedList<ColorFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.FadeColor;
                 }
                 case RecordTypeInts.RNAM:
                 {
@@ -16570,8 +13170,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -16580,8 +13180,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp;
                 }
                 case RecordTypeInts.UNAM:
                 {
@@ -16590,8 +13190,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.RadialBlurStart;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -16600,8 +13200,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown;
                 }
                 case RecordTypeInts.NAM2:
                 {
@@ -16610,8 +13210,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart;
                 }
                 case RecordTypeInts.WNAM:
                 {
@@ -16620,8 +13220,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -16630,8 +13230,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance;
                 }
                 case RecordTypeInts.YNAM:
                 {
@@ -16640,8 +13240,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange;
                 }
                 case RecordTypeInts.NAM4:
                 {
@@ -16650,8 +13250,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength;
                 }
                 case RecordTypeInts._0_IAD:
                 {
@@ -16660,8 +13260,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult;
                 }
                 case RecordTypeInts.@IAD:
                 {
@@ -16670,8 +13270,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd;
                 }
                 case RecordTypeInts._1_IAD:
                 {
@@ -16680,8 +13280,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult;
                 }
                 case RecordTypeInts.AIAD:
                 {
@@ -16690,8 +13290,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd;
                 }
                 case RecordTypeInts._2_IAD:
                 {
@@ -16700,8 +13300,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult;
                 }
                 case RecordTypeInts.BIAD:
                 {
@@ -16710,8 +13310,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd;
                 }
                 case RecordTypeInts._3_IAD:
                 {
@@ -16720,8 +13320,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult;
                 }
                 case RecordTypeInts.CIAD:
                 {
@@ -16730,8 +13330,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd;
                 }
                 case RecordTypeInts._4_IAD:
                 {
@@ -16740,8 +13340,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult;
                 }
                 case RecordTypeInts.DIAD:
                 {
@@ -16750,8 +13350,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd;
                 }
                 case RecordTypeInts._5_IAD:
                 {
@@ -16760,8 +13360,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult;
                 }
                 case RecordTypeInts.EIAD:
                 {
@@ -16770,8 +13370,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd;
                 }
                 case RecordTypeInts._6_IAD:
                 {
@@ -16780,8 +13380,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult;
                 }
                 case RecordTypeInts.FIAD:
                 {
@@ -16790,8 +13390,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd;
                 }
                 case RecordTypeInts._7_IAD:
                 {
@@ -16800,8 +13400,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult;
                 }
                 case RecordTypeInts.GIAD:
                 {
@@ -16810,8 +13410,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd;
                 }
                 case RecordTypeInts._8_IAD:
                 {
@@ -16820,8 +13420,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown08);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown08;
                 }
                 case RecordTypeInts.HIAD:
                 {
@@ -16830,8 +13430,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown48);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown48;
                 }
                 case RecordTypeInts._9_IAD:
                 {
@@ -16840,8 +13440,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown09);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown09;
                 }
                 case RecordTypeInts.IIAD:
                 {
@@ -16850,8 +13450,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown49);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown49;
                 }
                 case RecordTypeInts._A_IAD:
                 {
@@ -16860,8 +13460,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0A);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown0A;
                 }
                 case RecordTypeInts.JIAD:
                 {
@@ -16870,8 +13470,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4A);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown4A;
                 }
                 case RecordTypeInts._B_IAD:
                 {
@@ -16880,8 +13480,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0B);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown0B;
                 }
                 case RecordTypeInts.KIAD:
                 {
@@ -16890,8 +13490,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4B);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown4B;
                 }
                 case RecordTypeInts._C_IAD:
                 {
@@ -16900,8 +13500,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0C);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown0C;
                 }
                 case RecordTypeInts.LIAD:
                 {
@@ -16910,8 +13510,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4C);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown4C;
                 }
                 case RecordTypeInts._D_IAD:
                 {
@@ -16920,8 +13520,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0D);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown0D;
                 }
                 case RecordTypeInts.MIAD:
                 {
@@ -16930,8 +13530,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4D);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown4D;
                 }
                 case RecordTypeInts._E_IAD:
                 {
@@ -16940,8 +13540,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0E);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown0E;
                 }
                 case RecordTypeInts.NIAD:
                 {
@@ -16950,8 +13550,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4E);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown4E;
                 }
                 case RecordTypeInts._F_IAD:
                 {
@@ -16960,8 +13560,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0F);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown0F;
                 }
                 case RecordTypeInts.OIAD:
                 {
@@ -16970,8 +13570,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4F);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown4F;
                 }
                 case RecordTypeInts._10_IAD:
                 {
@@ -16980,8 +13580,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown10);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown10;
                 }
                 case RecordTypeInts.PIAD:
                 {
@@ -16990,8 +13590,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown50);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown50;
                 }
                 case RecordTypeInts._11_IAD:
                 {
@@ -17000,8 +13600,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult;
                 }
                 case RecordTypeInts.QIAD:
                 {
@@ -17010,8 +13610,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd;
                 }
                 case RecordTypeInts._12_IAD:
                 {
@@ -17020,8 +13620,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult;
                 }
                 case RecordTypeInts.RIAD:
                 {
@@ -17030,8 +13630,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd;
                 }
                 case RecordTypeInts._13_IAD:
                 {
@@ -17040,8 +13640,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult;
                 }
                 case RecordTypeInts.SIAD:
                 {
@@ -17050,8 +13650,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd;
                 }
                 case RecordTypeInts._14_IAD:
                 {
@@ -17060,8 +13660,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown14);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown14;
                 }
                 case RecordTypeInts.TIAD:
                 {
@@ -17070,13 +13670,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown54);
+                        .CastExtendedList<KeyFrame>();
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown54;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -17129,21 +13730,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IImageSpaceAdapterGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ImageSpaceAdapterXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ImageSpaceAdapterXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ImageSpaceAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -17165,7 +13751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Duration
         private int _DurationLocation => _DNAMLocation!.Value + 0x4;
         private bool _Duration_IsSet => _DNAMLocation.HasValue;
-        public Single Duration => _Duration_IsSet ? SpanExt.GetFloat(_data.Slice(_DurationLocation, 4)) : default;
+        public Single Duration => _Duration_IsSet ? _data.Slice(_DurationLocation, 4).Float() : default;
         #endregion
         #region Counts1
         partial void Counts1CustomParse(
@@ -17277,8 +13863,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new ImageSpaceAdapterBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -17304,12 +13891,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -17318,667 +13906,667 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags);
+                    return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.BlurRadius = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.BlurRadius = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.BlurRadius);
+                    return (int)ImageSpaceAdapter_FieldIndex.BlurRadius;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.DoubleVisionStrength = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.DoubleVisionStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength);
+                    return (int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.TintColor = BinaryOverlayList<ColorFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.TintColor = BinaryOverlayList.FactoryByStartIndex<ColorFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 20,
                         getter: (s, p) => ColorFrameBinaryOverlay.ColorFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.TintColor);
+                    return (int)ImageSpaceAdapter_FieldIndex.TintColor;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.FadeColor = BinaryOverlayList<ColorFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.FadeColor = BinaryOverlayList.FactoryByStartIndex<ColorFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 20,
                         getter: (s, p) => ColorFrameBinaryOverlay.ColorFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.FadeColor);
+                    return (int)ImageSpaceAdapter_FieldIndex.FadeColor;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RadialBlurStrength = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.RadialBlurStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength);
+                    return (int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RadialBlurRampUp = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.RadialBlurRampUp = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp);
+                    return (int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RadialBlurStart = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.RadialBlurStart = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart);
+                    return (int)ImageSpaceAdapter_FieldIndex.RadialBlurStart;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RadialBlurRampDown = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.RadialBlurRampDown = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown);
+                    return (int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RadialBlurDownStart = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.RadialBlurDownStart = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart);
+                    return (int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.DepthOfFieldStrength = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.DepthOfFieldStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength);
+                    return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.DepthOfFieldDistance = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.DepthOfFieldDistance = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance);
+                    return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.DepthOfFieldRange = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.DepthOfFieldRange = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange);
+                    return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.MotionBlurStrength = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.MotionBlurStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength);
+                    return (int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength;
                 }
                 case RecordTypeInts._0_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrEyeAdaptSpeedMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrEyeAdaptSpeedMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult;
                 }
                 case RecordTypeInts.@IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrEyeAdaptSpeedAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrEyeAdaptSpeedAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd;
                 }
                 case RecordTypeInts._1_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrBloomBlurRadiusMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrBloomBlurRadiusMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult;
                 }
                 case RecordTypeInts.AIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrBloomBlurRadiusAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrBloomBlurRadiusAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd;
                 }
                 case RecordTypeInts._2_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrBloomThresholdMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrBloomThresholdMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult;
                 }
                 case RecordTypeInts.BIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrBloomThresholdAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrBloomThresholdAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd;
                 }
                 case RecordTypeInts._3_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrBloomScaleMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrBloomScaleMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult;
                 }
                 case RecordTypeInts.CIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrBloomScaleAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrBloomScaleAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd;
                 }
                 case RecordTypeInts._4_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrTargetLumMinMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrTargetLumMinMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult;
                 }
                 case RecordTypeInts.DIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrTargetLumMinAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrTargetLumMinAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd;
                 }
                 case RecordTypeInts._5_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrTargetLumMaxMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrTargetLumMaxMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult;
                 }
                 case RecordTypeInts.EIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrTargetLumMaxAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrTargetLumMaxAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd;
                 }
                 case RecordTypeInts._6_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrSunlightScaleMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrSunlightScaleMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult;
                 }
                 case RecordTypeInts.FIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrSunlightScaleAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrSunlightScaleAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd;
                 }
                 case RecordTypeInts._7_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrSkyScaleMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrSkyScaleMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult;
                 }
                 case RecordTypeInts.GIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrSkyScaleAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrSkyScaleAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd);
+                    return (int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd;
                 }
                 case RecordTypeInts._8_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown08 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown08 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown08);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown08;
                 }
                 case RecordTypeInts.HIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown48 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown48 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown48);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown48;
                 }
                 case RecordTypeInts._9_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown09 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown09 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown09);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown09;
                 }
                 case RecordTypeInts.IIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown49 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown49 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown49);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown49;
                 }
                 case RecordTypeInts._A_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown0A = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown0A = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0A);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown0A;
                 }
                 case RecordTypeInts.JIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown4A = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown4A = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4A);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown4A;
                 }
                 case RecordTypeInts._B_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown0B = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown0B = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0B);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown0B;
                 }
                 case RecordTypeInts.KIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown4B = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown4B = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4B);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown4B;
                 }
                 case RecordTypeInts._C_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown0C = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown0C = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0C);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown0C;
                 }
                 case RecordTypeInts.LIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown4C = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown4C = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4C);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown4C;
                 }
                 case RecordTypeInts._D_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown0D = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown0D = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0D);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown0D;
                 }
                 case RecordTypeInts.MIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown4D = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown4D = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4D);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown4D;
                 }
                 case RecordTypeInts._E_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown0E = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown0E = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0E);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown0E;
                 }
                 case RecordTypeInts.NIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown4E = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown4E = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4E);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown4E;
                 }
                 case RecordTypeInts._F_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown0F = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown0F = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown0F);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown0F;
                 }
                 case RecordTypeInts.OIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown4F = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown4F = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown4F);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown4F;
                 }
                 case RecordTypeInts._10_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown10 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown10 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown10);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown10;
                 }
                 case RecordTypeInts.PIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown50 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown50 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown50);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown50;
                 }
                 case RecordTypeInts._11_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.CinematicSaturationMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.CinematicSaturationMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult);
+                    return (int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult;
                 }
                 case RecordTypeInts.QIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.CinematicSaturationAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.CinematicSaturationAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd);
+                    return (int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd;
                 }
                 case RecordTypeInts._12_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.CinematicBrightnessMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.CinematicBrightnessMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult);
+                    return (int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult;
                 }
                 case RecordTypeInts.RIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.CinematicBrightnessAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.CinematicBrightnessAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd);
+                    return (int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd;
                 }
                 case RecordTypeInts._13_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.CinematicContrastMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.CinematicContrastMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult);
+                    return (int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult;
                 }
                 case RecordTypeInts.SIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.CinematicContrastAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.CinematicContrastAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd);
+                    return (int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd;
                 }
                 case RecordTypeInts._14_IAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown14 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown14 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown14);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown14;
                 }
                 case RecordTypeInts.TIAD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown54 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown54 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => KeyFrameBinaryOverlay.KeyFrameFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ImageSpaceAdapter_FieldIndex.Unknown54);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unknown54;
                 }
                 default:
                     return base.FillRecordType(
@@ -17986,7 +14574,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

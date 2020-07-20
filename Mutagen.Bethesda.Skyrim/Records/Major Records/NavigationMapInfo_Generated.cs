@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -63,8 +57,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MergedTo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ANavigationMesh>> _MergedTo = new ExtendedList<IFormLink<ANavigationMesh>>();
-        public ExtendedList<IFormLink<ANavigationMesh>> MergedTo
+        private IExtendedList<IFormLink<ANavigationMesh>> _MergedTo = new ExtendedList<IFormLink<ANavigationMesh>>();
+        public IExtendedList<IFormLink<ANavigationMesh>> MergedTo
         {
             get => this._MergedTo;
             protected set => this._MergedTo = value;
@@ -77,8 +71,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region PreferredMerges
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ANavigationMesh>> _PreferredMerges = new ExtendedList<IFormLink<ANavigationMesh>>();
-        public ExtendedList<IFormLink<ANavigationMesh>> PreferredMerges
+        private IExtendedList<IFormLink<ANavigationMesh>> _PreferredMerges = new ExtendedList<IFormLink<ANavigationMesh>>();
+        public IExtendedList<IFormLink<ANavigationMesh>> PreferredMerges
         {
             get => this._PreferredMerges;
             protected set => this._PreferredMerges = value;
@@ -91,8 +85,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkedDoors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LinkedDoor> _LinkedDoors = new ExtendedList<LinkedDoor>();
-        public ExtendedList<LinkedDoor> LinkedDoors
+        private IExtendedList<LinkedDoor> _LinkedDoors = new ExtendedList<LinkedDoor>();
+        public IExtendedList<LinkedDoor> LinkedDoors
         {
             get => this._LinkedDoors;
             protected set => this._LinkedDoors = value;
@@ -157,137 +151,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => NavigationMapInfoXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((NavigationMapInfoXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static NavigationMapInfo CreateFromXml(
-            XElement node,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static NavigationMapInfo CreateFromXml(
-            XElement node,
-            out NavigationMapInfo.ErrorMask errorMask,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = NavigationMapInfo.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static NavigationMapInfo CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new NavigationMapInfo();
-            ((NavigationMapInfoSetterCommon)((INavigationMapInfoGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static NavigationMapInfo CreateFromXml(
-            string path,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static NavigationMapInfo CreateFromXml(
-            string path,
-            out NavigationMapInfo.ErrorMask errorMask,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static NavigationMapInfo CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static NavigationMapInfo CreateFromXml(
-            Stream stream,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static NavigationMapInfo CreateFromXml(
-            Stream stream,
-            out NavigationMapInfo.ErrorMask errorMask,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static NavigationMapInfo CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -1097,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = NavigationMapInfo_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = NavigationMapInfo_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => NavigationMapInfoCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1180,9 +1043,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 Unknown { get; set; }
         new P3Float Point { get; set; }
         new UInt32 PreferredMergesFlag { get; set; }
-        new ExtendedList<IFormLink<ANavigationMesh>> MergedTo { get; }
-        new ExtendedList<IFormLink<ANavigationMesh>> PreferredMerges { get; }
-        new ExtendedList<LinkedDoor> LinkedDoors { get; }
+        new IExtendedList<IFormLink<ANavigationMesh>> MergedTo { get; }
+        new IExtendedList<IFormLink<ANavigationMesh>> PreferredMerges { get; }
+        new IExtendedList<LinkedDoor> LinkedDoors { get; }
         new IslandData? Island { get; set; }
         new Int32 Unknown2 { get; set; }
         new FormLink<Worldspace> ParentWorldspace { get; set; }
@@ -1193,7 +1056,6 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INavigationMapInfoGetter :
         ILoquiObject,
         ILoquiObject<INavigationMapInfoGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -1372,131 +1234,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this INavigationMapInfo item,
-            XElement node,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this INavigationMapInfo item,
-            XElement node,
-            out NavigationMapInfo.ErrorMask errorMask,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = NavigationMapInfo.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this INavigationMapInfo item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((NavigationMapInfoSetterCommon)((INavigationMapInfoGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INavigationMapInfo item,
-            string path,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INavigationMapInfo item,
-            string path,
-            out NavigationMapInfo.ErrorMask errorMask,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INavigationMapInfo item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this INavigationMapInfo item,
-            Stream stream,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INavigationMapInfo item,
-            Stream stream,
-            out NavigationMapInfo.ErrorMask errorMask,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INavigationMapInfo item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1788,11 +1525,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case NavigationMapInfo_FieldIndex.PreferredMergesFlag:
                     return typeof(UInt32);
                 case NavigationMapInfo_FieldIndex.MergedTo:
-                    return typeof(ExtendedList<IFormLink<ANavigationMesh>>);
+                    return typeof(IExtendedList<IFormLink<ANavigationMesh>>);
                 case NavigationMapInfo_FieldIndex.PreferredMerges:
-                    return typeof(ExtendedList<IFormLink<ANavigationMesh>>);
+                    return typeof(IExtendedList<IFormLink<ANavigationMesh>>);
                 case NavigationMapInfo_FieldIndex.LinkedDoors:
-                    return typeof(ExtendedList<LinkedDoor>);
+                    return typeof(IExtendedList<LinkedDoor>);
                 case NavigationMapInfo_FieldIndex.Island:
                     return typeof(IslandData);
                 case NavigationMapInfo_FieldIndex.Unknown2:
@@ -1808,7 +1545,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(NavigationMapInfoXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.NVMI;
         public static readonly Type BinaryWriteTranslation = typeof(NavigationMapInfoBinaryWriteTranslation);
         #region Interface
@@ -1865,34 +1601,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ParentWorldspaceCoord = default;
             item.ParentCell = FormLink<Cell>.Null;
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            INavigationMapInfo item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    NavigationMapInfoXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2414,678 +2122,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class NavigationMapInfoXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static NavigationMapInfoXmlWriteTranslation Instance = new NavigationMapInfoXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            INavigationMapInfoGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.NavigationMesh) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NavigationMesh),
-                    item: item.NavigationMesh.FormKey,
-                    fieldIndex: (int)NavigationMapInfo_FieldIndex.NavigationMesh,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Unknown) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)NavigationMapInfo_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Point) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Point),
-                    item: item.Point,
-                    fieldIndex: (int)NavigationMapInfo_FieldIndex.Point,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.PreferredMergesFlag) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PreferredMergesFlag),
-                    item: item.PreferredMergesFlag,
-                    fieldIndex: (int)NavigationMapInfo_FieldIndex.PreferredMergesFlag,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.MergedTo) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MergedTo),
-                    item: item.MergedTo,
-                    fieldIndex: (int)NavigationMapInfo_FieldIndex.MergedTo,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.MergedTo),
-                    transl: (XElement subNode, IFormLink<IANavigationMeshGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.PreferredMerges) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.PreferredMerges),
-                    item: item.PreferredMerges,
-                    fieldIndex: (int)NavigationMapInfo_FieldIndex.PreferredMerges,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.PreferredMerges),
-                    transl: (XElement subNode, IFormLink<IANavigationMeshGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.LinkedDoors) ?? true))
-            {
-                ListXmlTranslation<ILinkedDoorGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.LinkedDoors),
-                    item: item.LinkedDoors,
-                    fieldIndex: (int)NavigationMapInfo_FieldIndex.LinkedDoors,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.LinkedDoors),
-                    transl: (XElement subNode, ILinkedDoorGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LinkedDoorXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Island != null)
-                && (translationMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Island) ?? true))
-            {
-                if (item.Island.TryGet(out var IslandItem))
-                {
-                    ((IslandDataXmlWriteTranslation)((IXmlItem)IslandItem).XmlWriteTranslator).Write(
-                        item: IslandItem,
-                        node: node,
-                        name: nameof(item.Island),
-                        fieldIndex: (int)NavigationMapInfo_FieldIndex.Island,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.Island));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Unknown2) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown2),
-                    item: item.Unknown2,
-                    fieldIndex: (int)NavigationMapInfo_FieldIndex.Unknown2,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspace) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParentWorldspace),
-                    item: item.ParentWorldspace.FormKey,
-                    fieldIndex: (int)NavigationMapInfo_FieldIndex.ParentWorldspace,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspaceCoord) ?? true))
-            {
-                P2Int16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParentWorldspaceCoord),
-                    item: item.ParentWorldspaceCoord,
-                    fieldIndex: (int)NavigationMapInfo_FieldIndex.ParentWorldspaceCoord,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentCell) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParentCell),
-                    item: item.ParentCell.FormKey,
-                    fieldIndex: (int)NavigationMapInfo_FieldIndex.ParentCell,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            INavigationMapInfoGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.NavigationMapInfo");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.NavigationMapInfo");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (INavigationMapInfoGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            INavigationMapInfoGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (INavigationMapInfoGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class NavigationMapInfoXmlCreateTranslation
-    {
-        public readonly static NavigationMapInfoXmlCreateTranslation Instance = new NavigationMapInfoXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            INavigationMapInfo item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    NavigationMapInfoXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            INavigationMapInfo item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "NavigationMesh":
-                    errorMask?.PushIndex((int)NavigationMapInfo_FieldIndex.NavigationMesh);
-                    try
-                    {
-                        item.NavigationMesh = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)NavigationMapInfo_FieldIndex.Unknown);
-                    try
-                    {
-                        item.Unknown = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Point":
-                    errorMask?.PushIndex((int)NavigationMapInfo_FieldIndex.Point);
-                    try
-                    {
-                        item.Point = P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PreferredMergesFlag":
-                    errorMask?.PushIndex((int)NavigationMapInfo_FieldIndex.PreferredMergesFlag);
-                    try
-                    {
-                        item.PreferredMergesFlag = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MergedTo":
-                    errorMask?.PushIndex((int)NavigationMapInfo_FieldIndex.MergedTo);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<ANavigationMesh>>.Instance.Parse(
-                            node: node,
-                            enumer: out var MergedToItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.MergedTo.SetTo(MergedToItem);
-                        }
-                        else
-                        {
-                            item.MergedTo.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PreferredMerges":
-                    errorMask?.PushIndex((int)NavigationMapInfo_FieldIndex.PreferredMerges);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<ANavigationMesh>>.Instance.Parse(
-                            node: node,
-                            enumer: out var PreferredMergesItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.PreferredMerges.SetTo(PreferredMergesItem);
-                        }
-                        else
-                        {
-                            item.PreferredMerges.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LinkedDoors":
-                    errorMask?.PushIndex((int)NavigationMapInfo_FieldIndex.LinkedDoors);
-                    try
-                    {
-                        if (ListXmlTranslation<LinkedDoor>.Instance.Parse(
-                            node: node,
-                            enumer: out var LinkedDoorsItem,
-                            transl: LoquiXmlTranslation<LinkedDoor>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.LinkedDoors.SetTo(LinkedDoorsItem);
-                        }
-                        else
-                        {
-                            item.LinkedDoors.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Island":
-                    errorMask?.PushIndex((int)NavigationMapInfo_FieldIndex.Island);
-                    try
-                    {
-                        item.Island = LoquiXmlTranslation<IslandData>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.Island));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown2":
-                    errorMask?.PushIndex((int)NavigationMapInfo_FieldIndex.Unknown2);
-                    try
-                    {
-                        item.Unknown2 = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParentWorldspace":
-                    errorMask?.PushIndex((int)NavigationMapInfo_FieldIndex.ParentWorldspace);
-                    try
-                    {
-                        item.ParentWorldspace = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParentWorldspaceCoord":
-                    errorMask?.PushIndex((int)NavigationMapInfo_FieldIndex.ParentWorldspaceCoord);
-                    try
-                    {
-                        item.ParentWorldspaceCoord = P2Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParentCell":
-                    errorMask?.PushIndex((int)NavigationMapInfo_FieldIndex.ParentCell);
-                    try
-                    {
-                        item.ParentCell = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class NavigationMapInfoXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this INavigationMapInfoGetter item,
-            XElement node,
-            out NavigationMapInfo.ErrorMask errorMask,
-            NavigationMapInfo.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((NavigationMapInfoXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = NavigationMapInfo.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this INavigationMapInfoGetter item,
-            string path,
-            out NavigationMapInfo.ErrorMask errorMask,
-            NavigationMapInfo.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this INavigationMapInfoGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this INavigationMapInfoGetter item,
-            Stream stream,
-            out NavigationMapInfo.ErrorMask errorMask,
-            NavigationMapInfo.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this INavigationMapInfoGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this INavigationMapInfoGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((NavigationMapInfoXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this INavigationMapInfoGetter item,
-            XElement node,
-            string? name = null,
-            NavigationMapInfo.TranslationMask? translationMask = null)
-        {
-            ((NavigationMapInfoXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this INavigationMapInfoGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((NavigationMapInfoXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this INavigationMapInfoGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((NavigationMapInfoXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3311,23 +2347,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMapInfoCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMapInfoCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => NavigationMapInfoXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((NavigationMapInfoXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavigationMapInfoBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -3346,15 +2365,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P3Float Point => P3FloatBinaryTranslation.Read(_data.Slice(0x8, 0xC));
         public UInt32 PreferredMergesFlag => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x14, 0x4));
         #region MergedTo
-        public IReadOnlyList<IFormLink<IANavigationMeshGetter>> MergedTo => BinaryOverlayList<IFormLink<IANavigationMeshGetter>>.FactoryByCountLength(_data.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLink<IANavigationMeshGetter>> MergedTo => BinaryOverlayList.FactoryByCountLength<IFormLink<IANavigationMeshGetter>>(_data.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int MergedToEndingPos;
         #endregion
         #region PreferredMerges
-        public IReadOnlyList<IFormLink<IANavigationMeshGetter>> PreferredMerges => BinaryOverlayList<IFormLink<IANavigationMeshGetter>>.FactoryByCountLength(_data.Slice(MergedToEndingPos), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLink<IANavigationMeshGetter>> PreferredMerges => BinaryOverlayList.FactoryByCountLength<IFormLink<IANavigationMeshGetter>>(_data.Slice(MergedToEndingPos), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int PreferredMergesEndingPos;
         #endregion
         #region LinkedDoors
-        public IReadOnlyList<ILinkedDoorGetter> LinkedDoors => BinaryOverlayList<ILinkedDoorGetter>.FactoryByCountLength(_data.Slice(PreferredMergesEndingPos), _package, 8, countLength: 4, (s, p) => LinkedDoorBinaryOverlay.LinkedDoorFactory(s, p));
+        public IReadOnlyList<ILinkedDoorGetter> LinkedDoors => BinaryOverlayList.FactoryByCountLength<LinkedDoorBinaryOverlay>(_data.Slice(PreferredMergesEndingPos), _package, 8, countLength: 4, (s, p) => LinkedDoorBinaryOverlay.LinkedDoorFactory(s, p));
         protected int LinkedDoorsEndingPos;
         #endregion
         #region Island
@@ -3394,7 +2413,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new NavigationMapInfoBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.MergedToEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(0x18)) * 4 + 4;
             ret.PreferredMergesEndingPos = ret.MergedToEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.MergedToEndingPos)) * 4 + 4;

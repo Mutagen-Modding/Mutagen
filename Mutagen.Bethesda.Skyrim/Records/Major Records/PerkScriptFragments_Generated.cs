@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -55,8 +49,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Fragments
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IndexedScriptFragment> _Fragments = new ExtendedList<IndexedScriptFragment>();
-        public ExtendedList<IndexedScriptFragment> Fragments
+        private IExtendedList<IndexedScriptFragment> _Fragments = new ExtendedList<IndexedScriptFragment>();
+        public IExtendedList<IndexedScriptFragment> Fragments
         {
             get => this._Fragments;
             protected set => this._Fragments = value;
@@ -94,137 +88,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PerkScriptFragmentsXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PerkScriptFragmentsXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static PerkScriptFragments CreateFromXml(
-            XElement node,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static PerkScriptFragments CreateFromXml(
-            XElement node,
-            out PerkScriptFragments.ErrorMask errorMask,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PerkScriptFragments.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static PerkScriptFragments CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new PerkScriptFragments();
-            ((PerkScriptFragmentsSetterCommon)((IPerkScriptFragmentsGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static PerkScriptFragments CreateFromXml(
-            string path,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PerkScriptFragments CreateFromXml(
-            string path,
-            out PerkScriptFragments.ErrorMask errorMask,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PerkScriptFragments CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static PerkScriptFragments CreateFromXml(
-            Stream stream,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PerkScriptFragments CreateFromXml(
-            Stream stream,
-            out PerkScriptFragments.ErrorMask errorMask,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PerkScriptFragments CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -699,13 +562,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new SByte Unknown { get; set; }
         new String FileName { get; set; }
-        new ExtendedList<IndexedScriptFragment> Fragments { get; }
+        new IExtendedList<IndexedScriptFragment> Fragments { get; }
     }
 
     public partial interface IPerkScriptFragmentsGetter :
         ILoquiObject,
         ILoquiObject<IPerkScriptFragmentsGetter>,
-        IXmlItem,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -874,131 +736,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPerkScriptFragments item,
-            XElement node,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPerkScriptFragments item,
-            XElement node,
-            out PerkScriptFragments.ErrorMask errorMask,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PerkScriptFragments.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IPerkScriptFragments item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((PerkScriptFragmentsSetterCommon)((IPerkScriptFragmentsGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPerkScriptFragments item,
-            string path,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPerkScriptFragments item,
-            string path,
-            out PerkScriptFragments.ErrorMask errorMask,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPerkScriptFragments item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IPerkScriptFragments item,
-            Stream stream,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPerkScriptFragments item,
-            Stream stream,
-            out PerkScriptFragments.ErrorMask errorMask,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPerkScriptFragments item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1196,13 +933,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PerkScriptFragments_FieldIndex.FileName:
                     return typeof(String);
                 case PerkScriptFragments_FieldIndex.Fragments:
-                    return typeof(ExtendedList<IndexedScriptFragment>);
+                    return typeof(IExtendedList<IndexedScriptFragment>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(PerkScriptFragmentsXmlWriteTranslation);
         public static readonly Type BinaryWriteTranslation = typeof(PerkScriptFragmentsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1249,34 +985,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FileName = string.Empty;
             item.Fragments.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IPerkScriptFragments item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PerkScriptFragmentsXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1575,391 +1283,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class PerkScriptFragmentsXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static PerkScriptFragmentsXmlWriteTranslation Instance = new PerkScriptFragmentsXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IPerkScriptFragmentsGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)PerkScriptFragments_FieldIndex.Unknown) ?? true))
-            {
-                Int8XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)PerkScriptFragments_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PerkScriptFragments_FieldIndex.FileName) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FileName),
-                    item: item.FileName,
-                    fieldIndex: (int)PerkScriptFragments_FieldIndex.FileName,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PerkScriptFragments_FieldIndex.Fragments) ?? true))
-            {
-                ListXmlTranslation<IIndexedScriptFragmentGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Fragments),
-                    item: item.Fragments,
-                    fieldIndex: (int)PerkScriptFragments_FieldIndex.Fragments,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PerkScriptFragments_FieldIndex.Fragments),
-                    transl: (XElement subNode, IIndexedScriptFragmentGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((IndexedScriptFragmentXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IPerkScriptFragmentsGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.PerkScriptFragments");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.PerkScriptFragments");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPerkScriptFragmentsGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IPerkScriptFragmentsGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IPerkScriptFragmentsGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class PerkScriptFragmentsXmlCreateTranslation
-    {
-        public readonly static PerkScriptFragmentsXmlCreateTranslation Instance = new PerkScriptFragmentsXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IPerkScriptFragments item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PerkScriptFragmentsXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IPerkScriptFragments item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Unknown":
-                    errorMask?.PushIndex((int)PerkScriptFragments_FieldIndex.Unknown);
-                    try
-                    {
-                        item.Unknown = Int8XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FileName":
-                    errorMask?.PushIndex((int)PerkScriptFragments_FieldIndex.FileName);
-                    try
-                    {
-                        item.FileName = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fragments":
-                    errorMask?.PushIndex((int)PerkScriptFragments_FieldIndex.Fragments);
-                    try
-                    {
-                        if (ListXmlTranslation<IndexedScriptFragment>.Instance.Parse(
-                            node: node,
-                            enumer: out var FragmentsItem,
-                            transl: LoquiXmlTranslation<IndexedScriptFragment>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Fragments.SetTo(FragmentsItem);
-                        }
-                        else
-                        {
-                            item.Fragments.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class PerkScriptFragmentsXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IPerkScriptFragmentsGetter item,
-            XElement node,
-            out PerkScriptFragments.ErrorMask errorMask,
-            PerkScriptFragments.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((PerkScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PerkScriptFragments.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IPerkScriptFragmentsGetter item,
-            string path,
-            out PerkScriptFragments.ErrorMask errorMask,
-            PerkScriptFragments.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPerkScriptFragmentsGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPerkScriptFragmentsGetter item,
-            Stream stream,
-            out PerkScriptFragments.ErrorMask errorMask,
-            PerkScriptFragments.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPerkScriptFragmentsGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPerkScriptFragmentsGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((PerkScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IPerkScriptFragmentsGetter item,
-            XElement node,
-            string? name = null,
-            PerkScriptFragments.TranslationMask? translationMask = null)
-        {
-            ((PerkScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IPerkScriptFragmentsGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PerkScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPerkScriptFragmentsGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PerkScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2082,23 +1405,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkScriptFragmentsGetter)rhs, include);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PerkScriptFragmentsXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PerkScriptFragmentsXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PerkScriptFragmentsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

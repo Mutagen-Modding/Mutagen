@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda
 
         private static void SkipHeader(IMutagenReadStream reader)
         {
-            if (!reader.TryReadMod(out var header))
+            if (!reader.TryReadModHeader(out var header))
             {
                 reader.Position = reader.Length;
             }
@@ -209,10 +209,6 @@ namespace Mutagen.Bethesda
         {
             var grupLoc = reader.Position;
             GroupHeader groupMeta = reader.GetGroup();
-            if (!groupMeta.IsGroup)
-            {
-                throw new ArgumentException();
-            }
             fileLocs.GrupLocations.Add(reader.Position);
             var grupRec = grupRecOverride ?? groupMeta.ContainedRecordType;
 
@@ -223,12 +219,6 @@ namespace Mutagen.Bethesda
                 return null;
             }
 
-            if (grupRec.Type == "WRLD")
-            {
-                int wer = 23;
-                wer++;
-            }
-
             reader.Position += groupMeta.HeaderLength;
 
             using (var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + groupMeta.ContentLength))
@@ -237,15 +227,9 @@ namespace Mutagen.Bethesda
                 {
                     MajorRecordHeader majorRecordMeta = frame.GetMajorRecord();
                     var targetRec = majorRecordMeta.RecordType;
-                    if (majorRecordMeta.FormID.ID == 0xB414D
-                        || majorRecordMeta.FormID.ID == 0xD74)
-                    {
-                        int wer = 23;
-                        wer++;
-                    }
                     if (targetRec != grupRec)
                     {
-                        if (IsSubLevelGRUP(frame.GetGroup()))
+                        if (IsSubLevelGRUP(frame.GetGroup(checkIsGroup: false)))
                         {
                             parentGroupLocations.Push(grupLoc);
                             HandleSubLevelGRUP(
@@ -406,10 +390,6 @@ namespace Mutagen.Bethesda
             {
                 var grupLoc = frame.Position;
                 var groupMeta = frame.GetGroup();
-                if (!groupMeta.IsGroup)
-                {
-                    throw new ArgumentException();
-                }
                 fileLocs.GrupLocations.Add(grupLoc);
                 switch ((GroupTypeEnum)groupMeta.GroupType)
                 {

@@ -19,14 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using System.Drawing;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -73,8 +67,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RankPlacement> _Factions = new ExtendedList<RankPlacement>();
-        public ExtendedList<RankPlacement> Factions
+        private IExtendedList<RankPlacement> _Factions = new ExtendedList<RankPlacement>();
+        public IExtendedList<RankPlacement> Factions
         {
             get => this._Factions;
             protected set => this._Factions = value;
@@ -107,8 +101,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ASpell>>? _ActorEffect;
-        public ExtendedList<IFormLink<ASpell>>? ActorEffect
+        private IExtendedList<IFormLink<ASpell>>? _ActorEffect;
+        public IExtendedList<IFormLink<ASpell>>? ActorEffect
         {
             get => this._ActorEffect;
             set => this._ActorEffect = value;
@@ -147,8 +141,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Attacks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Attack> _Attacks = new ExtendedList<Attack>();
-        public ExtendedList<Attack> Attacks
+        private IExtendedList<Attack> _Attacks = new ExtendedList<Attack>();
+        public IExtendedList<Attack> Attacks
         {
             get => this._Attacks;
             protected set => this._Attacks = value;
@@ -181,8 +175,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Perks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<PerkPlacement>? _Perks;
-        public ExtendedList<PerkPlacement>? Perks
+        private IExtendedList<PerkPlacement>? _Perks;
+        public IExtendedList<PerkPlacement>? Perks
         {
             get => this._Perks;
             set => this._Perks = value;
@@ -195,8 +189,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ContainerEntry>? _Items;
-        public ExtendedList<ContainerEntry>? Items
+        private IExtendedList<ContainerEntry>? _Items;
+        public IExtendedList<ContainerEntry>? Items
         {
             get => this._Items;
             set => this._Items = value;
@@ -214,8 +208,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Packages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Package>> _Packages = new ExtendedList<IFormLink<Package>>();
-        public ExtendedList<IFormLink<Package>> Packages
+        private IExtendedList<IFormLink<Package>> _Packages = new ExtendedList<IFormLink<Package>>();
+        public IExtendedList<IFormLink<Package>> Packages
         {
             get => this._Packages;
             protected set => this._Packages = value;
@@ -228,8 +222,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -251,9 +245,9 @@ namespace Mutagen.Bethesda.Skyrim
         TranslatedString? INpcGetter.Name => this.Name;
         #endregion
         #region ShortName
-        public String? ShortName { get; set; }
+        public TranslatedString? ShortName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? INpcGetter.ShortName => this.ShortName;
+        TranslatedString? INpcGetter.ShortName => this.ShortName;
         #endregion
         #region PlayerSkills
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -268,8 +262,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HeadParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<HeadPart>> _HeadParts = new ExtendedList<IFormLink<HeadPart>>();
-        public ExtendedList<IFormLink<HeadPart>> HeadParts
+        private IExtendedList<IFormLink<HeadPart>> _HeadParts = new ExtendedList<IFormLink<HeadPart>>();
+        public IExtendedList<IFormLink<HeadPart>> HeadParts
         {
             get => this._HeadParts;
             protected set => this._HeadParts = value;
@@ -373,8 +367,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TintLayers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<TintLayer> _TintLayers = new ExtendedList<TintLayer>();
-        public ExtendedList<TintLayer> TintLayers
+        private IExtendedList<TintLayer> _TintLayers = new ExtendedList<TintLayer>();
+        public IExtendedList<TintLayer> TintLayers
         {
             get => this._TintLayers;
             protected set => this._TintLayers = value;
@@ -412,135 +406,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((NpcCommon)((INpcGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => NpcXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((NpcXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Npc CreateFromXml(
-            XElement node,
-            Npc.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Npc CreateFromXml(
-            XElement node,
-            out Npc.ErrorMask errorMask,
-            Npc.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Npc.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Npc CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Npc();
-            ((NpcSetterCommon)((INpcGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Npc CreateFromXml(
-            string path,
-            Npc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Npc CreateFromXml(
-            string path,
-            out Npc.ErrorMask errorMask,
-            Npc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Npc CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Npc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Npc CreateFromXml(
-            Stream stream,
-            Npc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Npc CreateFromXml(
-            Stream stream,
-            out Npc.ErrorMask errorMask,
-            Npc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Npc CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Npc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -604,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -656,7 +521,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -2792,7 +2657,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2901,31 +2766,31 @@ namespace Mutagen.Bethesda.Skyrim
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
         new NpcConfiguration Configuration { get; set; }
-        new ExtendedList<RankPlacement> Factions { get; }
+        new IExtendedList<RankPlacement> Factions { get; }
         new FormLinkNullable<LeveledItem> DeathItem { get; set; }
         new FormLinkNullable<VoiceType> Voice { get; set; }
         new FormLinkNullable<INpcSpawn> Template { get; set; }
         new FormLink<Race> Race { get; set; }
-        new ExtendedList<IFormLink<ASpell>>? ActorEffect { get; set; }
+        new IExtendedList<IFormLink<ASpell>>? ActorEffect { get; set; }
         new Destructible? Destructible { get; set; }
         new FormLinkNullable<Armor> WornArmor { get; set; }
         new FormLinkNullable<Armor> FarAwayModel { get; set; }
         new FormLinkNullable<Race> AttackRace { get; set; }
-        new ExtendedList<Attack> Attacks { get; }
+        new IExtendedList<Attack> Attacks { get; }
         new FormLinkNullable<FormList> SpectatorOverridePackageList { get; set; }
         new FormLinkNullable<FormList> ObserveDeadBodyOverridePackageList { get; set; }
         new FormLinkNullable<FormList> GuardWarnOverridePackageList { get; set; }
         new FormLinkNullable<FormList> CombatOverridePackageList { get; set; }
-        new ExtendedList<PerkPlacement>? Perks { get; set; }
-        new ExtendedList<ContainerEntry>? Items { get; set; }
+        new IExtendedList<PerkPlacement>? Perks { get; set; }
+        new IExtendedList<ContainerEntry>? Items { get; set; }
         new AIData AIData { get; set; }
-        new ExtendedList<IFormLink<Package>> Packages { get; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Package>> Packages { get; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new FormLink<Class> Class { get; set; }
         new TranslatedString? Name { get; set; }
-        new String? ShortName { get; set; }
+        new TranslatedString? ShortName { get; set; }
         new PlayerSkills? PlayerSkills { get; set; }
-        new ExtendedList<IFormLink<HeadPart>> HeadParts { get; }
+        new IExtendedList<IFormLink<HeadPart>> HeadParts { get; }
         new FormLinkNullable<ColorRecord> HairColor { get; set; }
         new FormLinkNullable<CombatStyle> CombatStyle { get; set; }
         new FormLinkNullable<FormList> GiftFilter { get; set; }
@@ -2942,7 +2807,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Color? TextureLighting { get; set; }
         new NpcFaceMorph? FaceMorph { get; set; }
         new NpcFaceParts? FaceParts { get; set; }
-        new ExtendedList<TintLayer> TintLayers { get; }
+        new IExtendedList<TintLayer> TintLayers { get; }
         #region Mutagen
         new Npc.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -2965,11 +2830,10 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         ITranslatedNamedGetter,
         ILoquiObject<INpcGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Npc_Registration.Instance;
+        static new ILoquiRegistration Registration => Npc_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
         INpcConfigurationGetter Configuration { get; }
@@ -2995,7 +2859,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         IFormLink<IClassGetter> Class { get; }
         TranslatedString? Name { get; }
-        String? ShortName { get; }
+        TranslatedString? ShortName { get; }
         IPlayerSkillsGetter? PlayerSkills { get; }
         IReadOnlyList<IFormLink<IHeadPartGetter>> HeadParts { get; }
         IFormLinkNullable<IColorRecordGetter> HairColor { get; }
@@ -3153,131 +3017,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this INpcInternal item,
-            XElement node,
-            Npc.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this INpcInternal item,
-            XElement node,
-            out Npc.ErrorMask errorMask,
-            Npc.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Npc.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this INpcInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((NpcSetterCommon)((INpcGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INpcInternal item,
-            string path,
-            Npc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INpcInternal item,
-            string path,
-            out Npc.ErrorMask errorMask,
-            Npc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INpcInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Npc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this INpcInternal item,
-            Stream stream,
-            Npc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INpcInternal item,
-            Stream stream,
-            out Npc.ErrorMask errorMask,
-            Npc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INpcInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Npc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -3315,7 +3054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -3902,7 +3641,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.Configuration:
                     return typeof(NpcConfiguration);
                 case Npc_FieldIndex.Factions:
-                    return typeof(ExtendedList<RankPlacement>);
+                    return typeof(IExtendedList<RankPlacement>);
                 case Npc_FieldIndex.DeathItem:
                     return typeof(FormLinkNullable<LeveledItem>);
                 case Npc_FieldIndex.Voice:
@@ -3912,7 +3651,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.Race:
                     return typeof(FormLink<Race>);
                 case Npc_FieldIndex.ActorEffect:
-                    return typeof(ExtendedList<IFormLink<ASpell>>);
+                    return typeof(IExtendedList<IFormLink<ASpell>>);
                 case Npc_FieldIndex.Destructible:
                     return typeof(Destructible);
                 case Npc_FieldIndex.WornArmor:
@@ -3922,7 +3661,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.AttackRace:
                     return typeof(FormLinkNullable<Race>);
                 case Npc_FieldIndex.Attacks:
-                    return typeof(ExtendedList<Attack>);
+                    return typeof(IExtendedList<Attack>);
                 case Npc_FieldIndex.SpectatorOverridePackageList:
                     return typeof(FormLinkNullable<FormList>);
                 case Npc_FieldIndex.ObserveDeadBodyOverridePackageList:
@@ -3932,25 +3671,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.CombatOverridePackageList:
                     return typeof(FormLinkNullable<FormList>);
                 case Npc_FieldIndex.Perks:
-                    return typeof(ExtendedList<PerkPlacement>);
+                    return typeof(IExtendedList<PerkPlacement>);
                 case Npc_FieldIndex.Items:
-                    return typeof(ExtendedList<ContainerEntry>);
+                    return typeof(IExtendedList<ContainerEntry>);
                 case Npc_FieldIndex.AIData:
                     return typeof(AIData);
                 case Npc_FieldIndex.Packages:
-                    return typeof(ExtendedList<IFormLink<Package>>);
+                    return typeof(IExtendedList<IFormLink<Package>>);
                 case Npc_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Npc_FieldIndex.Class:
                     return typeof(FormLink<Class>);
                 case Npc_FieldIndex.Name:
                     return typeof(TranslatedString);
                 case Npc_FieldIndex.ShortName:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Npc_FieldIndex.PlayerSkills:
                     return typeof(PlayerSkills);
                 case Npc_FieldIndex.HeadParts:
-                    return typeof(ExtendedList<IFormLink<HeadPart>>);
+                    return typeof(IExtendedList<IFormLink<HeadPart>>);
                 case Npc_FieldIndex.HairColor:
                     return typeof(FormLinkNullable<ColorRecord>);
                 case Npc_FieldIndex.CombatStyle:
@@ -3984,13 +3723,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.FaceParts:
                     return typeof(NpcFaceParts);
                 case Npc_FieldIndex.TintLayers:
-                    return typeof(ExtendedList<TintLayer>);
+                    return typeof(IExtendedList<TintLayer>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(NpcXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.NPC_;
         public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
         #region Interface
@@ -4091,86 +3829,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (INpcInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            INpcInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            INpcInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    NpcXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Npc)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Npc)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -4845,7 +4503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Npc_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Npc_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Npc_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Npc_FieldIndex)((int)index);
@@ -4866,7 +4524,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Npc_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Npc_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Npc_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Npc_FieldIndex)((int)index);
@@ -5974,1676 +5632,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class NpcXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static NpcXmlWriteTranslation Instance = new NpcXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            INpcGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.VirtualMachineAdapter != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.VirtualMachineAdapter) ?? true))
-            {
-                if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
-                {
-                    ((VirtualMachineAdapterXmlWriteTranslation)((IXmlItem)VirtualMachineAdapterItem).XmlWriteTranslator).Write(
-                        item: VirtualMachineAdapterItem,
-                        node: node,
-                        name: nameof(item.VirtualMachineAdapter),
-                        fieldIndex: (int)Npc_FieldIndex.VirtualMachineAdapter,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.VirtualMachineAdapter));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.ObjectBounds) ?? true))
-            {
-                var ObjectBoundsItem = item.ObjectBounds;
-                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    node: node,
-                    name: nameof(item.ObjectBounds),
-                    fieldIndex: (int)Npc_FieldIndex.ObjectBounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.ObjectBounds));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Configuration) ?? true))
-            {
-                var ConfigurationItem = item.Configuration;
-                ((NpcConfigurationXmlWriteTranslation)((IXmlItem)ConfigurationItem).XmlWriteTranslator).Write(
-                    item: ConfigurationItem,
-                    node: node,
-                    name: nameof(item.Configuration),
-                    fieldIndex: (int)Npc_FieldIndex.Configuration,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Configuration));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
-            {
-                ListXmlTranslation<IRankPlacementGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Factions),
-                    item: item.Factions,
-                    fieldIndex: (int)Npc_FieldIndex.Factions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Factions),
-                    transl: (XElement subNode, IRankPlacementGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((RankPlacementXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.DeathItem.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DeathItem),
-                    item: item.DeathItem.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.DeathItem,
-                    errorMask: errorMask);
-            }
-            if ((item.Voice.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Voice) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Voice),
-                    item: item.Voice.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.Voice,
-                    errorMask: errorMask);
-            }
-            if ((item.Template.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Template) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Template),
-                    item: item.Template.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.Template,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Race),
-                    item: item.Race.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.Race,
-                    errorMask: errorMask);
-            }
-            if ((item.ActorEffect != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.ActorEffect) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IASpellGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ActorEffect),
-                    item: item.ActorEffect,
-                    fieldIndex: (int)Npc_FieldIndex.ActorEffect,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.ActorEffect),
-                    transl: (XElement subNode, IFormLink<IASpellGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.Destructible != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Destructible) ?? true))
-            {
-                if (item.Destructible.TryGet(out var DestructibleItem))
-                {
-                    ((DestructibleXmlWriteTranslation)((IXmlItem)DestructibleItem).XmlWriteTranslator).Write(
-                        item: DestructibleItem,
-                        node: node,
-                        name: nameof(item.Destructible),
-                        fieldIndex: (int)Npc_FieldIndex.Destructible,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Destructible));
-                }
-            }
-            if ((item.WornArmor.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.WornArmor) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WornArmor),
-                    item: item.WornArmor.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.WornArmor,
-                    errorMask: errorMask);
-            }
-            if ((item.FarAwayModel.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.FarAwayModel) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FarAwayModel),
-                    item: item.FarAwayModel.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.FarAwayModel,
-                    errorMask: errorMask);
-            }
-            if ((item.AttackRace.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.AttackRace) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AttackRace),
-                    item: item.AttackRace.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.AttackRace,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Attacks) ?? true))
-            {
-                ListXmlTranslation<IAttackGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Attacks),
-                    item: item.Attacks,
-                    fieldIndex: (int)Npc_FieldIndex.Attacks,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Attacks),
-                    transl: (XElement subNode, IAttackGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((AttackXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.SpectatorOverridePackageList.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.SpectatorOverridePackageList) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpectatorOverridePackageList),
-                    item: item.SpectatorOverridePackageList.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.SpectatorOverridePackageList,
-                    errorMask: errorMask);
-            }
-            if ((item.ObserveDeadBodyOverridePackageList.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ObserveDeadBodyOverridePackageList),
-                    item: item.ObserveDeadBodyOverridePackageList.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList,
-                    errorMask: errorMask);
-            }
-            if ((item.GuardWarnOverridePackageList.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.GuardWarnOverridePackageList) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.GuardWarnOverridePackageList),
-                    item: item.GuardWarnOverridePackageList.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.GuardWarnOverridePackageList,
-                    errorMask: errorMask);
-            }
-            if ((item.CombatOverridePackageList.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.CombatOverridePackageList) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CombatOverridePackageList),
-                    item: item.CombatOverridePackageList.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.CombatOverridePackageList,
-                    errorMask: errorMask);
-            }
-            if ((item.Perks != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Perks) ?? true))
-            {
-                ListXmlTranslation<IPerkPlacementGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Perks),
-                    item: item.Perks,
-                    fieldIndex: (int)Npc_FieldIndex.Perks,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Perks),
-                    transl: (XElement subNode, IPerkPlacementGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((PerkPlacementXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Items != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
-            {
-                ListXmlTranslation<IContainerEntryGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Items),
-                    item: item.Items,
-                    fieldIndex: (int)Npc_FieldIndex.Items,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Items),
-                    transl: (XElement subNode, IContainerEntryGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ContainerEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.AIData) ?? true))
-            {
-                var AIDataItem = item.AIData;
-                ((AIDataXmlWriteTranslation)((IXmlItem)AIDataItem).XmlWriteTranslator).Write(
-                    item: AIDataItem,
-                    node: node,
-                    name: nameof(item.AIData),
-                    fieldIndex: (int)Npc_FieldIndex.AIData,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.AIData));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Packages) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IPackageGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Packages),
-                    item: item.Packages,
-                    fieldIndex: (int)Npc_FieldIndex.Packages,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Packages),
-                    transl: (XElement subNode, IFormLink<IPackageGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.Keywords != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Keywords) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IKeywordGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Keywords),
-                    item: item.Keywords,
-                    fieldIndex: (int)Npc_FieldIndex.Keywords,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Keywords),
-                    transl: (XElement subNode, IFormLink<IKeywordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Class) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Class),
-                    item: item.Class.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.Class,
-                    errorMask: errorMask);
-            }
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Npc_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((item.ShortName != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.ShortName) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ShortName),
-                    item: item.ShortName,
-                    fieldIndex: (int)Npc_FieldIndex.ShortName,
-                    errorMask: errorMask);
-            }
-            if ((item.PlayerSkills != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.PlayerSkills) ?? true))
-            {
-                if (item.PlayerSkills.TryGet(out var PlayerSkillsItem))
-                {
-                    ((PlayerSkillsXmlWriteTranslation)((IXmlItem)PlayerSkillsItem).XmlWriteTranslator).Write(
-                        item: PlayerSkillsItem,
-                        node: node,
-                        name: nameof(item.PlayerSkills),
-                        fieldIndex: (int)Npc_FieldIndex.PlayerSkills,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.PlayerSkills));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.HeadParts) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IHeadPartGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HeadParts),
-                    item: item.HeadParts,
-                    fieldIndex: (int)Npc_FieldIndex.HeadParts,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.HeadParts),
-                    transl: (XElement subNode, IFormLink<IHeadPartGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.HairColor.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.HairColor) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HairColor),
-                    item: item.HairColor.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.HairColor,
-                    errorMask: errorMask);
-            }
-            if ((item.CombatStyle.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.CombatStyle) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CombatStyle),
-                    item: item.CombatStyle.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.CombatStyle,
-                    errorMask: errorMask);
-            }
-            if ((item.GiftFilter.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.GiftFilter) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.GiftFilter),
-                    item: item.GiftFilter.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.GiftFilter,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.NAM5) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NAM5),
-                    item: item.NAM5,
-                    fieldIndex: (int)Npc_FieldIndex.NAM5,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Height) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Height),
-                    item: item.Height,
-                    fieldIndex: (int)Npc_FieldIndex.Height,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Weight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Weight),
-                    item: item.Weight,
-                    fieldIndex: (int)Npc_FieldIndex.Weight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.SoundLevel) ?? true))
-            {
-                EnumXmlTranslation<SoundLevel>.Instance.Write(
-                    node: node,
-                    name: nameof(item.SoundLevel),
-                    item: item.SoundLevel,
-                    fieldIndex: (int)Npc_FieldIndex.SoundLevel,
-                    errorMask: errorMask);
-            }
-            if ((item.Sound != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Sound) ?? true))
-            {
-                if (item.Sound.TryGet(out var SoundItem))
-                {
-                    ((ANpcSoundDefinitionXmlWriteTranslation)((IXmlItem)SoundItem).XmlWriteTranslator).Write(
-                        item: SoundItem,
-                        node: node,
-                        name: nameof(item.Sound),
-                        fieldIndex: (int)Npc_FieldIndex.Sound,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Sound));
-                }
-            }
-            if ((item.DefaultOutfit.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.DefaultOutfit) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DefaultOutfit),
-                    item: item.DefaultOutfit.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.DefaultOutfit,
-                    errorMask: errorMask);
-            }
-            if ((item.SleepingOutfit.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.SleepingOutfit) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SleepingOutfit),
-                    item: item.SleepingOutfit.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.SleepingOutfit,
-                    errorMask: errorMask);
-            }
-            if ((item.DefaultPackageList.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.DefaultPackageList) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DefaultPackageList),
-                    item: item.DefaultPackageList.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.DefaultPackageList,
-                    errorMask: errorMask);
-            }
-            if ((item.CrimeFaction.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.CrimeFaction) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CrimeFaction),
-                    item: item.CrimeFaction.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.CrimeFaction,
-                    errorMask: errorMask);
-            }
-            if ((item.HeadTexture.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.HeadTexture) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HeadTexture),
-                    item: item.HeadTexture.FormKey,
-                    fieldIndex: (int)Npc_FieldIndex.HeadTexture,
-                    errorMask: errorMask);
-            }
-            if ((item.TextureLighting != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.TextureLighting) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TextureLighting),
-                    item: item.TextureLighting.Value,
-                    fieldIndex: (int)Npc_FieldIndex.TextureLighting,
-                    errorMask: errorMask);
-            }
-            if ((item.FaceMorph != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.FaceMorph) ?? true))
-            {
-                if (item.FaceMorph.TryGet(out var FaceMorphItem))
-                {
-                    ((NpcFaceMorphXmlWriteTranslation)((IXmlItem)FaceMorphItem).XmlWriteTranslator).Write(
-                        item: FaceMorphItem,
-                        node: node,
-                        name: nameof(item.FaceMorph),
-                        fieldIndex: (int)Npc_FieldIndex.FaceMorph,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.FaceMorph));
-                }
-            }
-            if ((item.FaceParts != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.FaceParts) ?? true))
-            {
-                if (item.FaceParts.TryGet(out var FacePartsItem))
-                {
-                    ((NpcFacePartsXmlWriteTranslation)((IXmlItem)FacePartsItem).XmlWriteTranslator).Write(
-                        item: FacePartsItem,
-                        node: node,
-                        name: nameof(item.FaceParts),
-                        fieldIndex: (int)Npc_FieldIndex.FaceParts,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.FaceParts));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.TintLayers) ?? true))
-            {
-                ListXmlTranslation<ITintLayerGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.TintLayers),
-                    item: item.TintLayers,
-                    fieldIndex: (int)Npc_FieldIndex.TintLayers,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.TintLayers),
-                    transl: (XElement subNode, ITintLayerGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((TintLayerXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            INpcGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Npc");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Npc");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (INpcGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (INpcGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (INpcGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class NpcXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static NpcXmlCreateTranslation Instance = new NpcXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            INpcInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    NpcXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            INpcInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "VirtualMachineAdapter":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.VirtualMachineAdapter);
-                    try
-                    {
-                        item.VirtualMachineAdapter = LoquiXmlTranslation<VirtualMachineAdapter>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.VirtualMachineAdapter));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ObjectBounds":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.ObjectBounds);
-                    try
-                    {
-                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.ObjectBounds));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Configuration":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Configuration);
-                    try
-                    {
-                        item.Configuration = LoquiXmlTranslation<NpcConfiguration>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Configuration));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Factions":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Factions);
-                    try
-                    {
-                        if (ListXmlTranslation<RankPlacement>.Instance.Parse(
-                            node: node,
-                            enumer: out var FactionsItem,
-                            transl: LoquiXmlTranslation<RankPlacement>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Factions.SetTo(FactionsItem);
-                        }
-                        else
-                        {
-                            item.Factions.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DeathItem":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.DeathItem);
-                    try
-                    {
-                        item.DeathItem = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Voice":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Voice);
-                    try
-                    {
-                        item.Voice = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Template":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Template);
-                    try
-                    {
-                        item.Template = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Race":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Race);
-                    try
-                    {
-                        item.Race = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ActorEffect":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.ActorEffect);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<ASpell>>.Instance.Parse(
-                            node: node,
-                            enumer: out var ActorEffectItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.ActorEffect = ActorEffectItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.ActorEffect = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Destructible":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Destructible);
-                    try
-                    {
-                        item.Destructible = LoquiXmlTranslation<Destructible>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Destructible));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WornArmor":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.WornArmor);
-                    try
-                    {
-                        item.WornArmor = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FarAwayModel":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.FarAwayModel);
-                    try
-                    {
-                        item.FarAwayModel = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AttackRace":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.AttackRace);
-                    try
-                    {
-                        item.AttackRace = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Attacks":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Attacks);
-                    try
-                    {
-                        if (ListXmlTranslation<Attack>.Instance.Parse(
-                            node: node,
-                            enumer: out var AttacksItem,
-                            transl: LoquiXmlTranslation<Attack>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Attacks.SetTo(AttacksItem);
-                        }
-                        else
-                        {
-                            item.Attacks.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SpectatorOverridePackageList":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.SpectatorOverridePackageList);
-                    try
-                    {
-                        item.SpectatorOverridePackageList = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ObserveDeadBodyOverridePackageList":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList);
-                    try
-                    {
-                        item.ObserveDeadBodyOverridePackageList = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "GuardWarnOverridePackageList":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.GuardWarnOverridePackageList);
-                    try
-                    {
-                        item.GuardWarnOverridePackageList = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CombatOverridePackageList":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.CombatOverridePackageList);
-                    try
-                    {
-                        item.CombatOverridePackageList = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Perks":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Perks);
-                    try
-                    {
-                        if (ListXmlTranslation<PerkPlacement>.Instance.Parse(
-                            node: node,
-                            enumer: out var PerksItem,
-                            transl: LoquiXmlTranslation<PerkPlacement>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Perks = PerksItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Perks = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Items":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Items);
-                    try
-                    {
-                        if (ListXmlTranslation<ContainerEntry>.Instance.Parse(
-                            node: node,
-                            enumer: out var ItemsItem,
-                            transl: LoquiXmlTranslation<ContainerEntry>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Items = ItemsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Items = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AIData":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.AIData);
-                    try
-                    {
-                        item.AIData = LoquiXmlTranslation<AIData>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.AIData));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Packages":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Packages);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Package>>.Instance.Parse(
-                            node: node,
-                            enumer: out var PackagesItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Packages.SetTo(PackagesItem);
-                        }
-                        else
-                        {
-                            item.Packages.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Keywords":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Keywords);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
-                            node: node,
-                            enumer: out var KeywordsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Keywords = KeywordsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Keywords = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Class":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Class);
-                    try
-                    {
-                        item.Class = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Name":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ShortName":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.ShortName);
-                    try
-                    {
-                        item.ShortName = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PlayerSkills":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.PlayerSkills);
-                    try
-                    {
-                        item.PlayerSkills = LoquiXmlTranslation<PlayerSkills>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.PlayerSkills));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HeadParts":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.HeadParts);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<HeadPart>>.Instance.Parse(
-                            node: node,
-                            enumer: out var HeadPartsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.HeadParts.SetTo(HeadPartsItem);
-                        }
-                        else
-                        {
-                            item.HeadParts.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HairColor":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.HairColor);
-                    try
-                    {
-                        item.HairColor = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CombatStyle":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.CombatStyle);
-                    try
-                    {
-                        item.CombatStyle = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "GiftFilter":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.GiftFilter);
-                    try
-                    {
-                        item.GiftFilter = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NAM5":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.NAM5);
-                    try
-                    {
-                        item.NAM5 = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Height":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Height);
-                    try
-                    {
-                        item.Height = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weight":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Weight);
-                    try
-                    {
-                        item.Weight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SoundLevel":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.SoundLevel);
-                    try
-                    {
-                        item.SoundLevel = EnumXmlTranslation<SoundLevel>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sound":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Sound);
-                    try
-                    {
-                        item.Sound = LoquiXmlTranslation<ANpcSoundDefinition>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Sound));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DefaultOutfit":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.DefaultOutfit);
-                    try
-                    {
-                        item.DefaultOutfit = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SleepingOutfit":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.SleepingOutfit);
-                    try
-                    {
-                        item.SleepingOutfit = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DefaultPackageList":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.DefaultPackageList);
-                    try
-                    {
-                        item.DefaultPackageList = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CrimeFaction":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.CrimeFaction);
-                    try
-                    {
-                        item.CrimeFaction = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HeadTexture":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.HeadTexture);
-                    try
-                    {
-                        item.HeadTexture = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TextureLighting":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.TextureLighting);
-                    try
-                    {
-                        item.TextureLighting = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FaceMorph":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.FaceMorph);
-                    try
-                    {
-                        item.FaceMorph = LoquiXmlTranslation<NpcFaceMorph>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.FaceMorph));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FaceParts":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.FaceParts);
-                    try
-                    {
-                        item.FaceParts = LoquiXmlTranslation<NpcFaceParts>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.FaceParts));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TintLayers":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.TintLayers);
-                    try
-                    {
-                        if (ListXmlTranslation<TintLayer>.Instance.Parse(
-                            node: node,
-                            enumer: out var TintLayersItem,
-                            transl: LoquiXmlTranslation<TintLayer>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.TintLayers.SetTo(TintLayersItem);
-                        }
-                        else
-                        {
-                            item.TintLayers.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class NpcXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this INpcGetter item,
-            XElement node,
-            out Npc.ErrorMask errorMask,
-            Npc.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((NpcXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Npc.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this INpcGetter item,
-            string path,
-            out Npc.ErrorMask errorMask,
-            Npc.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this INpcGetter item,
-            Stream stream,
-            out Npc.ErrorMask errorMask,
-            Npc.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -7845,7 +5833,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.ShortName,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SHRT),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             NpcBinaryWriteTranslation.WriteBinaryDataMarker(
                 writer: writer,
                 item: item);
@@ -7967,10 +5956,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -8023,9 +6014,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             INpcInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -8036,17 +6028,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.VirtualMachineAdapter);
+                    return (int)Npc_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.ObjectBounds);
+                    return (int)Npc_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.ACBS:
                 {
                     item.Configuration = Mutagen.Bethesda.Skyrim.NpcConfiguration.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Configuration);
+                    return (int)Npc_FieldIndex.Configuration;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -8056,7 +6048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.SNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: RankPlacement.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Factions);
+                    return (int)Npc_FieldIndex.Factions;
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -8064,7 +6056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DeathItem = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.DeathItem);
+                    return (int)Npc_FieldIndex.DeathItem;
                 }
                 case RecordTypeInts.VTCK:
                 {
@@ -8072,7 +6064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Voice = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Voice);
+                    return (int)Npc_FieldIndex.Voice;
                 }
                 case RecordTypeInts.TPLT:
                 {
@@ -8080,7 +6072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Template = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Template);
+                    return (int)Npc_FieldIndex.Template;
                 }
                 case RecordTypeInts.RNAM:
                 {
@@ -8088,7 +6080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Race = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Race);
+                    return (int)Npc_FieldIndex.Race;
                 }
                 case RecordTypeInts.SPLO:
                 case RecordTypeInts.SPCT:
@@ -8100,8 +6092,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPCT),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<ASpell>>();
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.ActorEffect);
+                        .CastExtendedList<IFormLink<ASpell>>();
+                    return (int)Npc_FieldIndex.ActorEffect;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -8110,7 +6102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Destructible);
+                    return (int)Npc_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.WNAM:
                 {
@@ -8118,7 +6110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.WornArmor = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.WornArmor);
+                    return (int)Npc_FieldIndex.WornArmor;
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -8126,7 +6118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FarAwayModel = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FarAwayModel);
+                    return (int)Npc_FieldIndex.FarAwayModel;
                 }
                 case RecordTypeInts.ATKR:
                 {
@@ -8134,7 +6126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AttackRace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.AttackRace);
+                    return (int)Npc_FieldIndex.AttackRace;
                 }
                 case RecordTypeInts.ATKD:
                 case RecordTypeInts.ATKE:
@@ -8145,7 +6137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: Attack_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Attack.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Attacks);
+                    return (int)Npc_FieldIndex.Attacks;
                 }
                 case RecordTypeInts.SPOR:
                 {
@@ -8153,7 +6145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SpectatorOverridePackageList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.SpectatorOverridePackageList);
+                    return (int)Npc_FieldIndex.SpectatorOverridePackageList;
                 }
                 case RecordTypeInts.OCOR:
                 {
@@ -8161,7 +6153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ObserveDeadBodyOverridePackageList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList);
+                    return (int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList;
                 }
                 case RecordTypeInts.GWOR:
                 {
@@ -8169,7 +6161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.GuardWarnOverridePackageList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.GuardWarnOverridePackageList);
+                    return (int)Npc_FieldIndex.GuardWarnOverridePackageList;
                 }
                 case RecordTypeInts.ECOR:
                 {
@@ -8177,7 +6169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CombatOverridePackageList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatOverridePackageList);
+                    return (int)Npc_FieldIndex.CombatOverridePackageList;
                 }
                 case RecordTypeInts.PRKR:
                 case RecordTypeInts.PRKZ:
@@ -8190,8 +6182,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.PRKR,
                             recordTypeConverter: recordTypeConverter,
                             transl: PerkPlacement.TryCreateFromBinary)
-                        .ToExtendedList<PerkPlacement>();
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Perks);
+                        .CastExtendedList<PerkPlacement>();
+                    return (int)Npc_FieldIndex.Perks;
                 }
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
@@ -8204,13 +6196,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.CNTO,
                             recordTypeConverter: recordTypeConverter,
                             transl: ContainerEntry.TryCreateFromBinary)
-                        .ToExtendedList<ContainerEntry>();
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Items);
+                        .CastExtendedList<ContainerEntry>();
+                    return (int)Npc_FieldIndex.Items;
                 }
                 case RecordTypeInts.AIDT:
                 {
                     item.AIData = Mutagen.Bethesda.Skyrim.AIData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.AIData);
+                    return (int)Npc_FieldIndex.AIData;
                 }
                 case RecordTypeInts.PKID:
                 {
@@ -8219,7 +6211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PKID),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Packages);
+                    return (int)Npc_FieldIndex.Packages;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -8231,8 +6223,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Keywords);
+                        .CastExtendedList<IFormLink<Keyword>>();
+                    return (int)Npc_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -8240,7 +6232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Class = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Class);
+                    return (int)Npc_FieldIndex.Class;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -8249,27 +6241,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Name);
+                    return (int)Npc_FieldIndex.Name;
                 }
                 case RecordTypeInts.SHRT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ShortName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.ShortName);
+                    return (int)Npc_FieldIndex.ShortName;
                 }
                 case RecordTypeInts.DATA:
                 {
                     NpcBinaryCreateTranslation.FillBinaryDataMarkerCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     item.PlayerSkills = Mutagen.Bethesda.Skyrim.PlayerSkills.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.PlayerSkills);
+                    return (int)Npc_FieldIndex.PlayerSkills;
                 }
                 case RecordTypeInts.PNAM:
                 {
@@ -8278,7 +6271,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.HeadParts);
+                    return (int)Npc_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.HCLF:
                 {
@@ -8286,7 +6279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.HairColor = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.HairColor);
+                    return (int)Npc_FieldIndex.HairColor;
                 }
                 case RecordTypeInts.ZNAM:
                 {
@@ -8294,7 +6287,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CombatStyle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatStyle);
+                    return (int)Npc_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -8302,38 +6295,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.GiftFilter = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.GiftFilter);
+                    return (int)Npc_FieldIndex.GiftFilter;
                 }
                 case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NAM5 = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.NAM5);
+                    return (int)Npc_FieldIndex.NAM5;
                 }
                 case RecordTypeInts.NAM6:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Height = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Height);
+                    return (int)Npc_FieldIndex.Height;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Weight);
+                    return (int)Npc_FieldIndex.Weight;
                 }
                 case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.SoundLevel);
+                    return (int)Npc_FieldIndex.SoundLevel;
                 }
                 case RecordTypeInts.CSCR:
                 {
                     item.Sound = Mutagen.Bethesda.Skyrim.NpcInheritSound.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Sound);
+                    return (int)Npc_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDT:
                 case RecordTypeInts.CSDI:
@@ -8342,7 +6335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Sound = Mutagen.Bethesda.Skyrim.NpcSoundTypes.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Sound);
+                    return (int)Npc_FieldIndex.Sound;
                 }
                 case RecordTypeInts.DOFT:
                 {
@@ -8350,7 +6343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DefaultOutfit = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.DefaultOutfit);
+                    return (int)Npc_FieldIndex.DefaultOutfit;
                 }
                 case RecordTypeInts.SOFT:
                 {
@@ -8358,7 +6351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SleepingOutfit = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.SleepingOutfit);
+                    return (int)Npc_FieldIndex.SleepingOutfit;
                 }
                 case RecordTypeInts.DPLT:
                 {
@@ -8366,7 +6359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DefaultPackageList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.DefaultPackageList);
+                    return (int)Npc_FieldIndex.DefaultPackageList;
                 }
                 case RecordTypeInts.CRIF:
                 {
@@ -8374,7 +6367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CrimeFaction = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.CrimeFaction);
+                    return (int)Npc_FieldIndex.CrimeFaction;
                 }
                 case RecordTypeInts.FTST:
                 {
@@ -8382,23 +6375,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.HeadTexture = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.HeadTexture);
+                    return (int)Npc_FieldIndex.HeadTexture;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureLighting = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.TextureLighting);
+                    return (int)Npc_FieldIndex.TextureLighting;
                 }
                 case RecordTypeInts.NAM9:
                 {
                     item.FaceMorph = Mutagen.Bethesda.Skyrim.NpcFaceMorph.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceMorph);
+                    return (int)Npc_FieldIndex.FaceMorph;
                 }
                 case RecordTypeInts.NAMA:
                 {
                     item.FaceParts = Mutagen.Bethesda.Skyrim.NpcFaceParts.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceParts);
+                    return (int)Npc_FieldIndex.FaceParts;
                 }
                 case RecordTypeInts.TINI:
                 case RecordTypeInts.TINC:
@@ -8411,12 +6404,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: TintLayer_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: TintLayer.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.TintLayers);
+                    return (int)Npc_FieldIndex.TintLayers;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -8467,21 +6461,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => NpcXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((NpcXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -8513,60 +6492,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region DeathItem
         private int? _DeathItemLocation;
         public bool DeathItem_IsSet => _DeathItemLocation.HasValue;
-        public IFormLinkNullable<ILeveledItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
+        public IFormLinkNullable<ILeveledItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
         #endregion
         #region Voice
         private int? _VoiceLocation;
         public bool Voice_IsSet => _VoiceLocation.HasValue;
-        public IFormLinkNullable<IVoiceTypeGetter> Voice => _VoiceLocation.HasValue ? new FormLinkNullable<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VoiceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IVoiceTypeGetter>.Null;
+        public IFormLinkNullable<IVoiceTypeGetter> Voice => _VoiceLocation.HasValue ? new FormLinkNullable<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VoiceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IVoiceTypeGetter>.Null;
         #endregion
         #region Template
         private int? _TemplateLocation;
         public bool Template_IsSet => _TemplateLocation.HasValue;
-        public IFormLinkNullable<INpcSpawnGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcSpawnGetter>.Null;
+        public IFormLinkNullable<INpcSpawnGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcSpawnGetter>.Null;
         #endregion
         #region Race
         private int? _RaceLocation;
         public bool Race_IsSet => _RaceLocation.HasValue;
-        public IFormLink<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IRaceGetter>.Null;
+        public IFormLink<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IRaceGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLink<IASpellGetter>>? ActorEffect { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
         #region WornArmor
         private int? _WornArmorLocation;
         public bool WornArmor_IsSet => _WornArmorLocation.HasValue;
-        public IFormLinkNullable<IArmorGetter> WornArmor => _WornArmorLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WornArmorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public IFormLinkNullable<IArmorGetter> WornArmor => _WornArmorLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WornArmorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
         #endregion
         #region FarAwayModel
         private int? _FarAwayModelLocation;
         public bool FarAwayModel_IsSet => _FarAwayModelLocation.HasValue;
-        public IFormLinkNullable<IArmorGetter> FarAwayModel => _FarAwayModelLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FarAwayModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public IFormLinkNullable<IArmorGetter> FarAwayModel => _FarAwayModelLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FarAwayModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
         #endregion
         #region AttackRace
         private int? _AttackRaceLocation;
         public bool AttackRace_IsSet => _AttackRaceLocation.HasValue;
-        public IFormLinkNullable<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullable<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = ListExt.Empty<AttackBinaryOverlay>();
         #region SpectatorOverridePackageList
         private int? _SpectatorOverridePackageListLocation;
         public bool SpectatorOverridePackageList_IsSet => _SpectatorOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region ObserveDeadBodyOverridePackageList
         private int? _ObserveDeadBodyOverridePackageListLocation;
         public bool ObserveDeadBodyOverridePackageList_IsSet => _ObserveDeadBodyOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList => _ObserveDeadBodyOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ObserveDeadBodyOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList => _ObserveDeadBodyOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObserveDeadBodyOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region GuardWarnOverridePackageList
         private int? _GuardWarnOverridePackageListLocation;
         public bool GuardWarnOverridePackageList_IsSet => _GuardWarnOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList => _GuardWarnOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GuardWarnOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList => _GuardWarnOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GuardWarnOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region CombatOverridePackageList
         private int? _CombatOverridePackageListLocation;
         public bool CombatOverridePackageList_IsSet => _CombatOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> CombatOverridePackageList => _CombatOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CombatOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullable<IFormListGetter> CombatOverridePackageList => _CombatOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         public IReadOnlyList<IPerkPlacementGetter>? Perks { get; private set; }
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
@@ -8580,7 +6559,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Class
         private int? _ClassLocation;
         public bool Class_IsSet => _ClassLocation.HasValue;
-        public IFormLink<IClassGetter> Class => _ClassLocation.HasValue ? new FormLink<IClassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ClassLocation.Value, _package.MetaData.Constants)))) : FormLink<IClassGetter>.Null;
+        public IFormLink<IClassGetter> Class => _ClassLocation.HasValue ? new FormLink<IClassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ClassLocation.Value, _package.MetaData.Constants)))) : FormLink<IClassGetter>.Null;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -8588,7 +6567,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ShortName
         private int? _ShortNameLocation;
-        public String? ShortName => _ShortNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ShortNameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public TranslatedString? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region DataMarker
         partial void DataMarkerCustomParse(
@@ -8604,17 +6583,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region HairColor
         private int? _HairColorLocation;
         public bool HairColor_IsSet => _HairColorLocation.HasValue;
-        public IFormLinkNullable<IColorRecordGetter> HairColor => _HairColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HairColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public IFormLinkNullable<IColorRecordGetter> HairColor => _HairColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HairColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         #region CombatStyle
         private int? _CombatStyleLocation;
         public bool CombatStyle_IsSet => _CombatStyleLocation.HasValue;
-        public IFormLinkNullable<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
+        public IFormLinkNullable<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
         #endregion
         #region GiftFilter
         private int? _GiftFilterLocation;
         public bool GiftFilter_IsSet => _GiftFilterLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> GiftFilter => _GiftFilterLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GiftFilterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullable<IFormListGetter> GiftFilter => _GiftFilterLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GiftFilterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region NAM5
         private int? _NAM5Location;
@@ -8622,41 +6601,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Height
         private int? _HeightLocation;
-        public Single Height => _HeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _HeightLocation.Value, _package.MetaData.Constants)) : default;
+        public Single Height => _HeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HeightLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region Weight
         private int? _WeightLocation;
-        public Single Weight => _WeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _WeightLocation.Value, _package.MetaData.Constants)) : default;
+        public Single Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _WeightLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region SoundLevel
         private int? _SoundLevelLocation;
-        public SoundLevel SoundLevel => _SoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLevelLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel);
+        public SoundLevel SoundLevel => _SoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLevelLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel);
         #endregion
         public IANpcSoundDefinitionGetter? Sound { get; private set; }
         #region DefaultOutfit
         private int? _DefaultOutfitLocation;
         public bool DefaultOutfit_IsSet => _DefaultOutfitLocation.HasValue;
-        public IFormLinkNullable<IOutfitGetter> DefaultOutfit => _DefaultOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DefaultOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
+        public IFormLinkNullable<IOutfitGetter> DefaultOutfit => _DefaultOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
         #endregion
         #region SleepingOutfit
         private int? _SleepingOutfitLocation;
         public bool SleepingOutfit_IsSet => _SleepingOutfitLocation.HasValue;
-        public IFormLinkNullable<IOutfitGetter> SleepingOutfit => _SleepingOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SleepingOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
+        public IFormLinkNullable<IOutfitGetter> SleepingOutfit => _SleepingOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SleepingOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
         #endregion
         #region DefaultPackageList
         private int? _DefaultPackageListLocation;
         public bool DefaultPackageList_IsSet => _DefaultPackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> DefaultPackageList => _DefaultPackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DefaultPackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullable<IFormListGetter> DefaultPackageList => _DefaultPackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultPackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region CrimeFaction
         private int? _CrimeFactionLocation;
         public bool CrimeFaction_IsSet => _CrimeFactionLocation.HasValue;
-        public IFormLinkNullable<IFactionGetter> CrimeFaction => _CrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
+        public IFormLinkNullable<IFactionGetter> CrimeFaction => _CrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
         #endregion
         #region HeadTexture
         private int? _HeadTextureLocation;
         public bool HeadTexture_IsSet => _HeadTextureLocation.HasValue;
-        public IFormLinkNullable<ITextureSetGetter> HeadTexture => _HeadTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HeadTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullable<ITextureSetGetter> HeadTexture => _HeadTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HeadTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region TextureLighting
         private int? _TextureLightingLocation;
@@ -8698,8 +6677,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new NpcBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -8725,12 +6705,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -8739,21 +6720,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.VirtualMachineAdapter);
+                    return (int)Npc_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.ObjectBounds);
+                    return (int)Npc_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.ACBS:
                 {
                     _ConfigurationLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Configuration);
+                    return (int)Npc_FieldIndex.Configuration;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.Factions = BinaryOverlayList<RankPlacementBinaryOverlay>.FactoryByArray(
+                    this.Factions = BinaryOverlayList.FactoryByArray<RankPlacementBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -8763,32 +6744,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Factions);
+                    return (int)Npc_FieldIndex.Factions;
                 }
                 case RecordTypeInts.INAM:
                 {
                     _DeathItemLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.DeathItem);
+                    return (int)Npc_FieldIndex.DeathItem;
                 }
                 case RecordTypeInts.VTCK:
                 {
                     _VoiceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Voice);
+                    return (int)Npc_FieldIndex.Voice;
                 }
                 case RecordTypeInts.TPLT:
                 {
                     _TemplateLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Template);
+                    return (int)Npc_FieldIndex.Template;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     _RaceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Race);
+                    return (int)Npc_FieldIndex.Race;
                 }
                 case RecordTypeInts.SPLO:
                 case RecordTypeInts.SPCT:
                 {
-                    this.ActorEffect = BinaryOverlayList<IFormLink<IASpellGetter>>.FactoryByCountPerItem(
+                    this.ActorEffect = BinaryOverlayList.FactoryByCountPerItem<IFormLink<IASpellGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -8796,7 +6777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.SPCT,
                         subrecordType: RecordTypes.SPLO,
                         getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.ActorEffect);
+                    return (int)Npc_FieldIndex.ActorEffect;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -8806,22 +6787,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Destructible);
+                    return (int)Npc_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     _WornArmorLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.WornArmor);
+                    return (int)Npc_FieldIndex.WornArmor;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     _FarAwayModelLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FarAwayModel);
+                    return (int)Npc_FieldIndex.FarAwayModel;
                 }
                 case RecordTypeInts.ATKR:
                 {
                     _AttackRaceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.AttackRace);
+                    return (int)Npc_FieldIndex.AttackRace;
                 }
                 case RecordTypeInts.ATKD:
                 case RecordTypeInts.ATKE:
@@ -8831,32 +6812,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: Attack_Registration.TriggeringRecordTypes,
                         factory:  AttackBinaryOverlay.AttackFactory);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Attacks);
+                    return (int)Npc_FieldIndex.Attacks;
                 }
                 case RecordTypeInts.SPOR:
                 {
                     _SpectatorOverridePackageListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.SpectatorOverridePackageList);
+                    return (int)Npc_FieldIndex.SpectatorOverridePackageList;
                 }
                 case RecordTypeInts.OCOR:
                 {
                     _ObserveDeadBodyOverridePackageListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList);
+                    return (int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList;
                 }
                 case RecordTypeInts.GWOR:
                 {
                     _GuardWarnOverridePackageListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.GuardWarnOverridePackageList);
+                    return (int)Npc_FieldIndex.GuardWarnOverridePackageList;
                 }
                 case RecordTypeInts.ECOR:
                 {
                     _CombatOverridePackageListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatOverridePackageList);
+                    return (int)Npc_FieldIndex.CombatOverridePackageList;
                 }
                 case RecordTypeInts.PRKR:
                 case RecordTypeInts.PRKZ:
                 {
-                    this.Perks = BinaryOverlayList<PerkPlacementBinaryOverlay>.FactoryByCountPerItem(
+                    this.Perks = BinaryOverlayList.FactoryByCountPerItem<PerkPlacementBinaryOverlay>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x8,
@@ -8865,12 +6846,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         subrecordType: RecordTypes.PRKR,
                         getter: (s, p) => PerkPlacementBinaryOverlay.PerkPlacementFactory(s, p),
                         skipHeader: false);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Perks);
+                    return (int)Npc_FieldIndex.Perks;
                 }
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
                 {
-                    this.Items = BinaryOverlayList<ContainerEntryBinaryOverlay>.FactoryByCountPerItem(
+                    this.Items = BinaryOverlayList.FactoryByCountPerItem<ContainerEntryBinaryOverlay>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
@@ -8879,16 +6860,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Items);
+                    return (int)Npc_FieldIndex.Items;
                 }
                 case RecordTypeInts.AIDT:
                 {
                     _AIDataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.AIData);
+                    return (int)Npc_FieldIndex.AIData;
                 }
                 case RecordTypeInts.PKID:
                 {
-                    this.Packages = BinaryOverlayList<IFormLink<IPackageGetter>>.FactoryByArray(
+                    this.Packages = BinaryOverlayList.FactoryByArray<IFormLink<IPackageGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -8898,12 +6879,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Packages);
+                    return (int)Npc_FieldIndex.Packages;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -8911,38 +6892,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Keywords);
+                    return (int)Npc_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _ClassLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Class);
+                    return (int)Npc_FieldIndex.Class;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Name);
+                    return (int)Npc_FieldIndex.Name;
                 }
                 case RecordTypeInts.SHRT:
                 {
                     _ShortNameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.ShortName);
+                    return (int)Npc_FieldIndex.ShortName;
                 }
                 case RecordTypeInts.DATA:
                 {
                     DataMarkerCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _PlayerSkillsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.PlayerSkills);
+                    return (int)Npc_FieldIndex.PlayerSkills;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    this.HeadParts = BinaryOverlayList<IFormLink<IHeadPartGetter>>.FactoryByArray(
+                    this.HeadParts = BinaryOverlayList.FactoryByArray<IFormLink<IHeadPartGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IHeadPartGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -8952,42 +6933,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.HeadParts);
+                    return (int)Npc_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.HCLF:
                 {
                     _HairColorLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.HairColor);
+                    return (int)Npc_FieldIndex.HairColor;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     _CombatStyleLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatStyle);
+                    return (int)Npc_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     _GiftFilterLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.GiftFilter);
+                    return (int)Npc_FieldIndex.GiftFilter;
                 }
                 case RecordTypeInts.NAM5:
                 {
                     _NAM5Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.NAM5);
+                    return (int)Npc_FieldIndex.NAM5;
                 }
                 case RecordTypeInts.NAM6:
                 {
                     _HeightLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Height);
+                    return (int)Npc_FieldIndex.Height;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     _WeightLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Weight);
+                    return (int)Npc_FieldIndex.Weight;
                 }
                 case RecordTypeInts.NAM8:
                 {
                     _SoundLevelLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.SoundLevel);
+                    return (int)Npc_FieldIndex.SoundLevel;
                 }
                 case RecordTypeInts.CSCR:
                 {
@@ -8995,7 +6976,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Sound);
+                    return (int)Npc_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDT:
                 case RecordTypeInts.CSDI:
@@ -9005,47 +6986,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Sound);
+                    return (int)Npc_FieldIndex.Sound;
                 }
                 case RecordTypeInts.DOFT:
                 {
                     _DefaultOutfitLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.DefaultOutfit);
+                    return (int)Npc_FieldIndex.DefaultOutfit;
                 }
                 case RecordTypeInts.SOFT:
                 {
                     _SleepingOutfitLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.SleepingOutfit);
+                    return (int)Npc_FieldIndex.SleepingOutfit;
                 }
                 case RecordTypeInts.DPLT:
                 {
                     _DefaultPackageListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.DefaultPackageList);
+                    return (int)Npc_FieldIndex.DefaultPackageList;
                 }
                 case RecordTypeInts.CRIF:
                 {
                     _CrimeFactionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.CrimeFaction);
+                    return (int)Npc_FieldIndex.CrimeFaction;
                 }
                 case RecordTypeInts.FTST:
                 {
                     _HeadTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.HeadTexture);
+                    return (int)Npc_FieldIndex.HeadTexture;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     _TextureLightingLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.TextureLighting);
+                    return (int)Npc_FieldIndex.TextureLighting;
                 }
                 case RecordTypeInts.NAM9:
                 {
                     _FaceMorphLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceMorph);
+                    return (int)Npc_FieldIndex.FaceMorph;
                 }
                 case RecordTypeInts.NAMA:
                 {
                     _FacePartsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceParts);
+                    return (int)Npc_FieldIndex.FaceParts;
                 }
                 case RecordTypeInts.TINI:
                 case RecordTypeInts.TINC:
@@ -9057,7 +7038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: TintLayer_Registration.TriggeringRecordTypes,
                         factory:  TintLayerBinaryOverlay.TintLayerFactory);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.TintLayers);
+                    return (int)Npc_FieldIndex.TintLayers;
                 }
                 default:
                     return base.FillRecordType(
@@ -9065,7 +7046,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

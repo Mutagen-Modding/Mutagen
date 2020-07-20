@@ -19,14 +19,8 @@ using System.Drawing;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -67,8 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Areas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RegionArea> _Areas = new ExtendedList<RegionArea>();
-        public ExtendedList<RegionArea> Areas
+        private IExtendedList<RegionArea> _Areas = new ExtendedList<RegionArea>();
+        public IExtendedList<RegionArea> Areas
         {
             get => this._Areas;
             protected set => this._Areas = value;
@@ -164,135 +158,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => RegionXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((RegionXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Region CreateFromXml(
-            XElement node,
-            Region.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Region CreateFromXml(
-            XElement node,
-            out Region.ErrorMask errorMask,
-            Region.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Region.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Region CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Region();
-            ((RegionSetterCommon)((IRegionGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Region CreateFromXml(
-            string path,
-            Region.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Region CreateFromXml(
-            string path,
-            out Region.ErrorMask errorMask,
-            Region.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Region CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Region.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Region CreateFromXml(
-            Stream stream,
-            Region.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Region CreateFromXml(
-            Stream stream,
-            out Region.ErrorMask errorMask,
-            Region.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Region CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Region.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
@@ -317,7 +182,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem OblivionMajorRecordFlags,
                 TItem Icon,
@@ -332,7 +197,7 @@ namespace Mutagen.Bethesda.Oblivion
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
@@ -903,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Region_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Region_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1001,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new Color? MapColor { get; set; }
         new FormLinkNullable<Worldspace> Worldspace { get; set; }
-        new ExtendedList<RegionArea> Areas { get; }
+        new IExtendedList<RegionArea> Areas { get; }
         new RegionObjects? Objects { get; set; }
         new RegionWeather? Weather { get; set; }
         new RegionMap? MapName { get; set; }
@@ -1019,11 +884,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IRegionGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Region_Registration.Instance;
+        static new ILoquiRegistration Registration => Region_Registration.Instance;
         String? Icon { get; }
         Color? MapColor { get; }
         IFormLinkNullable<IWorldspaceGetter> Worldspace { get; }
@@ -1167,131 +1031,6 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IRegionInternal item,
-            XElement node,
-            Region.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IRegionInternal item,
-            XElement node,
-            out Region.ErrorMask errorMask,
-            Region.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Region.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((RegionSetterCommon)((IRegionGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionInternal item,
-            string path,
-            Region.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionInternal item,
-            string path,
-            out Region.ErrorMask errorMask,
-            Region.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Region.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IRegionInternal item,
-            Stream stream,
-            Region.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionInternal item,
-            Stream stream,
-            out Region.ErrorMask errorMask,
-            Region.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Region.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1329,7 +1068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         OblivionMajorRecordFlags = 4,
         Icon = 5,
@@ -1555,7 +1294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Region_FieldIndex.Worldspace:
                     return typeof(FormLinkNullable<Worldspace>);
                 case Region_FieldIndex.Areas:
-                    return typeof(ExtendedList<RegionArea>);
+                    return typeof(IExtendedList<RegionArea>);
                 case Region_FieldIndex.Objects:
                     return typeof(RegionObjects);
                 case Region_FieldIndex.Weather:
@@ -1571,7 +1310,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(RegionXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.REGN;
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
         #region Interface
@@ -1636,86 +1374,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IRegionInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IRegionInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IRegionInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    RegionXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IOblivionMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Region)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Region)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1978,7 +1636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Region_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (Region_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
+                case OblivionMajorRecord_FieldIndex.VersionControl:
                     return (Region_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Region_FieldIndex)((int)index);
@@ -1997,7 +1655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Region_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Region_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Region_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Region_FieldIndex)((int)index);
@@ -2476,507 +2134,6 @@ namespace Mutagen.Bethesda.Oblivion
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public partial class RegionXmlWriteTranslation :
-        OblivionMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static RegionXmlWriteTranslation Instance = new RegionXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IRegionGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Icon != null)
-                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Icon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Icon),
-                    item: item.Icon,
-                    fieldIndex: (int)Region_FieldIndex.Icon,
-                    errorMask: errorMask);
-            }
-            if ((item.MapColor != null)
-                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.MapColor) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MapColor),
-                    item: item.MapColor.Value,
-                    fieldIndex: (int)Region_FieldIndex.MapColor,
-                    errorMask: errorMask);
-            }
-            if ((item.Worldspace.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Worldspace),
-                    item: item.Worldspace.FormKey,
-                    fieldIndex: (int)Region_FieldIndex.Worldspace,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
-            {
-                ListXmlTranslation<IRegionAreaGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Areas),
-                    item: item.Areas,
-                    fieldIndex: (int)Region_FieldIndex.Areas,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Areas),
-                    transl: (XElement subNode, IRegionAreaGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((RegionAreaXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Objects != null)
-                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
-            {
-                if (item.Objects.TryGet(out var ObjectsItem))
-                {
-                    ((RegionObjectsXmlWriteTranslation)((IXmlItem)ObjectsItem).XmlWriteTranslator).Write(
-                        item: ObjectsItem,
-                        node: node,
-                        name: nameof(item.Objects),
-                        fieldIndex: (int)Region_FieldIndex.Objects,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Objects));
-                }
-            }
-            if ((item.Weather != null)
-                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
-            {
-                if (item.Weather.TryGet(out var WeatherItem))
-                {
-                    ((RegionWeatherXmlWriteTranslation)((IXmlItem)WeatherItem).XmlWriteTranslator).Write(
-                        item: WeatherItem,
-                        node: node,
-                        name: nameof(item.Weather),
-                        fieldIndex: (int)Region_FieldIndex.Weather,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Weather));
-                }
-            }
-            if ((item.MapName != null)
-                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.MapName) ?? true))
-            {
-                if (item.MapName.TryGet(out var MapNameItem))
-                {
-                    ((RegionMapXmlWriteTranslation)((IXmlItem)MapNameItem).XmlWriteTranslator).Write(
-                        item: MapNameItem,
-                        node: node,
-                        name: nameof(item.MapName),
-                        fieldIndex: (int)Region_FieldIndex.MapName,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.MapName));
-                }
-            }
-            if ((item.Grasses != null)
-                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
-            {
-                if (item.Grasses.TryGet(out var GrassesItem))
-                {
-                    ((RegionGrassesXmlWriteTranslation)((IXmlItem)GrassesItem).XmlWriteTranslator).Write(
-                        item: GrassesItem,
-                        node: node,
-                        name: nameof(item.Grasses),
-                        fieldIndex: (int)Region_FieldIndex.Grasses,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Grasses));
-                }
-            }
-            if ((item.Sounds != null)
-                && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
-            {
-                if (item.Sounds.TryGet(out var SoundsItem))
-                {
-                    ((RegionSoundsXmlWriteTranslation)((IXmlItem)SoundsItem).XmlWriteTranslator).Write(
-                        item: SoundsItem,
-                        node: node,
-                        name: nameof(item.Sounds),
-                        fieldIndex: (int)Region_FieldIndex.Sounds,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Sounds));
-                }
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IRegionGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Region");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Region");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IRegionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IRegionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IRegionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class RegionXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
-    {
-        public new readonly static RegionXmlCreateTranslation Instance = new RegionXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IRegionInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RegionXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IRegionInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Icon":
-                    errorMask?.PushIndex((int)Region_FieldIndex.Icon);
-                    try
-                    {
-                        item.Icon = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MapColor":
-                    errorMask?.PushIndex((int)Region_FieldIndex.MapColor);
-                    try
-                    {
-                        item.MapColor = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Worldspace":
-                    errorMask?.PushIndex((int)Region_FieldIndex.Worldspace);
-                    try
-                    {
-                        item.Worldspace = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Areas":
-                    errorMask?.PushIndex((int)Region_FieldIndex.Areas);
-                    try
-                    {
-                        if (ListXmlTranslation<RegionArea>.Instance.Parse(
-                            node: node,
-                            enumer: out var AreasItem,
-                            transl: LoquiXmlTranslation<RegionArea>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Areas.SetTo(AreasItem);
-                        }
-                        else
-                        {
-                            item.Areas.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Objects":
-                    errorMask?.PushIndex((int)Region_FieldIndex.Objects);
-                    try
-                    {
-                        item.Objects = LoquiXmlTranslation<RegionObjects>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Objects));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weather":
-                    errorMask?.PushIndex((int)Region_FieldIndex.Weather);
-                    try
-                    {
-                        item.Weather = LoquiXmlTranslation<RegionWeather>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Weather));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MapName":
-                    errorMask?.PushIndex((int)Region_FieldIndex.MapName);
-                    try
-                    {
-                        item.MapName = LoquiXmlTranslation<RegionMap>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.MapName));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Grasses":
-                    errorMask?.PushIndex((int)Region_FieldIndex.Grasses);
-                    try
-                    {
-                        item.Grasses = LoquiXmlTranslation<RegionGrasses>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Grasses));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sounds":
-                    errorMask?.PushIndex((int)Region_FieldIndex.Sounds);
-                    try
-                    {
-                        item.Sounds = LoquiXmlTranslation<RegionSounds>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Sounds));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    OblivionMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Oblivion
-{
-    #region Xml Write Mixins
-    public static class RegionXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IRegionGetter item,
-            XElement node,
-            out Region.ErrorMask errorMask,
-            Region.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((RegionXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Region.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IRegionGetter item,
-            string path,
-            out Region.ErrorMask errorMask,
-            Region.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IRegionGetter item,
-            Stream stream,
-            out Region.ErrorMask errorMask,
-            Region.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -3050,10 +2207,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -3106,9 +2265,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRegionInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3122,13 +2282,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Icon);
+                    return (int)Region_FieldIndex.Icon;
                 }
                 case RecordTypeInts.RCLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MapColor = frame.ReadColor(ColorBinaryType.Alpha);
-                    return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
+                    return (int)Region_FieldIndex.MapColor;
                 }
                 case RecordTypeInts.WNAM:
                 {
@@ -3136,7 +2296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Worldspace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
+                    return (int)Region_FieldIndex.Worldspace;
                 }
                 case RecordTypeInts.RPLI:
                 case RecordTypeInts.RPLD:
@@ -3147,19 +2307,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: RegionArea.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);
+                    return (int)Region_FieldIndex.Areas;
                 }
                 case RecordTypeInts.RDAT:
                 {
                     RegionBinaryCreateTranslation.FillBinaryRegionAreaLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3210,21 +2371,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => RegionXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((RegionXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3250,7 +2396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Worldspace
         private int? _WorldspaceLocation;
         public bool Worldspace_IsSet => _WorldspaceLocation.HasValue;
-        public IFormLinkNullable<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
+        public IFormLinkNullable<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
         #endregion
         public IReadOnlyList<IRegionAreaGetter> Areas { get; private set; } = ListExt.Empty<RegionAreaBinaryOverlay>();
         #region RegionAreaLogic
@@ -3283,8 +2429,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new RegionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3310,12 +2457,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3327,17 +2475,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Icon);
+                    return (int)Region_FieldIndex.Icon;
                 }
                 case RecordTypeInts.RCLR:
                 {
                     _MapColorLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
+                    return (int)Region_FieldIndex.MapColor;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     _WorldspaceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
+                    return (int)Region_FieldIndex.Worldspace;
                 }
                 case RecordTypeInts.RPLI:
                 case RecordTypeInts.RPLD:
@@ -3347,14 +2495,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: RegionArea_Registration.TriggeringRecordTypes,
                         factory:  RegionAreaBinaryOverlay.RegionAreaFactory);
-                    return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);
+                    return (int)Region_FieldIndex.Areas;
                 }
                 case RecordTypeInts.RDAT:
                 {
                     RegionAreaLogicCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 default:
                     return base.FillRecordType(
@@ -3362,7 +2510,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

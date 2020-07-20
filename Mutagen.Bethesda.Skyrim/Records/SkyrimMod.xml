@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SkyrimMod" objType="Mod" failOnUnknownType="false" ctorPermission="protected" GUID="9dcb1a8f-db0a-44bd-9a30-9427a9350e7a" ID="66">
+  <Object name="SkyrimMod" objType="Mod" ctorPermission="protected" GUID="9dcb1a8f-db0a-44bd-9a30-9427a9350e7a" ID="66">
     <Fields>
       <RefDirect name="ModHeader" refName="ModHeader" singleton="true" />
       <Group name="GameSettings" refName="GameSetting" />
@@ -106,6 +106,22 @@
       <Group name="Shouts" refName="Shout" />
       <Group name="EquipTypes" refName="EquipType" />
       <Group name="Relationships" refName="Relationship" />
+      <Group name="Scenes" refName="Scene" />
+      <Group name="AssociationTypes" refName="AssociationType" />
+      <Group name="Outfits" refName="Outfit" />
+      <Group name="ArtObjects" refName="ArtObject" />
+      <Group name="MaterialObjects" refName="MaterialObject" />
+      <Group name="MovementTypes" refName="MovementType" />
+      <Group name="SoundDescriptors" refName="SoundDescriptor" />
+      <Group name="DualCastData" refName="DualCastData" />
+      <Group name="SoundCategories" refName="SoundCategory" />
+      <Group name="SoundOutputModels" refName="SoundOutputModel" />
+      <Group name="CollisionLayers" refName="CollisionLayer" />
+      <Group name="Colors" refName="ColorRecord" />
+      <Group name="ReverbParameters" refName="ReverbParameters" />
+      <Group name="VolumetricLightings" refName="VolumetricLighting" />
     </Fields>
+    <GameReleaseOptions>SkyrimLE</GameReleaseOptions>
+    <GameReleaseOptions>SkyrimSE</GameReleaseOptions>
   </Object>
 </Loqui>

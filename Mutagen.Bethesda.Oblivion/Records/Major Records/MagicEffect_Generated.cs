@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -88,8 +82,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IEDIDLink<MagicEffect>>? _CounterEffects;
-        public ExtendedList<IEDIDLink<MagicEffect>>? CounterEffects
+        private IExtendedList<IEDIDLink<MagicEffect>>? _CounterEffects;
+        public IExtendedList<IEDIDLink<MagicEffect>>? CounterEffects
         {
             get => this._CounterEffects;
             set => this._CounterEffects = value;
@@ -130,135 +124,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => MagicEffectXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((MagicEffectXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new MagicEffect CreateFromXml(
-            XElement node,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static MagicEffect CreateFromXml(
-            XElement node,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffect.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static MagicEffect CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new MagicEffect();
-            ((MagicEffectSetterCommon)((IMagicEffectGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static MagicEffect CreateFromXml(
-            string path,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffect CreateFromXml(
-            string path,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffect CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static MagicEffect CreateFromXml(
-            Stream stream,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffect CreateFromXml(
-            Stream stream,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffect CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
@@ -280,7 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem OblivionMajorRecordFlags,
                 TItem Name,
@@ -292,7 +157,7 @@ namespace Mutagen.Bethesda.Oblivion
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
@@ -758,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = MagicEffect_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = MagicEffect_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -859,7 +724,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new Model? Model { get; set; }
         new MagicEffectData? Data { get; set; }
-        new ExtendedList<IEDIDLink<MagicEffect>>? CounterEffects { get; set; }
+        new IExtendedList<IEDIDLink<MagicEffect>>? CounterEffects { get; set; }
     }
 
     public partial interface IMagicEffectInternal :
@@ -873,11 +738,10 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         INamedGetter,
         ILoquiObject<IMagicEffectGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => MagicEffect_Registration.Instance;
+        static new ILoquiRegistration Registration => MagicEffect_Registration.Instance;
         String? Name { get; }
         String? Description { get; }
         String? Icon { get; }
@@ -1018,131 +882,6 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            XElement node,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            XElement node,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffect.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((MagicEffectSetterCommon)((IMagicEffectGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            string path,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            string path,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            Stream stream,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            Stream stream,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1180,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         OblivionMajorRecordFlags = 4,
         Name = 5,
@@ -1380,13 +1119,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.Data:
                     return typeof(MagicEffectData);
                 case MagicEffect_FieldIndex.CounterEffects:
-                    return typeof(ExtendedList<IEDIDLink<MagicEffect>>);
+                    return typeof(IExtendedList<IEDIDLink<MagicEffect>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(MagicEffectXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.MGEF;
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectBinaryWriteTranslation);
         #region Interface
@@ -1448,86 +1186,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IMagicEffectInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IMagicEffectInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IMagicEffectInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    MagicEffectXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IOblivionMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (MagicEffect)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (MagicEffect)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1749,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (MagicEffect_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (MagicEffect_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
+                case OblivionMajorRecord_FieldIndex.VersionControl:
                     return (MagicEffect_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (MagicEffect_FieldIndex)((int)index);
@@ -1768,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (MagicEffect_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (MagicEffect_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (MagicEffect_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (MagicEffect_FieldIndex)((int)index);
@@ -2132,407 +1790,6 @@ namespace Mutagen.Bethesda.Oblivion
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public partial class MagicEffectXmlWriteTranslation :
-        OblivionMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static MagicEffectXmlWriteTranslation Instance = new MagicEffectXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IMagicEffectGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((item.Description != null)
-                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Description) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Description),
-                    item: item.Description,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Description,
-                    errorMask: errorMask);
-            }
-            if ((item.Icon != null)
-                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Icon) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Icon),
-                    item: item.Icon,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Icon,
-                    errorMask: errorMask);
-            }
-            if ((item.Model != null)
-                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Model) ?? true))
-            {
-                if (item.Model.TryGet(out var ModelItem))
-                {
-                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                        item: ModelItem,
-                        node: node,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)MagicEffect_FieldIndex.Model,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Model));
-                }
-            }
-            if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Data) ?? true))
-            {
-                if (item.Data.TryGet(out var DataItem))
-                {
-                    ((MagicEffectDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                        item: DataItem,
-                        node: node,
-                        name: nameof(item.Data),
-                        fieldIndex: (int)MagicEffect_FieldIndex.Data,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Data));
-                }
-            }
-            if ((item.CounterEffects != null)
-                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
-            {
-                ListXmlTranslation<IEDIDLink<IMagicEffectGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CounterEffects),
-                    item: item.CounterEffects,
-                    fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.CounterEffects),
-                    transl: (XElement subNode, IEDIDLink<IMagicEffectGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        RecordTypeXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.EDID,
-                            errorMask: listSubMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IMagicEffectGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.MagicEffect");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MagicEffect");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IMagicEffectGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IMagicEffectGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IMagicEffectGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class MagicEffectXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
-    {
-        public new readonly static MagicEffectXmlCreateTranslation Instance = new MagicEffectXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IMagicEffectInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    MagicEffectXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IMagicEffectInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Name":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Description":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Description);
-                    try
-                    {
-                        item.Description = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Icon":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Icon);
-                    try
-                    {
-                        item.Icon = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Model);
-                    try
-                    {
-                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Model));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Data":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Data);
-                    try
-                    {
-                        item.Data = LoquiXmlTranslation<MagicEffectData>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Data));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CounterEffects":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffects);
-                    try
-                    {
-                        if (ListXmlTranslation<IEDIDLink<MagicEffect>>.Instance.Parse(
-                            node: node,
-                            enumer: out var CounterEffectsItem,
-                            transl: RecordTypeXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.CounterEffects = CounterEffectsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.CounterEffects = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    OblivionMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Oblivion
-{
-    #region Xml Write Mixins
-    public static class MagicEffectXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IMagicEffectGetter item,
-            XElement node,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((MagicEffectXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffect.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IMagicEffectGetter item,
-            string path,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IMagicEffectGetter item,
-            Stream stream,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -2605,10 +1862,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -2661,9 +1920,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IMagicEffectInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2677,7 +1937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Name);
+                    return (int)MagicEffect_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -2685,7 +1945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Description);
+                    return (int)MagicEffect_FieldIndex.Description;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -2693,19 +1953,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Icon);
+                    return (int)MagicEffect_FieldIndex.Icon;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Model);
+                    return (int)MagicEffect_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.MagicEffectData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Data);
+                    return (int)MagicEffect_FieldIndex.Data;
                 }
                 case RecordTypeInts.ESCE:
                 {
@@ -2714,13 +1974,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLink<MagicEffect>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: RecordTypeBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IEDIDLink<MagicEffect>>();
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
+                        .CastExtendedList<IEDIDLink<MagicEffect>>();
+                    return (int)MagicEffect_FieldIndex.CounterEffects;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -2766,21 +2027,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => MagicEffectXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((MagicEffectXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2837,8 +2083,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new MagicEffectBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2864,12 +2111,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2878,17 +2126,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Name);
+                    return (int)MagicEffect_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Description);
+                    return (int)MagicEffect_FieldIndex.Description;
                 }
                 case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Icon);
+                    return (int)MagicEffect_FieldIndex.Icon;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -2896,24 +2144,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Model);
+                    return (int)MagicEffect_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Data);
+                    return (int)MagicEffect_FieldIndex.Data;
                 }
                 case RecordTypeInts.ESCE:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.CounterEffects = BinaryOverlayList<IEDIDLink<IMagicEffectGetter>>.FactoryByStartIndex(
+                    this.CounterEffects = BinaryOverlayList.FactoryByStartIndex<IEDIDLink<IMagicEffectGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new EDIDLink<IMagicEffectGetter>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
+                    return (int)MagicEffect_FieldIndex.CounterEffects;
                 }
                 default:
                     return base.FillRecordType(
@@ -2921,7 +2169,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

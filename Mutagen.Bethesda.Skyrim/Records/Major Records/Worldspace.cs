@@ -102,9 +102,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!frame.Reader.TryReadGroup(out var groupHeader)) return;
                 if (groupHeader.GroupType == (int)GroupTypeEnum.WorldChildren)
                 {
-                    obj.SubCellsTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.LastModifiedSpan);
-                    obj.SubCellsUnknown = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.Span.Slice(groupHeader.HeaderLength - 4));
-                    var formKey = FormKeyBinaryTranslation.Instance.Parse(groupHeader.ContainedRecordTypeSpan, frame.MetaData.MasterReferences!);
+                    obj.SubCellsTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.LastModifiedData);
+                    obj.SubCellsUnknown = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.HeaderData.Slice(groupHeader.HeaderLength - 4));
+                    var formKey = FormKeyBinaryTranslation.Instance.Parse(groupHeader.ContainedRecordTypeData, frame.MetaData.MasterReferences!);
                     if (formKey != obj.FormKey)
                     {
                         throw new ArgumentException("Cell children group did not match the FormID of the parent worldspace.");
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var topCell = obj.TopCell;
                 var subCells = obj.SubCells;
                 if (subCells?.Count == 0
-                    && topCell != null) return;
+                    && topCell == null) return;
                 using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Skyrim
             private int? _TopCellLocation;
             public ICellGetter? TopCell => _TopCellLocation.HasValue ? CellBinaryOverlay.CellFactory(new OverlayStream(_grupData!.Value.Slice(_TopCellLocation!.Value), _package), _package, insideWorldspace: true) : default;
 
-            public int SubCellsTimestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedSpan) : 0;
+            public int SubCellsTimestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedData) : 0;
 
             public IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; private set; } = ListExt.Empty<IWorldspaceBlockGetter>();
 
@@ -208,10 +208,9 @@ namespace Mutagen.Bethesda.Skyrim
             partial void CustomEnd(OverlayStream stream, int finalPos, int offset)
             {
                 if (stream.Complete) return;
-                var groupMeta = stream.GetGroup();
-                if (!groupMeta.IsGroup || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
+                if (!stream.TryGetGroup(out var groupMeta) || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
 
-                if (this.FormKey != FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan)))
+                if (this.FormKey != FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)))
                 {
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
@@ -223,7 +222,7 @@ namespace Mutagen.Bethesda.Skyrim
                 for (int i = 0; i < 2; i++)
                 {
                     if (stream.Complete) return;
-                    var varMeta = stream.GetNextRecordVariableMeta();
+                    var varMeta = stream.GetVariableHeader();
                     switch (varMeta.RecordTypeInt)
                     {
                         case 0x4C4C4543: // "CELL":
@@ -239,7 +238,7 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                             break;
                         case 0x50555247: // "GRUP":
-                            this.SubCells = BinaryOverlayList<IWorldspaceBlockGetter>.FactoryByArray(
+                            this.SubCells = BinaryOverlayList.FactoryByArray<IWorldspaceBlockGetter>(
                                 stream.RemainingMemory,
                                 _package,
                                 getter: (s, p) => WorldspaceBlockBinaryOverlay.WorldspaceBlockFactory(new OverlayStream(s, p), p),

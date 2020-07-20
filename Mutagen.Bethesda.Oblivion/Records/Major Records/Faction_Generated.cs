@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -56,8 +50,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Relation> _Relations = new ExtendedList<Relation>();
-        public ExtendedList<Relation> Relations
+        private IExtendedList<Relation> _Relations = new ExtendedList<Relation>();
+        public IExtendedList<Relation> Relations
         {
             get => this._Relations;
             protected set => this._Relations = value;
@@ -80,8 +74,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Ranks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
-        public ExtendedList<Rank> Ranks
+        private IExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
+        public IExtendedList<Rank> Ranks
         {
             get => this._Ranks;
             protected set => this._Ranks = value;
@@ -122,135 +116,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => FactionXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((FactionXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Faction CreateFromXml(
-            XElement node,
-            Faction.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Faction CreateFromXml(
-            XElement node,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Faction.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Faction CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Faction();
-            ((FactionSetterCommon)((IFactionGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Faction CreateFromXml(
-            string path,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Faction CreateFromXml(
-            string path,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Faction CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Faction CreateFromXml(
-            Stream stream,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Faction CreateFromXml(
-            Stream stream,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Faction CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
@@ -271,7 +136,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem OblivionMajorRecordFlags,
                 TItem Name,
@@ -282,7 +147,7 @@ namespace Mutagen.Bethesda.Oblivion
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
@@ -785,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Faction_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Faction_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -883,10 +748,10 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IFactionInternal>
     {
         new String? Name { get; set; }
-        new ExtendedList<Relation> Relations { get; }
+        new IExtendedList<Relation> Relations { get; }
         new Faction.FactionFlag? Flags { get; set; }
         new Single? CrimeGoldMultiplier { get; set; }
-        new ExtendedList<Rank> Ranks { get; }
+        new IExtendedList<Rank> Ranks { get; }
     }
 
     public partial interface IFactionInternal :
@@ -901,11 +766,10 @@ namespace Mutagen.Bethesda.Oblivion
         IOwnerGetter,
         INamedGetter,
         ILoquiObject<IFactionGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Faction_Registration.Instance;
+        static new ILoquiRegistration Registration => Faction_Registration.Instance;
         String? Name { get; }
         IReadOnlyList<IRelationGetter> Relations { get; }
         Faction.FactionFlag? Flags { get; }
@@ -1045,131 +909,6 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            XElement node,
-            Faction.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            XElement node,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Faction.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            string path,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            string path,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            Stream stream,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            Stream stream,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1207,7 +946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         OblivionMajorRecordFlags = 4,
         Name = 5,
@@ -1389,19 +1128,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Faction_FieldIndex.Name:
                     return typeof(String);
                 case Faction_FieldIndex.Relations:
-                    return typeof(ExtendedList<Relation>);
+                    return typeof(IExtendedList<Relation>);
                 case Faction_FieldIndex.Flags:
                     return typeof(Faction.FactionFlag);
                 case Faction_FieldIndex.CrimeGoldMultiplier:
                     return typeof(Single);
                 case Faction_FieldIndex.Ranks:
-                    return typeof(ExtendedList<Rank>);
+                    return typeof(IExtendedList<Rank>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(FactionXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.FACT;
         public static readonly Type BinaryWriteTranslation = typeof(FactionBinaryWriteTranslation);
         #region Interface
@@ -1462,86 +1200,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IFactionInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IFactionInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IFactionInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    FactionXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IOblivionMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Faction)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Faction)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1758,7 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Faction_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (Faction_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
+                case OblivionMajorRecord_FieldIndex.VersionControl:
                     return (Faction_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (Faction_FieldIndex)((int)index);
@@ -1777,7 +1435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (Faction_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Faction_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Faction_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Faction_FieldIndex)((int)index);
@@ -2099,390 +1757,6 @@ namespace Mutagen.Bethesda.Oblivion
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public partial class FactionXmlWriteTranslation :
-        OblivionMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static FactionXmlWriteTranslation Instance = new FactionXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IFactionGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Faction_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
-            {
-                ListXmlTranslation<IRelationGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Relations),
-                    item: item.Relations,
-                    fieldIndex: (int)Faction_FieldIndex.Relations,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Relations),
-                    transl: (XElement subNode, IRelationGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((RelationXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Faction.FactionFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Faction_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((item.CrimeGoldMultiplier != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeGoldMultiplier) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CrimeGoldMultiplier),
-                    item: item.CrimeGoldMultiplier.Value,
-                    fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
-            {
-                ListXmlTranslation<IRankGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Ranks),
-                    item: item.Ranks,
-                    fieldIndex: (int)Faction_FieldIndex.Ranks,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Ranks),
-                    transl: (XElement subNode, IRankGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((RankXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IFactionGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Faction");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Faction");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IFactionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IFactionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IFactionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class FactionXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
-    {
-        public new readonly static FactionXmlCreateTranslation Instance = new FactionXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IFactionInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FactionXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IFactionInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Name":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Relations":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.Relations);
-                    try
-                    {
-                        if (ListXmlTranslation<Relation>.Instance.Parse(
-                            node: node,
-                            enumer: out var RelationsItem,
-                            transl: LoquiXmlTranslation<Relation>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Relations.SetTo(RelationsItem);
-                        }
-                        else
-                        {
-                            item.Relations.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Faction.FactionFlag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CrimeGoldMultiplier":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.CrimeGoldMultiplier);
-                    try
-                    {
-                        item.CrimeGoldMultiplier = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Ranks":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.Ranks);
-                    try
-                    {
-                        if (ListXmlTranslation<Rank>.Instance.Parse(
-                            node: node,
-                            enumer: out var RanksItem,
-                            transl: LoquiXmlTranslation<Rank>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Ranks.SetTo(RanksItem);
-                        }
-                        else
-                        {
-                            item.Ranks.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    OblivionMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Oblivion
-{
-    #region Xml Write Mixins
-    public static class FactionXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IFactionGetter item,
-            XElement node,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((FactionXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Faction.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IFactionGetter item,
-            string path,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IFactionGetter item,
-            Stream stream,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -2552,10 +1826,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -2608,9 +1884,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IFactionInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2624,7 +1901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
+                    return (int)Faction_FieldIndex.Name;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -2634,19 +1911,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: RecordTypes.XNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: Relation.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
+                    return (int)Faction_FieldIndex.Relations;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
+                    return (int)Faction_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CrimeGoldMultiplier = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGoldMultiplier);
+                    return (int)Faction_FieldIndex.CrimeGoldMultiplier;
                 }
                 case RecordTypeInts.RNAM:
                 case RecordTypeInts.MNAM:
@@ -2659,12 +1936,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: Rank_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Rank.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
+                    return (int)Faction_FieldIndex.Ranks;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -2711,21 +1989,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => FactionXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((FactionXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2744,11 +2007,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IRelationGetter> Relations { get; private set; } = ListExt.Empty<RelationBinaryOverlay>();
         #region Flags
         private int? _FlagsLocation;
-        public Faction.FactionFlag? Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Faction.FactionFlag?);
+        public Faction.FactionFlag? Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Faction.FactionFlag?);
         #endregion
         #region CrimeGoldMultiplier
         private int? _CrimeGoldMultiplierLocation;
-        public Single? CrimeGoldMultiplier => _CrimeGoldMultiplierLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _CrimeGoldMultiplierLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? CrimeGoldMultiplier => _CrimeGoldMultiplierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CrimeGoldMultiplierLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public IReadOnlyList<IRankGetter> Ranks { get; private set; } = ListExt.Empty<RankBinaryOverlay>();
         partial void CustomFactoryEnd(
@@ -2776,8 +2039,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new FactionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2803,12 +2067,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2817,11 +2082,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
+                    return (int)Faction_FieldIndex.Name;
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    this.Relations = BinaryOverlayList<RelationBinaryOverlay>.FactoryByArray(
+                    this.Relations = BinaryOverlayList.FactoryByArray<RelationBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -2831,17 +2096,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
+                    return (int)Faction_FieldIndex.Relations;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
+                    return (int)Faction_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _CrimeGoldMultiplierLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGoldMultiplier);
+                    return (int)Faction_FieldIndex.CrimeGoldMultiplier;
                 }
                 case RecordTypeInts.RNAM:
                 case RecordTypeInts.MNAM:
@@ -2853,7 +2118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: Rank_Registration.TriggeringRecordTypes,
                         factory:  RankBinaryOverlay.RankFactory);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
+                    return (int)Faction_FieldIndex.Ranks;
                 }
                 default:
                     return base.FillRecordType(
@@ -2861,7 +2126,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

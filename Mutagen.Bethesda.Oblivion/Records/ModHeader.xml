@@ -10,8 +10,7 @@
       <ByteArray name="Deleted" recordType="DELE" />
       <String name="Author" recordType="CNAM" maxLength="512" />
       <String name="Description" recordType="SNAM" maxLength="512" />
-      <RefList name="MasterReferences" refName="Bethesda.MasterReference" hasBeenSet="False" />
-      <UInt64 name="VestigialData" recordType="DATA" />
+      <RefList name="MasterReferences" refName="Bethesda.MasterReference" hasBeenSet="False" binary="Custom" binaryOverlay="Normal" />
     </Fields>
   </Object>
   <Object name="ModStats" recordType="HEDR" objType="Subrecord" GUID="88a14b36-530f-42a1-aa1f-b8ee1852e625" ID="1">

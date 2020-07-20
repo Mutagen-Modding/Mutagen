@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -51,8 +45,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -75,8 +69,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RelatedIdles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IIdleRelation>> _RelatedIdles = new ExtendedList<IFormLink<IIdleRelation>>();
-        public ExtendedList<IFormLink<IIdleRelation>> RelatedIdles
+        private IExtendedList<IFormLink<IIdleRelation>> _RelatedIdles = new ExtendedList<IFormLink<IIdleRelation>>();
+        public IExtendedList<IFormLink<IIdleRelation>> RelatedIdles
         {
             get => this._RelatedIdles;
             protected set => this._RelatedIdles = value;
@@ -135,135 +129,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => IdleAnimationXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((IdleAnimationXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new IdleAnimation CreateFromXml(
-            XElement node,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static IdleAnimation CreateFromXml(
-            XElement node,
-            out IdleAnimation.ErrorMask errorMask,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = IdleAnimation.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static IdleAnimation CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new IdleAnimation();
-            ((IdleAnimationSetterCommon)((IIdleAnimationGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static IdleAnimation CreateFromXml(
-            string path,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static IdleAnimation CreateFromXml(
-            string path,
-            out IdleAnimation.ErrorMask errorMask,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static IdleAnimation CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static IdleAnimation CreateFromXml(
-            Stream stream,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static IdleAnimation CreateFromXml(
-            Stream stream,
-            out IdleAnimation.ErrorMask errorMask,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static IdleAnimation CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -289,7 +154,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -306,7 +171,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -937,7 +802,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = IdleAnimation_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = IdleAnimation_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1037,10 +902,10 @@ namespace Mutagen.Bethesda.Skyrim
         IIdleRelation,
         ILoquiObjectSetter<IIdleAnimationInternal>
     {
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
         new String? Filename { get; set; }
         new String? AnimationEvent { get; set; }
-        new ExtendedList<IFormLink<IIdleRelation>> RelatedIdles { get; }
+        new IExtendedList<IFormLink<IIdleRelation>> RelatedIdles { get; }
         new Byte LoopingSecondsMin { get; set; }
         new Byte LoopingSecondsMax { get; set; }
         new IdleAnimation.Flag Flags { get; set; }
@@ -1060,11 +925,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IIdleRelationGetter,
         ILoquiObject<IIdleAnimationGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
+        static new ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }
         String? Filename { get; }
         String? AnimationEvent { get; }
@@ -1209,131 +1073,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IIdleAnimationInternal item,
-            XElement node,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IIdleAnimationInternal item,
-            XElement node,
-            out IdleAnimation.ErrorMask errorMask,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = IdleAnimation.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IIdleAnimationInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((IdleAnimationSetterCommon)((IIdleAnimationGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IIdleAnimationInternal item,
-            string path,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IIdleAnimationInternal item,
-            string path,
-            out IdleAnimation.ErrorMask errorMask,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IIdleAnimationInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IIdleAnimationInternal item,
-            Stream stream,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IIdleAnimationInternal item,
-            Stream stream,
-            out IdleAnimation.ErrorMask errorMask,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IIdleAnimationInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            IdleAnimation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1371,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1602,13 +1341,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case IdleAnimation_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case IdleAnimation_FieldIndex.Filename:
                     return typeof(String);
                 case IdleAnimation_FieldIndex.AnimationEvent:
                     return typeof(String);
                 case IdleAnimation_FieldIndex.RelatedIdles:
-                    return typeof(ExtendedList<IFormLink<IIdleRelation>>);
+                    return typeof(IExtendedList<IFormLink<IIdleRelation>>);
                 case IdleAnimation_FieldIndex.LoopingSecondsMin:
                     return typeof(Byte);
                 case IdleAnimation_FieldIndex.LoopingSecondsMax:
@@ -1626,7 +1365,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(IdleAnimationXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.IDLE;
         public static readonly Type BinaryWriteTranslation = typeof(IdleAnimationBinaryWriteTranslation);
         #region Interface
@@ -1692,86 +1430,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IIdleAnimationInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IIdleAnimationInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IIdleAnimationInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    IdleAnimationXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (IdleAnimation)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (IdleAnimation)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2015,7 +1673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (IdleAnimation_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (IdleAnimation_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (IdleAnimation_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (IdleAnimation_FieldIndex)((int)index);
@@ -2036,7 +1694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (IdleAnimation_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (IdleAnimation_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (IdleAnimation_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (IdleAnimation_FieldIndex)((int)index);
@@ -2385,522 +2043,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class IdleAnimationXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static IdleAnimationXmlWriteTranslation Instance = new IdleAnimationXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IIdleAnimationGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Conditions) ?? true))
-            {
-                ListXmlTranslation<IConditionGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Conditions),
-                    item: item.Conditions,
-                    fieldIndex: (int)IdleAnimation_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.Conditions),
-                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Filename != null)
-                && (translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Filename) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Filename),
-                    item: item.Filename,
-                    fieldIndex: (int)IdleAnimation_FieldIndex.Filename,
-                    errorMask: errorMask);
-            }
-            if ((item.AnimationEvent != null)
-                && (translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationEvent) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AnimationEvent),
-                    item: item.AnimationEvent,
-                    fieldIndex: (int)IdleAnimation_FieldIndex.AnimationEvent,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.RelatedIdles) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IIdleRelationGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.RelatedIdles),
-                    item: item.RelatedIdles,
-                    fieldIndex: (int)IdleAnimation_FieldIndex.RelatedIdles,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.RelatedIdles),
-                    transl: (XElement subNode, IFormLink<IIdleRelationGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.LoopingSecondsMin) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LoopingSecondsMin),
-                    item: item.LoopingSecondsMin,
-                    fieldIndex: (int)IdleAnimation_FieldIndex.LoopingSecondsMin,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.LoopingSecondsMax) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LoopingSecondsMax),
-                    item: item.LoopingSecondsMax,
-                    fieldIndex: (int)IdleAnimation_FieldIndex.LoopingSecondsMax,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<IdleAnimation.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)IdleAnimation_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationGroupSection) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AnimationGroupSection),
-                    item: item.AnimationGroupSection,
-                    fieldIndex: (int)IdleAnimation_FieldIndex.AnimationGroupSection,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.ReplayDelay) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ReplayDelay),
-                    item: item.ReplayDelay,
-                    fieldIndex: (int)IdleAnimation_FieldIndex.ReplayDelay,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<IdleAnimation.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)IdleAnimation_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IIdleAnimationGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.IdleAnimation");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.IdleAnimation");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IIdleAnimationGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IIdleAnimationGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IIdleAnimationGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class IdleAnimationXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static IdleAnimationXmlCreateTranslation Instance = new IdleAnimationXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IIdleAnimationInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    IdleAnimationXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IIdleAnimationInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Conditions":
-                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Conditions);
-                    try
-                    {
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Filename":
-                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Filename);
-                    try
-                    {
-                        item.Filename = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AnimationEvent":
-                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.AnimationEvent);
-                    try
-                    {
-                        item.AnimationEvent = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RelatedIdles":
-                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.RelatedIdles);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<IIdleRelation>>.Instance.Parse(
-                            node: node,
-                            enumer: out var RelatedIdlesItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.RelatedIdles.SetTo(RelatedIdlesItem);
-                        }
-                        else
-                        {
-                            item.RelatedIdles.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LoopingSecondsMin":
-                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.LoopingSecondsMin);
-                    try
-                    {
-                        item.LoopingSecondsMin = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LoopingSecondsMax":
-                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.LoopingSecondsMax);
-                    try
-                    {
-                        item.LoopingSecondsMax = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<IdleAnimation.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AnimationGroupSection":
-                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.AnimationGroupSection);
-                    try
-                    {
-                        item.AnimationGroupSection = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ReplayDelay":
-                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.ReplayDelay);
-                    try
-                    {
-                        item.ReplayDelay = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)IdleAnimation_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<IdleAnimation.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class IdleAnimationXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IIdleAnimationGetter item,
-            XElement node,
-            out IdleAnimation.ErrorMask errorMask,
-            IdleAnimation.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((IdleAnimationXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = IdleAnimation.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IIdleAnimationGetter item,
-            string path,
-            out IdleAnimation.ErrorMask errorMask,
-            IdleAnimation.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IIdleAnimationGetter item,
-            Stream stream,
-            out IdleAnimation.ErrorMask errorMask,
-            IdleAnimation.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2990,10 +2132,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -3046,9 +2190,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IIdleAnimationInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3061,7 +2206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     IdleAnimationBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
+                    return (int)IdleAnimation_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -3069,7 +2214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Filename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Filename);
+                    return (int)IdleAnimation_FieldIndex.Filename;
                 }
                 case RecordTypeInts.ENAM:
                 {
@@ -3077,7 +2222,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AnimationEvent = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationEvent);
+                    return (int)IdleAnimation_FieldIndex.AnimationEvent;
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -3086,7 +2231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleRelation>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdles);
+                    return (int)IdleAnimation_FieldIndex.RelatedIdles;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3097,12 +2242,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Flags = EnumBinaryTranslation<IdleAnimation.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.AnimationGroupSection = dataFrame.ReadUInt8();
                     item.ReplayDelay = dataFrame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.ReplayDelay);
+                    return (int)IdleAnimation_FieldIndex.ReplayDelay;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3152,21 +2298,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => IdleAnimationXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((IdleAnimationXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IdleAnimationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -3248,8 +2379,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new IdleAnimationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3275,12 +2407,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3294,34 +2427,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
+                    return (int)IdleAnimation_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _FilenameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Filename);
+                    return (int)IdleAnimation_FieldIndex.Filename;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     _AnimationEventLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationEvent);
+                    return (int)IdleAnimation_FieldIndex.AnimationEvent;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RelatedIdles = BinaryOverlayList<IFormLink<IIdleRelationGetter>>.FactoryByStartIndex(
+                    this.RelatedIdles = BinaryOverlayList.FactoryByStartIndex<IFormLink<IIdleRelationGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IIdleRelationGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdles);
+                    return (int)IdleAnimation_FieldIndex.RelatedIdles;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.ReplayDelay);
+                    return (int)IdleAnimation_FieldIndex.ReplayDelay;
                 }
                 default:
                     return base.FillRecordType(
@@ -3329,7 +2462,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

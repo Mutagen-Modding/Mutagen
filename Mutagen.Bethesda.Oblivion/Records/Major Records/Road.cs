@@ -69,9 +69,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var pt = new RoadPoint();
             pt.Point = new Noggog.P3Float(
-                reader.GetFloat(),
-                reader.Slice(4).GetFloat(),
-                reader.Slice(8).GetFloat());
+                reader.Float(),
+                reader.Slice(4).Float(),
+                reader.Slice(8).Float());
             numConn = reader[12];
             pt.NumConnectionsFluffBytes = reader.Slice(13, 3).ToArray();
             return pt;
@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x52524750: // "PGRR":
                     stream.Position += subMeta.HeaderLength;
                     var connBytes = stream.ReadMemory(subMeta.ContentLength);
-                    this.Points = BinaryOverlayList<IRoadPointGetter>.FactoryByLazyParse(
+                    this.Points = BinaryOverlayList.FactoryByLazyParse<IRoadPointGetter>(
                         pointBytes,
                         _package,
                         getter: (s, p) =>
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         });
                     break;
                 default:
-                    this.Points = BinaryOverlayList<IRoadPointGetter>.FactoryByStartIndex(
+                    this.Points = BinaryOverlayList.FactoryByStartIndex<IRoadPointGetter>(
                         pointBytes,
                         _package,
                         itemLength: RoadBinaryCreateTranslation.POINT_LEN,

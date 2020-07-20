@@ -12,11 +12,12 @@ namespace Mutagen.Bethesda.Tests
 {
     public class SkyrimPassthroughTest : PassthroughTest
     {
-        public override GameMode GameMode => GameMode.Skyrim;
+        public override GameRelease GameRelease { get; }
 
-        public SkyrimPassthroughTest(TestingSettings settings, Target target)
-            : base(settings, target)
+        public SkyrimPassthroughTest(PassthroughTestParams param, GameRelease mode)
+            : base(param)
         {
+            GameRelease = mode;
         }
 
         public override ModRecordAligner.AlignmentRules GetAlignmentRules()
@@ -218,25 +219,27 @@ namespace Mutagen.Bethesda.Tests
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 this.FilePath.Path,
-                this.ModKey);
+                this.ModKey,
+                GameRelease.ToSkyrimRelease());
         }
 
         protected override async Task<IMod> ImportBinary(FilePath path)
         {
             return SkyrimMod.CreateFromBinary(
                 path.Path,
+                GameRelease.ToSkyrimRelease(),
                 this.ModKey,
                 parallel: this.Settings.Parallel);
         }
 
         protected override async Task<IMod> ImportCopyIn(FilePath file)
         {
-            var wrapper = SkyrimMod.CreateFromBinaryOverlay(file.Path);
-            var ret = new SkyrimMod(this.ModKey);
+            var wrapper = SkyrimMod.CreateFromBinaryOverlay(file.Path, GameRelease.ToSkyrimRelease());
+            var ret = new SkyrimMod(this.ModKey, GameRelease.ToSkyrimRelease());
             ret.DeepCopyIn(wrapper);
             return ret;
         }
 
-        protected override Processor ProcessorFactory() => new SkyrimProcessor();
+        protected override Processor ProcessorFactory() => new SkyrimProcessor(Settings.Parallel);
     }
 }

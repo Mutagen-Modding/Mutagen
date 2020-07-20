@@ -29,7 +29,7 @@
           <RefDirect refName="ArmorModel" />
         </Fields>
       </Gendered>
-      <RefDirect name="BodyTemplate" refName="BodyTemplate" />
+      <RefDirect name="BodyTemplate" refName="BodyTemplate" binary="Custom" />
       <RefDirect name="Destructible" refName="Destructible" />
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
@@ -55,6 +55,7 @@
       <FormLink name="TemplateArmor" recordType="TNAM" refName="Armor" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IOutfitTarget</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
   </Object>
   <Object name="ArmorModel" objType="Subrecord" GUID="39a3a83f-68bd-473a-aa14-10efdb07031b" ID="151">

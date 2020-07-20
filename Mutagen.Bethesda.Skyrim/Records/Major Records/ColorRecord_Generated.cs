@@ -15,17 +15,12 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Drawing;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -49,6 +44,17 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString? IColorRecordGetter.Name => this.Name;
+        #endregion
+        #region Color
+        public Color Color { get; set; } = default;
+        #endregion
+        #region Playable
+        public Boolean Playable { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -79,135 +85,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ColorRecordXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ColorRecordXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new ColorRecord CreateFromXml(
-            XElement node,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static ColorRecord CreateFromXml(
-            XElement node,
-            out ColorRecord.ErrorMask errorMask,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ColorRecord.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static ColorRecord CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new ColorRecord();
-            ((ColorRecordSetterCommon)((IColorRecordGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static ColorRecord CreateFromXml(
-            string path,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ColorRecord CreateFromXml(
-            string path,
-            out ColorRecord.ErrorMask errorMask,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ColorRecord CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static ColorRecord CreateFromXml(
-            Stream stream,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ColorRecord CreateFromXml(
-            Stream stream,
-            out ColorRecord.ErrorMask errorMask,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ColorRecord CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -218,23 +95,32 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.Color = initialValue;
+                this.Playable = initialValue;
             }
 
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Name,
+                TItem Color,
+                TItem Playable)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Name = Name;
+                this.Color = Color;
+                this.Playable = Playable;
             }
 
             #pragma warning disable CS8618
@@ -243,6 +129,12 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public TItem Color;
+            public TItem Playable;
             #endregion
 
             #region Equals
@@ -256,11 +148,17 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Color, rhs.Color)) return false;
+                if (!object.Equals(this.Playable, rhs.Playable)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Color);
+                hash.Add(this.Playable);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +169,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Color)) return false;
+                if (!eval(this.Playable)) return false;
                 return true;
             }
             #endregion
@@ -279,6 +180,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Color)) return true;
+                if (eval(this.Playable)) return true;
                 return false;
             }
             #endregion
@@ -294,6 +198,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Color = eval(this.Color);
+                obj.Playable = eval(this.Playable);
             }
             #endregion
 
@@ -316,6 +223,18 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Color ?? true)
+                    {
+                        fg.AppendItem(Color, "Color");
+                    }
+                    if (printMask?.Playable ?? true)
+                    {
+                        fg.AppendItem(Playable, "Playable");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +246,24 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public Exception? Color;
+            public Exception? Playable;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ColorRecord_FieldIndex enu = (ColorRecord_FieldIndex)index;
                 switch (enu)
                 {
+                    case ColorRecord_FieldIndex.Name:
+                        return Name;
+                    case ColorRecord_FieldIndex.Color:
+                        return Color;
+                    case ColorRecord_FieldIndex.Playable:
+                        return Playable;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +274,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ColorRecord_FieldIndex enu = (ColorRecord_FieldIndex)index;
                 switch (enu)
                 {
+                    case ColorRecord_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case ColorRecord_FieldIndex.Color:
+                        this.Color = ex;
+                        break;
+                    case ColorRecord_FieldIndex.Playable:
+                        this.Playable = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +294,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ColorRecord_FieldIndex enu = (ColorRecord_FieldIndex)index;
                 switch (enu)
                 {
+                    case ColorRecord_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case ColorRecord_FieldIndex.Color:
+                        this.Color = (Exception?)obj;
+                        break;
+                    case ColorRecord_FieldIndex.Playable:
+                        this.Playable = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +312,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Color != null) return true;
+                if (Playable != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +350,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Color, "Color");
+                fg.AppendItem(Playable, "Playable");
             }
             #endregion
 
@@ -406,6 +361,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Color = this.Color.Combine(rhs.Color);
+                ret.Playable = this.Playable.Combine(rhs.Playable);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +385,35 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool Color;
+            public bool Playable;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Name = defaultOn;
+                this.Color = defaultOn;
+                this.Playable = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Color, null));
+                ret.Add((Playable, null));
+            }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ColorRecord_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = ColorRecord_Registration.TriggeringRecordType;
         public ColorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -526,8 +500,12 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IColorRecord :
         IColorRecordGetter,
         ISkyrimMajorRecord,
+        ITranslatedNamed,
         ILoquiObjectSetter<IColorRecordInternal>
     {
+        new TranslatedString? Name { get; set; }
+        new Color Color { get; set; }
+        new Boolean Playable { get; set; }
     }
 
     public partial interface IColorRecordInternal :
@@ -539,11 +517,14 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IColorRecordGetter :
         ISkyrimMajorRecordGetter,
+        ITranslatedNamedGetter,
         ILoquiObject<IColorRecordGetter>,
-        IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ColorRecord_Registration.Instance;
+        static new ILoquiRegistration Registration => ColorRecord_Registration.Instance;
+        TranslatedString? Name { get; }
+        Color Color { get; }
+        Boolean Playable { get; }
 
     }
 
@@ -678,131 +659,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IColorRecordInternal item,
-            XElement node,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IColorRecordInternal item,
-            XElement node,
-            out ColorRecord.ErrorMask errorMask,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ColorRecord.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IColorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ColorRecordSetterCommon)((IColorRecordGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IColorRecordInternal item,
-            string path,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IColorRecordInternal item,
-            string path,
-            out ColorRecord.ErrorMask errorMask,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IColorRecordInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IColorRecordInternal item,
-            Stream stream,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IColorRecordInternal item,
-            Stream stream,
-            out ColorRecord.ErrorMask errorMask,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IColorRecordInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ColorRecord.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -840,10 +696,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Name = 6,
+        Color = 7,
+        Playable = 8,
     }
     #endregion
 
@@ -861,9 +720,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "2aebdb48-cb97-47d6-89e6-208bb68a5f6d";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(ColorRecord.Mask<>);
 
@@ -893,6 +752,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "NAME":
+                    return (ushort)ColorRecord_FieldIndex.Name;
+                case "COLOR":
+                    return (ushort)ColorRecord_FieldIndex.Color;
+                case "PLAYABLE":
+                    return (ushort)ColorRecord_FieldIndex.Playable;
                 default:
                     return null;
             }
@@ -903,6 +768,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ColorRecord_FieldIndex enu = (ColorRecord_FieldIndex)index;
             switch (enu)
             {
+                case ColorRecord_FieldIndex.Name:
+                case ColorRecord_FieldIndex.Color:
+                case ColorRecord_FieldIndex.Playable:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -913,6 +782,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ColorRecord_FieldIndex enu = (ColorRecord_FieldIndex)index;
             switch (enu)
             {
+                case ColorRecord_FieldIndex.Name:
+                case ColorRecord_FieldIndex.Color:
+                case ColorRecord_FieldIndex.Playable:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -923,6 +796,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ColorRecord_FieldIndex enu = (ColorRecord_FieldIndex)index;
             switch (enu)
             {
+                case ColorRecord_FieldIndex.Name:
+                case ColorRecord_FieldIndex.Color:
+                case ColorRecord_FieldIndex.Playable:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -933,6 +810,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ColorRecord_FieldIndex enu = (ColorRecord_FieldIndex)index;
             switch (enu)
             {
+                case ColorRecord_FieldIndex.Name:
+                    return "Name";
+                case ColorRecord_FieldIndex.Color:
+                    return "Color";
+                case ColorRecord_FieldIndex.Playable:
+                    return "Playable";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -943,6 +826,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ColorRecord_FieldIndex enu = (ColorRecord_FieldIndex)index;
             switch (enu)
             {
+                case ColorRecord_FieldIndex.Name:
+                case ColorRecord_FieldIndex.Color:
+                case ColorRecord_FieldIndex.Playable:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -953,6 +840,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ColorRecord_FieldIndex enu = (ColorRecord_FieldIndex)index;
             switch (enu)
             {
+                case ColorRecord_FieldIndex.Name:
+                case ColorRecord_FieldIndex.Color:
+                case ColorRecord_FieldIndex.Playable:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -963,12 +854,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ColorRecord_FieldIndex enu = (ColorRecord_FieldIndex)index;
             switch (enu)
             {
+                case ColorRecord_FieldIndex.Name:
+                    return typeof(TranslatedString);
+                case ColorRecord_FieldIndex.Color:
+                    return typeof(Color);
+                case ColorRecord_FieldIndex.Playable:
+                    return typeof(Boolean);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ColorRecordXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.CLFM;
         public static readonly Type BinaryWriteTranslation = typeof(ColorRecordBinaryWriteTranslation);
         #region Interface
@@ -1012,6 +908,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IColorRecordInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.Color = default;
+            item.Playable = default;
             base.Clear(item);
         }
         
@@ -1024,86 +923,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IColorRecordInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IColorRecordInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IColorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    ColorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (ColorRecord)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (ColorRecord)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1169,6 +988,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
+            ret.Playable = item.Playable == rhs.Playable;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1220,12 +1042,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Color ?? true)
+            {
+                fg.AppendItem(item.Color, "Color");
+            }
+            if (printMask?.Playable ?? true)
+            {
+                fg.AppendItem(item.Playable, "Playable");
+            }
         }
         
         public bool HasBeenSet(
             IColorRecordGetter item,
             ColorRecord.Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1235,6 +1071,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IColorRecordGetter item,
             ColorRecord.Mask<bool> mask)
         {
+            mask.Name = (item.Name != null);
+            mask.Color = true;
+            mask.Playable = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1248,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ColorRecord_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (ColorRecord_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (ColorRecord_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (ColorRecord_FieldIndex)((int)index);
@@ -1269,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ColorRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (ColorRecord_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (ColorRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (ColorRecord_FieldIndex)((int)index);
@@ -1286,6 +1125,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            if (lhs.Playable != rhs.Playable) return false;
             return true;
         }
         
@@ -1310,6 +1152,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IColorRecordGetter item)
         {
             var hash = new HashCode();
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Color);
+            hash.Add(item.Playable);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1386,6 +1234,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Color) ?? true))
+            {
+                item.Color = rhs.Color;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Playable) ?? true))
+            {
+                item.Playable = rhs.Playable;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1508,210 +1368,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class ColorRecordXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static ColorRecordXmlWriteTranslation Instance = new ColorRecordXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IColorRecordGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IColorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ColorRecord");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ColorRecord");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IColorRecordGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IColorRecordGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IColorRecordGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class ColorRecordXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static ColorRecordXmlCreateTranslation Instance = new ColorRecordXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IColorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ColorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IColorRecordInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class ColorRecordXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IColorRecordGetter item,
-            XElement node,
-            out ColorRecord.ErrorMask errorMask,
-            ColorRecord.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ColorRecordXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ColorRecord.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IColorRecordGetter item,
-            string path,
-            out ColorRecord.ErrorMask errorMask,
-            ColorRecord.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IColorRecordGetter item,
-            Stream stream,
-            out ColorRecord.ErrorMask errorMask,
-            ColorRecord.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -1720,6 +1376,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IBinaryWriteTranslator
     {
         public new readonly static ColorRecordBinaryWriteTranslation Instance = new ColorRecordBinaryWriteTranslation();
+
+        public static void WriteRecordTypes(
+            IColorRecordGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Color,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
+            Mutagen.Bethesda.Binary.BooleanBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Playable,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM),
+                byteLength: 4);
+        }
 
         public void Write(
             MutagenWriter writer,
@@ -1734,10 +1416,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                writer.MetaData.FormVersion = item.FormVersion;
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -1790,6 +1474,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IColorRecordInternal item,
+            MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)ColorRecord_FieldIndex.Name;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)ColorRecord_FieldIndex.Color;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Playable = Mutagen.Bethesda.Binary.BooleanBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        byteLength: 4);
+                    return (int)ColorRecord_FieldIndex.Playable;
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1825,21 +1553,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IColorRecordGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ColorRecordXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ColorRecordXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ColorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -1851,6 +1564,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Name
+        private int? _NameLocation;
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        #endregion
+        #region Color
+        private int? _ColorLocation;
+        public Color Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region Playable
+        private int? _PlayableLocation;
+        public Boolean Playable => _PlayableLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PlayableLocation.Value, _package.MetaData.Constants)[0] == 1 : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1876,8 +1601,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new ColorRecordBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1903,6 +1629,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)ColorRecord_FieldIndex.Name;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _ColorLocation = (stream.Position - offset);
+                    return (int)ColorRecord_FieldIndex.Color;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _PlayableLocation = (stream.Position - offset);
+                    return (int)ColorRecord_FieldIndex.Playable;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void ToString(

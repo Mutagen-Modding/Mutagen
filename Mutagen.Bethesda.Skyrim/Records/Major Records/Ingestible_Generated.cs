@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -61,8 +55,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -150,8 +144,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public ExtendedList<Effect> Effects
+        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public IExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -195,135 +189,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => IngestibleXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((IngestibleXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Ingestible CreateFromXml(
-            XElement node,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Ingestible CreateFromXml(
-            XElement node,
-            out Ingestible.ErrorMask errorMask,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Ingestible.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Ingestible CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Ingestible();
-            ((IngestibleSetterCommon)((IIngestibleGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Ingestible CreateFromXml(
-            string path,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Ingestible CreateFromXml(
-            string path,
-            out Ingestible.ErrorMask errorMask,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Ingestible CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Ingestible CreateFromXml(
-            Stream stream,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Ingestible CreateFromXml(
-            Stream stream,
-            out Ingestible.ErrorMask errorMask,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Ingestible CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -357,7 +222,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -382,7 +247,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -1253,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Ingestible_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Ingestible_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => IngestibleCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1364,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new TranslatedString? Description { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
@@ -1378,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLink<SkyrimMajorRecord> Addiction { get; set; }
         new Single AddictionChance { get; set; }
         new FormLink<SoundDescriptor> ConsumeSound { get; set; }
-        new ExtendedList<Effect> Effects { get; }
+        new IExtendedList<Effect> Effects { get; }
         new Ingestible.ENITDataType ENITDataTypeState { get; set; }
         #region Mutagen
         new Ingestible.MajorFlag MajorFlags { get; set; }
@@ -1401,11 +1266,10 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IWeightValueGetter,
         ILoquiObject<IIngestibleGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Ingestible_Registration.Instance;
+        static new ILoquiRegistration Registration => Ingestible_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         TranslatedString? Name { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
@@ -1562,131 +1426,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IIngestibleInternal item,
-            XElement node,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IIngestibleInternal item,
-            XElement node,
-            out Ingestible.ErrorMask errorMask,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Ingestible.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IIngestibleInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((IngestibleSetterCommon)((IIngestibleGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IIngestibleInternal item,
-            string path,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IIngestibleInternal item,
-            string path,
-            out Ingestible.ErrorMask errorMask,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IIngestibleInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IIngestibleInternal item,
-            Stream stream,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IIngestibleInternal item,
-            Stream stream,
-            out Ingestible.ErrorMask errorMask,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IIngestibleInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Ingestible.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1724,7 +1463,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -2039,7 +1778,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ingestible_FieldIndex.Name:
                     return typeof(TranslatedString);
                 case Ingestible_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Ingestible_FieldIndex.Description:
                     return typeof(TranslatedString);
                 case Ingestible_FieldIndex.Model:
@@ -2067,7 +1806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ingestible_FieldIndex.ConsumeSound:
                     return typeof(FormLink<SoundDescriptor>);
                 case Ingestible_FieldIndex.Effects:
-                    return typeof(ExtendedList<Effect>);
+                    return typeof(IExtendedList<Effect>);
                 case Ingestible_FieldIndex.ENITDataTypeState:
                     return typeof(Ingestible.ENITDataType);
                 default:
@@ -2075,7 +1814,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(IngestibleXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.ALCH;
         public static readonly Type BinaryWriteTranslation = typeof(IngestibleBinaryWriteTranslation);
         #region Interface
@@ -2149,86 +1887,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IIngestibleInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IIngestibleInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IIngestibleInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    IngestibleXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Ingestible)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Ingestible)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2552,7 +2210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Ingestible_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Ingestible_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Ingestible_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Ingestible_FieldIndex)((int)index);
@@ -2573,7 +2231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Ingestible_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Ingestible_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Ingestible_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Ingestible_FieldIndex)((int)index);
@@ -3110,763 +2768,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class IngestibleXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static IngestibleXmlWriteTranslation Instance = new IngestibleXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IIngestibleGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.ObjectBounds) ?? true))
-            {
-                var ObjectBoundsItem = item.ObjectBounds;
-                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    node: node,
-                    name: nameof(item.ObjectBounds),
-                    fieldIndex: (int)Ingestible_FieldIndex.ObjectBounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Ingestible_FieldIndex.ObjectBounds));
-            }
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Ingestible_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((item.Keywords != null)
-                && (translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Keywords) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IKeywordGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Keywords),
-                    item: item.Keywords,
-                    fieldIndex: (int)Ingestible_FieldIndex.Keywords,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Ingestible_FieldIndex.Keywords),
-                    transl: (XElement subNode, IFormLink<IKeywordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.Description != null)
-                && (translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Description) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Description),
-                    item: item.Description,
-                    fieldIndex: (int)Ingestible_FieldIndex.Description,
-                    errorMask: errorMask);
-            }
-            if ((item.Model != null)
-                && (translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Model) ?? true))
-            {
-                if (item.Model.TryGet(out var ModelItem))
-                {
-                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                        item: ModelItem,
-                        node: node,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)Ingestible_FieldIndex.Model,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Ingestible_FieldIndex.Model));
-                }
-            }
-            if ((item.Destructible != null)
-                && (translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Destructible) ?? true))
-            {
-                if (item.Destructible.TryGet(out var DestructibleItem))
-                {
-                    ((DestructibleXmlWriteTranslation)((IXmlItem)DestructibleItem).XmlWriteTranslator).Write(
-                        item: DestructibleItem,
-                        node: node,
-                        name: nameof(item.Destructible),
-                        fieldIndex: (int)Ingestible_FieldIndex.Destructible,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Ingestible_FieldIndex.Destructible));
-                }
-            }
-            if ((item.Icons != null)
-                && (translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Icons) ?? true))
-            {
-                if (item.Icons.TryGet(out var IconsItem))
-                {
-                    ((IconsXmlWriteTranslation)((IXmlItem)IconsItem).XmlWriteTranslator).Write(
-                        item: IconsItem,
-                        node: node,
-                        name: nameof(item.Icons),
-                        fieldIndex: (int)Ingestible_FieldIndex.Icons,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Ingestible_FieldIndex.Icons));
-                }
-            }
-            if ((item.PickUpSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.PickUpSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PickUpSound),
-                    item: item.PickUpSound.FormKey,
-                    fieldIndex: (int)Ingestible_FieldIndex.PickUpSound,
-                    errorMask: errorMask);
-            }
-            if ((item.PutDownSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.PutDownSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PutDownSound),
-                    item: item.PutDownSound.FormKey,
-                    fieldIndex: (int)Ingestible_FieldIndex.PutDownSound,
-                    errorMask: errorMask);
-            }
-            if ((item.EquipmentType.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.EquipmentType) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EquipmentType),
-                    item: item.EquipmentType.FormKey,
-                    fieldIndex: (int)Ingestible_FieldIndex.EquipmentType,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Weight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Weight),
-                    item: item.Weight,
-                    fieldIndex: (int)Ingestible_FieldIndex.Weight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Value) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Value),
-                    item: item.Value,
-                    fieldIndex: (int)Ingestible_FieldIndex.Value,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Ingestible.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Ingestible_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Addiction) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Addiction),
-                    item: item.Addiction.FormKey,
-                    fieldIndex: (int)Ingestible_FieldIndex.Addiction,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.AddictionChance) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AddictionChance),
-                    item: item.AddictionChance,
-                    fieldIndex: (int)Ingestible_FieldIndex.AddictionChance,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.ConsumeSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ConsumeSound),
-                    item: item.ConsumeSound.FormKey,
-                    fieldIndex: (int)Ingestible_FieldIndex.ConsumeSound,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Effects) ?? true))
-            {
-                ListXmlTranslation<IEffectGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Effects),
-                    item: item.Effects,
-                    fieldIndex: (int)Ingestible_FieldIndex.Effects,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Ingestible_FieldIndex.Effects),
-                    transl: (XElement subNode, IEffectGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((EffectXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Ingestible_FieldIndex.ENITDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Ingestible.ENITDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ENITDataTypeState),
-                    item: item.ENITDataTypeState,
-                    fieldIndex: (int)Ingestible_FieldIndex.ENITDataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IIngestibleGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Ingestible");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Ingestible");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IIngestibleGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IIngestibleGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IIngestibleGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class IngestibleXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static IngestibleXmlCreateTranslation Instance = new IngestibleXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IIngestibleInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    IngestibleXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IIngestibleInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "ObjectBounds":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.ObjectBounds);
-                    try
-                    {
-                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Ingestible_FieldIndex.ObjectBounds));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Name":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Keywords":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.Keywords);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
-                            node: node,
-                            enumer: out var KeywordsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Keywords = KeywordsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Keywords = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Description":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.Description);
-                    try
-                    {
-                        item.Description = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.Model);
-                    try
-                    {
-                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Ingestible_FieldIndex.Model));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Destructible":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.Destructible);
-                    try
-                    {
-                        item.Destructible = LoquiXmlTranslation<Destructible>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Ingestible_FieldIndex.Destructible));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Icons":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.Icons);
-                    try
-                    {
-                        item.Icons = LoquiXmlTranslation<Icons>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Ingestible_FieldIndex.Icons));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PickUpSound":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.PickUpSound);
-                    try
-                    {
-                        item.PickUpSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PutDownSound":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.PutDownSound);
-                    try
-                    {
-                        item.PutDownSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EquipmentType":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.EquipmentType);
-                    try
-                    {
-                        item.EquipmentType = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weight":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.Weight);
-                    try
-                    {
-                        item.Weight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Value":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.Value);
-                    try
-                    {
-                        item.Value = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Ingestible.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Addiction":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.Addiction);
-                    try
-                    {
-                        item.Addiction = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AddictionChance":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.AddictionChance);
-                    try
-                    {
-                        item.AddictionChance = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ConsumeSound":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.ConsumeSound);
-                    try
-                    {
-                        item.ConsumeSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Effects":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.Effects);
-                    try
-                    {
-                        if (ListXmlTranslation<Effect>.Instance.Parse(
-                            node: node,
-                            enumer: out var EffectsItem,
-                            transl: LoquiXmlTranslation<Effect>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Effects.SetTo(EffectsItem);
-                        }
-                        else
-                        {
-                            item.Effects.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ENITDataTypeState":
-                    errorMask?.PushIndex((int)Ingestible_FieldIndex.ENITDataTypeState);
-                    try
-                    {
-                        item.ENITDataTypeState = EnumXmlTranslation<Ingestible.ENITDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class IngestibleXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IIngestibleGetter item,
-            XElement node,
-            out Ingestible.ErrorMask errorMask,
-            Ingestible.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((IngestibleXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Ingestible.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IIngestibleGetter item,
-            string path,
-            out Ingestible.ErrorMask errorMask,
-            Ingestible.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IIngestibleGetter item,
-            Stream stream,
-            out Ingestible.ErrorMask errorMask,
-            Ingestible.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -4003,10 +2904,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -4059,9 +2962,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IIngestibleInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -4072,7 +2976,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.ObjectBounds);
+                    return (int)Ingestible_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -4081,7 +2985,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Name);
+                    return (int)Ingestible_FieldIndex.Name;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -4093,8 +2997,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Keywords);
+                        .CastExtendedList<IFormLink<Keyword>>();
+                    return (int)Ingestible_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -4103,14 +3007,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Description);
+                    return (int)Ingestible_FieldIndex.Description;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Model);
+                    return (int)Ingestible_FieldIndex.Model;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -4119,14 +3023,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Destructible);
+                    return (int)Ingestible_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.ICON:
                 {
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Icons);
+                    return (int)Ingestible_FieldIndex.Icons;
                 }
                 case RecordTypeInts.YNAM:
                 {
@@ -4134,7 +3038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PickUpSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.PickUpSound);
+                    return (int)Ingestible_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
@@ -4142,7 +3046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PutDownSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.PutDownSound);
+                    return (int)Ingestible_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.ETYP:
                 {
@@ -4150,13 +3054,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EquipmentType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.EquipmentType);
+                    return (int)Ingestible_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Weight);
+                    return (int)Ingestible_FieldIndex.Weight;
                 }
                 case RecordTypeInts.ENIT:
                 {
@@ -4171,7 +3075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ConsumeSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.ConsumeSound);
+                    return (int)Ingestible_FieldIndex.ConsumeSound;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
@@ -4183,12 +3087,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: Effect_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Effect.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Effects);
+                    return (int)Ingestible_FieldIndex.Effects;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -4235,21 +3140,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IngestibleCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IngestibleCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => IngestibleXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((IngestibleXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IngestibleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -4282,21 +3172,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region PickUpSound
         private int? _PickUpSoundLocation;
         public bool PickUpSound_IsSet => _PickUpSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
         public bool PutDownSound_IsSet => _PutDownSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region EquipmentType
         private int? _EquipmentTypeLocation;
         public bool EquipmentType_IsSet => _EquipmentTypeLocation.HasValue;
-        public IFormLinkNullable<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        public IFormLinkNullable<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
         #region Weight
         private int? _WeightLocation;
-        public Single Weight => _WeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _WeightLocation.Value, _package.MetaData.Constants)) : default;
+        public Single Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _WeightLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         private int? _ENITLocation;
         public Ingestible.ENITDataType ENITDataTypeState { get; private set; }
@@ -4318,7 +3208,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AddictionChance
         private int _AddictionChanceLocation => _ENITLocation!.Value + 0xC;
         private bool _AddictionChance_IsSet => _ENITLocation.HasValue;
-        public Single AddictionChance => _AddictionChance_IsSet ? SpanExt.GetFloat(_data.Slice(_AddictionChanceLocation, 4)) : default;
+        public Single AddictionChance => _AddictionChance_IsSet ? _data.Slice(_AddictionChanceLocation, 4).Float() : default;
         #endregion
         #region ConsumeSound
         private int _ConsumeSoundLocation => _ENITLocation!.Value + 0x10;
@@ -4351,8 +3241,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new IngestibleBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -4378,12 +3269,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -4392,17 +3284,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.ObjectBounds);
+                    return (int)Ingestible_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Name);
+                    return (int)Ingestible_FieldIndex.Name;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -4410,12 +3302,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Keywords);
+                    return (int)Ingestible_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Description);
+                    return (int)Ingestible_FieldIndex.Description;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -4423,7 +3315,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Model);
+                    return (int)Ingestible_FieldIndex.Model;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -4433,7 +3325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Destructible);
+                    return (int)Ingestible_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -4441,32 +3333,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Icons);
+                    return (int)Ingestible_FieldIndex.Icons;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     _PickUpSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.PickUpSound);
+                    return (int)Ingestible_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     _PutDownSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.PutDownSound);
+                    return (int)Ingestible_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.ETYP:
                 {
                     _EquipmentTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.EquipmentType);
+                    return (int)Ingestible_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _WeightLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Weight);
+                    return (int)Ingestible_FieldIndex.Weight;
                 }
                 case RecordTypeInts.ENIT:
                 {
                     _ENITLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.ConsumeSound);
+                    return (int)Ingestible_FieldIndex.ConsumeSound;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
@@ -4477,7 +3369,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: Effect_Registration.TriggeringRecordTypes,
                         factory:  EffectBinaryOverlay.EffectFactory);
-                    return TryGet<int?>.Succeed((int)Ingestible_FieldIndex.Effects);
+                    return (int)Ingestible_FieldIndex.Effects;
                 }
                 default:
                     return base.FillRecordType(
@@ -4485,7 +3377,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

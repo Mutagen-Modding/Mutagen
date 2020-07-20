@@ -4,12 +4,12 @@
     <Interface>ITranslatedNamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
-      <String name="Description" recordType="DESC" hasBeenSet="False" />
+      <String name="Description" recordType="DESC" hasBeenSet="False" translated="DL" />
       <List name="ActorEffect" counterRecType="SPCT">
         <FormLink refName="ASpell" recordType="SPLO" />
       </List>
       <FormLink name="Skin" refName="Armor" recordType="WNAM" />
-      <RefDirect name="BodyTemplate" refName="BodyTemplate" />
+      <RefDirect name="BodyTemplate" refName="BodyTemplate" binary="Custom" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
@@ -80,7 +80,6 @@
           </RefDirect>
         </Fields>
       </Gendered>
-      <Nothing name="NAM2Marker" recordType="NAM2" />
       <List name="MovementTypeNames">
         <String recordType="MTNM" binaryType="Plain" />
       </List>
@@ -162,6 +161,8 @@
           <RefDirect refName="HeadData" />
         </Fields>
       </Gendered>
+      <FormLink name="MorphRace" refName="Race" recordType="NAM8" />
+      <FormLink name="ArmorRace" refName="Race" recordType="RNAM" />
     </Fields>
     <LinkInterface>IRelatable</LinkInterface>
   </Object>
@@ -201,7 +202,7 @@
   </Object>
   <Object name="FaceFxPhonemes" objType="Subrecord" GUID="b965bdb9-1d8c-4efe-8cfa-2f35cd13370a" ID="70">
     <Fields>
-      <Bool name="LipMode" binary="NoGeneration" />
+      <Bool name="ForceNames" binary="NoGeneration" />
       <RefDirect name="Aah_LipBigAah" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
       <RefDirect name="BigAah_LipDST" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
       <RefDirect name="BMP_LipEee" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
@@ -222,6 +223,7 @@
   </Object>
   <Object name="Phoneme" objType="Subrecord" GUID="de2d7619-85dc-497e-b8a2-b955f9340a93" ID="71">
     <Fields>
+      <String name="Name" binary="NoGeneration" />
       <Float name="IY" binary="NoGeneration" />
       <Float name="IH" binary="NoGeneration" />
       <Float name="EH" binary="NoGeneration" />
@@ -284,8 +286,6 @@
       <FormLink name="DefaultFaceTexture" refName="TextureSet" recordType="DFTM" />
       <RefList name="TintMasks" refName="TintAssets" />
       <RefDirect name="Model" refName="Model" />
-      <FormLink name="MorphRace" refName="Race" recordType="NAM8" />
-      <FormLink name="ArmorRace" refName="Race" recordType="RNAM" />
     </Fields>
   </Object>
   <Object name="HeadPartReference" objType="Subrecord" GUID="d9a4b8da-2a5b-42d5-9cf6-614b7a13bc26" ID="73">

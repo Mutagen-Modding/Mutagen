@@ -10,14 +10,15 @@ namespace Mutagen.Bethesda.Binary
 {
     public abstract class BinaryOverlay
     {
-        public delegate TryGet<int?> RecordTypeFillWrapper(
+        public delegate ParseResult RecordTypeFillWrapper(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter);
-        public delegate TryGet<int?> ModTypeFillWrapper(
+        public delegate ParseResult ModTypeFillWrapper(
             IBinaryReadStream stream,
             long finalPos,
             int offset,
@@ -42,7 +43,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryOverlayFactoryPackage package)
         {
             int? lastParsed = null;
-            ModHeader headerMeta = package.MetaData.Constants.GetMod(stream);
+            ModHeader headerMeta = stream.GetModHeader(package);
             var minimumFinalPos = checked((int)(stream.Position + headerMeta.TotalLength));
             fill(
                 stream: stream,
@@ -54,7 +55,7 @@ namespace Mutagen.Bethesda.Binary
             stream.Position = (int)headerMeta.TotalLength;
             while (!stream.Complete)
             {
-                GroupHeader groupMeta = package.MetaData.Constants.GetGroup(stream);
+                GroupHeader groupMeta = stream.GetGroup(package);
                 if (!groupMeta.IsGroup)
                 {
                     throw new ArgumentException("Did not see GRUP header as expected.");
@@ -72,12 +73,13 @@ namespace Mutagen.Bethesda.Binary
                     type: groupMeta.ContainedRecordType,
                     lastParsed: lastParsed,
                     recordTypeConverter: null);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
+                if (!parsed.KeepParsing) break;
                 if (minimumFinalPos > stream.Position)
                 {
                     stream.Position = checked((int)minimumFinalPos);
                 }
-                lastParsed = parsed.Value;
+                lastParsed = parsed.ParsedIndex;
             }
         }
 
@@ -89,6 +91,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
+            Dictionary<RecordType, int>? recordParseCount = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
                 MajorRecordHeader majorMeta = stream.GetMajorRecord();
@@ -97,15 +100,24 @@ namespace Mutagen.Bethesda.Binary
                     stream: stream,
                     finalPos: finalPos,
                     offset: offset,
+                    recordParseCount: recordParseCount,
                     type: majorMeta.RecordType,
                     lastParsed: lastParsed,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
+                if (parsed.DuplicateParseMarker != null)
+                {
+                    if (recordParseCount == null)
+                    {
+                        recordParseCount = new Dictionary<RecordType, int>();
+                    }
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                }
                 if (minimumFinalPos > stream.Position)
                 {
                     stream.Position = checked((int)minimumFinalPos);
                 }
-                lastParsed = parsed.Value;
+                lastParsed = parsed.ParsedIndex;
             }
         }
 
@@ -117,6 +129,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
+            Dictionary<RecordType, int>? recordParseCount = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
                 if (!stream.TryGetGroup(out var groupMeta))
@@ -128,12 +141,21 @@ namespace Mutagen.Bethesda.Binary
                     stream: subStream,
                     finalPos: subStream.Length,
                     offset: 0, // unused 
+                    recordParseCount: recordParseCount,
                     type: groupMeta.RecordType,
                     lastParsed: lastParsed,
                     recordTypeConverter: recordTypeConverter);
                 stream.Position += subStream.Position;
-                if (parsed.Failed) break;
-                lastParsed = parsed.Value;
+                if (!parsed.KeepParsing) break;
+                if (parsed.DuplicateParseMarker != null)
+                {
+                    if (recordParseCount == null)
+                    {
+                        recordParseCount = new Dictionary<RecordType, int>();
+                    }
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                }
+                lastParsed = parsed.ParsedIndex;
             }
         }
 
@@ -145,6 +167,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
+            Dictionary<RecordType, int>? recordParseCount = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
                 SubrecordHeader subMeta = stream.GetSubrecord();
@@ -152,16 +175,25 @@ namespace Mutagen.Bethesda.Binary
                 var parsed = fill(
                     stream: stream,
                     finalPos: minimumFinalPos,
+                    recordParseCount: recordParseCount,
                     offset: offset,
                     type: subMeta.RecordType,
                     lastParsed: lastParsed,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
                 if (minimumFinalPos > stream.Position)
                 {
                     stream.Position = minimumFinalPos;
                 }
-                lastParsed = parsed.Value;
+                if (parsed.DuplicateParseMarker != null)
+                {
+                    if (recordParseCount == null)
+                    {
+                        recordParseCount = new Dictionary<RecordType, int>();
+                    }
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                }
+                lastParsed = parsed.ParsedIndex;
             }
         }
 
@@ -173,6 +205,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
+            Dictionary<RecordType, int>? recordParseCount = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
                 SubrecordHeader subMeta = stream.GetSubrecord();
@@ -181,15 +214,24 @@ namespace Mutagen.Bethesda.Binary
                     stream: stream,
                     finalPos: finalPos,
                     offset: offset,
+                    recordParseCount: recordParseCount,
                     type: subMeta.RecordType,
                     lastParsed: lastParsed,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
                 if (minimumFinalPos > stream.Position)
                 {
                     stream.Position = minimumFinalPos;
                 }
-                lastParsed = parsed.Value;
+                if (parsed.DuplicateParseMarker != null)
+                {
+                    if (recordParseCount == null)
+                    {
+                        recordParseCount = new Dictionary<RecordType, int>();
+                    }
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                }
+                lastParsed = parsed.ParsedIndex;
             }
         }
 

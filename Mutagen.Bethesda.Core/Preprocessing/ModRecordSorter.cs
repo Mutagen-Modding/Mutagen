@@ -16,12 +16,12 @@ namespace Mutagen.Bethesda.Preprocessing
         public static void Sort(
             Func<Stream> streamCreator,
             Stream outputStream,
-            GameMode gameMode)
+            GameRelease release)
         {
-            var meta = new ParsingBundle(GameConstants.Get(gameMode));
+            var meta = new ParsingBundle(GameConstants.Get(release));
             using var inputStream = new MutagenBinaryReadStream(streamCreator(), meta);
             using var locatorStream = new MutagenBinaryReadStream(streamCreator(), meta);
-            using var writer = new MutagenWriter(outputStream, gameMode, dispose: false);
+            using var writer = new MutagenWriter(outputStream, release, dispose: false);
             while (!inputStream.Complete)
             {
                 long noRecordLength;
@@ -34,10 +34,6 @@ namespace Mutagen.Bethesda.Preprocessing
                     if (inputStream.Complete) return;
 
                     var groupMeta = inputStream.GetGroup();
-                    if (!groupMeta.IsGroup)
-                    {
-                        throw new ArgumentException();
-                    }
 
                     var storage = new Dictionary<FormID, List<ReadOnlyMemorySlice<byte>>>();
                     using (var grupFrame = new MutagenFrame(inputStream).SpawnWithLength(groupMeta.TotalLength))
@@ -49,8 +45,7 @@ namespace Mutagen.Bethesda.Preprocessing
                             MajorRecordHeader majorMeta = inputStream.GetMajorRecord();
                             storage.TryCreateValue(rec.FormID).Add(inputStream.ReadMemory(checked((int)majorMeta.TotalLength), readSafe: true));
                             if (grupFrame.Complete) continue;
-                            GroupHeader subGroupMeta = inputStream.GetGroup();
-                            if (subGroupMeta.IsGroup)
+                            if (inputStream.TryGetGroup(out var subGroupMeta))
                             {
                                 storage.TryCreateValue(rec.FormID).Add(inputStream.ReadMemory(checked((int)subGroupMeta.TotalLength), readSafe: true));
                             }

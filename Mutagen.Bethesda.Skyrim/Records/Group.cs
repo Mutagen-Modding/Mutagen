@@ -1,13 +1,8 @@
-using Loqui;
-using Loqui.Internal;
-using Loqui.Xml;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -25,7 +20,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     public partial interface IGroupGetter<out T> : IGroupCommon<T>
-        where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+        where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
     }
 
@@ -36,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
                 MutagenWriter writer,
                 IGroupGetter<T> item)
-                where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+                where T : class, ISkyrimMajorRecordGetter, IBinaryItem
             {
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer,

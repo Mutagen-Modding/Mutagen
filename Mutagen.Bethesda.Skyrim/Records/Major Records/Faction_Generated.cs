@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -56,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Relation> _Relations = new ExtendedList<Relation>();
-        public ExtendedList<Relation> Relations
+        private IExtendedList<Relation> _Relations = new ExtendedList<Relation>();
+        public IExtendedList<Relation> Relations
         {
             get => this._Relations;
             protected set => this._Relations = value;
@@ -114,8 +108,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Ranks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
-        public ExtendedList<Rank> Ranks
+        private IExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
+        public IExtendedList<Rank> Ranks
         {
             get => this._Ranks;
             protected set => this._Ranks = value;
@@ -160,8 +154,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition>? _Conditions;
-        public ExtendedList<Condition>? Conditions
+        private IExtendedList<Condition>? _Conditions;
+        public IExtendedList<Condition>? Conditions
         {
             get => this._Conditions;
             set => this._Conditions = value;
@@ -202,135 +196,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => FactionXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((FactionXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Faction CreateFromXml(
-            XElement node,
-            Faction.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Faction CreateFromXml(
-            XElement node,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Faction.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Faction CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Faction();
-            ((FactionSetterCommon)((IFactionGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Faction CreateFromXml(
-            string path,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Faction CreateFromXml(
-            string path,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Faction CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Faction CreateFromXml(
-            Stream stream,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Faction CreateFromXml(
-            Stream stream,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Faction CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -362,7 +227,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -385,7 +250,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -1275,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Faction_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Faction_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1375,7 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFactionInternal>
     {
         new TranslatedString? Name { get; set; }
-        new ExtendedList<Relation> Relations { get; }
+        new IExtendedList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
         new FormLinkNullable<PlacedObject> ExteriorJailMarker { get; set; }
         new FormLinkNullable<PlacedObject> FollowerWaitMarker { get; set; }
@@ -1384,12 +1249,12 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<FormList> SharedCrimeFactionList { get; set; }
         new FormLinkNullable<Outfit> JailOutfit { get; set; }
         new CrimeValues? CrimeValues { get; set; }
-        new ExtendedList<Rank> Ranks { get; }
+        new IExtendedList<Rank> Ranks { get; }
         new FormLinkNullable<FormList> VendorBuySellList { get; set; }
         new FormLinkNullable<PlacedObject> MerchantContainer { get; set; }
         new VendorValues? VendorValues { get; set; }
         new LocationTargetRadius? VendorLocation { get; set; }
-        new ExtendedList<Condition>? Conditions { get; set; }
+        new IExtendedList<Condition>? Conditions { get; set; }
     }
 
     public partial interface IFactionInternal :
@@ -1406,11 +1271,10 @@ namespace Mutagen.Bethesda.Skyrim
         IRelatableGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IFactionGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Faction_Registration.Instance;
+        static new ILoquiRegistration Registration => Faction_Registration.Instance;
         TranslatedString? Name { get; }
         IReadOnlyList<IRelationGetter> Relations { get; }
         Faction.FactionFlag Flags { get; }
@@ -1561,131 +1425,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            XElement node,
-            Faction.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            XElement node,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Faction.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            string path,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            string path,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            Stream stream,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            Stream stream,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFactionInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Faction.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1723,7 +1462,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -2016,7 +1755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.Name:
                     return typeof(TranslatedString);
                 case Faction_FieldIndex.Relations:
-                    return typeof(ExtendedList<Relation>);
+                    return typeof(IExtendedList<Relation>);
                 case Faction_FieldIndex.Flags:
                     return typeof(Faction.FactionFlag);
                 case Faction_FieldIndex.ExteriorJailMarker:
@@ -2034,7 +1773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.CrimeValues:
                     return typeof(CrimeValues);
                 case Faction_FieldIndex.Ranks:
-                    return typeof(ExtendedList<Rank>);
+                    return typeof(IExtendedList<Rank>);
                 case Faction_FieldIndex.VendorBuySellList:
                     return typeof(FormLinkNullable<FormList>);
                 case Faction_FieldIndex.MerchantContainer:
@@ -2044,13 +1783,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.VendorLocation:
                     return typeof(LocationTargetRadius);
                 case Faction_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(FactionXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.FACT;
         public static readonly Type BinaryWriteTranslation = typeof(FactionBinaryWriteTranslation);
         #region Interface
@@ -2122,86 +1860,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IFactionInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IFactionInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IFactionInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    FactionXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Faction)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Faction)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2542,7 +2200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Faction_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Faction_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Faction_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Faction_FieldIndex)((int)index);
@@ -2563,7 +2221,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Faction_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Faction_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Faction_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Faction_FieldIndex)((int)index);
@@ -3119,733 +2777,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class FactionXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static FactionXmlWriteTranslation Instance = new FactionXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IFactionGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Faction_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
-            {
-                ListXmlTranslation<IRelationGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Relations),
-                    item: item.Relations,
-                    fieldIndex: (int)Faction_FieldIndex.Relations,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Relations),
-                    transl: (XElement subNode, IRelationGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((RelationXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Faction.FactionFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Faction_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((item.ExteriorJailMarker.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.ExteriorJailMarker) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ExteriorJailMarker),
-                    item: item.ExteriorJailMarker.FormKey,
-                    fieldIndex: (int)Faction_FieldIndex.ExteriorJailMarker,
-                    errorMask: errorMask);
-            }
-            if ((item.FollowerWaitMarker.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.FollowerWaitMarker) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FollowerWaitMarker),
-                    item: item.FollowerWaitMarker.FormKey,
-                    fieldIndex: (int)Faction_FieldIndex.FollowerWaitMarker,
-                    errorMask: errorMask);
-            }
-            if ((item.StolenGoodsContainer.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.StolenGoodsContainer) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.StolenGoodsContainer),
-                    item: item.StolenGoodsContainer.FormKey,
-                    fieldIndex: (int)Faction_FieldIndex.StolenGoodsContainer,
-                    errorMask: errorMask);
-            }
-            if ((item.PlayerInventoryContainer.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.PlayerInventoryContainer) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PlayerInventoryContainer),
-                    item: item.PlayerInventoryContainer.FormKey,
-                    fieldIndex: (int)Faction_FieldIndex.PlayerInventoryContainer,
-                    errorMask: errorMask);
-            }
-            if ((item.SharedCrimeFactionList.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.SharedCrimeFactionList) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SharedCrimeFactionList),
-                    item: item.SharedCrimeFactionList.FormKey,
-                    fieldIndex: (int)Faction_FieldIndex.SharedCrimeFactionList,
-                    errorMask: errorMask);
-            }
-            if ((item.JailOutfit.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.JailOutfit) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.JailOutfit),
-                    item: item.JailOutfit.FormKey,
-                    fieldIndex: (int)Faction_FieldIndex.JailOutfit,
-                    errorMask: errorMask);
-            }
-            if ((item.CrimeValues != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeValues) ?? true))
-            {
-                if (item.CrimeValues.TryGet(out var CrimeValuesItem))
-                {
-                    ((CrimeValuesXmlWriteTranslation)((IXmlItem)CrimeValuesItem).XmlWriteTranslator).Write(
-                        item: CrimeValuesItem,
-                        node: node,
-                        name: nameof(item.CrimeValues),
-                        fieldIndex: (int)Faction_FieldIndex.CrimeValues,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.CrimeValues));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
-            {
-                ListXmlTranslation<IRankGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Ranks),
-                    item: item.Ranks,
-                    fieldIndex: (int)Faction_FieldIndex.Ranks,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Ranks),
-                    transl: (XElement subNode, IRankGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((RankXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.VendorBuySellList.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VendorBuySellList),
-                    item: item.VendorBuySellList.FormKey,
-                    fieldIndex: (int)Faction_FieldIndex.VendorBuySellList,
-                    errorMask: errorMask);
-            }
-            if ((item.MerchantContainer.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.MerchantContainer) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MerchantContainer),
-                    item: item.MerchantContainer.FormKey,
-                    fieldIndex: (int)Faction_FieldIndex.MerchantContainer,
-                    errorMask: errorMask);
-            }
-            if ((item.VendorValues != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
-            {
-                if (item.VendorValues.TryGet(out var VendorValuesItem))
-                {
-                    ((VendorValuesXmlWriteTranslation)((IXmlItem)VendorValuesItem).XmlWriteTranslator).Write(
-                        item: VendorValuesItem,
-                        node: node,
-                        name: nameof(item.VendorValues),
-                        fieldIndex: (int)Faction_FieldIndex.VendorValues,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.VendorValues));
-                }
-            }
-            if ((item.VendorLocation != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorLocation) ?? true))
-            {
-                if (item.VendorLocation.TryGet(out var VendorLocationItem))
-                {
-                    ((LocationTargetRadiusXmlWriteTranslation)((IXmlItem)VendorLocationItem).XmlWriteTranslator).Write(
-                        item: VendorLocationItem,
-                        node: node,
-                        name: nameof(item.VendorLocation),
-                        fieldIndex: (int)Faction_FieldIndex.VendorLocation,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.VendorLocation));
-                }
-            }
-            if ((item.Conditions != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Conditions) ?? true))
-            {
-                ListXmlTranslation<IConditionGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Conditions),
-                    item: item.Conditions,
-                    fieldIndex: (int)Faction_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.Conditions),
-                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IFactionGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Faction");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Faction");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IFactionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IFactionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IFactionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class FactionXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static FactionXmlCreateTranslation Instance = new FactionXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IFactionInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FactionXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IFactionInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Name":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Relations":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.Relations);
-                    try
-                    {
-                        if (ListXmlTranslation<Relation>.Instance.Parse(
-                            node: node,
-                            enumer: out var RelationsItem,
-                            transl: LoquiXmlTranslation<Relation>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Relations.SetTo(RelationsItem);
-                        }
-                        else
-                        {
-                            item.Relations.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Faction.FactionFlag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ExteriorJailMarker":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.ExteriorJailMarker);
-                    try
-                    {
-                        item.ExteriorJailMarker = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FollowerWaitMarker":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.FollowerWaitMarker);
-                    try
-                    {
-                        item.FollowerWaitMarker = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "StolenGoodsContainer":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.StolenGoodsContainer);
-                    try
-                    {
-                        item.StolenGoodsContainer = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PlayerInventoryContainer":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.PlayerInventoryContainer);
-                    try
-                    {
-                        item.PlayerInventoryContainer = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SharedCrimeFactionList":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.SharedCrimeFactionList);
-                    try
-                    {
-                        item.SharedCrimeFactionList = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "JailOutfit":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.JailOutfit);
-                    try
-                    {
-                        item.JailOutfit = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CrimeValues":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.CrimeValues);
-                    try
-                    {
-                        item.CrimeValues = LoquiXmlTranslation<CrimeValues>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.CrimeValues));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Ranks":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.Ranks);
-                    try
-                    {
-                        if (ListXmlTranslation<Rank>.Instance.Parse(
-                            node: node,
-                            enumer: out var RanksItem,
-                            transl: LoquiXmlTranslation<Rank>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Ranks.SetTo(RanksItem);
-                        }
-                        else
-                        {
-                            item.Ranks.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VendorBuySellList":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.VendorBuySellList);
-                    try
-                    {
-                        item.VendorBuySellList = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MerchantContainer":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.MerchantContainer);
-                    try
-                    {
-                        item.MerchantContainer = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VendorValues":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.VendorValues);
-                    try
-                    {
-                        item.VendorValues = LoquiXmlTranslation<VendorValues>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.VendorValues));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VendorLocation":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.VendorLocation);
-                    try
-                    {
-                        item.VendorLocation = LoquiXmlTranslation<LocationTargetRadius>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.VendorLocation));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conditions":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.Conditions);
-                    try
-                    {
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions = ConditionsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Conditions = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class FactionXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IFactionGetter item,
-            XElement node,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((FactionXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Faction.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IFactionGetter item,
-            string path,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IFactionGetter item,
-            Stream stream,
-            out Faction.ErrorMask errorMask,
-            Faction.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3984,10 +2915,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -4040,9 +2973,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IFactionInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -4057,7 +2991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
+                    return (int)Faction_FieldIndex.Name;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -4067,13 +3001,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.XNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: Relation.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
+                    return (int)Faction_FieldIndex.Relations;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
+                    return (int)Faction_FieldIndex.Flags;
                 }
                 case RecordTypeInts.JAIL:
                 {
@@ -4081,7 +3015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ExteriorJailMarker = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.ExteriorJailMarker);
+                    return (int)Faction_FieldIndex.ExteriorJailMarker;
                 }
                 case RecordTypeInts.WAIT:
                 {
@@ -4089,7 +3023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FollowerWaitMarker = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.FollowerWaitMarker);
+                    return (int)Faction_FieldIndex.FollowerWaitMarker;
                 }
                 case RecordTypeInts.STOL:
                 {
@@ -4097,7 +3031,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.StolenGoodsContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.StolenGoodsContainer);
+                    return (int)Faction_FieldIndex.StolenGoodsContainer;
                 }
                 case RecordTypeInts.PLCN:
                 {
@@ -4105,7 +3039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PlayerInventoryContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.PlayerInventoryContainer);
+                    return (int)Faction_FieldIndex.PlayerInventoryContainer;
                 }
                 case RecordTypeInts.CRGR:
                 {
@@ -4113,7 +3047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SharedCrimeFactionList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.SharedCrimeFactionList);
+                    return (int)Faction_FieldIndex.SharedCrimeFactionList;
                 }
                 case RecordTypeInts.JOUT:
                 {
@@ -4121,12 +3055,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.JailOutfit = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.JailOutfit);
+                    return (int)Faction_FieldIndex.JailOutfit;
                 }
                 case RecordTypeInts.CRVA:
                 {
                     item.CrimeValues = Mutagen.Bethesda.Skyrim.CrimeValues.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeValues);
+                    return (int)Faction_FieldIndex.CrimeValues;
                 }
                 case RecordTypeInts.RNAM:
                 case RecordTypeInts.MNAM:
@@ -4139,7 +3073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: Rank_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Rank.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
+                    return (int)Faction_FieldIndex.Ranks;
                 }
                 case RecordTypeInts.VEND:
                 {
@@ -4147,7 +3081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.VendorBuySellList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorBuySellList);
+                    return (int)Faction_FieldIndex.VendorBuySellList;
                 }
                 case RecordTypeInts.VENC:
                 {
@@ -4155,18 +3089,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MerchantContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.MerchantContainer);
+                    return (int)Faction_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.VENV:
                 {
                     item.VendorValues = Mutagen.Bethesda.Skyrim.VendorValues.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorValues);
+                    return (int)Faction_FieldIndex.VendorValues;
                 }
                 case RecordTypeInts.PLVD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.VendorLocation = Mutagen.Bethesda.Skyrim.LocationTargetRadius.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorLocation);
+                    return (int)Faction_FieldIndex.VendorLocation;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -4174,12 +3108,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     FactionBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Conditions);
+                    return (int)Faction_FieldIndex.Conditions;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -4230,21 +3165,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => FactionXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((FactionXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -4263,37 +3183,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IRelationGetter> Relations { get; private set; } = ListExt.Empty<RelationBinaryOverlay>();
         #region Flags
         private int? _FlagsLocation;
-        public Faction.FactionFlag Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Faction.FactionFlag);
+        public Faction.FactionFlag Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Faction.FactionFlag);
         #endregion
         #region ExteriorJailMarker
         private int? _ExteriorJailMarkerLocation;
         public bool ExteriorJailMarker_IsSet => _ExteriorJailMarkerLocation.HasValue;
-        public IFormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker => _ExteriorJailMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ExteriorJailMarkerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker => _ExteriorJailMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ExteriorJailMarkerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region FollowerWaitMarker
         private int? _FollowerWaitMarkerLocation;
         public bool FollowerWaitMarker_IsSet => _FollowerWaitMarkerLocation.HasValue;
-        public IFormLinkNullable<IPlacedObjectGetter> FollowerWaitMarker => _FollowerWaitMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FollowerWaitMarkerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullable<IPlacedObjectGetter> FollowerWaitMarker => _FollowerWaitMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FollowerWaitMarkerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region StolenGoodsContainer
         private int? _StolenGoodsContainerLocation;
         public bool StolenGoodsContainer_IsSet => _StolenGoodsContainerLocation.HasValue;
-        public IFormLinkNullable<IPlacedObjectGetter> StolenGoodsContainer => _StolenGoodsContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _StolenGoodsContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullable<IPlacedObjectGetter> StolenGoodsContainer => _StolenGoodsContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StolenGoodsContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region PlayerInventoryContainer
         private int? _PlayerInventoryContainerLocation;
         public bool PlayerInventoryContainer_IsSet => _PlayerInventoryContainerLocation.HasValue;
-        public IFormLinkNullable<IPlacedObjectGetter> PlayerInventoryContainer => _PlayerInventoryContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PlayerInventoryContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullable<IPlacedObjectGetter> PlayerInventoryContainer => _PlayerInventoryContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PlayerInventoryContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region SharedCrimeFactionList
         private int? _SharedCrimeFactionListLocation;
         public bool SharedCrimeFactionList_IsSet => _SharedCrimeFactionListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> SharedCrimeFactionList => _SharedCrimeFactionListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SharedCrimeFactionListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullable<IFormListGetter> SharedCrimeFactionList => _SharedCrimeFactionListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SharedCrimeFactionListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region JailOutfit
         private int? _JailOutfitLocation;
         public bool JailOutfit_IsSet => _JailOutfitLocation.HasValue;
-        public IFormLinkNullable<IOutfitGetter> JailOutfit => _JailOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _JailOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
+        public IFormLinkNullable<IOutfitGetter> JailOutfit => _JailOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _JailOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
         #endregion
         #region CrimeValues
         private RangeInt32? _CrimeValuesLocation;
@@ -4304,12 +3224,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VendorBuySellList
         private int? _VendorBuySellListLocation;
         public bool VendorBuySellList_IsSet => _VendorBuySellListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> VendorBuySellList => _VendorBuySellListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VendorBuySellListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullable<IFormListGetter> VendorBuySellList => _VendorBuySellListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VendorBuySellListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region MerchantContainer
         private int? _MerchantContainerLocation;
         public bool MerchantContainer_IsSet => _MerchantContainerLocation.HasValue;
-        public IFormLinkNullable<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MerchantContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullable<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MerchantContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region VendorValues
         private RangeInt32? _VendorValuesLocation;
@@ -4350,8 +3270,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new FactionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -4377,12 +3298,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -4391,11 +3313,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
+                    return (int)Faction_FieldIndex.Name;
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    this.Relations = BinaryOverlayList<RelationBinaryOverlay>.FactoryByArray(
+                    this.Relations = BinaryOverlayList.FactoryByArray<RelationBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -4405,47 +3327,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
+                    return (int)Faction_FieldIndex.Relations;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
+                    return (int)Faction_FieldIndex.Flags;
                 }
                 case RecordTypeInts.JAIL:
                 {
                     _ExteriorJailMarkerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.ExteriorJailMarker);
+                    return (int)Faction_FieldIndex.ExteriorJailMarker;
                 }
                 case RecordTypeInts.WAIT:
                 {
                     _FollowerWaitMarkerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.FollowerWaitMarker);
+                    return (int)Faction_FieldIndex.FollowerWaitMarker;
                 }
                 case RecordTypeInts.STOL:
                 {
                     _StolenGoodsContainerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.StolenGoodsContainer);
+                    return (int)Faction_FieldIndex.StolenGoodsContainer;
                 }
                 case RecordTypeInts.PLCN:
                 {
                     _PlayerInventoryContainerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.PlayerInventoryContainer);
+                    return (int)Faction_FieldIndex.PlayerInventoryContainer;
                 }
                 case RecordTypeInts.CRGR:
                 {
                     _SharedCrimeFactionListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.SharedCrimeFactionList);
+                    return (int)Faction_FieldIndex.SharedCrimeFactionList;
                 }
                 case RecordTypeInts.JOUT:
                 {
                     _JailOutfitLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.JailOutfit);
+                    return (int)Faction_FieldIndex.JailOutfit;
                 }
                 case RecordTypeInts.CRVA:
                 {
                     _CrimeValuesLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeValues);
+                    return (int)Faction_FieldIndex.CrimeValues;
                 }
                 case RecordTypeInts.RNAM:
                 case RecordTypeInts.MNAM:
@@ -4457,22 +3379,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: Rank_Registration.TriggeringRecordTypes,
                         factory:  RankBinaryOverlay.RankFactory);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
+                    return (int)Faction_FieldIndex.Ranks;
                 }
                 case RecordTypeInts.VEND:
                 {
                     _VendorBuySellListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorBuySellList);
+                    return (int)Faction_FieldIndex.VendorBuySellList;
                 }
                 case RecordTypeInts.VENC:
                 {
                     _MerchantContainerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.MerchantContainer);
+                    return (int)Faction_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.VENV:
                 {
                     _VendorValuesLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorValues);
+                    return (int)Faction_FieldIndex.VendorValues;
                 }
                 case RecordTypeInts.PLVD:
                 {
@@ -4481,7 +3403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorLocation);
+                    return (int)Faction_FieldIndex.VendorLocation;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -4492,7 +3414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Conditions);
+                    return (int)Faction_FieldIndex.Conditions;
                 }
                 default:
                     return base.FillRecordType(
@@ -4500,7 +3422,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

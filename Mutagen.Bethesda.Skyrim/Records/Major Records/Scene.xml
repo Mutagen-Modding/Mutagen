@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Scene" recordType="SCEN" objType="Record" baseClass="SkyrimMajorRecord" GUID="1b4d8bf2-2bfe-484e-9447-4dda9d66a0f1" ID="464">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="SceneAdapter" recordType="VMAD" />
+      <Enum name="Flags" enumName="Scene.Flag" byteLength="4" recordType="FNAM" />
+      <RefList name="Phases" refName="ScenePhase" />
+      <RefList name="Actors" refName="SceneActor" />
+      <RefList name="Actions" refName="SceneAction" />
+      <RefDirect name="Unused" refName="ScenePhaseUnusedData" />
+      <RefDirect name="Unused2" refName="ScenePhaseUnusedData" markerType="NEXT" />
+      <FormLink name="Quest" refName="Quest" recordType="PNAM" />
+      <UInt32 name="LastActionIndex" recordType="INAM" />
+      <ByteArray name="VNAM" recordType="VNAM" />
+      <RefList name="Conditions" refName="Condition" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="SceneAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="a0b825f4-0bce-4fbd-8655-db9ba9e77e0e" ID="465">
+    <Fields>
+      <RefDirect name="ScriptFragments" refName="SceneScriptFragments" binary="Custom" hasBeenSet="True" />
+    </Fields>
+  </Object>
+  <Object name="SceneScriptFragments" baseClass="ScriptFragments" objType="Subrecord" GUID="17cf35cc-e0fd-4a46-ae82-c3f779d2fdcd" ID="466">
+    <Fields>
+      <RefList name="PhaseFragments" refName="ScenePhaseFragment" counterLength="2" />
+    </Fields>
+  </Object>
+  <Object name="ScenePhaseFragment" objType="Subrecord" GUID="85dc02e5-bd8b-4912-bf75-efda4c03ab35" ID="467">
+    <Fields>
+      <Enum name="Flags" enumName="ScenePhaseFragment.Flag" byteLength="1" />
+      <UInt8 name="Index" />
+      <UInt32 name="Unknown" />
+      <String name="ScriptName" binaryType="PrependLengthUShort" />
+      <String name="FragmentName" binaryType="PrependLengthUShort" />
+    </Fields>
+  </Object>
+  <Object name="ScenePhase" objType="Subrecord" GUID="0520e1b4-d605-4812-8177-c80e8d49733d" ID="468" >
+    <Fields>
+      <Marker name="StartMarker" recordType="HNAM" hasBeenSet="False" />
+      <String name="Name" recordType="NAM0" />
+      <RefList name="StartConditions" refName="Condition" binary="Custom" />
+      <RefList name="CompletionConditions" refName="Condition" binary="Custom" markerType="NEXT" />
+      <RefDirect name="Unused" refName="ScenePhaseUnusedData" />
+      <RefDirect name="Unused2" refName="ScenePhaseUnusedData" markerType="NEXT" />
+      <UInt32 name="EditorWidth" recordType="WNAM" />
+      <Marker name="EndMarker" recordType="HNAM" />
+    </Fields>
+  </Object>
+  <Object name="ScenePhaseUnusedData" objType="Subrecord" GUID="51d4b3f1-35b7-4c35-9ec4-e5ffcf4c6bb5" ID="469">
+    <Fields>
+      <ByteArray name="SCHR" recordType="SCHR" />
+      <ByteArray name="SCDA" recordType="SCDA" />
+      <ByteArray name="SCTX" recordType="SCTX" />
+      <ByteArray name="QNAM" recordType="QNAM" />
+      <ByteArray name="SCRO" recordType="SCRO" />
+    </Fields>
+  </Object>
+  <Object name="SceneActor" objType="Subrecord" GUID="5663098c-807a-46e0-ae5d-d4b95dba4ba8" ID="470">
+    <Fields>
+      <UInt32 name="ID" recordType="ALID" hasBeenSet="False" />
+      <Enum name="Flags" enumName="SceneActor.Flag" recordType="LNAM" byteLength="4" />
+      <Enum name="BehaviorFlags" enumName="SceneActor.BehaviorFlag" recordType="DNAM" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="SceneAction" objType="Subrecord" GUID="3f2b0ff3-2e6d-4fce-958e-40dffd9c696d" ID="471">
+    <Fields>
+      <Enum name="Type" enumName="SceneAction.TypeEnum" byteLength="2" recordType="ANAM" hasBeenSet="False" />
+      <String name="Name" recordType="NAM0" />
+      <Int32 name="ActorID" recordType="ALID" />
+      <ByteArray name="LNAM" recordType="LNAM" />
+      <UInt32 name="Index" recordType="INAM" />
+      <Enum name="Flags" enumName="SceneAction.Flag" byteLength="4" recordType="FNAM" />
+      <UInt32 name="StartPhase" recordType="SNAM" />
+      <UInt32 name="EndPhase" recordType="ENAM" />
+      <Float name="TimerSeconds" recordType="SNAM" />
+      <List name="Packages">
+        <FormLink refName="Package" recordType="PNAM" />
+      </List>
+      <FormLink name="Topic" recordType="DATA" refName="DialogTopic" />
+      <Int32 name="HeadtrackActorID" recordType="HTID" />
+      <Float name="LoopingMax" recordType="DMAX" />
+      <Float name="LoopingMin" recordType="DMIN" />
+      <Enum name="Emotion" enumName="Emotion" byteLength="4" recordType="DEMO" />
+      <UInt32 name="EmotionValue" recordType="DEVA" />
+      <RefDirect name="Unused" refName="ScenePhaseUnusedData" />
+      <Marker name="EndMarker" recordType="ANAM" />
+    </Fields>
+  </Object>
+</Loqui>

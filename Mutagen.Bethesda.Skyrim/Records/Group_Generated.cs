@@ -15,14 +15,8 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -37,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<Group<T>>,
         IEquatable<Group<T>>,
         IEqualsMask
-        where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
+        where T : class, ISkyrimMajorRecordInternal, IBinaryItem
     {
         #region Ctor
         protected Group()
@@ -100,150 +94,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => GroupXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((GroupXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static Group<T> CreateFromXml<T_TranslMask>(
-            XElement node,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
-            XElement node,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Group.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static Group<T> CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Group<T>();
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Group<T> CreateFromXml<T_TranslMask>(
-            string path,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
-            string path,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Group<T> CreateFromXml<T_TranslMask>(
-            Stream stream,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
-            Stream stream,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -339,7 +189,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<T>,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IGroup<T>>
-        where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
+        where T : class, ISkyrimMajorRecordInternal, IBinaryItem
     {
         new GroupTypeEnum Type { get; set; }
         new Int32 LastModified { get; set; }
@@ -351,10 +201,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IGroupGetter<T>>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
-        where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+        where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -376,7 +225,7 @@ namespace Mutagen.Bethesda.Skyrim
     public static partial class GroupMixIn
     {
         public static void Clear<T>(this IGroup<T> item)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
             ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()!).Clear(item: item);
         }
@@ -385,7 +234,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGroupGetter<T> item,
             IGroupGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()!).GetEqualsMask(
                 item: item,
@@ -397,7 +246,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGroupGetter<T> item,
             string? name = null,
             Group.Mask<bool>? printMask = null)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()!).ToString(
                 item: item,
@@ -410,7 +259,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null,
             Group.Mask<bool>? printMask = null)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()!).ToString(
                 item: item,
@@ -422,7 +271,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool HasBeenSet<T>(
             this IGroupGetter<T> item,
             Group.Mask<bool?> checkMask)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()!).HasBeenSet(
                 item: item,
@@ -430,7 +279,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static Group.Mask<bool> GetHasBeenSetMask<T>(this IGroupGetter<T> item)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             var ret = new Group.Mask<bool>(false);
             ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()!).FillHasBeenSetMask(
@@ -442,7 +291,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool Equals<T>(
             this IGroupGetter<T> item,
             IGroupGetter<T> rhs)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()!).Equals(
                 lhs: item,
@@ -452,8 +301,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyIn<T, TGetter>(
             this IGroup<T> lhs,
             IGroupGetter<TGetter> rhs)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
@@ -466,8 +315,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IGroup<T> lhs,
             IGroupGetter<TGetter> rhs,
             Group.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
         {
             ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
@@ -482,8 +331,8 @@ namespace Mutagen.Bethesda.Skyrim
             IGroupGetter<TGetter> rhs,
             out Group.ErrorMask<T_ErrMask> errorMask,
             Group.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
         {
@@ -501,8 +350,8 @@ namespace Mutagen.Bethesda.Skyrim
             IGroupGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
@@ -514,8 +363,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static Group<T> DeepCopy<T, TGetter, T_TranslMask>(
             this IGroupGetter<TGetter> item,
             Group.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
         {
             return ((GroupSetterTranslationCommon)((IGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_TranslMask>(
@@ -527,8 +376,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IGroupGetter<TGetter> item,
             out Group.ErrorMask<T_ErrMask> errorMask,
             Group.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
         {
@@ -542,8 +391,8 @@ namespace Mutagen.Bethesda.Skyrim
             this IGroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             return ((GroupSetterTranslationCommon)((IGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter>(
                 item: item,
@@ -551,164 +400,17 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml<T, T_TranslMask>(
-            this IGroup<T> item,
-            XElement node,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : SkyrimMajorRecord, IXmlItem, IBinaryItem
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
-            this IGroup<T> item,
-            XElement node,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : SkyrimMajorRecord, IXmlItem, IBinaryItem
-            where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Group.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml<T>(
-            this IGroup<T> item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
-        {
-            ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml<T, T_TranslMask>(
-            this IGroup<T> item,
-            string path,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : SkyrimMajorRecord, IXmlItem, IBinaryItem
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
-            this IGroup<T> item,
-            string path,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : SkyrimMajorRecord, IXmlItem, IBinaryItem
-            where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
-            this IGroup<T> item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : SkyrimMajorRecord, IXmlItem, IBinaryItem
-            where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml<T, T_TranslMask>(
-            this IGroup<T> item,
-            Stream stream,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : SkyrimMajorRecord, IXmlItem, IBinaryItem
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
-            this IGroup<T> item,
-            Stream stream,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : SkyrimMajorRecord, IXmlItem, IBinaryItem
-            where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
-            this IGroup<T> item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : SkyrimMajorRecord, IXmlItem, IBinaryItem
-            where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Mutagen
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords<T>(this IGroupGetter<T> obj)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IGroupGetter<T> obj)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
             where TMajor : class, IMajorRecordCommonGetter
         {
             return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance()!).EnumerateMajorRecords(
@@ -723,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGroupGetter<T> obj,
             Type type,
             bool throwIfUnknown = true)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -734,14 +436,14 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords<T>(this IGroup<T> obj)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
             return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IGroup<T> obj)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem
             where TMajor : class, IMajorRecordCommon
         {
             return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance()!).EnumerateMajorRecords(
@@ -756,7 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGroup<T> obj,
             Type type,
             bool throwIfUnknown = true)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
             return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -772,7 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary<T>(
             this IGroup<T> item,
             MutagenFrame frame)
-            where T : SkyrimMajorRecord, IXmlItem, IBinaryItem
+            where T : SkyrimMajorRecord, IBinaryItem
         {
             CopyInFromBinary(
                 item: item,
@@ -784,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGroup<T> item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
             ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -965,7 +667,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index) => throw new ArgumentException("Cannot get nth type for a generic object here.  Use generic registration instead.");
 
-        public static readonly Type XmlWriteTranslation = typeof(GroupXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
         public static readonly Type BinaryWriteTranslation = typeof(GroupBinaryWriteTranslation);
         #region Interface
@@ -999,7 +700,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
 
     public class Group_Registration<T> : Group_Registration
-        where T : SkyrimMajorRecord, IXmlItem, IBinaryItem
+        where T : SkyrimMajorRecord, IBinaryItem
     {
         public static readonly Group_Registration<T> GenericInstance = new Group_Registration<T>();
 
@@ -1026,7 +727,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     #region Common
     public partial class GroupSetterCommon<T>
-        where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
+        where T : class, ISkyrimMajorRecordInternal, IBinaryItem
     {
         public static readonly GroupSetterCommon<T> Instance = new GroupSetterCommon<T>();
 
@@ -1040,34 +741,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = default;
             item.RecordCache.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IGroup<T> item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    GroupXmlCreateTranslation<T>.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IGroup<T> obj)
@@ -1109,7 +782,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
     }
     public partial class GroupCommon<T>
-        where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+        where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
         public static readonly GroupCommon<T> Instance = new GroupCommon<T>();
 
@@ -1265,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         
         public object GetNew<T_Setter>()
-            where T_Setter : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
+            where T_Setter : class, ISkyrimMajorRecordInternal, IBinaryItem
         {
             return Group<T_Setter>.GetNew();
         }
@@ -1341,8 +1014,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGroupGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.Type) ?? true))
             {
@@ -1385,8 +1058,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Group<T> DeepCopy<T, TGetter, T_TranslMask>(
             IGroupGetter<TGetter> item,
             Group.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
         {
             Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
@@ -1400,8 +1073,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGroupGetter<TGetter> item,
             out Group.ErrorMask<T_ErrMask> errorMask,
             Group.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
         {
@@ -1417,8 +1090,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
-            where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordInternal, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
             ret.DeepCopyIn<T, TGetter>(
@@ -1463,431 +1136,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class GroupXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static GroupXmlWriteTranslation Instance = new GroupXmlWriteTranslation();
-
-        public static void WriteToNodeXml<T>(
-            IGroupGetter<T> item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
-        {
-            if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.Type) ?? true))
-            {
-                EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)Group_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.LastModified) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LastModified),
-                    item: item.LastModified,
-                    fieldIndex: (int)Group_FieldIndex.LastModified,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.Unknown) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)Group_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.RecordCache) ?? true))
-            {
-                errorMask?.PushIndex((int)Group_FieldIndex.RecordCache);
-                try
-                {
-                    KeyedDictXmlTranslation<FormKey, T>.Instance.Write(
-                        node: node,
-                        name: nameof(item.RecordCache),
-                        items: item.RecordCache.Items,
-                        translationMask: translationMask,
-                        errorMask: errorMask,
-                        valTransl: (XElement subNode, T subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictTranslMask) =>
-                        {
-                            if (subItem.TryGet(out var Item))
-                            {
-                                ((SkyrimMajorRecordXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                                    item: Item,
-                                    node: subNode,
-                                    name: null,
-                                    errorMask: dictSubMask,
-                                    translationMask: dictTranslMask);
-                            }
-                        });
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-        }
-
-        public void Write<T>(
-            XElement node,
-            IGroupGetter<T> item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Group");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Group");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Write<T>(
-            XElement node,
-            IGroupGetter<T> item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IGroupGetter<T>)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class GroupXmlCreateTranslation<T>
-        where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
-    {
-        public readonly static GroupXmlCreateTranslation<T> Instance = new GroupXmlCreateTranslation<T>();
-
-        public static void FillPublicXml(
-            IGroup<T> item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    GroupXmlCreateTranslation<T>.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IGroup<T> item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Type":
-                    errorMask?.PushIndex((int)Group_FieldIndex.Type);
-                    try
-                    {
-                        item.Type = EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LastModified":
-                    errorMask?.PushIndex((int)Group_FieldIndex.LastModified);
-                    try
-                    {
-                        item.LastModified = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)Group_FieldIndex.Unknown);
-                    try
-                    {
-                        item.Unknown = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RecordCache":
-                    KeyedDictXmlTranslation<FormKey, T>.Instance.ParseInto(
-                        node: node,
-                        item: item.RecordCache,
-                        fieldIndex: (int)Group_FieldIndex.RecordCache,
-                        errorMask: errorMask,
-                        translationMask: translationMask,
-                        valTransl: LoquiXmlTranslation<T>.Instance.Parse);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class GroupXmlTranslationMixIn
-    {
-        public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IGroupGetter<T> item,
-            XElement node,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? translationMask = null,
-            string? name = null)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Group.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IGroupGetter<T> item,
-            string path,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? translationMask = null,
-            string? name = null)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml<T>(
-            this IGroupGetter<T> item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
-        {
-            var node = new XElement("topnode");
-            WriteToXml<T>(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IGroupGetter<T> item,
-            Stream stream,
-            out Group.ErrorMask<T_ErrMask> errorMask,
-            Group.TranslationMask<T_TranslMask>? translationMask = null,
-            string? name = null)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml<T>(
-            this IGroupGetter<T> item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
-        {
-            var node = new XElement("topnode");
-            WriteToXml<T>(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml<T>(
-            this IGroupGetter<T> item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
-        {
-            ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IGroupGetter<T> item,
-            XElement node,
-            string? name = null,
-            Group.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml<T, T_TranslMask>(
-            this IGroupGetter<T> item,
-            string path,
-            string? name = null)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = new XElement("topnode");
-            ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml<T, T_TranslMask>(
-            this IGroupGetter<T> item,
-            Stream stream,
-            string? name = null)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
-            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
-        {
-            var node = new XElement("topnode");
-            ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -1898,12 +1146,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
             MutagenWriter writer,
             IGroupGetter<T> item)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem;
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem;
 
         public static void WriteBinaryContainedRecordTypeParse<T>(
             MutagenWriter writer,
             IGroupGetter<T> item)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             WriteBinaryContainedRecordTypeParseCustom(
                 writer: writer,
@@ -1913,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteEmbedded<T>(
             IGroupGetter<T> item,
             MutagenWriter writer)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             GroupBinaryWriteTranslation.WriteBinaryContainedRecordTypeParse(
                 writer: writer,
@@ -1930,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGroupGetter<T> item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
@@ -1950,7 +1198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IGroupGetter<T> item,
             RecordTypeConverter? recordTypeConverter = null)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             using (HeaderExport.Header(
                 writer: writer,
@@ -1978,7 +1226,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
 
     public partial class GroupBinaryCreateTranslation<T>
-        where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
+        where T : class, ISkyrimMajorRecordInternal, IBinaryItem
     {
         public readonly static GroupBinaryCreateTranslation<T> Instance = new GroupBinaryCreateTranslation<T>();
 
@@ -1994,9 +1242,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = frame.ReadInt32();
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IGroup<T> item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2012,10 +1261,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: Group<T>.T_RecordType,
                             item: item.RecordCache,
                             transl: LoquiBinaryTranslation<T>.Instance.Parse);
-                        return TryGet<int?>.Failure;
+                        return ParseResult.Stop;
                     }
                     frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
 
@@ -2034,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary<T, T_ErrMask>(
             this IGroupGetter<T> item,
             MutagenWriter writer)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
         {
             ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
@@ -2053,7 +1302,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class GroupBinaryOverlay<T> :
         BinaryOverlay,
         IGroupGetter<T>
-        where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+        where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2088,23 +1337,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => GroupXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((GroupXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => GroupBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2151,7 +1383,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new GroupBinaryOverlay<T>(
                 bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Group(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetGroup().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
@@ -2178,19 +1410,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 default:
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
         #region To String

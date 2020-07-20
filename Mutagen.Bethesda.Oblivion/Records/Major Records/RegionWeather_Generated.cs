@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -50,8 +44,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WeatherType>? _Weathers;
-        public ExtendedList<WeatherType>? Weathers
+        private IExtendedList<WeatherType>? _Weathers;
+        public IExtendedList<WeatherType>? Weathers
         {
             get => this._Weathers;
             set => this._Weathers = value;
@@ -89,135 +83,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public override int GetHashCode() => ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => RegionWeatherXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((RegionWeatherXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new RegionWeather CreateFromXml(
-            XElement node,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static RegionWeather CreateFromXml(
-            XElement node,
-            out RegionWeather.ErrorMask errorMask,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RegionWeather.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static RegionWeather CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new RegionWeather();
-            ((RegionWeatherSetterCommon)((IRegionWeatherGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static RegionWeather CreateFromXml(
-            string path,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static RegionWeather CreateFromXml(
-            string path,
-            out RegionWeather.ErrorMask errorMask,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static RegionWeather CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static RegionWeather CreateFromXml(
-            Stream stream,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static RegionWeather CreateFromXml(
-            Stream stream,
-            out RegionWeather.ErrorMask errorMask,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static RegionWeather CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -558,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = RegionWeather_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = RegionWeather_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RegionWeatherCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -636,17 +501,16 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionData,
         ILoquiObjectSetter<IRegionWeather>
     {
-        new ExtendedList<WeatherType>? Weathers { get; set; }
+        new IExtendedList<WeatherType>? Weathers { get; set; }
     }
 
     public partial interface IRegionWeatherGetter :
         IRegionDataGetter,
         ILoquiObject<IRegionWeatherGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => RegionWeather_Registration.Instance;
+        static new ILoquiRegistration Registration => RegionWeather_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? Weathers { get; }
 
     }
@@ -781,131 +645,6 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IRegionWeather item,
-            XElement node,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IRegionWeather item,
-            XElement node,
-            out RegionWeather.ErrorMask errorMask,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RegionWeather.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionWeather item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((RegionWeatherSetterCommon)((IRegionWeatherGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionWeather item,
-            string path,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionWeather item,
-            string path,
-            out RegionWeather.ErrorMask errorMask,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionWeather item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IRegionWeather item,
-            Stream stream,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionWeather item,
-            Stream stream,
-            out RegionWeather.ErrorMask errorMask,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRegionWeather item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            RegionWeather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1078,13 +817,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionWeather_FieldIndex.Weathers:
-                    return typeof(ExtendedList<WeatherType>);
+                    return typeof(IExtendedList<WeatherType>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(RegionWeatherXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.RDAT;
         public static readonly Type BinaryWriteTranslation = typeof(RegionWeatherBinaryWriteTranslation);
         #region Interface
@@ -1136,47 +874,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IRegionWeather)item);
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IRegionWeather item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RegionWeatherXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IRegionData item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (RegionWeather)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1536,244 +1233,6 @@ namespace Mutagen.Bethesda.Oblivion
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public partial class RegionWeatherXmlWriteTranslation :
-        RegionDataXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static RegionWeatherXmlWriteTranslation Instance = new RegionWeatherXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IRegionWeatherGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            RegionDataXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Weathers != null)
-                && (translationMask?.GetShouldTranslate((int)RegionWeather_FieldIndex.Weathers) ?? true))
-            {
-                ListXmlTranslation<IWeatherTypeGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Weathers),
-                    item: item.Weathers,
-                    fieldIndex: (int)RegionWeather_FieldIndex.Weathers,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)RegionWeather_FieldIndex.Weathers),
-                    transl: (XElement subNode, IWeatherTypeGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((WeatherTypeXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IRegionWeatherGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.RegionWeather");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.RegionWeather");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IRegionWeatherGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IRegionDataGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IRegionWeatherGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class RegionWeatherXmlCreateTranslation : RegionDataXmlCreateTranslation
-    {
-        public new readonly static RegionWeatherXmlCreateTranslation Instance = new RegionWeatherXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IRegionWeather item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RegionWeatherXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IRegionWeather item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Weathers":
-                    errorMask?.PushIndex((int)RegionWeather_FieldIndex.Weathers);
-                    try
-                    {
-                        if (ListXmlTranslation<WeatherType>.Instance.Parse(
-                            node: node,
-                            enumer: out var WeathersItem,
-                            transl: LoquiXmlTranslation<WeatherType>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Weathers = WeathersItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Weathers = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    RegionDataXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Oblivion
-{
-    #region Xml Write Mixins
-    public static class RegionWeatherXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IRegionWeatherGetter item,
-            XElement node,
-            out RegionWeather.ErrorMask errorMask,
-            RegionWeather.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((RegionWeatherXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = RegionWeather.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IRegionWeatherGetter item,
-            string path,
-            out RegionWeather.ErrorMask errorMask,
-            RegionWeather.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IRegionWeatherGetter item,
-            Stream stream,
-            out RegionWeather.ErrorMask errorMask,
-            RegionWeather.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -1851,10 +1310,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRegionWeather item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1869,14 +1329,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: WeatherType.TryCreateFromBinary)
-                        .ToExtendedList<WeatherType>();
-                    return TryGet<int?>.Succeed((int)RegionWeather_FieldIndex.Weathers);
+                        .CastExtendedList<WeatherType>();
+                    return (int)RegionWeather_FieldIndex.Weathers;
                 }
                 default:
                     return RegionDataBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -1922,21 +1383,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionWeatherCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionWeatherCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionWeatherCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => RegionWeatherXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((RegionWeatherXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionWeatherBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1995,12 +1441,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2010,13 +1457,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Weathers = BinaryOverlayList<WeatherTypeBinaryOverlay>.FactoryByStartIndex(
+                    this.Weathers = BinaryOverlayList.FactoryByStartIndex<WeatherTypeBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => WeatherTypeBinaryOverlay.WeatherTypeFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)RegionWeather_FieldIndex.Weathers);
+                    return (int)RegionWeather_FieldIndex.Weathers;
                 }
                 default:
                     return base.FillRecordType(
@@ -2024,7 +1471,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

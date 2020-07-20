@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -143,135 +137,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ShaderParticleGeometryXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ShaderParticleGeometryXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new ShaderParticleGeometry CreateFromXml(
-            XElement node,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static ShaderParticleGeometry CreateFromXml(
-            XElement node,
-            out ShaderParticleGeometry.ErrorMask errorMask,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ShaderParticleGeometry.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static ShaderParticleGeometry CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new ShaderParticleGeometry();
-            ((ShaderParticleGeometrySetterCommon)((IShaderParticleGeometryGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static ShaderParticleGeometry CreateFromXml(
-            string path,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ShaderParticleGeometry CreateFromXml(
-            string path,
-            out ShaderParticleGeometry.ErrorMask errorMask,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ShaderParticleGeometry CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static ShaderParticleGeometry CreateFromXml(
-            Stream stream,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ShaderParticleGeometry CreateFromXml(
-            Stream stream,
-            out ShaderParticleGeometry.ErrorMask errorMask,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ShaderParticleGeometry CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -301,7 +166,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -322,7 +187,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -908,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ShaderParticleGeometry_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = ShaderParticleGeometry_Registration.TriggeringRecordType;
         public ShaderParticleGeometry(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1028,10 +893,9 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IShaderParticleGeometryGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IShaderParticleGeometryGetter>,
-        IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ShaderParticleGeometry_Registration.Instance;
+        static new ILoquiRegistration Registration => ShaderParticleGeometry_Registration.Instance;
         Single GravityVelocity { get; }
         Single RotationVelocity { get; }
         Single ParticleSizeX { get; }
@@ -1180,131 +1044,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IShaderParticleGeometryInternal item,
-            XElement node,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IShaderParticleGeometryInternal item,
-            XElement node,
-            out ShaderParticleGeometry.ErrorMask errorMask,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ShaderParticleGeometry.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IShaderParticleGeometryInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ShaderParticleGeometrySetterCommon)((IShaderParticleGeometryGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IShaderParticleGeometryInternal item,
-            string path,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IShaderParticleGeometryInternal item,
-            string path,
-            out ShaderParticleGeometry.ErrorMask errorMask,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IShaderParticleGeometryInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IShaderParticleGeometryInternal item,
-            Stream stream,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IShaderParticleGeometryInternal item,
-            Stream stream,
-            out ShaderParticleGeometry.ErrorMask errorMask,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IShaderParticleGeometryInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ShaderParticleGeometry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1342,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1643,7 +1382,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ShaderParticleGeometryXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.SPGD;
         public static readonly Type BinaryWriteTranslation = typeof(ShaderParticleGeometryBinaryWriteTranslation);
         #region Interface
@@ -1713,87 +1451,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IShaderParticleGeometryInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IShaderParticleGeometryInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IShaderParticleGeometryInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                item.DATADataTypeState |= ShaderParticleGeometry.DATADataType.Break0;
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    ShaderParticleGeometryXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (ShaderParticleGeometry)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (ShaderParticleGeometry)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2024,7 +1681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ShaderParticleGeometry_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (ShaderParticleGeometry_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (ShaderParticleGeometry_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (ShaderParticleGeometry_FieldIndex)((int)index);
@@ -2045,7 +1702,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ShaderParticleGeometry_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (ShaderParticleGeometry_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (ShaderParticleGeometry_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (ShaderParticleGeometry_FieldIndex)((int)index);
@@ -2371,597 +2028,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class ShaderParticleGeometryXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static ShaderParticleGeometryXmlWriteTranslation Instance = new ShaderParticleGeometryXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IShaderParticleGeometryGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.GravityVelocity) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.GravityVelocity),
-                    item: item.GravityVelocity,
-                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.GravityVelocity,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.RotationVelocity) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.RotationVelocity),
-                    item: item.RotationVelocity,
-                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.RotationVelocity,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeX) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleSizeX),
-                    item: item.ParticleSizeX,
-                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.ParticleSizeX,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleSizeY) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleSizeY),
-                    item: item.ParticleSizeY,
-                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.ParticleSizeY,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMin) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CenterOffsetMin),
-                    item: item.CenterOffsetMin,
-                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.CenterOffsetMin,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMax) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CenterOffsetMax),
-                    item: item.CenterOffsetMax,
-                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.CenterOffsetMax,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.InitialRotationRange) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.InitialRotationRange),
-                    item: item.InitialRotationRange,
-                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.InitialRotationRange,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesX) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NumSubtexturesX),
-                    item: item.NumSubtexturesX,
-                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.NumSubtexturesX,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesY) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NumSubtexturesY),
-                    item: item.NumSubtexturesY,
-                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.NumSubtexturesY,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.Type) ?? true))
-            {
-                EnumXmlTranslation<ShaderParticleGeometry.TypeEnum>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if (!item.DATADataTypeState.HasFlag(ShaderParticleGeometry.DATADataType.Break0))
-            {
-                if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.BoxSize) ?? true))
-                {
-                    UInt32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.BoxSize),
-                        item: item.BoxSize,
-                        fieldIndex: (int)ShaderParticleGeometry_FieldIndex.BoxSize,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleDensity) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.ParticleDensity),
-                        item: item.ParticleDensity,
-                        fieldIndex: (int)ShaderParticleGeometry_FieldIndex.ParticleDensity,
-                        errorMask: errorMask);
-                }
-            }
-            else
-            {
-                node.Add(new XElement("HasDATADataType"));
-            }
-            if ((item.ParticleTexture != null)
-                && (translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.ParticleTexture) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleTexture),
-                    item: item.ParticleTexture,
-                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.ParticleTexture,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<ShaderParticleGeometry.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)ShaderParticleGeometry_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IShaderParticleGeometryGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ShaderParticleGeometry");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ShaderParticleGeometry");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IShaderParticleGeometryGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IShaderParticleGeometryGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IShaderParticleGeometryGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class ShaderParticleGeometryXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static ShaderParticleGeometryXmlCreateTranslation Instance = new ShaderParticleGeometryXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IShaderParticleGeometryInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ShaderParticleGeometryXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IShaderParticleGeometryInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "GravityVelocity":
-                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.GravityVelocity);
-                    try
-                    {
-                        item.GravityVelocity = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RotationVelocity":
-                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.RotationVelocity);
-                    try
-                    {
-                        item.RotationVelocity = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleSizeX":
-                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.ParticleSizeX);
-                    try
-                    {
-                        item.ParticleSizeX = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleSizeY":
-                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.ParticleSizeY);
-                    try
-                    {
-                        item.ParticleSizeY = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CenterOffsetMin":
-                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMin);
-                    try
-                    {
-                        item.CenterOffsetMin = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CenterOffsetMax":
-                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.CenterOffsetMax);
-                    try
-                    {
-                        item.CenterOffsetMax = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "InitialRotationRange":
-                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.InitialRotationRange);
-                    try
-                    {
-                        item.InitialRotationRange = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NumSubtexturesX":
-                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesX);
-                    try
-                    {
-                        item.NumSubtexturesX = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NumSubtexturesY":
-                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.NumSubtexturesY);
-                    try
-                    {
-                        item.NumSubtexturesY = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Type":
-                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.Type);
-                    try
-                    {
-                        item.Type = EnumXmlTranslation<ShaderParticleGeometry.TypeEnum>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BoxSize":
-                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.BoxSize);
-                    try
-                    {
-                        item.BoxSize = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~ShaderParticleGeometry.DATADataType.Break0;
-                    break;
-                case "ParticleDensity":
-                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.ParticleDensity);
-                    try
-                    {
-                        item.ParticleDensity = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleTexture":
-                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.ParticleTexture);
-                    try
-                    {
-                        item.ParticleTexture = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<ShaderParticleGeometry.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class ShaderParticleGeometryXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IShaderParticleGeometryGetter item,
-            XElement node,
-            out ShaderParticleGeometry.ErrorMask errorMask,
-            ShaderParticleGeometry.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ShaderParticleGeometryXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ShaderParticleGeometry.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IShaderParticleGeometryGetter item,
-            string path,
-            out ShaderParticleGeometry.ErrorMask errorMask,
-            ShaderParticleGeometry.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IShaderParticleGeometryGetter item,
-            Stream stream,
-            out ShaderParticleGeometry.ErrorMask errorMask,
-            ShaderParticleGeometry.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3046,10 +2112,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -3102,9 +2170,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IShaderParticleGeometryInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3129,11 +2198,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= ShaderParticleGeometry.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.Type);
+                        return (int)ShaderParticleGeometry_FieldIndex.Type;
                     }
                     item.BoxSize = dataFrame.ReadUInt32();
                     item.ParticleDensity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleDensity);
+                    return (int)ShaderParticleGeometry_FieldIndex.ParticleDensity;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -3141,12 +2210,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ParticleTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleTexture);
+                    return (int)ShaderParticleGeometry_FieldIndex.ParticleTexture;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3187,21 +2257,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IShaderParticleGeometryGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ShaderParticleGeometryXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ShaderParticleGeometryXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ShaderParticleGeometryBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3218,37 +2273,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region GravityVelocity
         private int _GravityVelocityLocation => _DATALocation!.Value;
         private bool _GravityVelocity_IsSet => _DATALocation.HasValue;
-        public Single GravityVelocity => _GravityVelocity_IsSet ? SpanExt.GetFloat(_data.Slice(_GravityVelocityLocation, 4)) : default;
+        public Single GravityVelocity => _GravityVelocity_IsSet ? _data.Slice(_GravityVelocityLocation, 4).Float() : default;
         #endregion
         #region RotationVelocity
         private int _RotationVelocityLocation => _DATALocation!.Value + 0x4;
         private bool _RotationVelocity_IsSet => _DATALocation.HasValue;
-        public Single RotationVelocity => _RotationVelocity_IsSet ? SpanExt.GetFloat(_data.Slice(_RotationVelocityLocation, 4)) : default;
+        public Single RotationVelocity => _RotationVelocity_IsSet ? _data.Slice(_RotationVelocityLocation, 4).Float() : default;
         #endregion
         #region ParticleSizeX
         private int _ParticleSizeXLocation => _DATALocation!.Value + 0x8;
         private bool _ParticleSizeX_IsSet => _DATALocation.HasValue;
-        public Single ParticleSizeX => _ParticleSizeX_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleSizeXLocation, 4)) : default;
+        public Single ParticleSizeX => _ParticleSizeX_IsSet ? _data.Slice(_ParticleSizeXLocation, 4).Float() : default;
         #endregion
         #region ParticleSizeY
         private int _ParticleSizeYLocation => _DATALocation!.Value + 0xC;
         private bool _ParticleSizeY_IsSet => _DATALocation.HasValue;
-        public Single ParticleSizeY => _ParticleSizeY_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleSizeYLocation, 4)) : default;
+        public Single ParticleSizeY => _ParticleSizeY_IsSet ? _data.Slice(_ParticleSizeYLocation, 4).Float() : default;
         #endregion
         #region CenterOffsetMin
         private int _CenterOffsetMinLocation => _DATALocation!.Value + 0x10;
         private bool _CenterOffsetMin_IsSet => _DATALocation.HasValue;
-        public Single CenterOffsetMin => _CenterOffsetMin_IsSet ? SpanExt.GetFloat(_data.Slice(_CenterOffsetMinLocation, 4)) : default;
+        public Single CenterOffsetMin => _CenterOffsetMin_IsSet ? _data.Slice(_CenterOffsetMinLocation, 4).Float() : default;
         #endregion
         #region CenterOffsetMax
         private int _CenterOffsetMaxLocation => _DATALocation!.Value + 0x14;
         private bool _CenterOffsetMax_IsSet => _DATALocation.HasValue;
-        public Single CenterOffsetMax => _CenterOffsetMax_IsSet ? SpanExt.GetFloat(_data.Slice(_CenterOffsetMaxLocation, 4)) : default;
+        public Single CenterOffsetMax => _CenterOffsetMax_IsSet ? _data.Slice(_CenterOffsetMaxLocation, 4).Float() : default;
         #endregion
         #region InitialRotationRange
         private int _InitialRotationRangeLocation => _DATALocation!.Value + 0x18;
         private bool _InitialRotationRange_IsSet => _DATALocation.HasValue;
-        public Single InitialRotationRange => _InitialRotationRange_IsSet ? SpanExt.GetFloat(_data.Slice(_InitialRotationRangeLocation, 4)) : default;
+        public Single InitialRotationRange => _InitialRotationRange_IsSet ? _data.Slice(_InitialRotationRangeLocation, 4).Float() : default;
         #endregion
         #region NumSubtexturesX
         private int _NumSubtexturesXLocation => _DATALocation!.Value + 0x1C;
@@ -3273,7 +2328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ParticleDensity
         private int _ParticleDensityLocation => _DATALocation!.Value + 0x2C;
         private bool _ParticleDensity_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(ShaderParticleGeometry.DATADataType.Break0);
-        public Single ParticleDensity => _ParticleDensity_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleDensityLocation, 4)) : default;
+        public Single ParticleDensity => _ParticleDensity_IsSet ? _data.Slice(_ParticleDensityLocation, 4).Float() : default;
         #endregion
         #region ParticleTexture
         private int? _ParticleTextureLocation;
@@ -3304,8 +2359,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new ShaderParticleGeometryBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3331,12 +2387,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3350,12 +2407,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.DATADataTypeState |= ShaderParticleGeometry.DATADataType.Break0;
                     }
-                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleDensity);
+                    return (int)ShaderParticleGeometry_FieldIndex.ParticleDensity;
                 }
                 case RecordTypeInts.ICON:
                 {
                     _ParticleTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleTexture);
+                    return (int)ShaderParticleGeometry_FieldIndex.ParticleTexture;
                 }
                 default:
                     return base.FillRecordType(
@@ -3363,7 +2420,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

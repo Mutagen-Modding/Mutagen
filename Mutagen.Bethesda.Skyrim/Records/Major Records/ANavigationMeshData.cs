@@ -84,19 +84,19 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public uint NavmeshGridDivisor => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(CoverTrianglesLogicEndingPos));
 
-            public float MaxDistanceX => SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 4));
+            public float MaxDistanceX => _data.Slice(CoverTrianglesLogicEndingPos + 4).Float();
 
-            public float MaxDistanceY => SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 8));
+            public float MaxDistanceY => _data.Slice(CoverTrianglesLogicEndingPos + 8).Float();
 
             public P3Float Min => new P3Float(
-                SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 12)),
-                SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 16)),
-                SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 20)));
+                _data.Slice(CoverTrianglesLogicEndingPos + 12).Float(),
+                _data.Slice(CoverTrianglesLogicEndingPos + 16).Float(),
+                _data.Slice(CoverTrianglesLogicEndingPos + 20).Float());
 
             public P3Float Max => new P3Float(
-                SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 24)),
-                SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 28)),
-                SpanExt.GetFloat(_data.Slice(CoverTrianglesLogicEndingPos + 32)));
+                _data.Slice(CoverTrianglesLogicEndingPos + 24).Float(),
+                _data.Slice(CoverTrianglesLogicEndingPos + 28).Float(),
+                _data.Slice(CoverTrianglesLogicEndingPos + 32).Float());
 
             public ReadOnlyMemorySlice<byte> NavmeshGrid { get; private set; }
 

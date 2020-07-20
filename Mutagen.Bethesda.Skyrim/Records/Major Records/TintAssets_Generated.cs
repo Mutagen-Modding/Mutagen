@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -69,8 +63,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Presets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<TintPreset> _Presets = new ExtendedList<TintPreset>();
-        public ExtendedList<TintPreset> Presets
+        private IExtendedList<TintPreset> _Presets = new ExtendedList<TintPreset>();
+        public IExtendedList<TintPreset> Presets
         {
             get => this._Presets;
             protected set => this._Presets = value;
@@ -108,137 +102,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => TintAssetsXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((TintAssetsXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static TintAssets CreateFromXml(
-            XElement node,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static TintAssets CreateFromXml(
-            XElement node,
-            out TintAssets.ErrorMask errorMask,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = TintAssets.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static TintAssets CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new TintAssets();
-            ((TintAssetsSetterCommon)((ITintAssetsGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static TintAssets CreateFromXml(
-            string path,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static TintAssets CreateFromXml(
-            string path,
-            out TintAssets.ErrorMask errorMask,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static TintAssets CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static TintAssets CreateFromXml(
-            Stream stream,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static TintAssets CreateFromXml(
-            Stream stream,
-            out TintAssets.ErrorMask errorMask,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static TintAssets CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -780,13 +643,12 @@ namespace Mutagen.Bethesda.Skyrim
         new String? FileName { get; set; }
         new TintAssets.TintMaskType? MaskType { get; set; }
         new FormLinkNullable<ColorRecord> PresetDefault { get; set; }
-        new ExtendedList<TintPreset> Presets { get; }
+        new IExtendedList<TintPreset> Presets { get; }
     }
 
     public partial interface ITintAssetsGetter :
         ILoquiObject,
         ILoquiObject<ITintAssetsGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -958,131 +820,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ITintAssets item,
-            XElement node,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ITintAssets item,
-            XElement node,
-            out TintAssets.ErrorMask errorMask,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = TintAssets.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this ITintAssets item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((TintAssetsSetterCommon)((ITintAssetsGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ITintAssets item,
-            string path,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ITintAssets item,
-            string path,
-            out TintAssets.ErrorMask errorMask,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ITintAssets item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this ITintAssets item,
-            Stream stream,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ITintAssets item,
-            Stream stream,
-            out TintAssets.ErrorMask errorMask,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ITintAssets item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1304,13 +1041,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case TintAssets_FieldIndex.PresetDefault:
                     return typeof(FormLinkNullable<ColorRecord>);
                 case TintAssets_FieldIndex.Presets:
-                    return typeof(ExtendedList<TintPreset>);
+                    return typeof(IExtendedList<TintPreset>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(TintAssetsXmlWriteTranslation);
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1376,34 +1112,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.PresetDefault = FormLinkNullable<ColorRecord>.Null;
             item.Presets.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            ITintAssets item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    TintAssetsXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1755,449 +1463,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class TintAssetsXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static TintAssetsXmlWriteTranslation Instance = new TintAssetsXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            ITintAssetsGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((item.Index != null)
-                && (translationMask?.GetShouldTranslate((int)TintAssets_FieldIndex.Index) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Index),
-                    item: item.Index.Value,
-                    fieldIndex: (int)TintAssets_FieldIndex.Index,
-                    errorMask: errorMask);
-            }
-            if ((item.FileName != null)
-                && (translationMask?.GetShouldTranslate((int)TintAssets_FieldIndex.FileName) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FileName),
-                    item: item.FileName,
-                    fieldIndex: (int)TintAssets_FieldIndex.FileName,
-                    errorMask: errorMask);
-            }
-            if ((item.MaskType != null)
-                && (translationMask?.GetShouldTranslate((int)TintAssets_FieldIndex.MaskType) ?? true))
-            {
-                EnumXmlTranslation<TintAssets.TintMaskType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaskType),
-                    item: item.MaskType,
-                    fieldIndex: (int)TintAssets_FieldIndex.MaskType,
-                    errorMask: errorMask);
-            }
-            if ((item.PresetDefault.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)TintAssets_FieldIndex.PresetDefault) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PresetDefault),
-                    item: item.PresetDefault.FormKey,
-                    fieldIndex: (int)TintAssets_FieldIndex.PresetDefault,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)TintAssets_FieldIndex.Presets) ?? true))
-            {
-                ListXmlTranslation<ITintPresetGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Presets),
-                    item: item.Presets,
-                    fieldIndex: (int)TintAssets_FieldIndex.Presets,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)TintAssets_FieldIndex.Presets),
-                    transl: (XElement subNode, ITintPresetGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((TintPresetXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            ITintAssetsGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.TintAssets");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.TintAssets");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ITintAssetsGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            ITintAssetsGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (ITintAssetsGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class TintAssetsXmlCreateTranslation
-    {
-        public readonly static TintAssetsXmlCreateTranslation Instance = new TintAssetsXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            ITintAssets item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    TintAssetsXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            ITintAssets item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Index":
-                    errorMask?.PushIndex((int)TintAssets_FieldIndex.Index);
-                    try
-                    {
-                        item.Index = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FileName":
-                    errorMask?.PushIndex((int)TintAssets_FieldIndex.FileName);
-                    try
-                    {
-                        item.FileName = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaskType":
-                    errorMask?.PushIndex((int)TintAssets_FieldIndex.MaskType);
-                    try
-                    {
-                        item.MaskType = EnumXmlTranslation<TintAssets.TintMaskType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PresetDefault":
-                    errorMask?.PushIndex((int)TintAssets_FieldIndex.PresetDefault);
-                    try
-                    {
-                        item.PresetDefault = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Presets":
-                    errorMask?.PushIndex((int)TintAssets_FieldIndex.Presets);
-                    try
-                    {
-                        if (ListXmlTranslation<TintPreset>.Instance.Parse(
-                            node: node,
-                            enumer: out var PresetsItem,
-                            transl: LoquiXmlTranslation<TintPreset>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Presets.SetTo(PresetsItem);
-                        }
-                        else
-                        {
-                            item.Presets.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class TintAssetsXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this ITintAssetsGetter item,
-            XElement node,
-            out TintAssets.ErrorMask errorMask,
-            TintAssets.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((TintAssetsXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = TintAssets.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this ITintAssetsGetter item,
-            string path,
-            out TintAssets.ErrorMask errorMask,
-            TintAssets.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ITintAssetsGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ITintAssetsGetter item,
-            Stream stream,
-            out TintAssets.ErrorMask errorMask,
-            TintAssets.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this ITintAssetsGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this ITintAssetsGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((TintAssetsXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this ITintAssetsGetter item,
-            XElement node,
-            string? name = null,
-            TintAssets.TranslationMask? translationMask = null)
-        {
-            ((TintAssetsXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this ITintAssetsGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((TintAssetsXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ITintAssetsGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((TintAssetsXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2275,10 +1540,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ITintAssets item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2288,51 +1554,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.TINI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Index) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Index) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.Index);
+                    return (int)TintAssets_FieldIndex.Index;
                 }
                 case RecordTypeInts.TINT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.FileName) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.FileName) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FileName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.FileName);
+                    return (int)TintAssets_FieldIndex.FileName;
                 }
                 case RecordTypeInts.TINP:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaskType = EnumBinaryTranslation<TintAssets.TintMaskType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.MaskType);
+                    return (int)TintAssets_FieldIndex.MaskType;
                 }
                 case RecordTypeInts.TIND:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PresetDefault = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.PresetDefault);
+                    return (int)TintAssets_FieldIndex.PresetDefault;
                 }
                 case RecordTypeInts.TINC:
                 case RecordTypeInts.TINV:
                 case RecordTypeInts.TIRS:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return ParseResult.Stop;
                     item.Presets.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<TintPreset>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: TintPreset_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: TintPreset.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.Presets);
+                    return (int)TintAssets_FieldIndex.Presets;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2393,23 +1659,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintAssetsCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintAssetsCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => TintAssetsXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((TintAssetsXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TintAssetsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -2433,12 +1682,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region MaskType
         private int? _MaskTypeLocation;
-        public TintAssets.TintMaskType? MaskType => _MaskTypeLocation.HasValue ? (TintAssets.TintMaskType)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MaskTypeLocation!.Value, _package.MetaData.Constants)) : default(TintAssets.TintMaskType?);
+        public TintAssets.TintMaskType? MaskType => _MaskTypeLocation.HasValue ? (TintAssets.TintMaskType)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaskTypeLocation!.Value, _package.MetaData.Constants)) : default(TintAssets.TintMaskType?);
         #endregion
         #region PresetDefault
         private int? _PresetDefaultLocation;
         public bool PresetDefault_IsSet => _PresetDefaultLocation.HasValue;
-        public IFormLinkNullable<IColorRecordGetter> PresetDefault => _PresetDefaultLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PresetDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public IFormLinkNullable<IColorRecordGetter> PresetDefault => _PresetDefaultLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PresetDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         public IReadOnlyList<ITintPresetGetter> Presets { get; private set; } = ListExt.Empty<TintPresetBinaryOverlay>();
         partial void CustomFactoryEnd(
@@ -2486,12 +1735,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2499,42 +1749,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.TINI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Index) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Index) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.Index);
+                    return (int)TintAssets_FieldIndex.Index;
                 }
                 case RecordTypeInts.TINT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.FileName) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.FileName) return ParseResult.Stop;
                     _FileNameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.FileName);
+                    return (int)TintAssets_FieldIndex.FileName;
                 }
                 case RecordTypeInts.TINP:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return ParseResult.Stop;
                     _MaskTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.MaskType);
+                    return (int)TintAssets_FieldIndex.MaskType;
                 }
                 case RecordTypeInts.TIND:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return ParseResult.Stop;
                     _PresetDefaultLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.PresetDefault);
+                    return (int)TintAssets_FieldIndex.PresetDefault;
                 }
                 case RecordTypeInts.TINC:
                 case RecordTypeInts.TINV:
                 case RecordTypeInts.TIRS:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return ParseResult.Stop;
                     this.Presets = this.ParseRepeatedTypelessSubrecord<TintPresetBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
                         trigger: TintPreset_Registration.TriggeringRecordTypes,
                         factory:  TintPresetBinaryOverlay.TintPresetFactory);
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.Presets);
+                    return (int)TintAssets_FieldIndex.Presets;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

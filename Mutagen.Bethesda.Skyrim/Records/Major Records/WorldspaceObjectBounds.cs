@@ -63,15 +63,15 @@ namespace Mutagen.Bethesda.Skyrim
             private int? _minLoc;
             public P2Float GetMinCustom() => _minLoc.HasValue 
                 ? new P2Float(
-                    SpanExt.GetFloat(_data.Slice(_minLoc.Value + 6)) / 4096f,
-                    SpanExt.GetFloat(_data.Slice(_minLoc.Value + 10)) / 4096f)
+                    _data.Slice(_minLoc.Value + 6).Float() / 4096f,
+                    _data.Slice(_minLoc.Value + 10).Float() / 4096f)
                 : default;
 
             private int? _maxLoc;
             public P2Float GetMaxCustom() => _maxLoc.HasValue 
                 ? new P2Float(
-                    SpanExt.GetFloat(_data.Slice(_maxLoc.Value + 6)) / 4096f,
-                    SpanExt.GetFloat(_data.Slice(_maxLoc.Value + 10)) / 4096f)
+                    _data.Slice(_maxLoc.Value + 6).Float() / 4096f,
+                    _data.Slice(_maxLoc.Value + 10).Float() / 4096f)
                 : default;
 
             partial void MinCustomParse(OverlayStream stream, long finalPos, int offset)

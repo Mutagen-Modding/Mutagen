@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.11</Version>
+    <Version>0.12</Version>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
     <Description>A C# library for manipulating, creating, and analyzing Bethesda mods.</Description>
@@ -26,8 +26,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.8" />
-    <PackageReference Include="Loqui" Version="1.1.16" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.23" />
+    <PackageReference Include="Loqui" Version="1.1.18" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.31" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Skyrim\Mutagen.Bethesda.Skyrim.csproj" />

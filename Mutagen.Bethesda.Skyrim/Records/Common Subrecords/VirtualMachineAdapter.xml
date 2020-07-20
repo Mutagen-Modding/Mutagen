@@ -50,15 +50,16 @@
   </Object>
   <Object name="ScriptObjectListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="f1e67286-b4d7-4f4f-bec6-fdc8a8a9f58b" ID="99">
     <Fields>
+      <RefList name="Objects" refName="ScriptObjectProperty" counterLength="4" />
     </Fields>
   </Object>
-  <!--<Object name="ScriptStringListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="8a0d079d-f9de-4460-82b6-01611f36fa7a" ID="100">
+  <Object name="ScriptStringListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="8a0d079d-f9de-4460-82b6-01611f36fa7a" ID="100">
     <Fields>
-      <List name="Data">
+      <List name="Data" counterLength="4" >
         <String binaryType="PrependLengthUShort" />
       </List>
     </Fields>
-  </Object>-->
+  </Object>
   <Object name="ScriptIntListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="55a3fbad-83ba-4d9a-bce1-c959a7226330" ID="101">
     <Fields>
       <List name="Data" counterLength="4">
@@ -94,6 +95,15 @@
       <Int8 name="Unknown2" />
       <String name="ScriptName" binaryType="PrependLengthUShort" />
       <String name="FragmentName" binaryType="PrependLengthUShort" />
+    </Fields>
+  </Object>
+  <Object name="ScriptFragments" objType="Subrecord" GUID="6564bb4d-ec2c-4a03-b6dd-5cca0e1b4b11" ID="428">
+    <Fields>
+      <Int8 name="Unknown" />
+      <CustomLogic name="Flags" />
+      <String name="FileName" binaryType="PrependLengthUShort" binary="NoGeneration" />
+      <RefDirect name="OnBegin" hasBeenSet="True" binary="NoGeneration" refName="ScriptFragment" />
+      <RefDirect name="OnEnd" hasBeenSet="True" binary="NoGeneration" refName="ScriptFragment" />
     </Fields>
   </Object>
 </Loqui>

@@ -5,14 +5,15 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class BinaryOverlayFactoryPackage
+    public struct BinaryOverlayFactoryPackage
     {
         public ParsingBundle MetaData;
-        public Dictionary<RecordType, Dictionary<RecordType, object>> EdidLinkCache = new Dictionary<RecordType, Dictionary<RecordType, object>>();
+        public IFormVersionGetter? FormVersion;
 
         public BinaryOverlayFactoryPackage(ParsingBundle metaData)
         {
             this.MetaData = metaData;
+            this.FormVersion = null;
         }
 
         public static implicit operator ParsingBundle(BinaryOverlayFactoryPackage package)

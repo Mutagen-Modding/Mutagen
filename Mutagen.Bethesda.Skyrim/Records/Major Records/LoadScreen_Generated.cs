@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -65,8 +59,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -143,135 +137,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => LoadScreenXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((LoadScreenXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new LoadScreen CreateFromXml(
-            XElement node,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static LoadScreen CreateFromXml(
-            XElement node,
-            out LoadScreen.ErrorMask errorMask,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LoadScreen.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static LoadScreen CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new LoadScreen();
-            ((LoadScreenSetterCommon)((ILoadScreenGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static LoadScreen CreateFromXml(
-            string path,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static LoadScreen CreateFromXml(
-            string path,
-            out LoadScreen.ErrorMask errorMask,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static LoadScreen CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static LoadScreen CreateFromXml(
-            Stream stream,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static LoadScreen CreateFromXml(
-            Stream stream,
-            out LoadScreen.ErrorMask errorMask,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static LoadScreen CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -296,7 +161,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -312,7 +177,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -860,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = LoadScreen_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = LoadScreen_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LoadScreenCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -963,7 +828,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Icons? Icons { get; set; }
         new TranslatedString Description { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
         new FormLink<Static> LoadingScreenNif { get; set; }
         new Single? InitialScale { get; set; }
         new P3Int16? InitialRotation { get; set; }
@@ -987,11 +852,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IHasIconsGetter,
         ILoquiObject<ILoadScreenGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => LoadScreen_Registration.Instance;
+        static new ILoquiRegistration Registration => LoadScreen_Registration.Instance;
         IIconsGetter? Icons { get; }
         TranslatedString Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
@@ -1139,131 +1003,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ILoadScreenInternal item,
-            XElement node,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ILoadScreenInternal item,
-            XElement node,
-            out LoadScreen.ErrorMask errorMask,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LoadScreen.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this ILoadScreenInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((LoadScreenSetterCommon)((ILoadScreenGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILoadScreenInternal item,
-            string path,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILoadScreenInternal item,
-            string path,
-            out LoadScreen.ErrorMask errorMask,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILoadScreenInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this ILoadScreenInternal item,
-            Stream stream,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILoadScreenInternal item,
-            Stream stream,
-            out LoadScreen.ErrorMask errorMask,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILoadScreenInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            LoadScreen.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1301,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1526,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LoadScreen_FieldIndex.Description:
                     return typeof(TranslatedString);
                 case LoadScreen_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case LoadScreen_FieldIndex.LoadingScreenNif:
                     return typeof(FormLink<Static>);
                 case LoadScreen_FieldIndex.InitialScale:
@@ -1544,7 +1283,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(LoadScreenXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.LSCR;
         public static readonly Type BinaryWriteTranslation = typeof(LoadScreenBinaryWriteTranslation);
         #region Interface
@@ -1609,86 +1347,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ILoadScreenInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            ILoadScreenInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            ILoadScreenInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    LoadScreenXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (LoadScreen)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (LoadScreen)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1929,7 +1587,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (LoadScreen_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (LoadScreen_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (LoadScreen_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (LoadScreen_FieldIndex)((int)index);
@@ -1950,7 +1608,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (LoadScreen_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (LoadScreen_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (LoadScreen_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (LoadScreen_FieldIndex)((int)index);
@@ -2331,490 +1989,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class LoadScreenXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static LoadScreenXmlWriteTranslation Instance = new LoadScreenXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            ILoadScreenGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Icons != null)
-                && (translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.Icons) ?? true))
-            {
-                if (item.Icons.TryGet(out var IconsItem))
-                {
-                    ((IconsXmlWriteTranslation)((IXmlItem)IconsItem).XmlWriteTranslator).Write(
-                        item: IconsItem,
-                        node: node,
-                        name: nameof(item.Icons),
-                        fieldIndex: (int)LoadScreen_FieldIndex.Icons,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)LoadScreen_FieldIndex.Icons));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.Description) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Description),
-                    item: item.Description,
-                    fieldIndex: (int)LoadScreen_FieldIndex.Description,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.Conditions) ?? true))
-            {
-                ListXmlTranslation<IConditionGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Conditions),
-                    item: item.Conditions,
-                    fieldIndex: (int)LoadScreen_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)LoadScreen_FieldIndex.Conditions),
-                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.LoadingScreenNif) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LoadingScreenNif),
-                    item: item.LoadingScreenNif.FormKey,
-                    fieldIndex: (int)LoadScreen_FieldIndex.LoadingScreenNif,
-                    errorMask: errorMask);
-            }
-            if ((item.InitialScale != null)
-                && (translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.InitialScale) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.InitialScale),
-                    item: item.InitialScale.Value,
-                    fieldIndex: (int)LoadScreen_FieldIndex.InitialScale,
-                    errorMask: errorMask);
-            }
-            if ((item.InitialRotation != null)
-                && (translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.InitialRotation) ?? true))
-            {
-                P3Int16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.InitialRotation),
-                    item: item.InitialRotation.Value,
-                    fieldIndex: (int)LoadScreen_FieldIndex.InitialRotation,
-                    errorMask: errorMask);
-            }
-            if ((item.RotationOffsetConstraints != null)
-                && (translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.RotationOffsetConstraints) ?? true))
-            {
-                if (item.RotationOffsetConstraints.TryGet(out var RotationOffsetConstraintsItem))
-                {
-                    ((Int16MinMaxXmlWriteTranslation)((IXmlItem)RotationOffsetConstraintsItem).XmlWriteTranslator).Write(
-                        item: RotationOffsetConstraintsItem,
-                        node: node,
-                        name: nameof(item.RotationOffsetConstraints),
-                        fieldIndex: (int)LoadScreen_FieldIndex.RotationOffsetConstraints,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)LoadScreen_FieldIndex.RotationOffsetConstraints));
-                }
-            }
-            if ((item.InitialTranslationOffset != null)
-                && (translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.InitialTranslationOffset) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.InitialTranslationOffset),
-                    item: item.InitialTranslationOffset.Value,
-                    fieldIndex: (int)LoadScreen_FieldIndex.InitialTranslationOffset,
-                    errorMask: errorMask);
-            }
-            if ((item.CameraPath != null)
-                && (translationMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.CameraPath) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CameraPath),
-                    item: item.CameraPath,
-                    fieldIndex: (int)LoadScreen_FieldIndex.CameraPath,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            ILoadScreenGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.LoadScreen");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.LoadScreen");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILoadScreenGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILoadScreenGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILoadScreenGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class LoadScreenXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static LoadScreenXmlCreateTranslation Instance = new LoadScreenXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            ILoadScreenInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    LoadScreenXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            ILoadScreenInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Icons":
-                    errorMask?.PushIndex((int)LoadScreen_FieldIndex.Icons);
-                    try
-                    {
-                        item.Icons = LoquiXmlTranslation<Icons>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)LoadScreen_FieldIndex.Icons));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Description":
-                    errorMask?.PushIndex((int)LoadScreen_FieldIndex.Description);
-                    try
-                    {
-                        item.Description = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conditions":
-                    errorMask?.PushIndex((int)LoadScreen_FieldIndex.Conditions);
-                    try
-                    {
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LoadingScreenNif":
-                    errorMask?.PushIndex((int)LoadScreen_FieldIndex.LoadingScreenNif);
-                    try
-                    {
-                        item.LoadingScreenNif = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "InitialScale":
-                    errorMask?.PushIndex((int)LoadScreen_FieldIndex.InitialScale);
-                    try
-                    {
-                        item.InitialScale = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "InitialRotation":
-                    errorMask?.PushIndex((int)LoadScreen_FieldIndex.InitialRotation);
-                    try
-                    {
-                        item.InitialRotation = P3Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RotationOffsetConstraints":
-                    errorMask?.PushIndex((int)LoadScreen_FieldIndex.RotationOffsetConstraints);
-                    try
-                    {
-                        item.RotationOffsetConstraints = LoquiXmlTranslation<Int16MinMax>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)LoadScreen_FieldIndex.RotationOffsetConstraints));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "InitialTranslationOffset":
-                    errorMask?.PushIndex((int)LoadScreen_FieldIndex.InitialTranslationOffset);
-                    try
-                    {
-                        item.InitialTranslationOffset = P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CameraPath":
-                    errorMask?.PushIndex((int)LoadScreen_FieldIndex.CameraPath);
-                    try
-                    {
-                        item.CameraPath = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class LoadScreenXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this ILoadScreenGetter item,
-            XElement node,
-            out LoadScreen.ErrorMask errorMask,
-            LoadScreen.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((LoadScreenXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LoadScreen.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this ILoadScreenGetter item,
-            string path,
-            out LoadScreen.ErrorMask errorMask,
-            LoadScreen.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ILoadScreenGetter item,
-            Stream stream,
-            out LoadScreen.ErrorMask errorMask,
-            LoadScreen.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2858,7 +2032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.DL);
+                source: StringsSource.Normal);
             LoadScreenBinaryWriteTranslation.WriteBinaryConditions(
                 writer: writer,
                 item: item);
@@ -2908,10 +2082,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -2964,9 +2140,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILoadScreenInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2979,23 +2156,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Icons);
+                    return (int)LoadScreen_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DESC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.DL,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Description);
+                    return (int)LoadScreen_FieldIndex.Description;
                 }
                 case RecordTypeInts.CTDA:
                 {
                     LoadScreenBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Conditions);
+                    return (int)LoadScreen_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -3003,31 +2180,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LoadingScreenNif = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.LoadingScreenNif);
+                    return (int)LoadScreen_FieldIndex.LoadingScreenNif;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InitialScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialScale);
+                    return (int)LoadScreen_FieldIndex.InitialScale;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InitialRotation = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialRotation);
+                    return (int)LoadScreen_FieldIndex.InitialRotation;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.RotationOffsetConstraints = Mutagen.Bethesda.Skyrim.Int16MinMax.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.RotationOffsetConstraints);
+                    return (int)LoadScreen_FieldIndex.RotationOffsetConstraints;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InitialTranslationOffset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialTranslationOffset);
+                    return (int)LoadScreen_FieldIndex.InitialTranslationOffset;
                 }
                 case RecordTypeInts.MOD2:
                 {
@@ -3035,12 +2212,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CameraPath = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.CameraPath);
+                    return (int)LoadScreen_FieldIndex.CameraPath;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3091,21 +2269,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => LoadScreenXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((LoadScreenXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LoadScreenBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3121,7 +2284,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IIconsGetter? Icons { get; private set; }
         #region Description
         private int? _DescriptionLocation;
-        public TranslatedString Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : string.Empty;
+        public TranslatedString Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : string.Empty;
         #endregion
         #region Conditions
         partial void ConditionsCustomParse(
@@ -3134,11 +2297,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region LoadingScreenNif
         private int? _LoadingScreenNifLocation;
         public bool LoadingScreenNif_IsSet => _LoadingScreenNifLocation.HasValue;
-        public IFormLink<IStaticGetter> LoadingScreenNif => _LoadingScreenNifLocation.HasValue ? new FormLink<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LoadingScreenNifLocation.Value, _package.MetaData.Constants)))) : FormLink<IStaticGetter>.Null;
+        public IFormLink<IStaticGetter> LoadingScreenNif => _LoadingScreenNifLocation.HasValue ? new FormLink<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoadingScreenNifLocation.Value, _package.MetaData.Constants)))) : FormLink<IStaticGetter>.Null;
         #endregion
         #region InitialScale
         private int? _InitialScaleLocation;
-        public Single? InitialScale => _InitialScaleLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _InitialScaleLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? InitialScale => _InitialScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _InitialScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region InitialRotation
         private int? _InitialRotationLocation;
@@ -3178,8 +2341,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new LoadScreenBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3205,12 +2369,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3222,12 +2387,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Icons);
+                    return (int)LoadScreen_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Description);
+                    return (int)LoadScreen_FieldIndex.Description;
                 }
                 case RecordTypeInts.CTDA:
                 {
@@ -3237,22 +2402,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Conditions);
+                    return (int)LoadScreen_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     _LoadingScreenNifLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.LoadingScreenNif);
+                    return (int)LoadScreen_FieldIndex.LoadingScreenNif;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _InitialScaleLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialScale);
+                    return (int)LoadScreen_FieldIndex.InitialScale;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     _InitialRotationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialRotation);
+                    return (int)LoadScreen_FieldIndex.InitialRotation;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -3261,17 +2426,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.RotationOffsetConstraints);
+                    return (int)LoadScreen_FieldIndex.RotationOffsetConstraints;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     _InitialTranslationOffsetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialTranslationOffset);
+                    return (int)LoadScreen_FieldIndex.InitialTranslationOffset;
                 }
                 case RecordTypeInts.MOD2:
                 {
                     _CameraPathLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.CameraPath);
+                    return (int)LoadScreen_FieldIndex.CameraPath;
                 }
                 default:
                     return base.FillRecordType(
@@ -3279,7 +2444,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

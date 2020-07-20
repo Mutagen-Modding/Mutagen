@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                return $"SpanExt.GetFloat({dataAccessor})";
+                return $"{dataAccessor}.Float()";
             }
         }
 

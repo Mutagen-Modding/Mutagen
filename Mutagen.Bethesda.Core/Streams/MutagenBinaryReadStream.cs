@@ -43,18 +43,18 @@ namespace Mutagen.Bethesda.Binary
         /// Constructor that opens a read stream to a path
         /// </summary>
         /// <param name="path">Path to read from</param>
-        /// <param name="gameMode">GameMode the stream is for</param>
+        /// <param name="release">Game Release the stream is for</param>
         /// <param name="bufferSize">Size of internal buffer</param>
         /// <param name="offsetReference">Optional offset reference position to use</param>
         public MutagenBinaryReadStream(
             string path,
-            GameMode gameMode,
+            GameRelease release,
             int bufferSize = 4096,
             long offsetReference = 0)
             : base(path, bufferSize)
         {
             this._path = path;
-            this.MetaData = new ParsingBundle(gameMode);
+            this.MetaData = new ParsingBundle(release);
             this.OffsetReference = offsetReference;
         }
 
@@ -82,19 +82,19 @@ namespace Mutagen.Bethesda.Binary
         /// Constructor that wraps an existing stream
         /// </summary>
         /// <param name="stream">Stream to wrap and read from</param>
-        /// <param name="gameMode">GameMode the stream is for</param>
+        /// <param name="release">Game Release the stream is for</param>
         /// <param name="bufferSize">Size of internal buffer</param>
         /// <param name="dispose">Whether to dispose the source stream</param>
         /// <param name="offsetReference">Optional offset reference position to use</param>
         public MutagenBinaryReadStream(
             Stream stream,
-            GameMode gameMode,
+            GameRelease release,
             int bufferSize = 4096,
             bool dispose = true,
             long offsetReference = 0)
             : base(stream, bufferSize, dispose)
         {
-            this.MetaData = new ParsingBundle(gameMode);
+            this.MetaData = new ParsingBundle(release);
             this.OffsetReference = offsetReference;
         }
 

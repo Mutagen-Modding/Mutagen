@@ -15,14 +15,8 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -46,6 +40,9 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        public String Name { get; set; } = string.Empty;
+        #endregion
         #region IY
         public Single IY { get; set; } = default;
         #endregion
@@ -205,137 +202,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PhonemeXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PhonemeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static Phoneme CreateFromXml(
-            XElement node,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Phoneme CreateFromXml(
-            XElement node,
-            out Phoneme.ErrorMask errorMask,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Phoneme.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static Phoneme CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Phoneme();
-            ((PhonemeSetterCommon)((IPhonemeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Phoneme CreateFromXml(
-            string path,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Phoneme CreateFromXml(
-            string path,
-            out Phoneme.ErrorMask errorMask,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Phoneme CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Phoneme CreateFromXml(
-            Stream stream,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Phoneme CreateFromXml(
-            Stream stream,
-            out Phoneme.ErrorMask errorMask,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Phoneme CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public class Mask<TItem> :
             IMask<TItem>,
@@ -344,6 +210,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Name = initialValue;
                 this.IY = initialValue;
                 this.IH = initialValue;
                 this.EH = initialValue;
@@ -390,6 +257,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
+                TItem Name,
                 TItem IY,
                 TItem IH,
                 TItem EH,
@@ -434,6 +302,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SHOTSIL,
                 TItem FLAP)
             {
+                this.Name = Name;
                 this.IY = IY;
                 this.IH = IH;
                 this.EH = EH;
@@ -488,6 +357,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
+            public TItem Name;
             public TItem IY;
             public TItem IH;
             public TItem EH;
@@ -543,6 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.IY, rhs.IY)) return false;
                 if (!object.Equals(this.IH, rhs.IH)) return false;
                 if (!object.Equals(this.EH, rhs.EH)) return false;
@@ -591,6 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
                 hash.Add(this.IY);
                 hash.Add(this.IH);
                 hash.Add(this.EH);
@@ -642,6 +514,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Name)) return false;
                 if (!eval(this.IY)) return false;
                 if (!eval(this.IH)) return false;
                 if (!eval(this.EH)) return false;
@@ -692,6 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Name)) return true;
                 if (eval(this.IY)) return true;
                 if (eval(this.IH)) return true;
                 if (eval(this.EH)) return true;
@@ -749,6 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Name = eval(this.Name);
                 obj.IY = eval(this.IY);
                 obj.IH = eval(this.IH);
                 obj.EH = eval(this.EH);
@@ -814,6 +689,10 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
                     if (printMask?.IY ?? true)
                     {
                         fg.AppendItem(IY, "IY");
@@ -1011,6 +890,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
+            public Exception? Name;
             public Exception? IY;
             public Exception? IH;
             public Exception? EH;
@@ -1062,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
                 switch (enu)
                 {
+                    case Phoneme_FieldIndex.Name:
+                        return Name;
                     case Phoneme_FieldIndex.IY:
                         return IY;
                     case Phoneme_FieldIndex.IH:
@@ -1158,6 +1040,9 @@ namespace Mutagen.Bethesda.Skyrim
                 Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
                 switch (enu)
                 {
+                    case Phoneme_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
                     case Phoneme_FieldIndex.IY:
                         this.IY = ex;
                         break;
@@ -1297,6 +1182,9 @@ namespace Mutagen.Bethesda.Skyrim
                 Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
                 switch (enu)
                 {
+                    case Phoneme_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
                     case Phoneme_FieldIndex.IY:
                         this.IY = (Exception?)obj;
                         break;
@@ -1434,6 +1322,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
                 if (IY != null) return true;
                 if (IH != null) return true;
                 if (EH != null) return true;
@@ -1511,6 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Name, "Name");
                 fg.AppendItem(IY, "IY");
                 fg.AppendItem(IH, "IH");
                 fg.AppendItem(EH, "EH");
@@ -1562,6 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
                 ret.IY = this.IY.Combine(rhs.IY);
                 ret.IH = this.IH.Combine(rhs.IH);
                 ret.EH = this.EH.Combine(rhs.EH);
@@ -1626,6 +1517,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public bool Name;
             public bool IY;
             public bool IH;
             public bool EH;
@@ -1674,6 +1566,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.Name = defaultOn;
                 this.IY = defaultOn;
                 this.IH = defaultOn;
                 this.EH = defaultOn;
@@ -1732,6 +1625,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Name, null));
                 ret.Add((IY, null));
                 ret.Add((IH, null));
                 ret.Add((EH, null));
@@ -1849,6 +1743,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPhonemeGetter,
         ILoquiObjectSetter<IPhoneme>
     {
+        new String Name { get; set; }
         new Single IY { get; set; }
         new Single IH { get; set; }
         new Single EH { get; set; }
@@ -1897,7 +1792,6 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPhonemeGetter :
         ILoquiObject,
         ILoquiObject<IPhonemeGetter>,
-        IXmlItem,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1907,6 +1801,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Phoneme_Registration.Instance;
+        String Name { get; }
         Single IY { get; }
         Single IH { get; }
         Single EH { get; }
@@ -2107,131 +2002,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPhoneme item,
-            XElement node,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPhoneme item,
-            XElement node,
-            out Phoneme.ErrorMask errorMask,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Phoneme.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IPhoneme item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((PhonemeSetterCommon)((IPhonemeGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPhoneme item,
-            string path,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPhoneme item,
-            string path,
-            out Phoneme.ErrorMask errorMask,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPhoneme item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IPhoneme item,
-            Stream stream,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPhoneme item,
-            Stream stream,
-            out Phoneme.ErrorMask errorMask,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPhoneme item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -2267,49 +2037,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum Phoneme_FieldIndex
     {
-        IY = 0,
-        IH = 1,
-        EH = 2,
-        EY = 3,
-        AE = 4,
-        AA = 5,
-        AW = 6,
-        AY = 7,
-        AH = 8,
-        AO = 9,
-        OY = 10,
-        OW = 11,
-        UH = 12,
-        UW = 13,
-        ER = 14,
-        AX = 15,
-        S = 16,
-        SH = 17,
-        Z = 18,
-        ZH = 19,
-        F = 20,
-        TH = 21,
-        V = 22,
-        DH = 23,
-        M = 24,
-        N = 25,
-        NG = 26,
-        L = 27,
-        R = 28,
-        W = 29,
-        Y = 30,
-        HH = 31,
-        B = 32,
-        D = 33,
-        JH = 34,
-        G = 35,
-        P = 36,
-        T = 37,
-        K = 38,
-        CH = 39,
-        SIL = 40,
-        SHOTSIL = 41,
-        FLAP = 42,
+        Name = 0,
+        IY = 1,
+        IH = 2,
+        EH = 3,
+        EY = 4,
+        AE = 5,
+        AA = 6,
+        AW = 7,
+        AY = 8,
+        AH = 9,
+        AO = 10,
+        OY = 11,
+        OW = 12,
+        UH = 13,
+        UW = 14,
+        ER = 15,
+        AX = 16,
+        S = 17,
+        SH = 18,
+        Z = 19,
+        ZH = 20,
+        F = 21,
+        TH = 22,
+        V = 23,
+        DH = 24,
+        M = 25,
+        N = 26,
+        NG = 27,
+        L = 28,
+        R = 29,
+        W = 30,
+        Y = 31,
+        HH = 32,
+        B = 33,
+        D = 34,
+        JH = 35,
+        G = 36,
+        P = 37,
+        T = 38,
+        K = 39,
+        CH = 40,
+        SIL = 41,
+        SHOTSIL = 42,
+        FLAP = 43,
     }
     #endregion
 
@@ -2327,9 +2098,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "de2d7619-85dc-497e-b8a2-b955f9340a93";
 
-        public const ushort AdditionalFieldCount = 43;
+        public const ushort AdditionalFieldCount = 44;
 
-        public const ushort FieldCount = 43;
+        public const ushort FieldCount = 44;
 
         public static readonly Type MaskType = typeof(Phoneme.Mask<>);
 
@@ -2359,6 +2130,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "NAME":
+                    return (ushort)Phoneme_FieldIndex.Name;
                 case "IY":
                     return (ushort)Phoneme_FieldIndex.IY;
                 case "IH":
@@ -2455,6 +2228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
             switch (enu)
             {
+                case Phoneme_FieldIndex.Name:
                 case Phoneme_FieldIndex.IY:
                 case Phoneme_FieldIndex.IH:
                 case Phoneme_FieldIndex.EH:
@@ -2509,6 +2283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
             switch (enu)
             {
+                case Phoneme_FieldIndex.Name:
                 case Phoneme_FieldIndex.IY:
                 case Phoneme_FieldIndex.IH:
                 case Phoneme_FieldIndex.EH:
@@ -2563,6 +2338,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
             switch (enu)
             {
+                case Phoneme_FieldIndex.Name:
                 case Phoneme_FieldIndex.IY:
                 case Phoneme_FieldIndex.IH:
                 case Phoneme_FieldIndex.EH:
@@ -2617,6 +2393,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
             switch (enu)
             {
+                case Phoneme_FieldIndex.Name:
+                    return "Name";
                 case Phoneme_FieldIndex.IY:
                     return "IY";
                 case Phoneme_FieldIndex.IH:
@@ -2713,6 +2491,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
             switch (enu)
             {
+                case Phoneme_FieldIndex.Name:
                 case Phoneme_FieldIndex.IY:
                 case Phoneme_FieldIndex.IH:
                 case Phoneme_FieldIndex.EH:
@@ -2767,6 +2546,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
             switch (enu)
             {
+                case Phoneme_FieldIndex.Name:
                 case Phoneme_FieldIndex.IY:
                 case Phoneme_FieldIndex.IH:
                 case Phoneme_FieldIndex.EH:
@@ -2821,6 +2601,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
             switch (enu)
             {
+                case Phoneme_FieldIndex.Name:
+                    return typeof(String);
                 case Phoneme_FieldIndex.IY:
                     return typeof(Single);
                 case Phoneme_FieldIndex.IH:
@@ -2912,7 +2694,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(PhonemeXmlWriteTranslation);
         public static readonly Type BinaryWriteTranslation = typeof(PhonemeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2955,6 +2736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPhoneme item)
         {
             ClearPartial();
+            item.Name = string.Empty;
             item.IY = default;
             item.IH = default;
             item.EH = default;
@@ -3000,34 +2782,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FLAP = default;
         }
         
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IPhoneme item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PhonemeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
-        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPhoneme item,
@@ -3069,6 +2823,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Name = string.Equals(item.Name, rhs.Name);
             ret.IY = item.IY.EqualsWithin(rhs.IY);
             ret.IH = item.IH.EqualsWithin(rhs.IH);
             ret.EH = item.EH.EqualsWithin(rhs.EH);
@@ -3158,6 +2913,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Phoneme.Mask<bool>? printMask = null)
         {
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendItem(item.Name, "Name");
+            }
             if (printMask?.IY ?? true)
             {
                 fg.AppendItem(item.IY, "IY");
@@ -3343,6 +3102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPhonemeGetter item,
             Phoneme.Mask<bool> mask)
         {
+            mask.Name = true;
             mask.IY = true;
             mask.IH = true;
             mask.EH = true;
@@ -3395,6 +3155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.IY.EqualsWithin(rhs.IY)) return false;
             if (!lhs.IH.EqualsWithin(rhs.IH)) return false;
             if (!lhs.EH.EqualsWithin(rhs.EH)) return false;
@@ -3444,6 +3205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IPhonemeGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Name);
             hash.Add(item.IY);
             hash.Add(item.IH);
             hash.Add(item.EH);
@@ -3519,6 +3281,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
+            if ((copyMask?.GetShouldTranslate((int)Phoneme_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
             if ((copyMask?.GetShouldTranslate((int)Phoneme_FieldIndex.IY) ?? true))
             {
                 item.IY = rhs.IY;
@@ -3767,1450 +3533,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class PhonemeXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static PhonemeXmlWriteTranslation Instance = new PhonemeXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IPhonemeGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.IY) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.IY),
-                    item: item.IY,
-                    fieldIndex: (int)Phoneme_FieldIndex.IY,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.IH) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.IH),
-                    item: item.IH,
-                    fieldIndex: (int)Phoneme_FieldIndex.IH,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.EH) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EH),
-                    item: item.EH,
-                    fieldIndex: (int)Phoneme_FieldIndex.EH,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.EY) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EY),
-                    item: item.EY,
-                    fieldIndex: (int)Phoneme_FieldIndex.EY,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.AE) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AE),
-                    item: item.AE,
-                    fieldIndex: (int)Phoneme_FieldIndex.AE,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.AA) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AA),
-                    item: item.AA,
-                    fieldIndex: (int)Phoneme_FieldIndex.AA,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.AW) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AW),
-                    item: item.AW,
-                    fieldIndex: (int)Phoneme_FieldIndex.AW,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.AY) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AY),
-                    item: item.AY,
-                    fieldIndex: (int)Phoneme_FieldIndex.AY,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.AH) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AH),
-                    item: item.AH,
-                    fieldIndex: (int)Phoneme_FieldIndex.AH,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.AO) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AO),
-                    item: item.AO,
-                    fieldIndex: (int)Phoneme_FieldIndex.AO,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.OY) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.OY),
-                    item: item.OY,
-                    fieldIndex: (int)Phoneme_FieldIndex.OY,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.OW) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.OW),
-                    item: item.OW,
-                    fieldIndex: (int)Phoneme_FieldIndex.OW,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.UH) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.UH),
-                    item: item.UH,
-                    fieldIndex: (int)Phoneme_FieldIndex.UH,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.UW) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.UW),
-                    item: item.UW,
-                    fieldIndex: (int)Phoneme_FieldIndex.UW,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.ER) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ER),
-                    item: item.ER,
-                    fieldIndex: (int)Phoneme_FieldIndex.ER,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.AX) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AX),
-                    item: item.AX,
-                    fieldIndex: (int)Phoneme_FieldIndex.AX,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.S) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.S),
-                    item: item.S,
-                    fieldIndex: (int)Phoneme_FieldIndex.S,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.SH) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SH),
-                    item: item.SH,
-                    fieldIndex: (int)Phoneme_FieldIndex.SH,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.Z) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Z),
-                    item: item.Z,
-                    fieldIndex: (int)Phoneme_FieldIndex.Z,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.ZH) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ZH),
-                    item: item.ZH,
-                    fieldIndex: (int)Phoneme_FieldIndex.ZH,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.F) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.F),
-                    item: item.F,
-                    fieldIndex: (int)Phoneme_FieldIndex.F,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.TH) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TH),
-                    item: item.TH,
-                    fieldIndex: (int)Phoneme_FieldIndex.TH,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.V) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.V),
-                    item: item.V,
-                    fieldIndex: (int)Phoneme_FieldIndex.V,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.DH) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DH),
-                    item: item.DH,
-                    fieldIndex: (int)Phoneme_FieldIndex.DH,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.M) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.M),
-                    item: item.M,
-                    fieldIndex: (int)Phoneme_FieldIndex.M,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.N) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.N),
-                    item: item.N,
-                    fieldIndex: (int)Phoneme_FieldIndex.N,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.NG) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NG),
-                    item: item.NG,
-                    fieldIndex: (int)Phoneme_FieldIndex.NG,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.L) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.L),
-                    item: item.L,
-                    fieldIndex: (int)Phoneme_FieldIndex.L,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.R) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.R),
-                    item: item.R,
-                    fieldIndex: (int)Phoneme_FieldIndex.R,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.W) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.W),
-                    item: item.W,
-                    fieldIndex: (int)Phoneme_FieldIndex.W,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.Y) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Y),
-                    item: item.Y,
-                    fieldIndex: (int)Phoneme_FieldIndex.Y,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.HH) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HH),
-                    item: item.HH,
-                    fieldIndex: (int)Phoneme_FieldIndex.HH,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.B) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.B),
-                    item: item.B,
-                    fieldIndex: (int)Phoneme_FieldIndex.B,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.D) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.D),
-                    item: item.D,
-                    fieldIndex: (int)Phoneme_FieldIndex.D,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.JH) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.JH),
-                    item: item.JH,
-                    fieldIndex: (int)Phoneme_FieldIndex.JH,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.G) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.G),
-                    item: item.G,
-                    fieldIndex: (int)Phoneme_FieldIndex.G,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.P) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.P),
-                    item: item.P,
-                    fieldIndex: (int)Phoneme_FieldIndex.P,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.T) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.T),
-                    item: item.T,
-                    fieldIndex: (int)Phoneme_FieldIndex.T,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.K) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.K),
-                    item: item.K,
-                    fieldIndex: (int)Phoneme_FieldIndex.K,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.CH) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CH),
-                    item: item.CH,
-                    fieldIndex: (int)Phoneme_FieldIndex.CH,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.SIL) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SIL),
-                    item: item.SIL,
-                    fieldIndex: (int)Phoneme_FieldIndex.SIL,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.SHOTSIL) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SHOTSIL),
-                    item: item.SHOTSIL,
-                    fieldIndex: (int)Phoneme_FieldIndex.SHOTSIL,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.FLAP) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FLAP),
-                    item: item.FLAP,
-                    fieldIndex: (int)Phoneme_FieldIndex.FLAP,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IPhonemeGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Phoneme");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Phoneme");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPhonemeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IPhonemeGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IPhonemeGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class PhonemeXmlCreateTranslation
-    {
-        public readonly static PhonemeXmlCreateTranslation Instance = new PhonemeXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IPhoneme item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PhonemeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IPhoneme item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "IY":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.IY);
-                    try
-                    {
-                        item.IY = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "IH":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.IH);
-                    try
-                    {
-                        item.IH = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EH":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.EH);
-                    try
-                    {
-                        item.EH = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EY":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.EY);
-                    try
-                    {
-                        item.EY = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AE":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.AE);
-                    try
-                    {
-                        item.AE = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AA":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.AA);
-                    try
-                    {
-                        item.AA = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AW":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.AW);
-                    try
-                    {
-                        item.AW = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AY":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.AY);
-                    try
-                    {
-                        item.AY = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AH":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.AH);
-                    try
-                    {
-                        item.AH = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AO":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.AO);
-                    try
-                    {
-                        item.AO = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "OY":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.OY);
-                    try
-                    {
-                        item.OY = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "OW":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.OW);
-                    try
-                    {
-                        item.OW = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UH":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.UH);
-                    try
-                    {
-                        item.UH = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UW":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.UW);
-                    try
-                    {
-                        item.UW = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ER":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.ER);
-                    try
-                    {
-                        item.ER = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AX":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.AX);
-                    try
-                    {
-                        item.AX = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "S":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.S);
-                    try
-                    {
-                        item.S = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SH":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.SH);
-                    try
-                    {
-                        item.SH = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Z":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.Z);
-                    try
-                    {
-                        item.Z = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ZH":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.ZH);
-                    try
-                    {
-                        item.ZH = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "F":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.F);
-                    try
-                    {
-                        item.F = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TH":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.TH);
-                    try
-                    {
-                        item.TH = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "V":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.V);
-                    try
-                    {
-                        item.V = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DH":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.DH);
-                    try
-                    {
-                        item.DH = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "M":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.M);
-                    try
-                    {
-                        item.M = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "N":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.N);
-                    try
-                    {
-                        item.N = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NG":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.NG);
-                    try
-                    {
-                        item.NG = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "L":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.L);
-                    try
-                    {
-                        item.L = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "R":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.R);
-                    try
-                    {
-                        item.R = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "W":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.W);
-                    try
-                    {
-                        item.W = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Y":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.Y);
-                    try
-                    {
-                        item.Y = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HH":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.HH);
-                    try
-                    {
-                        item.HH = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "B":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.B);
-                    try
-                    {
-                        item.B = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "D":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.D);
-                    try
-                    {
-                        item.D = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "JH":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.JH);
-                    try
-                    {
-                        item.JH = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "G":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.G);
-                    try
-                    {
-                        item.G = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "P":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.P);
-                    try
-                    {
-                        item.P = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "T":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.T);
-                    try
-                    {
-                        item.T = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "K":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.K);
-                    try
-                    {
-                        item.K = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CH":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.CH);
-                    try
-                    {
-                        item.CH = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SIL":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.SIL);
-                    try
-                    {
-                        item.SIL = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SHOTSIL":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.SHOTSIL);
-                    try
-                    {
-                        item.SHOTSIL = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FLAP":
-                    errorMask?.PushIndex((int)Phoneme_FieldIndex.FLAP);
-                    try
-                    {
-                        item.FLAP = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class PhonemeXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IPhonemeGetter item,
-            XElement node,
-            out Phoneme.ErrorMask errorMask,
-            Phoneme.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((PhonemeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Phoneme.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IPhonemeGetter item,
-            string path,
-            out Phoneme.ErrorMask errorMask,
-            Phoneme.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPhonemeGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPhonemeGetter item,
-            Stream stream,
-            out Phoneme.ErrorMask errorMask,
-            Phoneme.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPhonemeGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPhonemeGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((PhonemeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IPhonemeGetter item,
-            XElement node,
-            string? name = null,
-            Phoneme.TranslationMask? translationMask = null)
-        {
-            ((PhonemeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IPhonemeGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PhonemeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPhonemeGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PhonemeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -5307,23 +3629,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPhonemeGetter)rhs, include);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PhonemeXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PhonemeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PhonemeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

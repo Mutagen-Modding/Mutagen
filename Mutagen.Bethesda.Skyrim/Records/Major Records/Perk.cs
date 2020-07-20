@@ -124,9 +124,9 @@ namespace Mutagen.Bethesda.Skyrim
                             ReadOnlyMemorySlice<byte>? epf3 = null;
                             ReadOnlyMemorySlice<byte>? epfd = null;
                             ReadOnlyMemorySlice<byte>? epft = null;
-                            while (stream.TryReadSubrecordMemoryFrame(out var subFrame, readSafe: true))
+                            while (stream.TryReadSubrecordFrame(out var subFrame))
                             {
-                                switch (subFrame.Header.RecordTypeInt)
+                                switch (subFrame.RecordTypeInt)
                                 {
                                     case RecordTypeInts.EPF2:
                                         epf2 = subFrame.Content;
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Skyrim
                                     }
                                     entryPointEffect = new PerkModifyValue()
                                     {
-                                        Value = SpanExt.GetFloat(epfd.Value),
+                                        Value = epfd.Value.Float(),
                                         Modification = func switch
                                         {
                                             APerkEntryPointEffect.FunctionType.SetValue => PerkModifyValue.ModificationType.Set,
@@ -189,8 +189,8 @@ namespace Mutagen.Bethesda.Skyrim
                                     }
                                     entryPointEffect = new PerkAddRangeToValue()
                                     {
-                                        From = SpanExt.GetFloat(epfd.Value),
-                                        To = SpanExt.GetFloat(epfd.Value.Slice(4)),
+                                        From = epfd.Value.Float(),
+                                        To = epfd.Value.Slice(4).Float(),
                                     };
                                     break;
                                 case APerkEntryPointEffect.FunctionType.SetToActorValueMult:
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Skyrim
                                     entryPointEffect = new PerkModifyActorValue()
                                     {
                                         ActorValue = (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(epfd.Value),
-                                        Value = SpanExt.GetFloat(epfd.Value.Slice(4)),
+                                        Value = epfd.Value.Slice(4).Float(),
                                         Modification = func switch
                                         {
                                             APerkEntryPointEffect.FunctionType.SetToActorValueMult => PerkModifyActorValue.ModificationType.SetToAVMult,

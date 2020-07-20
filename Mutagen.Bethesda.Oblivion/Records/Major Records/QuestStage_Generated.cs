@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -52,8 +46,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LogEntries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LogEntry> _LogEntries = new ExtendedList<LogEntry>();
-        public ExtendedList<LogEntry> LogEntries
+        private IExtendedList<LogEntry> _LogEntries = new ExtendedList<LogEntry>();
+        public IExtendedList<LogEntry> LogEntries
         {
             get => this._LogEntries;
             protected set => this._LogEntries = value;
@@ -91,137 +85,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public override int GetHashCode() => ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => QuestStageXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((QuestStageXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static QuestStage CreateFromXml(
-            XElement node,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static QuestStage CreateFromXml(
-            XElement node,
-            out QuestStage.ErrorMask errorMask,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = QuestStage.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static QuestStage CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new QuestStage();
-            ((QuestStageSetterCommon)((IQuestStageGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static QuestStage CreateFromXml(
-            string path,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static QuestStage CreateFromXml(
-            string path,
-            out QuestStage.ErrorMask errorMask,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static QuestStage CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static QuestStage CreateFromXml(
-            Stream stream,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static QuestStage CreateFromXml(
-            Stream stream,
-            out QuestStage.ErrorMask errorMask,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static QuestStage CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -597,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = QuestStage_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = QuestStage_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => QuestStageCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -677,13 +540,12 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IQuestStage>
     {
         new UInt16 Stage { get; set; }
-        new ExtendedList<LogEntry> LogEntries { get; }
+        new IExtendedList<LogEntry> LogEntries { get; }
     }
 
     public partial interface IQuestStageGetter :
         ILoquiObject,
         ILoquiObject<IQuestStageGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -852,131 +714,6 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IQuestStage item,
-            XElement node,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IQuestStage item,
-            XElement node,
-            out QuestStage.ErrorMask errorMask,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = QuestStage.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestStage item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((QuestStageSetterCommon)((IQuestStageGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestStage item,
-            string path,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestStage item,
-            string path,
-            out QuestStage.ErrorMask errorMask,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestStage item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IQuestStage item,
-            Stream stream,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestStage item,
-            Stream stream,
-            out QuestStage.ErrorMask errorMask,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestStage item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1162,13 +899,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case QuestStage_FieldIndex.Stage:
                     return typeof(UInt16);
                 case QuestStage_FieldIndex.LogEntries:
-                    return typeof(ExtendedList<LogEntry>);
+                    return typeof(IExtendedList<LogEntry>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(QuestStageXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.INDX;
         public static readonly Type BinaryWriteTranslation = typeof(QuestStageBinaryWriteTranslation);
         #region Interface
@@ -1215,34 +951,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Stage = default;
             item.LogEntries.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IQuestStage item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    QuestStageXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1535,364 +1243,6 @@ namespace Mutagen.Bethesda.Oblivion
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public partial class QuestStageXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static QuestStageXmlWriteTranslation Instance = new QuestStageXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IQuestStageGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)QuestStage_FieldIndex.Stage) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Stage),
-                    item: item.Stage,
-                    fieldIndex: (int)QuestStage_FieldIndex.Stage,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)QuestStage_FieldIndex.LogEntries) ?? true))
-            {
-                ListXmlTranslation<ILogEntryGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.LogEntries),
-                    item: item.LogEntries,
-                    fieldIndex: (int)QuestStage_FieldIndex.LogEntries,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)QuestStage_FieldIndex.LogEntries),
-                    transl: (XElement subNode, ILogEntryGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LogEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IQuestStageGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.QuestStage");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.QuestStage");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IQuestStageGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IQuestStageGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IQuestStageGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class QuestStageXmlCreateTranslation
-    {
-        public readonly static QuestStageXmlCreateTranslation Instance = new QuestStageXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IQuestStage item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    QuestStageXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IQuestStage item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Stage":
-                    errorMask?.PushIndex((int)QuestStage_FieldIndex.Stage);
-                    try
-                    {
-                        item.Stage = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LogEntries":
-                    errorMask?.PushIndex((int)QuestStage_FieldIndex.LogEntries);
-                    try
-                    {
-                        if (ListXmlTranslation<LogEntry>.Instance.Parse(
-                            node: node,
-                            enumer: out var LogEntriesItem,
-                            transl: LoquiXmlTranslation<LogEntry>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.LogEntries.SetTo(LogEntriesItem);
-                        }
-                        else
-                        {
-                            item.LogEntries.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Oblivion
-{
-    #region Xml Write Mixins
-    public static class QuestStageXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IQuestStageGetter item,
-            XElement node,
-            out QuestStage.ErrorMask errorMask,
-            QuestStage.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((QuestStageXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = QuestStage.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IQuestStageGetter item,
-            string path,
-            out QuestStage.ErrorMask errorMask,
-            QuestStage.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IQuestStageGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IQuestStageGetter item,
-            Stream stream,
-            out QuestStage.ErrorMask errorMask,
-            QuestStage.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IQuestStageGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IQuestStageGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((QuestStageXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IQuestStageGetter item,
-            XElement node,
-            string? name = null,
-            QuestStage.TranslationMask? translationMask = null)
-        {
-            ((QuestStageXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IQuestStageGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((QuestStageXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IQuestStageGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((QuestStageXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -1956,10 +1306,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IQuestStage item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1969,10 +1320,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Stage = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Stage);
+                    return (int)QuestStage_FieldIndex.Stage;
                 }
                 case RecordTypeInts.QSDT:
                 case RecordTypeInts.CTDA:
@@ -1987,10 +1338,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: LogEntry_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: LogEntry.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);
+                    return (int)QuestStage_FieldIndex.LogEntries;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2050,23 +1401,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestStageCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestStageCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestStageCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => QuestStageXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((QuestStageXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestStageBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2131,12 +1465,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2144,9 +1479,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return ParseResult.Stop;
                     _StageLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Stage);
+                    return (int)QuestStage_FieldIndex.Stage;
                 }
                 case RecordTypeInts.QSDT:
                 case RecordTypeInts.CTDA:
@@ -2160,10 +1495,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: LogEntry_Registration.TriggeringRecordTypes,
                         factory:  LogEntryBinaryOverlay.LogEntryFactory);
-                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);
+                    return (int)QuestStage_FieldIndex.LogEntries;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

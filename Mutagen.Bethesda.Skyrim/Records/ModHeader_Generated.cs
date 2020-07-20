@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -102,8 +96,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MasterReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<MasterReference> _MasterReferences = new ExtendedList<MasterReference>();
-        public ExtendedList<MasterReference> MasterReferences
+        private IExtendedList<MasterReference> _MasterReferences = new ExtendedList<MasterReference>();
+        public IExtendedList<MasterReference> MasterReferences
         {
             get => this._MasterReferences;
             protected set => this._MasterReferences = value;
@@ -116,8 +110,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region OverriddenForms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<SkyrimMajorRecord>>? _OverriddenForms;
-        public ExtendedList<IFormLink<SkyrimMajorRecord>>? OverriddenForms
+        private IExtendedList<IFormLink<SkyrimMajorRecord>>? _OverriddenForms;
+        public IExtendedList<IFormLink<SkyrimMajorRecord>>? OverriddenForms
         {
             get => this._OverriddenForms;
             set => this._OverriddenForms = value;
@@ -165,137 +159,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((ModHeaderCommon)((IModHeaderGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => ModHeaderXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ModHeaderXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static ModHeader CreateFromXml(
-            XElement node,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static ModHeader CreateFromXml(
-            XElement node,
-            out ModHeader.ErrorMask errorMask,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ModHeader.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static ModHeader CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new ModHeader();
-            ((ModHeaderSetterCommon)((IModHeaderGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static ModHeader CreateFromXml(
-            string path,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ModHeader CreateFromXml(
-            string path,
-            out ModHeader.ErrorMask errorMask,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ModHeader CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static ModHeader CreateFromXml(
-            Stream stream,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ModHeader CreateFromXml(
-            Stream stream,
-            out ModHeader.ErrorMask errorMask,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ModHeader CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -1088,7 +951,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ModHeader_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = ModHeader_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ModHeaderCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1177,8 +1040,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? Deleted { get; set; }
         new String? Author { get; set; }
         new String? Description { get; set; }
-        new ExtendedList<MasterReference> MasterReferences { get; }
-        new ExtendedList<IFormLink<SkyrimMajorRecord>>? OverriddenForms { get; set; }
+        new IExtendedList<MasterReference> MasterReferences { get; }
+        new IExtendedList<IFormLink<SkyrimMajorRecord>>? OverriddenForms { get; set; }
         new Int32? INTV { get; set; }
         new Int32? INCC { get; set; }
     }
@@ -1186,7 +1049,6 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IModHeaderGetter :
         ILoquiObject,
         ILoquiObject<IModHeaderGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -1367,131 +1229,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IModHeader item,
-            XElement node,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IModHeader item,
-            XElement node,
-            out ModHeader.ErrorMask errorMask,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ModHeader.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IModHeader item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ModHeaderSetterCommon)((IModHeaderGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IModHeader item,
-            string path,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IModHeader item,
-            string path,
-            out ModHeader.ErrorMask errorMask,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IModHeader item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IModHeader item,
-            Stream stream,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IModHeader item,
-            Stream stream,
-            out ModHeader.ErrorMask errorMask,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IModHeader item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1815,9 +1552,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ModHeader_FieldIndex.Description:
                     return typeof(String);
                 case ModHeader_FieldIndex.MasterReferences:
-                    return typeof(ExtendedList<MasterReference>);
+                    return typeof(IExtendedList<MasterReference>);
                 case ModHeader_FieldIndex.OverriddenForms:
-                    return typeof(ExtendedList<IFormLink<SkyrimMajorRecord>>);
+                    return typeof(IExtendedList<IFormLink<SkyrimMajorRecord>>);
                 case ModHeader_FieldIndex.INTV:
                     return typeof(Int32);
                 case ModHeader_FieldIndex.INCC:
@@ -1827,7 +1564,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ModHeaderXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.TES4;
         public static readonly Type BinaryWriteTranslation = typeof(ModHeaderBinaryWriteTranslation);
         #region Interface
@@ -1886,34 +1622,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.INTV = default;
             item.INCC = default;
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IModHeader item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ModHeaderXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2459,723 +2167,25 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class ModHeaderXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static ModHeaderXmlWriteTranslation Instance = new ModHeaderXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IModHeaderGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<ModHeader.HeaderFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)ModHeader_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.FormID) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FormID),
-                    item: item.FormID,
-                    fieldIndex: (int)ModHeader_FieldIndex.FormID,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Version) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Version),
-                    item: item.Version,
-                    fieldIndex: (int)ModHeader_FieldIndex.Version,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.FormVersion) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FormVersion),
-                    item: item.FormVersion,
-                    fieldIndex: (int)ModHeader_FieldIndex.FormVersion,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Version2) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Version2),
-                    item: item.Version2,
-                    fieldIndex: (int)ModHeader_FieldIndex.Version2,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Stats) ?? true))
-            {
-                var StatsItem = item.Stats;
-                ((ModStatsXmlWriteTranslation)((IXmlItem)StatsItem).XmlWriteTranslator).Write(
-                    item: StatsItem,
-                    node: node,
-                    name: nameof(item.Stats),
-                    fieldIndex: (int)ModHeader_FieldIndex.Stats,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ModHeader_FieldIndex.Stats));
-            }
-            if ((item.TypeOffsets != null)
-                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.TypeOffsets) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TypeOffsets),
-                    item: item.TypeOffsets.Value,
-                    fieldIndex: (int)ModHeader_FieldIndex.TypeOffsets,
-                    errorMask: errorMask);
-            }
-            if ((item.Deleted != null)
-                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Deleted) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Deleted),
-                    item: item.Deleted.Value,
-                    fieldIndex: (int)ModHeader_FieldIndex.Deleted,
-                    errorMask: errorMask);
-            }
-            if ((item.Author != null)
-                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Author) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Author),
-                    item: item.Author,
-                    fieldIndex: (int)ModHeader_FieldIndex.Author,
-                    errorMask: errorMask);
-            }
-            if ((item.Description != null)
-                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Description) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Description),
-                    item: item.Description,
-                    fieldIndex: (int)ModHeader_FieldIndex.Description,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.MasterReferences) ?? true))
-            {
-                ListXmlTranslation<IMasterReferenceGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MasterReferences),
-                    item: item.MasterReferences,
-                    fieldIndex: (int)ModHeader_FieldIndex.MasterReferences,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ModHeader_FieldIndex.MasterReferences),
-                    transl: (XElement subNode, IMasterReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((MasterReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.OverriddenForms != null)
-                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.OverriddenForms) ?? true))
-            {
-                ListXmlTranslation<IFormLink<ISkyrimMajorRecordGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.OverriddenForms),
-                    item: item.OverriddenForms,
-                    fieldIndex: (int)ModHeader_FieldIndex.OverriddenForms,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ModHeader_FieldIndex.OverriddenForms),
-                    transl: (XElement subNode, IFormLink<ISkyrimMajorRecordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.INTV != null)
-                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.INTV) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.INTV),
-                    item: item.INTV.Value,
-                    fieldIndex: (int)ModHeader_FieldIndex.INTV,
-                    errorMask: errorMask);
-            }
-            if ((item.INCC != null)
-                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.INCC) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.INCC),
-                    item: item.INCC.Value,
-                    fieldIndex: (int)ModHeader_FieldIndex.INCC,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IModHeaderGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ModHeader");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ModHeader");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IModHeaderGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IModHeaderGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IModHeaderGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class ModHeaderXmlCreateTranslation
-    {
-        public readonly static ModHeaderXmlCreateTranslation Instance = new ModHeaderXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IModHeader item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ModHeaderXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IModHeader item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Flags":
-                    errorMask?.PushIndex((int)ModHeader_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<ModHeader.HeaderFlag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FormID":
-                    errorMask?.PushIndex((int)ModHeader_FieldIndex.FormID);
-                    try
-                    {
-                        item.FormID = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Version":
-                    errorMask?.PushIndex((int)ModHeader_FieldIndex.Version);
-                    try
-                    {
-                        item.Version = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FormVersion":
-                    errorMask?.PushIndex((int)ModHeader_FieldIndex.FormVersion);
-                    try
-                    {
-                        item.FormVersion = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Version2":
-                    errorMask?.PushIndex((int)ModHeader_FieldIndex.Version2);
-                    try
-                    {
-                        item.Version2 = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Stats":
-                    errorMask?.PushIndex((int)ModHeader_FieldIndex.Stats);
-                    try
-                    {
-                        item.Stats = LoquiXmlTranslation<ModStats>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)ModHeader_FieldIndex.Stats));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TypeOffsets":
-                    errorMask?.PushIndex((int)ModHeader_FieldIndex.TypeOffsets);
-                    try
-                    {
-                        item.TypeOffsets = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Deleted":
-                    errorMask?.PushIndex((int)ModHeader_FieldIndex.Deleted);
-                    try
-                    {
-                        item.Deleted = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Author":
-                    errorMask?.PushIndex((int)ModHeader_FieldIndex.Author);
-                    try
-                    {
-                        item.Author = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Description":
-                    errorMask?.PushIndex((int)ModHeader_FieldIndex.Description);
-                    try
-                    {
-                        item.Description = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MasterReferences":
-                    errorMask?.PushIndex((int)ModHeader_FieldIndex.MasterReferences);
-                    try
-                    {
-                        if (ListXmlTranslation<MasterReference>.Instance.Parse(
-                            node: node,
-                            enumer: out var MasterReferencesItem,
-                            transl: LoquiXmlTranslation<MasterReference>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.MasterReferences.SetTo(MasterReferencesItem);
-                        }
-                        else
-                        {
-                            item.MasterReferences.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "OverriddenForms":
-                    errorMask?.PushIndex((int)ModHeader_FieldIndex.OverriddenForms);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<SkyrimMajorRecord>>.Instance.Parse(
-                            node: node,
-                            enumer: out var OverriddenFormsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.OverriddenForms = OverriddenFormsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.OverriddenForms = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "INTV":
-                    errorMask?.PushIndex((int)ModHeader_FieldIndex.INTV);
-                    try
-                    {
-                        item.INTV = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "INCC":
-                    errorMask?.PushIndex((int)ModHeader_FieldIndex.INCC);
-                    try
-                    {
-                        item.INCC = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class ModHeaderXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IModHeaderGetter item,
-            XElement node,
-            out ModHeader.ErrorMask errorMask,
-            ModHeader.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ModHeaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ModHeader.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IModHeaderGetter item,
-            string path,
-            out ModHeader.ErrorMask errorMask,
-            ModHeader.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IModHeaderGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IModHeaderGetter item,
-            Stream stream,
-            out ModHeader.ErrorMask errorMask,
-            ModHeader.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IModHeaderGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IModHeaderGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((ModHeaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IModHeaderGetter item,
-            XElement node,
-            string? name = null,
-            ModHeader.TranslationMask? translationMask = null)
-        {
-            ((ModHeaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IModHeaderGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((ModHeaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IModHeaderGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((ModHeaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
         public readonly static ModHeaderBinaryWriteTranslation Instance = new ModHeaderBinaryWriteTranslation();
+
+        static partial void WriteBinaryMasterReferencesCustom(
+            MutagenWriter writer,
+            IModHeaderGetter item);
+
+        public static void WriteBinaryMasterReferences(
+            MutagenWriter writer,
+            IModHeaderGetter item)
+        {
+            WriteBinaryMasterReferencesCustom(
+                writer: writer,
+                item: item);
+        }
 
         public static void WriteEmbedded(
             IModHeaderGetter item,
@@ -3219,17 +2229,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
+            ModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
-                items: item.MasterReferences,
-                transl: (MutagenWriter subWriter, IMasterReferenceGetter subItem, RecordTypeConverter? conv) =>
-                {
-                    var Item = subItem;
-                    ((MasterReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        recordTypeConverter: conv);
-                });
+                item: item);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISkyrimMajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.OverriddenForms,
@@ -3298,9 +2300,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Version2 = frame.ReadUInt16();
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IModHeader item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3311,19 +2314,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.HEDR:
                 {
                     item.Stats = Mutagen.Bethesda.Skyrim.ModStats.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
+                    return (int)ModHeader_FieldIndex.Stats;
                 }
                 case RecordTypeInts.OFST:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TypeOffsets = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
+                    return (int)ModHeader_FieldIndex.TypeOffsets;
                 }
                 case RecordTypeInts.DELE:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Deleted = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
+                    return (int)ModHeader_FieldIndex.Deleted;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -3331,7 +2334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Author = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
+                    return (int)ModHeader_FieldIndex.Author;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -3339,17 +2342,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
+                    return (int)ModHeader_FieldIndex.Description;
                 }
                 case RecordTypeInts.MAST:
                 {
-                    item.MasterReferences.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: RecordTypes.MAST,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: MasterReference.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
+                    ModHeaderBinaryCreateTranslation.FillBinaryMasterReferencesCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return (int)ModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -3358,26 +2358,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<SkyrimMajorRecord>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<SkyrimMajorRecord>>();
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.OverriddenForms);
+                        .CastExtendedList<IFormLink<SkyrimMajorRecord>>();
+                    return (int)ModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.INTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INTV = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INTV);
+                    return (int)ModHeader_FieldIndex.INTV;
                 }
                 case RecordTypeInts.INCC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INCC = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INCC);
+                    return (int)ModHeader_FieldIndex.INCC;
                 }
                 default:
                     frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
+
+        static partial void FillBinaryMasterReferencesCustom(
+            MutagenFrame frame,
+            IModHeader item);
 
     }
 
@@ -3435,23 +2439,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ModHeaderCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ModHeaderCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ModHeaderCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => ModHeaderXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ModHeaderXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3526,7 +2513,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new ModHeaderBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
@@ -3553,12 +2540,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3567,27 +2555,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.HEDR:
                 {
                     _StatsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
+                    return (int)ModHeader_FieldIndex.Stats;
                 }
                 case RecordTypeInts.OFST:
                 {
                     _TypeOffsetsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
+                    return (int)ModHeader_FieldIndex.TypeOffsets;
                 }
                 case RecordTypeInts.DELE:
                 {
                     _DeletedLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
+                    return (int)ModHeader_FieldIndex.Deleted;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _AuthorLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
+                    return (int)ModHeader_FieldIndex.Author;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
+                    return (int)ModHeader_FieldIndex.Description;
                 }
                 case RecordTypeInts.MAST:
                 {
@@ -3596,32 +2584,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: RecordTypes.MAST,
                         factory:  MasterReferenceBinaryOverlay.MasterReferenceFactory);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
+                    return (int)ModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.OverriddenForms = BinaryOverlayList<IFormLink<ISkyrimMajorRecordGetter>>.FactoryByStartIndex(
+                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLink<ISkyrimMajorRecordGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.OverriddenForms);
+                    return (int)ModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.INTV:
                 {
                     _INTVLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INTV);
+                    return (int)ModHeader_FieldIndex.INTV;
                 }
                 case RecordTypeInts.INCC:
                 {
                     _INCCLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INCC);
+                    return (int)ModHeader_FieldIndex.INCC;
                 }
                 default:
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
         #region To String

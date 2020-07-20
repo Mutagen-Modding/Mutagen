@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -103,8 +97,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AdditionalRaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Race>> _AdditionalRaces = new ExtendedList<IFormLink<Race>>();
-        public ExtendedList<IFormLink<Race>> AdditionalRaces
+        private IExtendedList<IFormLink<Race>> _AdditionalRaces = new ExtendedList<IFormLink<Race>>();
+        public IExtendedList<IFormLink<Race>> AdditionalRaces
         {
             get => this._AdditionalRaces;
             protected set => this._AdditionalRaces = value;
@@ -158,135 +152,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ArmorAddonXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ArmorAddonXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new ArmorAddon CreateFromXml(
-            XElement node,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static ArmorAddon CreateFromXml(
-            XElement node,
-            out ArmorAddon.ErrorMask errorMask,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ArmorAddon.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static ArmorAddon CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new ArmorAddon();
-            ((ArmorAddonSetterCommon)((IArmorAddonGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static ArmorAddon CreateFromXml(
-            string path,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ArmorAddon CreateFromXml(
-            string path,
-            out ArmorAddon.ErrorMask errorMask,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ArmorAddon CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static ArmorAddon CreateFromXml(
-            Stream stream,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ArmorAddon CreateFromXml(
-            Stream stream,
-            out ArmorAddon.ErrorMask errorMask,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ArmorAddon CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -318,7 +183,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -341,7 +206,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -1106,7 +971,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ArmorAddon_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = ArmorAddon_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1217,7 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim
         new GenderedItem<Model?>? FirstPersonModel { get; set; }
         new GenderedItem<IFormLinkNullable<TextureSet>>? SkinTexture { get; set; }
         new GenderedItem<IFormLinkNullable<FormList>>? TextureSwapList { get; set; }
-        new ExtendedList<IFormLink<Race>> AdditionalRaces { get; }
+        new IExtendedList<IFormLink<Race>> AdditionalRaces { get; }
         new FormLinkNullable<FootstepSet> FootstepSound { get; set; }
         new FormLinkNullable<ArtObject> ArtObject { get; set; }
         new ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; }
@@ -1239,11 +1104,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArmorAddonGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IArmorAddonGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ArmorAddon_Registration.Instance;
+        static new ILoquiRegistration Registration => ArmorAddon_Registration.Instance;
         IBodyTemplateGetter? BodyTemplate { get; }
         IFormLinkNullable<IRaceGetter> Race { get; }
         IGenderedItemGetter<Byte> Priority { get; }
@@ -1394,131 +1258,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IArmorAddonInternal item,
-            XElement node,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IArmorAddonInternal item,
-            XElement node,
-            out ArmorAddon.ErrorMask errorMask,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ArmorAddon.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IArmorAddonInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ArmorAddonSetterCommon)((IArmorAddonGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IArmorAddonInternal item,
-            string path,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IArmorAddonInternal item,
-            string path,
-            out ArmorAddon.ErrorMask errorMask,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IArmorAddonInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IArmorAddonInternal item,
-            Stream stream,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IArmorAddonInternal item,
-            Stream stream,
-            out ArmorAddon.ErrorMask errorMask,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IArmorAddonInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ArmorAddon.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1556,7 +1295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1871,7 +1610,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ArmorAddon_FieldIndex.TextureSwapList:
                     return typeof(GenderedItem<IFormLinkNullable<FormList>>);
                 case ArmorAddon_FieldIndex.AdditionalRaces:
-                    return typeof(ExtendedList<IFormLink<Race>>);
+                    return typeof(IExtendedList<IFormLink<Race>>);
                 case ArmorAddon_FieldIndex.FootstepSound:
                     return typeof(FormLinkNullable<FootstepSet>);
                 case ArmorAddon_FieldIndex.ArtObject:
@@ -1883,7 +1622,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ArmorAddonXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.ARMA;
         public static readonly Type BinaryWriteTranslation = typeof(ArmorAddonBinaryWriteTranslation);
         public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
@@ -1997,86 +1735,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IArmorAddonInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IArmorAddonInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IArmorAddonInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    ArmorAddonXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (ArmorAddon)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (ArmorAddon)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2380,7 +2038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ArmorAddon_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (ArmorAddon_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (ArmorAddon_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (ArmorAddon_FieldIndex)((int)index);
@@ -2401,7 +2059,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ArmorAddon_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (ArmorAddon_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (ArmorAddon_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (ArmorAddon_FieldIndex)((int)index);
@@ -2843,766 +2501,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class ArmorAddonXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static ArmorAddonXmlWriteTranslation Instance = new ArmorAddonXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IArmorAddonGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.BodyTemplate != null)
-                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.BodyTemplate) ?? true))
-            {
-                if (item.BodyTemplate.TryGet(out var BodyTemplateItem))
-                {
-                    ((BodyTemplateXmlWriteTranslation)((IXmlItem)BodyTemplateItem).XmlWriteTranslator).Write(
-                        item: BodyTemplateItem,
-                        node: node,
-                        name: nameof(item.BodyTemplate),
-                        fieldIndex: (int)ArmorAddon_FieldIndex.BodyTemplate,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)ArmorAddon_FieldIndex.BodyTemplate));
-                }
-            }
-            if ((item.Race.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Race) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Race),
-                    item: item.Race.FormKey,
-                    fieldIndex: (int)ArmorAddon_FieldIndex.Race,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Priority) ?? true))
-            {
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Priority),
-                        item: item.Priority.Male,
-                        errorMask: errorMask);
-                }
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Priority),
-                        item: item.Priority.Female,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeightSliderEnabled) ?? true))
-            {
-                {
-                    BooleanXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.WeightSliderEnabled),
-                        item: item.WeightSliderEnabled.Male,
-                        errorMask: errorMask);
-                }
-                {
-                    BooleanXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.WeightSliderEnabled),
-                        item: item.WeightSliderEnabled.Female,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)ArmorAddon_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DetectionSoundValue) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DetectionSoundValue),
-                    item: item.DetectionSoundValue,
-                    fieldIndex: (int)ArmorAddon_FieldIndex.DetectionSoundValue,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown2) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown2),
-                    item: item.Unknown2,
-                    fieldIndex: (int)ArmorAddon_FieldIndex.Unknown2,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeaponAdjust) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WeaponAdjust),
-                    item: item.WeaponAdjust,
-                    fieldIndex: (int)ArmorAddon_FieldIndex.WeaponAdjust,
-                    errorMask: errorMask);
-            }
-            if ((item.WorldModel != null)
-                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WorldModel) ?? true))
-            {
-                {
-                    if (item.WorldModel.Male.TryGet(out var Item))
-                    {
-                        ((ModelXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: node,
-                            name: nameof(item.WorldModel),
-                            errorMask: errorMask,
-                            translationMask: translationMask);
-                    }
-                }
-                {
-                    if (item.WorldModel.Female.TryGet(out var Item))
-                    {
-                        ((ModelXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: node,
-                            name: nameof(item.WorldModel),
-                            errorMask: errorMask,
-                            translationMask: translationMask);
-                    }
-                }
-            }
-            if ((item.FirstPersonModel != null)
-                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FirstPersonModel) ?? true))
-            {
-                {
-                    if (item.FirstPersonModel.Male.TryGet(out var Item))
-                    {
-                        ((ModelXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: node,
-                            name: nameof(item.FirstPersonModel),
-                            errorMask: errorMask,
-                            translationMask: translationMask);
-                    }
-                }
-                {
-                    if (item.FirstPersonModel.Female.TryGet(out var Item))
-                    {
-                        ((ModelXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: node,
-                            name: nameof(item.FirstPersonModel),
-                            errorMask: errorMask,
-                            translationMask: translationMask);
-                    }
-                }
-            }
-            if ((item.SkinTexture != null)
-                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.SkinTexture) ?? true))
-            {
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.SkinTexture),
-                        item: item.SkinTexture.Male.FormKey,
-                        errorMask: errorMask);
-                }
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.SkinTexture),
-                        item: item.SkinTexture.Female.FormKey,
-                        errorMask: errorMask);
-                }
-            }
-            if ((item.TextureSwapList != null)
-                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.TextureSwapList) ?? true))
-            {
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.TextureSwapList),
-                        item: item.TextureSwapList.Male.FormKey,
-                        errorMask: errorMask);
-                }
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.TextureSwapList),
-                        item: item.TextureSwapList.Female.FormKey,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.AdditionalRaces) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IRaceGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.AdditionalRaces),
-                    item: item.AdditionalRaces,
-                    fieldIndex: (int)ArmorAddon_FieldIndex.AdditionalRaces,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ArmorAddon_FieldIndex.AdditionalRaces),
-                    transl: (XElement subNode, IFormLink<IRaceGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.FootstepSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FootstepSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FootstepSound),
-                    item: item.FootstepSound.FormKey,
-                    fieldIndex: (int)ArmorAddon_FieldIndex.FootstepSound,
-                    errorMask: errorMask);
-            }
-            if ((item.ArtObject.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ArtObject) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ArtObject),
-                    item: item.ArtObject.FormKey,
-                    fieldIndex: (int)ArmorAddon_FieldIndex.ArtObject,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<ArmorAddon.DNAMDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DNAMDataTypeState),
-                    item: item.DNAMDataTypeState,
-                    fieldIndex: (int)ArmorAddon_FieldIndex.DNAMDataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IArmorAddonGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ArmorAddon");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ArmorAddon");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IArmorAddonGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IArmorAddonGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IArmorAddonGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class ArmorAddonXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static ArmorAddonXmlCreateTranslation Instance = new ArmorAddonXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IArmorAddonInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ArmorAddonXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IArmorAddonInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "BodyTemplate":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.BodyTemplate);
-                    try
-                    {
-                        item.BodyTemplate = LoquiXmlTranslation<BodyTemplate>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)ArmorAddon_FieldIndex.BodyTemplate));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Race":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.Race);
-                    try
-                    {
-                        item.Race = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Priority":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.Priority);
-                    try
-                    {
-                        item.Priority = new GenderedItem<Byte>(
-                            male: ByteXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask),
-                            female: ByteXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WeightSliderEnabled":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.WeightSliderEnabled);
-                    try
-                    {
-                        item.WeightSliderEnabled = new GenderedItem<Boolean>(
-                            male: BooleanXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask),
-                            female: BooleanXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.Unknown);
-                    try
-                    {
-                        item.Unknown = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DetectionSoundValue":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.DetectionSoundValue);
-                    try
-                    {
-                        item.DetectionSoundValue = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown2":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.Unknown2);
-                    try
-                    {
-                        item.Unknown2 = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WeaponAdjust":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.WeaponAdjust);
-                    try
-                    {
-                        item.WeaponAdjust = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WorldModel":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.WorldModel);
-                    try
-                    {
-                        item.WorldModel = new GenderedItem<Model?>(
-                            male: LoquiXmlTranslation<Model>.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: null),
-                            female: LoquiXmlTranslation<Model>.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: null));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FirstPersonModel":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.FirstPersonModel);
-                    try
-                    {
-                        item.FirstPersonModel = new GenderedItem<Model?>(
-                            male: LoquiXmlTranslation<Model>.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: null),
-                            female: LoquiXmlTranslation<Model>.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: null));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkinTexture":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.SkinTexture);
-                    try
-                    {
-                        item.SkinTexture = new GenderedItem<IFormLinkNullable<TextureSet>>(
-                            male: new FormLinkNullable<TextureSet>(FormKeyXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask)),
-                            female: new FormLinkNullable<TextureSet>(FormKeyXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask)));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TextureSwapList":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.TextureSwapList);
-                    try
-                    {
-                        item.TextureSwapList = new GenderedItem<IFormLinkNullable<FormList>>(
-                            male: new FormLinkNullable<FormList>(FormKeyXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask)),
-                            female: new FormLinkNullable<FormList>(FormKeyXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask)));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AdditionalRaces":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.AdditionalRaces);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Race>>.Instance.Parse(
-                            node: node,
-                            enumer: out var AdditionalRacesItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.AdditionalRaces.SetTo(AdditionalRacesItem);
-                        }
-                        else
-                        {
-                            item.AdditionalRaces.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FootstepSound":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.FootstepSound);
-                    try
-                    {
-                        item.FootstepSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ArtObject":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.ArtObject);
-                    try
-                    {
-                        item.ArtObject = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DNAMDataTypeState":
-                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.DNAMDataTypeState);
-                    try
-                    {
-                        item.DNAMDataTypeState = EnumXmlTranslation<ArmorAddon.DNAMDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class ArmorAddonXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IArmorAddonGetter item,
-            XElement node,
-            out ArmorAddon.ErrorMask errorMask,
-            ArmorAddon.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ArmorAddonXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ArmorAddon.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IArmorAddonGetter item,
-            string path,
-            out ArmorAddon.ErrorMask errorMask,
-            ArmorAddon.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IArmorAddonGetter item,
-            Stream stream,
-            out ArmorAddon.ErrorMask errorMask,
-            ArmorAddon.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3611,6 +2509,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IBinaryWriteTranslator
     {
         public new readonly static ArmorAddonBinaryWriteTranslation Instance = new ArmorAddonBinaryWriteTranslation();
+
+        static partial void WriteBinaryBodyTemplateCustom(
+            MutagenWriter writer,
+            IArmorAddonGetter item);
+
+        public static void WriteBinaryBodyTemplate(
+            MutagenWriter writer,
+            IArmorAddonGetter item)
+        {
+            WriteBinaryBodyTemplateCustom(
+                writer: writer,
+                item: item);
+        }
 
         static partial void WriteBinaryWeightSliderEnabledCustom(
             MutagenWriter writer,
@@ -3643,13 +2554,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.BodyTemplate.TryGet(out var BodyTemplateItem))
-            {
-                ((BodyTemplateBinaryWriteTranslation)((IBinaryItem)BodyTemplateItem).BinaryWriteTranslator).Write(
-                    item: BodyTemplateItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            ArmorAddonBinaryWriteTranslation.WriteBinaryBodyTemplate(
+                writer: writer,
+                item: item);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Race,
@@ -3755,10 +2662,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -3811,9 +2720,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IArmorAddonInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3822,9 +2732,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.BODT:
+                case RecordTypeInts.BOD2:
                 {
-                    item.BodyTemplate = Mutagen.Bethesda.Skyrim.BodyTemplate.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.BodyTemplate);
+                    ArmorAddonBinaryCreateTranslation.FillBinaryBodyTemplateCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return (int)ArmorAddon_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.RNAM:
                 {
@@ -3832,7 +2745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Race = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.Race);
+                    return (int)ArmorAddon_FieldIndex.Race;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -3848,7 +2761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DetectionSoundValue = dataFrame.ReadUInt8();
                     item.Unknown2 = dataFrame.ReadUInt8();
                     item.WeaponAdjust = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.WeaponAdjust);
+                    return (int)ArmorAddon_FieldIndex.WeaponAdjust;
                 }
                 case RecordTypeInts.MOD2:
                 case RecordTypeInts.MOD3:
@@ -3858,7 +2771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
                         transl: Model.TryCreateFromBinary);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.WorldModel);
+                    return (int)ArmorAddon_FieldIndex.WorldModel;
                 }
                 case RecordTypeInts.MOD4:
                 case RecordTypeInts.MOD5:
@@ -3868,7 +2781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
                         transl: Model.TryCreateFromBinary);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.FirstPersonModel);
+                    return (int)ArmorAddon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.NAM0:
                 case RecordTypeInts.NAM1:
@@ -3880,7 +2793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         transl: FormLinkBinaryTranslation.Instance.Parse,
                         skipMarker: false,
                         fallback: FormLinkNullable<TextureSet>.Null);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.SkinTexture);
+                    return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
                 case RecordTypeInts.NAM2:
                 case RecordTypeInts.NAM3:
@@ -3892,7 +2805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         transl: FormLinkBinaryTranslation.Instance.Parse,
                         skipMarker: false,
                         fallback: FormLinkNullable<FormList>.Null);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.TextureSwapList);
+                    return (int)ArmorAddon_FieldIndex.TextureSwapList;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3901,7 +2814,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.MODL),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.AdditionalRaces);
+                    return (int)ArmorAddon_FieldIndex.AdditionalRaces;
                 }
                 case RecordTypeInts.SNDD:
                 {
@@ -3909,7 +2822,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FootstepSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.FootstepSound);
+                    return (int)ArmorAddon_FieldIndex.FootstepSound;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -3917,16 +2830,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ArtObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.ArtObject);
+                    return (int)ArmorAddon_FieldIndex.ArtObject;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
         }
+
+        static partial void FillBinaryBodyTemplateCustom(
+            MutagenFrame frame,
+            IArmorAddonInternal item);
 
         static partial void FillBinaryWeightSliderEnabledCustom(
             MutagenFrame frame,
@@ -3973,21 +2891,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ArmorAddonXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ArmorAddonXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ArmorAddonBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -4000,14 +2903,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region BodyTemplate
-        private RangeInt32? _BodyTemplateLocation;
-        public IBodyTemplateGetter? BodyTemplate => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new OverlayStream(_data.Slice(_BodyTemplateLocation!.Value.Min), _package), _package) : default;
-        public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
+        partial void BodyTemplateCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset);
+        public IBodyTemplateGetter? BodyTemplate => GetBodyTemplateCustom();
         #endregion
         #region Race
         private int? _RaceLocation;
         public bool Race_IsSet => _RaceLocation.HasValue;
-        public IFormLinkNullable<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullable<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         private int? _DNAMLocation;
         public ArmorAddon.DNAMDataType DNAMDataTypeState { get; private set; }
@@ -4048,7 +2953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region WeaponAdjust
         private int _WeaponAdjustLocation => _DNAMLocation!.Value + 0x8;
         private bool _WeaponAdjust_IsSet => _DNAMLocation.HasValue;
-        public Single WeaponAdjust => _WeaponAdjust_IsSet ? SpanExt.GetFloat(_data.Slice(_WeaponAdjustLocation, 4)) : default;
+        public Single WeaponAdjust => _WeaponAdjust_IsSet ? _data.Slice(_WeaponAdjustLocation, 4).Float() : default;
         #endregion
         #region WorldModel
         private IGenderedItemGetter<IModelGetter?>? _WorldModelOverlay;
@@ -4070,12 +2975,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FootstepSound
         private int? _FootstepSoundLocation;
         public bool FootstepSound_IsSet => _FootstepSoundLocation.HasValue;
-        public IFormLinkNullable<IFootstepSetGetter> FootstepSound => _FootstepSoundLocation.HasValue ? new FormLinkNullable<IFootstepSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FootstepSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFootstepSetGetter>.Null;
+        public IFormLinkNullable<IFootstepSetGetter> FootstepSound => _FootstepSoundLocation.HasValue ? new FormLinkNullable<IFootstepSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FootstepSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFootstepSetGetter>.Null;
         #endregion
         #region ArtObject
         private int? _ArtObjectLocation;
         public bool ArtObject_IsSet => _ArtObjectLocation.HasValue;
-        public IFormLinkNullable<IArtObjectGetter> ArtObject => _ArtObjectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ArtObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        public IFormLinkNullable<IArtObjectGetter> ArtObject => _ArtObjectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ArtObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -4102,8 +3007,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new ArmorAddonBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -4129,31 +3035,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.BODT:
+                case RecordTypeInts.BOD2:
                 {
-                    _BodyTemplateLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.BodyTemplate);
+                    BodyTemplateCustomParse(
+                        stream,
+                        finalPos,
+                        offset);
+                    return (int)ArmorAddon_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     _RaceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.Race);
+                    return (int)ArmorAddon_FieldIndex.Race;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.WeaponAdjust);
+                    return (int)ArmorAddon_FieldIndex.WeaponAdjust;
                 }
                 case RecordTypeInts.MOD2:
                 case RecordTypeInts.MOD3:
@@ -4164,7 +3075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         creator: (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.WorldModel);
+                    return (int)ArmorAddon_FieldIndex.WorldModel;
                 }
                 case RecordTypeInts.MOD4:
                 case RecordTypeInts.MOD5:
@@ -4175,7 +3086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         creator: (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.FirstPersonModel);
+                    return (int)ArmorAddon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.NAM0:
                 case RecordTypeInts.NAM1:
@@ -4187,7 +3098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         creator: (m, p) => new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
                         fallback: FormLinkNullable<TextureSet>.Null);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.SkinTexture);
+                    return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
                 case RecordTypeInts.NAM2:
                 case RecordTypeInts.NAM3:
@@ -4199,11 +3110,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         creator: (m, p) => new FormLinkNullable<IFormListGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
                         fallback: FormLinkNullable<FormList>.Null);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.TextureSwapList);
+                    return (int)ArmorAddon_FieldIndex.TextureSwapList;
                 }
                 case RecordTypeInts.MODL:
                 {
-                    this.AdditionalRaces = BinaryOverlayList<IFormLink<IRaceGetter>>.FactoryByArray(
+                    this.AdditionalRaces = BinaryOverlayList.FactoryByArray<IFormLink<IRaceGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IRaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -4213,17 +3124,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.AdditionalRaces);
+                    return (int)ArmorAddon_FieldIndex.AdditionalRaces;
                 }
                 case RecordTypeInts.SNDD:
                 {
                     _FootstepSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.FootstepSound);
+                    return (int)ArmorAddon_FieldIndex.FootstepSound;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     _ArtObjectLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.ArtObject);
+                    return (int)ArmorAddon_FieldIndex.ArtObject;
                 }
                 default:
                     return base.FillRecordType(
@@ -4231,7 +3142,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

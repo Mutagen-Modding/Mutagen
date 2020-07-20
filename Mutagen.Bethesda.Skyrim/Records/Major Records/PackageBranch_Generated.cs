@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -52,8 +46,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -87,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DataInputIndices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Byte> _DataInputIndices = new ExtendedList<Byte>();
-        public ExtendedList<Byte> DataInputIndices
+        private IExtendedList<Byte> _DataInputIndices = new ExtendedList<Byte>();
+        public IExtendedList<Byte> DataInputIndices
         {
             get => this._DataInputIndices;
             protected set => this._DataInputIndices = value;
@@ -162,137 +156,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PackageBranchXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PackageBranchXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static PackageBranch CreateFromXml(
-            XElement node,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static PackageBranch CreateFromXml(
-            XElement node,
-            out PackageBranch.ErrorMask errorMask,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PackageBranch.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static PackageBranch CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new PackageBranch();
-            ((PackageBranchSetterCommon)((IPackageBranchGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static PackageBranch CreateFromXml(
-            string path,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PackageBranch CreateFromXml(
-            string path,
-            out PackageBranch.ErrorMask errorMask,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PackageBranch CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static PackageBranch CreateFromXml(
-            Stream stream,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PackageBranch CreateFromXml(
-            Stream stream,
-            out PackageBranch.ErrorMask errorMask,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PackageBranch CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -1034,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PackageBranch_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PackageBranch_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => PackageBranchCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1114,11 +977,11 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPackageBranch>
     {
         new String BranchType { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
         new PackageRoot? Root { get; set; }
         new String? ProcedureType { get; set; }
         new PackageBranch.Flag? Flags { get; set; }
-        new ExtendedList<Byte> DataInputIndices { get; }
+        new IExtendedList<Byte> DataInputIndices { get; }
         new PackageFlagsOverride? FlagsOverride { get; set; }
         new PackageFlagsOverride? FlagsOverrideUnused { get; set; }
         new SliceList<byte> Unknown { get; }
@@ -1127,7 +990,6 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageBranchGetter :
         ILoquiObject,
         ILoquiObject<IPackageBranchGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -1303,131 +1165,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPackageBranch item,
-            XElement node,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPackageBranch item,
-            XElement node,
-            out PackageBranch.ErrorMask errorMask,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PackageBranch.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageBranch item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((PackageBranchSetterCommon)((IPackageBranchGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageBranch item,
-            string path,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageBranch item,
-            string path,
-            out PackageBranch.ErrorMask errorMask,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageBranch item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IPackageBranch item,
-            Stream stream,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageBranch item,
-            Stream stream,
-            out PackageBranch.ErrorMask errorMask,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageBranch item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1683,7 +1420,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PackageBranch_FieldIndex.BranchType:
                     return typeof(String);
                 case PackageBranch_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case PackageBranch_FieldIndex.Root:
                     return typeof(PackageRoot);
                 case PackageBranch_FieldIndex.ProcedureType:
@@ -1691,7 +1428,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PackageBranch_FieldIndex.Flags:
                     return typeof(PackageBranch.Flag);
                 case PackageBranch_FieldIndex.DataInputIndices:
-                    return typeof(ExtendedList<Byte>);
+                    return typeof(IExtendedList<Byte>);
                 case PackageBranch_FieldIndex.FlagsOverride:
                     return typeof(PackageFlagsOverride);
                 case PackageBranch_FieldIndex.FlagsOverrideUnused:
@@ -1703,7 +1440,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(PackageBranchXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.ANAM;
         public static readonly Type BinaryWriteTranslation = typeof(PackageBranchBinaryWriteTranslation);
         #region Interface
@@ -1757,34 +1493,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FlagsOverrideUnused = null;
             item.Unknown.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IPackageBranch item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PackageBranchXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2332,611 +2040,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class PackageBranchXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static PackageBranchXmlWriteTranslation Instance = new PackageBranchXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IPackageBranchGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.BranchType) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BranchType),
-                    item: item.BranchType,
-                    fieldIndex: (int)PackageBranch_FieldIndex.BranchType,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.Conditions) ?? true))
-            {
-                ListXmlTranslation<IConditionGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Conditions),
-                    item: item.Conditions,
-                    fieldIndex: (int)PackageBranch_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PackageBranch_FieldIndex.Conditions),
-                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Root != null)
-                && (translationMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.Root) ?? true))
-            {
-                if (item.Root.TryGet(out var RootItem))
-                {
-                    ((PackageRootXmlWriteTranslation)((IXmlItem)RootItem).XmlWriteTranslator).Write(
-                        item: RootItem,
-                        node: node,
-                        name: nameof(item.Root),
-                        fieldIndex: (int)PackageBranch_FieldIndex.Root,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)PackageBranch_FieldIndex.Root));
-                }
-            }
-            if ((item.ProcedureType != null)
-                && (translationMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.ProcedureType) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ProcedureType),
-                    item: item.ProcedureType,
-                    fieldIndex: (int)PackageBranch_FieldIndex.ProcedureType,
-                    errorMask: errorMask);
-            }
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<PackageBranch.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)PackageBranch_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.DataInputIndices) ?? true))
-            {
-                ListXmlTranslation<Byte>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DataInputIndices),
-                    item: item.DataInputIndices,
-                    fieldIndex: (int)PackageBranch_FieldIndex.DataInputIndices,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PackageBranch_FieldIndex.DataInputIndices),
-                    transl: (XElement subNode, Byte subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        ByteXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.FlagsOverride != null)
-                && (translationMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.FlagsOverride) ?? true))
-            {
-                if (item.FlagsOverride.TryGet(out var FlagsOverrideItem))
-                {
-                    ((PackageFlagsOverrideXmlWriteTranslation)((IXmlItem)FlagsOverrideItem).XmlWriteTranslator).Write(
-                        item: FlagsOverrideItem,
-                        node: node,
-                        name: nameof(item.FlagsOverride),
-                        fieldIndex: (int)PackageBranch_FieldIndex.FlagsOverride,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)PackageBranch_FieldIndex.FlagsOverride));
-                }
-            }
-            if ((item.FlagsOverrideUnused != null)
-                && (translationMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.FlagsOverrideUnused) ?? true))
-            {
-                if (item.FlagsOverrideUnused.TryGet(out var FlagsOverrideUnusedItem))
-                {
-                    ((PackageFlagsOverrideXmlWriteTranslation)((IXmlItem)FlagsOverrideUnusedItem).XmlWriteTranslator).Write(
-                        item: FlagsOverrideUnusedItem,
-                        node: node,
-                        name: nameof(item.FlagsOverrideUnused),
-                        fieldIndex: (int)PackageBranch_FieldIndex.FlagsOverrideUnused,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)PackageBranch_FieldIndex.FlagsOverrideUnused));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.Unknown) ?? true))
-            {
-                ListXmlTranslation<ReadOnlyMemorySlice<Byte>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)PackageBranch_FieldIndex.Unknown,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PackageBranch_FieldIndex.Unknown),
-                    transl: (XElement subNode, ReadOnlyMemorySlice<Byte> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        ByteArrayXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IPackageBranchGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.PackageBranch");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.PackageBranch");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPackageBranchGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IPackageBranchGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IPackageBranchGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class PackageBranchXmlCreateTranslation
-    {
-        public readonly static PackageBranchXmlCreateTranslation Instance = new PackageBranchXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IPackageBranch item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PackageBranchXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IPackageBranch item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "BranchType":
-                    errorMask?.PushIndex((int)PackageBranch_FieldIndex.BranchType);
-                    try
-                    {
-                        item.BranchType = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conditions":
-                    errorMask?.PushIndex((int)PackageBranch_FieldIndex.Conditions);
-                    try
-                    {
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Root":
-                    errorMask?.PushIndex((int)PackageBranch_FieldIndex.Root);
-                    try
-                    {
-                        item.Root = LoquiXmlTranslation<PackageRoot>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)PackageBranch_FieldIndex.Root));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ProcedureType":
-                    errorMask?.PushIndex((int)PackageBranch_FieldIndex.ProcedureType);
-                    try
-                    {
-                        item.ProcedureType = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)PackageBranch_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<PackageBranch.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DataInputIndices":
-                    errorMask?.PushIndex((int)PackageBranch_FieldIndex.DataInputIndices);
-                    try
-                    {
-                        if (ListXmlTranslation<Byte>.Instance.Parse(
-                            node: node,
-                            enumer: out var DataInputIndicesItem,
-                            transl: ByteXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.DataInputIndices.SetTo(DataInputIndicesItem);
-                        }
-                        else
-                        {
-                            item.DataInputIndices.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FlagsOverride":
-                    errorMask?.PushIndex((int)PackageBranch_FieldIndex.FlagsOverride);
-                    try
-                    {
-                        item.FlagsOverride = LoquiXmlTranslation<PackageFlagsOverride>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)PackageBranch_FieldIndex.FlagsOverride));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FlagsOverrideUnused":
-                    errorMask?.PushIndex((int)PackageBranch_FieldIndex.FlagsOverrideUnused);
-                    try
-                    {
-                        item.FlagsOverrideUnused = LoquiXmlTranslation<PackageFlagsOverride>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)PackageBranch_FieldIndex.FlagsOverrideUnused));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)PackageBranch_FieldIndex.Unknown);
-                    try
-                    {
-                        if (ListXmlTranslation<MemorySlice<Byte>>.Instance.Parse(
-                            node: node,
-                            enumer: out var UnknownItem,
-                            transl: ByteArrayXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Unknown.SetTo(UnknownItem);
-                        }
-                        else
-                        {
-                            item.Unknown.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class PackageBranchXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IPackageBranchGetter item,
-            XElement node,
-            out PackageBranch.ErrorMask errorMask,
-            PackageBranch.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((PackageBranchXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PackageBranch.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IPackageBranchGetter item,
-            string path,
-            out PackageBranch.ErrorMask errorMask,
-            PackageBranch.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPackageBranchGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPackageBranchGetter item,
-            Stream stream,
-            out PackageBranch.ErrorMask errorMask,
-            PackageBranch.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPackageBranchGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPackageBranchGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((PackageBranchXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IPackageBranchGetter item,
-            XElement node,
-            string? name = null,
-            PackageBranch.TranslationMask? translationMask = null)
-        {
-            ((PackageBranchXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IPackageBranchGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PackageBranchXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPackageBranchGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PackageBranchXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3052,10 +2155,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPackageBranch item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3065,12 +2169,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ANAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageBranch_FieldIndex.BranchType) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageBranch_FieldIndex.BranchType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BranchType = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.BranchType);
+                    return (int)PackageBranch_FieldIndex.BranchType;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -3078,13 +2182,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     PackageBranchBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Conditions);
+                    return (int)PackageBranch_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.PRCB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.Root = Mutagen.Bethesda.Skyrim.PackageRoot.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Root);
+                    return (int)PackageBranch_FieldIndex.Root;
                 }
                 case RecordTypeInts.PNAM:
                 {
@@ -3092,13 +2196,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ProcedureType = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.ProcedureType);
+                    return (int)PackageBranch_FieldIndex.ProcedureType;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<PackageBranch.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Flags);
+                    return (int)PackageBranch_FieldIndex.Flags;
                 }
                 case RecordTypeInts.PKC2:
                 {
@@ -3107,14 +2211,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PKC2),
                             transl: ByteBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.DataInputIndices);
+                    return (int)PackageBranch_FieldIndex.DataInputIndices;
                 }
                 case RecordTypeInts.PFO2:
                 {
                     PackageBranchBinaryCreateTranslation.FillBinaryFlagsOverrideCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.FlagsOverride);
+                    return (int)PackageBranch_FieldIndex.FlagsOverride;
                 }
                 case RecordTypeInts.PFOR:
                 {
@@ -3123,10 +2227,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PFOR),
                             transl: ByteArrayBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Unknown);
+                    return (int)PackageBranch_FieldIndex.Unknown;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -3195,23 +2299,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageBranchCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageBranchCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PackageBranchXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PackageBranchXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PackageBranchBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -3244,7 +2331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public PackageBranch.Flag? Flags => _FlagsLocation.HasValue ? (PackageBranch.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(PackageBranch.Flag?);
+        public PackageBranch.Flag? Flags => _FlagsLocation.HasValue ? (PackageBranch.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(PackageBranch.Flag?);
         #endregion
         public IReadOnlyList<Byte> DataInputIndices { get; private set; } = ListExt.Empty<Byte>();
         #region FlagsOverride
@@ -3300,12 +2387,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3313,9 +2401,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ANAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageBranch_FieldIndex.BranchType) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageBranch_FieldIndex.BranchType) return ParseResult.Stop;
                     _BranchTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.BranchType);
+                    return (int)PackageBranch_FieldIndex.BranchType;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -3326,7 +2414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Conditions);
+                    return (int)PackageBranch_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.PRCB:
                 {
@@ -3335,21 +2423,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Root);
+                    return (int)PackageBranch_FieldIndex.Root;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     _ProcedureTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.ProcedureType);
+                    return (int)PackageBranch_FieldIndex.ProcedureType;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Flags);
+                    return (int)PackageBranch_FieldIndex.Flags;
                 }
                 case RecordTypeInts.PKC2:
                 {
-                    this.DataInputIndices = BinaryOverlayList<Byte>.FactoryByArray(
+                    this.DataInputIndices = BinaryOverlayList.FactoryByArray<Byte>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => s[0],
@@ -3359,7 +2447,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.DataInputIndices);
+                    return (int)PackageBranch_FieldIndex.DataInputIndices;
                 }
                 case RecordTypeInts.PFO2:
                 {
@@ -3367,24 +2455,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream,
                         finalPos,
                         offset);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.FlagsOverride);
+                    return (int)PackageBranch_FieldIndex.FlagsOverride;
                 }
                 case RecordTypeInts.PFOR:
                 {
-                    this.Unknown = BinaryOverlayList<ReadOnlyMemorySlice<Byte>>.FactoryByArray(
+                    this.Unknown = BinaryOverlayList.FactoryByArray<ReadOnlyMemorySlice<Byte>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => p.MetaData.Constants.SubrecordMemoryFrame(s).Content,
+                        getter: (s, p) => p.MetaData.Constants.SubrecordFrame(s).Content,
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: false,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Unknown);
+                    return (int)PackageBranch_FieldIndex.Unknown;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

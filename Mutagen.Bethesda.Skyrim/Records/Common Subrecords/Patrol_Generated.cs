@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -79,8 +73,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ATopicReference> _Topics = new ExtendedList<ATopicReference>();
-        public ExtendedList<ATopicReference> Topics
+        private IExtendedList<ATopicReference> _Topics = new ExtendedList<ATopicReference>();
+        public IExtendedList<ATopicReference> Topics
         {
             get => this._Topics;
             protected set => this._Topics = value;
@@ -118,137 +112,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PatrolXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PatrolXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static Patrol CreateFromXml(
-            XElement node,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Patrol CreateFromXml(
-            XElement node,
-            out Patrol.ErrorMask errorMask,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Patrol.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static Patrol CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Patrol();
-            ((PatrolSetterCommon)((IPatrolGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Patrol CreateFromXml(
-            string path,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Patrol CreateFromXml(
-            string path,
-            out Patrol.ErrorMask errorMask,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Patrol CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Patrol CreateFromXml(
-            Stream stream,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Patrol CreateFromXml(
-            Stream stream,
-            out Patrol.ErrorMask errorMask,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Patrol CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -708,7 +571,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Patrol_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Patrol_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => PatrolCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -791,13 +654,12 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLink<IdleAnimation> Idle { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
-        new ExtendedList<ATopicReference> Topics { get; }
+        new IExtendedList<ATopicReference> Topics { get; }
     }
 
     public partial interface IPatrolGetter :
         ILoquiObject,
         ILoquiObject<IPatrolGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -969,131 +831,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPatrol item,
-            XElement node,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPatrol item,
-            XElement node,
-            out Patrol.ErrorMask errorMask,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Patrol.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IPatrol item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((PatrolSetterCommon)((IPatrolGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPatrol item,
-            string path,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPatrol item,
-            string path,
-            out Patrol.ErrorMask errorMask,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPatrol item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IPatrol item,
-            Stream stream,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPatrol item,
-            Stream stream,
-            out Patrol.ErrorMask errorMask,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPatrol item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1315,13 +1052,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Patrol_FieldIndex.SCTX:
                     return typeof(MemorySlice<Byte>);
                 case Patrol_FieldIndex.Topics:
-                    return typeof(ExtendedList<ATopicReference>);
+                    return typeof(IExtendedList<ATopicReference>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(PatrolXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.XPRD;
         public static readonly Type BinaryWriteTranslation = typeof(PatrolBinaryWriteTranslation);
         #region Interface
@@ -1371,34 +1107,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.SCTX = default;
             item.Topics.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IPatrol item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PatrolXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1752,447 +1460,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class PatrolXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static PatrolXmlWriteTranslation Instance = new PatrolXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IPatrolGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)Patrol_FieldIndex.IdleTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.IdleTime),
-                    item: item.IdleTime,
-                    fieldIndex: (int)Patrol_FieldIndex.IdleTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Patrol_FieldIndex.Idle) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Idle),
-                    item: item.Idle.FormKey,
-                    fieldIndex: (int)Patrol_FieldIndex.Idle,
-                    errorMask: errorMask);
-            }
-            if ((item.SCHR != null)
-                && (translationMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCHR) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SCHR),
-                    item: item.SCHR.Value,
-                    fieldIndex: (int)Patrol_FieldIndex.SCHR,
-                    errorMask: errorMask);
-            }
-            if ((item.SCTX != null)
-                && (translationMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCTX) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SCTX),
-                    item: item.SCTX.Value,
-                    fieldIndex: (int)Patrol_FieldIndex.SCTX,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Patrol_FieldIndex.Topics) ?? true))
-            {
-                ListXmlTranslation<IATopicReferenceGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Topics),
-                    item: item.Topics,
-                    fieldIndex: (int)Patrol_FieldIndex.Topics,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Patrol_FieldIndex.Topics),
-                    transl: (XElement subNode, IATopicReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ATopicReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IPatrolGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Patrol");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Patrol");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPatrolGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IPatrolGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IPatrolGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class PatrolXmlCreateTranslation
-    {
-        public readonly static PatrolXmlCreateTranslation Instance = new PatrolXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IPatrol item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PatrolXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IPatrol item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "IdleTime":
-                    errorMask?.PushIndex((int)Patrol_FieldIndex.IdleTime);
-                    try
-                    {
-                        item.IdleTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Idle":
-                    errorMask?.PushIndex((int)Patrol_FieldIndex.Idle);
-                    try
-                    {
-                        item.Idle = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SCHR":
-                    errorMask?.PushIndex((int)Patrol_FieldIndex.SCHR);
-                    try
-                    {
-                        item.SCHR = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SCTX":
-                    errorMask?.PushIndex((int)Patrol_FieldIndex.SCTX);
-                    try
-                    {
-                        item.SCTX = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Topics":
-                    errorMask?.PushIndex((int)Patrol_FieldIndex.Topics);
-                    try
-                    {
-                        if (ListXmlTranslation<ATopicReference>.Instance.Parse(
-                            node: node,
-                            enumer: out var TopicsItem,
-                            transl: LoquiXmlTranslation<ATopicReference>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Topics.SetTo(TopicsItem);
-                        }
-                        else
-                        {
-                            item.Topics.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class PatrolXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IPatrolGetter item,
-            XElement node,
-            out Patrol.ErrorMask errorMask,
-            Patrol.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((PatrolXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Patrol.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IPatrolGetter item,
-            string path,
-            out Patrol.ErrorMask errorMask,
-            Patrol.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPatrolGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPatrolGetter item,
-            Stream stream,
-            out Patrol.ErrorMask errorMask,
-            Patrol.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPatrolGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPatrolGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((PatrolXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IPatrolGetter item,
-            XElement node,
-            string? name = null,
-            Patrol.TranslationMask? translationMask = null)
-        {
-            ((PatrolXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IPatrolGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PatrolXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPatrolGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PatrolXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2289,10 +1556,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPatrol item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2302,17 +1570,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.XPRD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.IdleTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.IdleTime);
+                    return (int)Patrol_FieldIndex.IdleTime;
                 }
                 case RecordTypeInts.XPPA:
                 {
                     PatrolBinaryCreateTranslation.FillBinaryPatrolScriptMarkerCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -2320,29 +1588,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Idle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Idle);
+                    return (int)Patrol_FieldIndex.Idle;
                 }
                 case RecordTypeInts.SCHR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCHR = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCHR);
+                    return (int)Patrol_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.SCTX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCTX = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCTX);
+                    return (int)Patrol_FieldIndex.SCTX;
                 }
                 case RecordTypeInts.PDTO:
                 {
                     PatrolBinaryCreateTranslation.FillBinaryTopicsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Topics);
+                    return (int)Patrol_FieldIndex.Topics;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2411,23 +1679,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PatrolCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PatrolCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PatrolXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PatrolXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PatrolBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -2443,7 +1694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region IdleTime
         private int? _IdleTimeLocation;
-        public Single IdleTime => _IdleTimeLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleTimeLocation.Value, _package.MetaData.Constants)) : default;
+        public Single IdleTime => _IdleTimeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IdleTimeLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region PatrolScriptMarker
         partial void PatrolScriptMarkerCustomParse(
@@ -2453,7 +1704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Idle
         private int? _IdleLocation;
         public bool Idle_IsSet => _IdleLocation.HasValue;
-        public IFormLink<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLink<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLink<IIdleAnimationGetter>.Null;
+        public IFormLink<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLink<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLink<IIdleAnimationGetter>.Null;
         #endregion
         #region SCHR
         private int? _SCHRLocation;
@@ -2516,12 +1767,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2529,31 +1781,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.XPRD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return ParseResult.Stop;
                     _IdleTimeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.IdleTime);
+                    return (int)Patrol_FieldIndex.IdleTime;
                 }
                 case RecordTypeInts.XPPA:
                 {
                     PatrolScriptMarkerCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 case RecordTypeInts.INAM:
                 {
                     _IdleLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Idle);
+                    return (int)Patrol_FieldIndex.Idle;
                 }
                 case RecordTypeInts.SCHR:
                 {
                     _SCHRLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCHR);
+                    return (int)Patrol_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.SCTX:
                 {
                     _SCTXLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCTX);
+                    return (int)Patrol_FieldIndex.SCTX;
                 }
                 case RecordTypeInts.PDTO:
                 {
@@ -2563,10 +1815,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Topics);
+                    return (int)Patrol_FieldIndex.Topics;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

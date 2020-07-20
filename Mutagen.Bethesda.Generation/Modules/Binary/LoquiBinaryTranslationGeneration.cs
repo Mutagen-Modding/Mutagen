@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new BraceWrapper(fg, doIt: isGroup))
                 {
-                    if (loquiGen.TryGetFieldData(out var data)
-                        && data.MarkerType.HasValue)
+                    var data = loquiGen.GetFieldData();
+                    if (data.MarkerType.HasValue)
                     {
                         fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, {objGen.RecordTypeHeaderName(data.MarkerType.Value)})) {{ }}");
                     }
@@ -159,8 +159,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationMaskAccessor)
         {
             var loqui = typeGen as LoquiType;
-            if (loqui.TryGetFieldData(out var data)
-                && data.MarkerType.HasValue
+            var data = loqui.GetFieldData();
+            if (data.MarkerType.HasValue
                 && !data.RecordType.HasValue)
             {
                 fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
@@ -175,10 +175,6 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"frame: {frameAccessor}");
                         args.Add($"recordTypeConverter: null");
-                    }
-                    if (loqui.Name == "ModHeader")
-                    {
-                        fg.AppendLine($"{frameAccessor}.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!.SetTo(item.ModHeader.MasterReferences);");
                     }
                 }
                 else

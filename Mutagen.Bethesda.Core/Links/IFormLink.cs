@@ -80,7 +80,6 @@ namespace Mutagen.Bethesda
         /// <param name="package">Link Cache to resolve against</param>
         /// <param name="major">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
-        /// <typeparam name="TMod">Mod type</typeparam>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
         public static bool TryResolve<TMajor>(this IFormLinkNullable<TMajor> formLink, ILinkCache package, out TMajor major)
             where TMajor : IMajorRecordCommonGetter

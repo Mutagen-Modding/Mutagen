@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="DualCastData" recordType="DUAL" objType="Record" baseClass="SkyrimMajorRecord" GUID="636155e6-228a-40cb-a05b-32afabd5966e" ID="112">
+    <Interface>IObjectBounded</Interface>
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <Data>
+        <Fields>
+          <FormLink name="Projectile" refName="Projectile" />
+          <FormLink name="Explosion" refName="Explosion" />
+          <FormLink name="EffectShader" refName="EffectShader" />
+          <FormLink name="HitEffectArt" refName="ArtObject" />
+          <FormLink name="ImpactDataSet" refName="ImpactDataSet" />
+          <Enum name="InheritScale" enumName="DualCastData.InheritScaleType" byteLength="4" />
+        </Fields>
+      </Data>
     </Fields>
   </Object>
 </Loqui>

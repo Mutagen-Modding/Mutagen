@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -49,8 +43,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region NavmeshSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NavmeshSet> _NavmeshSets = new ExtendedList<NavmeshSet>();
-        public ExtendedList<NavmeshSet> NavmeshSets
+        private IExtendedList<NavmeshSet> _NavmeshSets = new ExtendedList<NavmeshSet>();
+        public IExtendedList<NavmeshSet> NavmeshSets
         {
             get => this._NavmeshSets;
             protected set => this._NavmeshSets = value;
@@ -63,8 +57,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NavmeshTree
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NavmeshNode> _NavmeshTree = new ExtendedList<NavmeshNode>();
-        public ExtendedList<NavmeshNode> NavmeshTree
+        private IExtendedList<NavmeshNode> _NavmeshTree = new ExtendedList<NavmeshNode>();
+        public IExtendedList<NavmeshNode> NavmeshTree
         {
             get => this._NavmeshTree;
             protected set => this._NavmeshTree = value;
@@ -102,137 +96,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PreferredPathingXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PreferredPathingXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static PreferredPathing CreateFromXml(
-            XElement node,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static PreferredPathing CreateFromXml(
-            XElement node,
-            out PreferredPathing.ErrorMask errorMask,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PreferredPathing.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static PreferredPathing CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new PreferredPathing();
-            ((PreferredPathingSetterCommon)((IPreferredPathingGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static PreferredPathing CreateFromXml(
-            string path,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PreferredPathing CreateFromXml(
-            string path,
-            out PreferredPathing.ErrorMask errorMask,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PreferredPathing CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static PreferredPathing CreateFromXml(
-            Stream stream,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PreferredPathing CreateFromXml(
-            Stream stream,
-            out PreferredPathing.ErrorMask errorMask,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PreferredPathing CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -684,7 +547,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PreferredPathing_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PreferredPathing_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => PreferredPathingCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -763,14 +626,13 @@ namespace Mutagen.Bethesda.Skyrim
         IPreferredPathingGetter,
         ILoquiObjectSetter<IPreferredPathing>
     {
-        new ExtendedList<NavmeshSet> NavmeshSets { get; }
-        new ExtendedList<NavmeshNode> NavmeshTree { get; }
+        new IExtendedList<NavmeshSet> NavmeshSets { get; }
+        new IExtendedList<NavmeshNode> NavmeshTree { get; }
     }
 
     public partial interface IPreferredPathingGetter :
         ILoquiObject,
         ILoquiObject<IPreferredPathingGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -939,131 +801,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPreferredPathing item,
-            XElement node,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPreferredPathing item,
-            XElement node,
-            out PreferredPathing.ErrorMask errorMask,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PreferredPathing.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IPreferredPathing item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((PreferredPathingSetterCommon)((IPreferredPathingGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPreferredPathing item,
-            string path,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPreferredPathing item,
-            string path,
-            out PreferredPathing.ErrorMask errorMask,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPreferredPathing item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IPreferredPathing item,
-            Stream stream,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPreferredPathing item,
-            Stream stream,
-            out PreferredPathing.ErrorMask errorMask,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPreferredPathing item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1245,15 +982,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case PreferredPathing_FieldIndex.NavmeshSets:
-                    return typeof(ExtendedList<NavmeshSet>);
+                    return typeof(IExtendedList<NavmeshSet>);
                 case PreferredPathing_FieldIndex.NavmeshTree:
-                    return typeof(ExtendedList<NavmeshNode>);
+                    return typeof(IExtendedList<NavmeshNode>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(PreferredPathingXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.NVPP;
         public static readonly Type BinaryWriteTranslation = typeof(PreferredPathingBinaryWriteTranslation);
         #region Interface
@@ -1300,34 +1036,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NavmeshSets.Clear();
             item.NavmeshTree.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IPreferredPathing item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PreferredPathingXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1663,385 +1371,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class PreferredPathingXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static PreferredPathingXmlWriteTranslation Instance = new PreferredPathingXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IPreferredPathingGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)PreferredPathing_FieldIndex.NavmeshSets) ?? true))
-            {
-                ListXmlTranslation<INavmeshSetGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.NavmeshSets),
-                    item: item.NavmeshSets,
-                    fieldIndex: (int)PreferredPathing_FieldIndex.NavmeshSets,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PreferredPathing_FieldIndex.NavmeshSets),
-                    transl: (XElement subNode, INavmeshSetGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((NavmeshSetXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)PreferredPathing_FieldIndex.NavmeshTree) ?? true))
-            {
-                ListXmlTranslation<INavmeshNodeGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.NavmeshTree),
-                    item: item.NavmeshTree,
-                    fieldIndex: (int)PreferredPathing_FieldIndex.NavmeshTree,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PreferredPathing_FieldIndex.NavmeshTree),
-                    transl: (XElement subNode, INavmeshNodeGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((NavmeshNodeXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IPreferredPathingGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.PreferredPathing");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.PreferredPathing");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPreferredPathingGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IPreferredPathingGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IPreferredPathingGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class PreferredPathingXmlCreateTranslation
-    {
-        public readonly static PreferredPathingXmlCreateTranslation Instance = new PreferredPathingXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IPreferredPathing item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PreferredPathingXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IPreferredPathing item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "NavmeshSets":
-                    errorMask?.PushIndex((int)PreferredPathing_FieldIndex.NavmeshSets);
-                    try
-                    {
-                        if (ListXmlTranslation<NavmeshSet>.Instance.Parse(
-                            node: node,
-                            enumer: out var NavmeshSetsItem,
-                            transl: LoquiXmlTranslation<NavmeshSet>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.NavmeshSets.SetTo(NavmeshSetsItem);
-                        }
-                        else
-                        {
-                            item.NavmeshSets.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NavmeshTree":
-                    errorMask?.PushIndex((int)PreferredPathing_FieldIndex.NavmeshTree);
-                    try
-                    {
-                        if (ListXmlTranslation<NavmeshNode>.Instance.Parse(
-                            node: node,
-                            enumer: out var NavmeshTreeItem,
-                            transl: LoquiXmlTranslation<NavmeshNode>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.NavmeshTree.SetTo(NavmeshTreeItem);
-                        }
-                        else
-                        {
-                            item.NavmeshTree.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class PreferredPathingXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IPreferredPathingGetter item,
-            XElement node,
-            out PreferredPathing.ErrorMask errorMask,
-            PreferredPathing.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((PreferredPathingXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PreferredPathing.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IPreferredPathingGetter item,
-            string path,
-            out PreferredPathing.ErrorMask errorMask,
-            PreferredPathing.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPreferredPathingGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPreferredPathingGetter item,
-            Stream stream,
-            out PreferredPathing.ErrorMask errorMask,
-            PreferredPathing.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPreferredPathingGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPreferredPathingGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((PreferredPathingXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IPreferredPathingGetter item,
-            XElement node,
-            string? name = null,
-            PreferredPathing.TranslationMask? translationMask = null)
-        {
-            ((PreferredPathingXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IPreferredPathingGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PreferredPathingXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPreferredPathingGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PreferredPathingXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2185,23 +1514,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PreferredPathingXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PreferredPathingXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PreferredPathingBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -2220,7 +1532,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         partial void CustomNavmeshSetsEndPos();
         #endregion
         #region NavmeshTree
-        public IReadOnlyList<INavmeshNodeGetter> NavmeshTree => BinaryOverlayList<INavmeshNodeGetter>.FactoryByCountLength(_data.Slice(NavmeshSetsEndingPos), _package, 8, countLength: 4, (s, p) => NavmeshNodeBinaryOverlay.NavmeshNodeFactory(s, p));
+        public IReadOnlyList<INavmeshNodeGetter> NavmeshTree => BinaryOverlayList.FactoryByCountLength<NavmeshNodeBinaryOverlay>(_data.Slice(NavmeshSetsEndingPos), _package, 8, countLength: 4, (s, p) => NavmeshNodeBinaryOverlay.NavmeshNodeFactory(s, p));
         protected int NavmeshTreeEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -2247,7 +1559,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new PreferredPathingBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.CustomNavmeshSetsEndPos();
             ret.NavmeshTreeEndingPos = ret.NavmeshSetsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.NavmeshSetsEndingPos)) * 8 + 4;

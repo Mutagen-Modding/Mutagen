@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -57,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Scripts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ScriptEntry> _Scripts = new ExtendedList<ScriptEntry>();
-        public ExtendedList<ScriptEntry> Scripts
+        private IExtendedList<ScriptEntry> _Scripts = new ExtendedList<ScriptEntry>();
+        public IExtendedList<ScriptEntry> Scripts
         {
             get => this._Scripts;
             protected set => this._Scripts = value;
@@ -96,140 +90,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object XmlWriteTranslator => AVirtualMachineAdapterXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((AVirtualMachineAdapterXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static AVirtualMachineAdapter CreateFromXml(
-            XElement node,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static AVirtualMachineAdapter CreateFromXml(
-            XElement node,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = AVirtualMachineAdapter.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static AVirtualMachineAdapter CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if (!LoquiXmlTranslation.Instance.TryCreate<AVirtualMachineAdapter>(node, out var ret, errorMask, translationMask))
-            {
-                throw new ArgumentException($"Unknown AVirtualMachineAdapter subclass: {node.Name.LocalName}");
-            }
-            ((AVirtualMachineAdapterSetterCommon)((IAVirtualMachineAdapterGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static AVirtualMachineAdapter CreateFromXml(
-            string path,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static AVirtualMachineAdapter CreateFromXml(
-            string path,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static AVirtualMachineAdapter CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static AVirtualMachineAdapter CreateFromXml(
-            Stream stream,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static AVirtualMachineAdapter CreateFromXml(
-            Stream stream,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static AVirtualMachineAdapter CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -633,7 +493,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = AVirtualMachineAdapter_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = AVirtualMachineAdapter_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual IEnumerable<FormKey> LinkFormKeys => AVirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -682,13 +542,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Int16 Version { get; set; }
         new UInt16 ObjectFormat { get; set; }
-        new ExtendedList<ScriptEntry> Scripts { get; }
+        new IExtendedList<ScriptEntry> Scripts { get; }
     }
 
     public partial interface IAVirtualMachineAdapterGetter :
         ILoquiObject,
         ILoquiObject<IAVirtualMachineAdapterGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -858,131 +717,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
-            XElement node,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
-            XElement node,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = AVirtualMachineAdapter.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((AVirtualMachineAdapterSetterCommon)((IAVirtualMachineAdapterGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
-            string path,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
-            string path,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
-            Stream stream,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
-            Stream stream,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAVirtualMachineAdapter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1180,13 +914,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
                     return typeof(UInt16);
                 case AVirtualMachineAdapter_FieldIndex.Scripts:
-                    return typeof(ExtendedList<ScriptEntry>);
+                    return typeof(IExtendedList<ScriptEntry>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(AVirtualMachineAdapterXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.VMAD;
         public static readonly Type BinaryWriteTranslation = typeof(AVirtualMachineAdapterBinaryWriteTranslation);
         #region Interface
@@ -1234,34 +967,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectFormat = AVirtualMachineAdapter._ObjectFormat_Default;
             item.Scripts.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IAVirtualMachineAdapter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    AVirtualMachineAdapterXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1560,391 +1265,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class AVirtualMachineAdapterXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static AVirtualMachineAdapterXmlWriteTranslation Instance = new AVirtualMachineAdapterXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IAVirtualMachineAdapterGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.Version) ?? true))
-            {
-                Int16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Version),
-                    item: item.Version,
-                    fieldIndex: (int)AVirtualMachineAdapter_FieldIndex.Version,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.ObjectFormat) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ObjectFormat),
-                    item: item.ObjectFormat,
-                    fieldIndex: (int)AVirtualMachineAdapter_FieldIndex.ObjectFormat,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.Scripts) ?? true))
-            {
-                ListXmlTranslation<IScriptEntryGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Scripts),
-                    item: item.Scripts,
-                    fieldIndex: (int)AVirtualMachineAdapter_FieldIndex.Scripts,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)AVirtualMachineAdapter_FieldIndex.Scripts),
-                    transl: (XElement subNode, IScriptEntryGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ScriptEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public virtual void Write(
-            XElement node,
-            IAVirtualMachineAdapterGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.AVirtualMachineAdapter");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.AVirtualMachineAdapter");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public virtual void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IAVirtualMachineAdapterGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IAVirtualMachineAdapterGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IAVirtualMachineAdapterGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class AVirtualMachineAdapterXmlCreateTranslation
-    {
-        public readonly static AVirtualMachineAdapterXmlCreateTranslation Instance = new AVirtualMachineAdapterXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IAVirtualMachineAdapter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    AVirtualMachineAdapterXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IAVirtualMachineAdapter item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Version":
-                    errorMask?.PushIndex((int)AVirtualMachineAdapter_FieldIndex.Version);
-                    try
-                    {
-                        item.Version = Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ObjectFormat":
-                    errorMask?.PushIndex((int)AVirtualMachineAdapter_FieldIndex.ObjectFormat);
-                    try
-                    {
-                        item.ObjectFormat = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Scripts":
-                    errorMask?.PushIndex((int)AVirtualMachineAdapter_FieldIndex.Scripts);
-                    try
-                    {
-                        if (ListXmlTranslation<ScriptEntry>.Instance.Parse(
-                            node: node,
-                            enumer: out var ScriptsItem,
-                            transl: LoquiXmlTranslation<ScriptEntry>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Scripts.SetTo(ScriptsItem);
-                        }
-                        else
-                        {
-                            item.Scripts.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class AVirtualMachineAdapterXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
-            XElement node,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((AVirtualMachineAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = AVirtualMachineAdapter.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
-            string path,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
-            Stream stream,
-            out AVirtualMachineAdapter.ErrorMask errorMask,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((AVirtualMachineAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
-            XElement node,
-            string? name = null,
-            AVirtualMachineAdapter.TranslationMask? translationMask = null)
-        {
-            ((AVirtualMachineAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((AVirtualMachineAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IAVirtualMachineAdapterGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((AVirtualMachineAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2080,23 +1400,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AVirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AVirtualMachineAdapterCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AVirtualMachineAdapterCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object XmlWriteTranslator => AVirtualMachineAdapterXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((AVirtualMachineAdapterXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => AVirtualMachineAdapterBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

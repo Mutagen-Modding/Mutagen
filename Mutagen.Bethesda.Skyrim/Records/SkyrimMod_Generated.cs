@@ -16,16 +16,11 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using System.IO;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -142,6 +137,20 @@ namespace Mutagen.Bethesda.Skyrim
             _Shouts_Object = new Group<Shout>(this);
             _EquipTypes_Object = new Group<EquipType>(this);
             _Relationships_Object = new Group<Relationship>(this);
+            _Scenes_Object = new Group<Scene>(this);
+            _AssociationTypes_Object = new Group<AssociationType>(this);
+            _Outfits_Object = new Group<Outfit>(this);
+            _ArtObjects_Object = new Group<ArtObject>(this);
+            _MaterialObjects_Object = new Group<MaterialObject>(this);
+            _MovementTypes_Object = new Group<MovementType>(this);
+            _SoundDescriptors_Object = new Group<SoundDescriptor>(this);
+            _DualCastData_Object = new Group<DualCastData>(this);
+            _SoundCategories_Object = new Group<SoundCategory>(this);
+            _SoundOutputModels_Object = new Group<SoundOutputModel>(this);
+            _CollisionLayers_Object = new Group<CollisionLayer>(this);
+            _Colors_Object = new Group<ColorRecord>(this);
+            _ReverbParameters_Object = new Group<ReverbParameters>(this);
+            _VolumetricLightings_Object = new Group<VolumetricLighting>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -847,6 +856,104 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IRelationshipGetter> ISkyrimModGetter.Relationships => _Relationships_Object;
         #endregion
+        #region Scenes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Scene> _Scenes_Object;
+        public Group<Scene> Scenes => _Scenes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ISceneGetter> ISkyrimModGetter.Scenes => _Scenes_Object;
+        #endregion
+        #region AssociationTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<AssociationType> _AssociationTypes_Object;
+        public Group<AssociationType> AssociationTypes => _AssociationTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IAssociationTypeGetter> ISkyrimModGetter.AssociationTypes => _AssociationTypes_Object;
+        #endregion
+        #region Outfits
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Outfit> _Outfits_Object;
+        public Group<Outfit> Outfits => _Outfits_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IOutfitGetter> ISkyrimModGetter.Outfits => _Outfits_Object;
+        #endregion
+        #region ArtObjects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<ArtObject> _ArtObjects_Object;
+        public Group<ArtObject> ArtObjects => _ArtObjects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IArtObjectGetter> ISkyrimModGetter.ArtObjects => _ArtObjects_Object;
+        #endregion
+        #region MaterialObjects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<MaterialObject> _MaterialObjects_Object;
+        public Group<MaterialObject> MaterialObjects => _MaterialObjects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IMaterialObjectGetter> ISkyrimModGetter.MaterialObjects => _MaterialObjects_Object;
+        #endregion
+        #region MovementTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<MovementType> _MovementTypes_Object;
+        public Group<MovementType> MovementTypes => _MovementTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IMovementTypeGetter> ISkyrimModGetter.MovementTypes => _MovementTypes_Object;
+        #endregion
+        #region SoundDescriptors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<SoundDescriptor> _SoundDescriptors_Object;
+        public Group<SoundDescriptor> SoundDescriptors => _SoundDescriptors_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ISoundDescriptorGetter> ISkyrimModGetter.SoundDescriptors => _SoundDescriptors_Object;
+        #endregion
+        #region DualCastData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<DualCastData> _DualCastData_Object;
+        public Group<DualCastData> DualCastData => _DualCastData_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IDualCastDataGetter> ISkyrimModGetter.DualCastData => _DualCastData_Object;
+        #endregion
+        #region SoundCategories
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<SoundCategory> _SoundCategories_Object;
+        public Group<SoundCategory> SoundCategories => _SoundCategories_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ISoundCategoryGetter> ISkyrimModGetter.SoundCategories => _SoundCategories_Object;
+        #endregion
+        #region SoundOutputModels
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<SoundOutputModel> _SoundOutputModels_Object;
+        public Group<SoundOutputModel> SoundOutputModels => _SoundOutputModels_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ISoundOutputModelGetter> ISkyrimModGetter.SoundOutputModels => _SoundOutputModels_Object;
+        #endregion
+        #region CollisionLayers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<CollisionLayer> _CollisionLayers_Object;
+        public Group<CollisionLayer> CollisionLayers => _CollisionLayers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ICollisionLayerGetter> ISkyrimModGetter.CollisionLayers => _CollisionLayers_Object;
+        #endregion
+        #region Colors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<ColorRecord> _Colors_Object;
+        public Group<ColorRecord> Colors => _Colors_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IColorRecordGetter> ISkyrimModGetter.Colors => _Colors_Object;
+        #endregion
+        #region ReverbParameters
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<ReverbParameters> _ReverbParameters_Object;
+        public Group<ReverbParameters> ReverbParameters => _ReverbParameters_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IReverbParametersGetter> ISkyrimModGetter.ReverbParameters => _ReverbParameters_Object;
+        #endregion
+        #region VolumetricLightings
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<VolumetricLighting> _VolumetricLightings_Object;
+        public Group<VolumetricLighting> VolumetricLightings => _VolumetricLightings_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IVolumetricLightingGetter> ISkyrimModGetter.VolumetricLightings => _VolumetricLightings_Object;
+        #endregion
 
         #region To String
 
@@ -874,137 +981,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((SkyrimModXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static SkyrimMod CreateFromXml(
-            XElement node,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static SkyrimMod CreateFromXml(
-            XElement node,
-            out SkyrimMod.ErrorMask errorMask,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SkyrimMod.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static SkyrimMod CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new SkyrimMod();
-            ((SkyrimModSetterCommon)((ISkyrimModGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static SkyrimMod CreateFromXml(
-            string path,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static SkyrimMod CreateFromXml(
-            string path,
-            out SkyrimMod.ErrorMask errorMask,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static SkyrimMod CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static SkyrimMod CreateFromXml(
-            Stream stream,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static SkyrimMod CreateFromXml(
-            Stream stream,
-            out SkyrimMod.ErrorMask errorMask,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static SkyrimMod CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -1116,6 +1092,20 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Shouts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.EquipTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Relationships = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Scenes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.AssociationTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Outfits = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.ArtObjects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.MaterialObjects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.MovementTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.SoundDescriptors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.DualCastData = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.SoundCategories = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.SoundOutputModels = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.CollisionLayers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Colors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.ReverbParameters = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.VolumetricLightings = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1218,7 +1208,21 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem WordsOfPower,
                 TItem Shouts,
                 TItem EquipTypes,
-                TItem Relationships)
+                TItem Relationships,
+                TItem Scenes,
+                TItem AssociationTypes,
+                TItem Outfits,
+                TItem ArtObjects,
+                TItem MaterialObjects,
+                TItem MovementTypes,
+                TItem SoundDescriptors,
+                TItem DualCastData,
+                TItem SoundCategories,
+                TItem SoundOutputModels,
+                TItem CollisionLayers,
+                TItem Colors,
+                TItem ReverbParameters,
+                TItem VolumetricLightings)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -1320,6 +1324,20 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Shouts = new MaskItem<TItem, Group.Mask<TItem>?>(Shouts, new Group.Mask<TItem>(Shouts));
                 this.EquipTypes = new MaskItem<TItem, Group.Mask<TItem>?>(EquipTypes, new Group.Mask<TItem>(EquipTypes));
                 this.Relationships = new MaskItem<TItem, Group.Mask<TItem>?>(Relationships, new Group.Mask<TItem>(Relationships));
+                this.Scenes = new MaskItem<TItem, Group.Mask<TItem>?>(Scenes, new Group.Mask<TItem>(Scenes));
+                this.AssociationTypes = new MaskItem<TItem, Group.Mask<TItem>?>(AssociationTypes, new Group.Mask<TItem>(AssociationTypes));
+                this.Outfits = new MaskItem<TItem, Group.Mask<TItem>?>(Outfits, new Group.Mask<TItem>(Outfits));
+                this.ArtObjects = new MaskItem<TItem, Group.Mask<TItem>?>(ArtObjects, new Group.Mask<TItem>(ArtObjects));
+                this.MaterialObjects = new MaskItem<TItem, Group.Mask<TItem>?>(MaterialObjects, new Group.Mask<TItem>(MaterialObjects));
+                this.MovementTypes = new MaskItem<TItem, Group.Mask<TItem>?>(MovementTypes, new Group.Mask<TItem>(MovementTypes));
+                this.SoundDescriptors = new MaskItem<TItem, Group.Mask<TItem>?>(SoundDescriptors, new Group.Mask<TItem>(SoundDescriptors));
+                this.DualCastData = new MaskItem<TItem, Group.Mask<TItem>?>(DualCastData, new Group.Mask<TItem>(DualCastData));
+                this.SoundCategories = new MaskItem<TItem, Group.Mask<TItem>?>(SoundCategories, new Group.Mask<TItem>(SoundCategories));
+                this.SoundOutputModels = new MaskItem<TItem, Group.Mask<TItem>?>(SoundOutputModels, new Group.Mask<TItem>(SoundOutputModels));
+                this.CollisionLayers = new MaskItem<TItem, Group.Mask<TItem>?>(CollisionLayers, new Group.Mask<TItem>(CollisionLayers));
+                this.Colors = new MaskItem<TItem, Group.Mask<TItem>?>(Colors, new Group.Mask<TItem>(Colors));
+                this.ReverbParameters = new MaskItem<TItem, Group.Mask<TItem>?>(ReverbParameters, new Group.Mask<TItem>(ReverbParameters));
+                this.VolumetricLightings = new MaskItem<TItem, Group.Mask<TItem>?>(VolumetricLightings, new Group.Mask<TItem>(VolumetricLightings));
             }
 
             #pragma warning disable CS8618
@@ -1431,6 +1449,20 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Shouts { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? EquipTypes { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Relationships { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Scenes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? AssociationTypes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Outfits { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? ArtObjects { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? MaterialObjects { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? MovementTypes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? SoundDescriptors { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? DualCastData { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? SoundCategories { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? SoundOutputModels { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? CollisionLayers { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Colors { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? ReverbParameters { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? VolumetricLightings { get; set; }
             #endregion
 
             #region Equals
@@ -1543,6 +1575,20 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Shouts, rhs.Shouts)) return false;
                 if (!object.Equals(this.EquipTypes, rhs.EquipTypes)) return false;
                 if (!object.Equals(this.Relationships, rhs.Relationships)) return false;
+                if (!object.Equals(this.Scenes, rhs.Scenes)) return false;
+                if (!object.Equals(this.AssociationTypes, rhs.AssociationTypes)) return false;
+                if (!object.Equals(this.Outfits, rhs.Outfits)) return false;
+                if (!object.Equals(this.ArtObjects, rhs.ArtObjects)) return false;
+                if (!object.Equals(this.MaterialObjects, rhs.MaterialObjects)) return false;
+                if (!object.Equals(this.MovementTypes, rhs.MovementTypes)) return false;
+                if (!object.Equals(this.SoundDescriptors, rhs.SoundDescriptors)) return false;
+                if (!object.Equals(this.DualCastData, rhs.DualCastData)) return false;
+                if (!object.Equals(this.SoundCategories, rhs.SoundCategories)) return false;
+                if (!object.Equals(this.SoundOutputModels, rhs.SoundOutputModels)) return false;
+                if (!object.Equals(this.CollisionLayers, rhs.CollisionLayers)) return false;
+                if (!object.Equals(this.Colors, rhs.Colors)) return false;
+                if (!object.Equals(this.ReverbParameters, rhs.ReverbParameters)) return false;
+                if (!object.Equals(this.VolumetricLightings, rhs.VolumetricLightings)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1648,6 +1694,20 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Shouts);
                 hash.Add(this.EquipTypes);
                 hash.Add(this.Relationships);
+                hash.Add(this.Scenes);
+                hash.Add(this.AssociationTypes);
+                hash.Add(this.Outfits);
+                hash.Add(this.ArtObjects);
+                hash.Add(this.MaterialObjects);
+                hash.Add(this.MovementTypes);
+                hash.Add(this.SoundDescriptors);
+                hash.Add(this.DualCastData);
+                hash.Add(this.SoundCategories);
+                hash.Add(this.SoundOutputModels);
+                hash.Add(this.CollisionLayers);
+                hash.Add(this.Colors);
+                hash.Add(this.ReverbParameters);
+                hash.Add(this.VolumetricLightings);
                 return hash.ToHashCode();
             }
 
@@ -2156,6 +2216,76 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Relationships.Overall)) return false;
                     if (this.Relationships.Specific != null && !this.Relationships.Specific.All(eval)) return false;
                 }
+                if (Scenes != null)
+                {
+                    if (!eval(this.Scenes.Overall)) return false;
+                    if (this.Scenes.Specific != null && !this.Scenes.Specific.All(eval)) return false;
+                }
+                if (AssociationTypes != null)
+                {
+                    if (!eval(this.AssociationTypes.Overall)) return false;
+                    if (this.AssociationTypes.Specific != null && !this.AssociationTypes.Specific.All(eval)) return false;
+                }
+                if (Outfits != null)
+                {
+                    if (!eval(this.Outfits.Overall)) return false;
+                    if (this.Outfits.Specific != null && !this.Outfits.Specific.All(eval)) return false;
+                }
+                if (ArtObjects != null)
+                {
+                    if (!eval(this.ArtObjects.Overall)) return false;
+                    if (this.ArtObjects.Specific != null && !this.ArtObjects.Specific.All(eval)) return false;
+                }
+                if (MaterialObjects != null)
+                {
+                    if (!eval(this.MaterialObjects.Overall)) return false;
+                    if (this.MaterialObjects.Specific != null && !this.MaterialObjects.Specific.All(eval)) return false;
+                }
+                if (MovementTypes != null)
+                {
+                    if (!eval(this.MovementTypes.Overall)) return false;
+                    if (this.MovementTypes.Specific != null && !this.MovementTypes.Specific.All(eval)) return false;
+                }
+                if (SoundDescriptors != null)
+                {
+                    if (!eval(this.SoundDescriptors.Overall)) return false;
+                    if (this.SoundDescriptors.Specific != null && !this.SoundDescriptors.Specific.All(eval)) return false;
+                }
+                if (DualCastData != null)
+                {
+                    if (!eval(this.DualCastData.Overall)) return false;
+                    if (this.DualCastData.Specific != null && !this.DualCastData.Specific.All(eval)) return false;
+                }
+                if (SoundCategories != null)
+                {
+                    if (!eval(this.SoundCategories.Overall)) return false;
+                    if (this.SoundCategories.Specific != null && !this.SoundCategories.Specific.All(eval)) return false;
+                }
+                if (SoundOutputModels != null)
+                {
+                    if (!eval(this.SoundOutputModels.Overall)) return false;
+                    if (this.SoundOutputModels.Specific != null && !this.SoundOutputModels.Specific.All(eval)) return false;
+                }
+                if (CollisionLayers != null)
+                {
+                    if (!eval(this.CollisionLayers.Overall)) return false;
+                    if (this.CollisionLayers.Specific != null && !this.CollisionLayers.Specific.All(eval)) return false;
+                }
+                if (Colors != null)
+                {
+                    if (!eval(this.Colors.Overall)) return false;
+                    if (this.Colors.Specific != null && !this.Colors.Specific.All(eval)) return false;
+                }
+                if (ReverbParameters != null)
+                {
+                    if (!eval(this.ReverbParameters.Overall)) return false;
+                    if (this.ReverbParameters.Specific != null && !this.ReverbParameters.Specific.All(eval)) return false;
+                }
+                if (VolumetricLightings != null)
+                {
+                    if (!eval(this.VolumetricLightings.Overall)) return false;
+                    if (this.VolumetricLightings.Specific != null && !this.VolumetricLightings.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2663,6 +2793,76 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Relationships.Overall)) return true;
                     if (this.Relationships.Specific != null && this.Relationships.Specific.Any(eval)) return true;
                 }
+                if (Scenes != null)
+                {
+                    if (eval(this.Scenes.Overall)) return true;
+                    if (this.Scenes.Specific != null && this.Scenes.Specific.Any(eval)) return true;
+                }
+                if (AssociationTypes != null)
+                {
+                    if (eval(this.AssociationTypes.Overall)) return true;
+                    if (this.AssociationTypes.Specific != null && this.AssociationTypes.Specific.Any(eval)) return true;
+                }
+                if (Outfits != null)
+                {
+                    if (eval(this.Outfits.Overall)) return true;
+                    if (this.Outfits.Specific != null && this.Outfits.Specific.Any(eval)) return true;
+                }
+                if (ArtObjects != null)
+                {
+                    if (eval(this.ArtObjects.Overall)) return true;
+                    if (this.ArtObjects.Specific != null && this.ArtObjects.Specific.Any(eval)) return true;
+                }
+                if (MaterialObjects != null)
+                {
+                    if (eval(this.MaterialObjects.Overall)) return true;
+                    if (this.MaterialObjects.Specific != null && this.MaterialObjects.Specific.Any(eval)) return true;
+                }
+                if (MovementTypes != null)
+                {
+                    if (eval(this.MovementTypes.Overall)) return true;
+                    if (this.MovementTypes.Specific != null && this.MovementTypes.Specific.Any(eval)) return true;
+                }
+                if (SoundDescriptors != null)
+                {
+                    if (eval(this.SoundDescriptors.Overall)) return true;
+                    if (this.SoundDescriptors.Specific != null && this.SoundDescriptors.Specific.Any(eval)) return true;
+                }
+                if (DualCastData != null)
+                {
+                    if (eval(this.DualCastData.Overall)) return true;
+                    if (this.DualCastData.Specific != null && this.DualCastData.Specific.Any(eval)) return true;
+                }
+                if (SoundCategories != null)
+                {
+                    if (eval(this.SoundCategories.Overall)) return true;
+                    if (this.SoundCategories.Specific != null && this.SoundCategories.Specific.Any(eval)) return true;
+                }
+                if (SoundOutputModels != null)
+                {
+                    if (eval(this.SoundOutputModels.Overall)) return true;
+                    if (this.SoundOutputModels.Specific != null && this.SoundOutputModels.Specific.Any(eval)) return true;
+                }
+                if (CollisionLayers != null)
+                {
+                    if (eval(this.CollisionLayers.Overall)) return true;
+                    if (this.CollisionLayers.Specific != null && this.CollisionLayers.Specific.Any(eval)) return true;
+                }
+                if (Colors != null)
+                {
+                    if (eval(this.Colors.Overall)) return true;
+                    if (this.Colors.Specific != null && this.Colors.Specific.Any(eval)) return true;
+                }
+                if (ReverbParameters != null)
+                {
+                    if (eval(this.ReverbParameters.Overall)) return true;
+                    if (this.ReverbParameters.Specific != null && this.ReverbParameters.Specific.Any(eval)) return true;
+                }
+                if (VolumetricLightings != null)
+                {
+                    if (eval(this.VolumetricLightings.Overall)) return true;
+                    if (this.VolumetricLightings.Specific != null && this.VolumetricLightings.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2777,6 +2977,20 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Shouts = this.Shouts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Shouts.Overall), this.Shouts.Specific?.Translate(eval));
                 obj.EquipTypes = this.EquipTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.EquipTypes.Overall), this.EquipTypes.Specific?.Translate(eval));
                 obj.Relationships = this.Relationships == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Relationships.Overall), this.Relationships.Specific?.Translate(eval));
+                obj.Scenes = this.Scenes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Scenes.Overall), this.Scenes.Specific?.Translate(eval));
+                obj.AssociationTypes = this.AssociationTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AssociationTypes.Overall), this.AssociationTypes.Specific?.Translate(eval));
+                obj.Outfits = this.Outfits == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Outfits.Overall), this.Outfits.Specific?.Translate(eval));
+                obj.ArtObjects = this.ArtObjects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ArtObjects.Overall), this.ArtObjects.Specific?.Translate(eval));
+                obj.MaterialObjects = this.MaterialObjects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MaterialObjects.Overall), this.MaterialObjects.Specific?.Translate(eval));
+                obj.MovementTypes = this.MovementTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MovementTypes.Overall), this.MovementTypes.Specific?.Translate(eval));
+                obj.SoundDescriptors = this.SoundDescriptors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SoundDescriptors.Overall), this.SoundDescriptors.Specific?.Translate(eval));
+                obj.DualCastData = this.DualCastData == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DualCastData.Overall), this.DualCastData.Specific?.Translate(eval));
+                obj.SoundCategories = this.SoundCategories == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SoundCategories.Overall), this.SoundCategories.Specific?.Translate(eval));
+                obj.SoundOutputModels = this.SoundOutputModels == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SoundOutputModels.Overall), this.SoundOutputModels.Specific?.Translate(eval));
+                obj.CollisionLayers = this.CollisionLayers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.CollisionLayers.Overall), this.CollisionLayers.Specific?.Translate(eval));
+                obj.Colors = this.Colors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Colors.Overall), this.Colors.Specific?.Translate(eval));
+                obj.ReverbParameters = this.ReverbParameters == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ReverbParameters.Overall), this.ReverbParameters.Specific?.Translate(eval));
+                obj.VolumetricLightings = this.VolumetricLightings == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.VolumetricLightings.Overall), this.VolumetricLightings.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3199,6 +3413,62 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Relationships?.ToString(fg);
                     }
+                    if (printMask?.Scenes?.Overall ?? true)
+                    {
+                        Scenes?.ToString(fg);
+                    }
+                    if (printMask?.AssociationTypes?.Overall ?? true)
+                    {
+                        AssociationTypes?.ToString(fg);
+                    }
+                    if (printMask?.Outfits?.Overall ?? true)
+                    {
+                        Outfits?.ToString(fg);
+                    }
+                    if (printMask?.ArtObjects?.Overall ?? true)
+                    {
+                        ArtObjects?.ToString(fg);
+                    }
+                    if (printMask?.MaterialObjects?.Overall ?? true)
+                    {
+                        MaterialObjects?.ToString(fg);
+                    }
+                    if (printMask?.MovementTypes?.Overall ?? true)
+                    {
+                        MovementTypes?.ToString(fg);
+                    }
+                    if (printMask?.SoundDescriptors?.Overall ?? true)
+                    {
+                        SoundDescriptors?.ToString(fg);
+                    }
+                    if (printMask?.DualCastData?.Overall ?? true)
+                    {
+                        DualCastData?.ToString(fg);
+                    }
+                    if (printMask?.SoundCategories?.Overall ?? true)
+                    {
+                        SoundCategories?.ToString(fg);
+                    }
+                    if (printMask?.SoundOutputModels?.Overall ?? true)
+                    {
+                        SoundOutputModels?.ToString(fg);
+                    }
+                    if (printMask?.CollisionLayers?.Overall ?? true)
+                    {
+                        CollisionLayers?.ToString(fg);
+                    }
+                    if (printMask?.Colors?.Overall ?? true)
+                    {
+                        Colors?.ToString(fg);
+                    }
+                    if (printMask?.ReverbParameters?.Overall ?? true)
+                    {
+                        ReverbParameters?.ToString(fg);
+                    }
+                    if (printMask?.VolumetricLightings?.Overall ?? true)
+                    {
+                        VolumetricLightings?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -3324,6 +3594,20 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Shout.ErrorMask>?>? Shouts;
             public MaskItem<Exception?, Group.ErrorMask<EquipType.ErrorMask>?>? EquipTypes;
             public MaskItem<Exception?, Group.ErrorMask<Relationship.ErrorMask>?>? Relationships;
+            public MaskItem<Exception?, Group.ErrorMask<Scene.ErrorMask>?>? Scenes;
+            public MaskItem<Exception?, Group.ErrorMask<AssociationType.ErrorMask>?>? AssociationTypes;
+            public MaskItem<Exception?, Group.ErrorMask<Outfit.ErrorMask>?>? Outfits;
+            public MaskItem<Exception?, Group.ErrorMask<ArtObject.ErrorMask>?>? ArtObjects;
+            public MaskItem<Exception?, Group.ErrorMask<MaterialObject.ErrorMask>?>? MaterialObjects;
+            public MaskItem<Exception?, Group.ErrorMask<MovementType.ErrorMask>?>? MovementTypes;
+            public MaskItem<Exception?, Group.ErrorMask<SoundDescriptor.ErrorMask>?>? SoundDescriptors;
+            public MaskItem<Exception?, Group.ErrorMask<DualCastData.ErrorMask>?>? DualCastData;
+            public MaskItem<Exception?, Group.ErrorMask<SoundCategory.ErrorMask>?>? SoundCategories;
+            public MaskItem<Exception?, Group.ErrorMask<SoundOutputModel.ErrorMask>?>? SoundOutputModels;
+            public MaskItem<Exception?, Group.ErrorMask<CollisionLayer.ErrorMask>?>? CollisionLayers;
+            public MaskItem<Exception?, Group.ErrorMask<ColorRecord.ErrorMask>?>? Colors;
+            public MaskItem<Exception?, Group.ErrorMask<ReverbParameters.ErrorMask>?>? ReverbParameters;
+            public MaskItem<Exception?, Group.ErrorMask<VolumetricLighting.ErrorMask>?>? VolumetricLightings;
             #endregion
 
             #region IErrorMask
@@ -3532,6 +3816,34 @@ namespace Mutagen.Bethesda.Skyrim
                         return EquipTypes;
                     case SkyrimMod_FieldIndex.Relationships:
                         return Relationships;
+                    case SkyrimMod_FieldIndex.Scenes:
+                        return Scenes;
+                    case SkyrimMod_FieldIndex.AssociationTypes:
+                        return AssociationTypes;
+                    case SkyrimMod_FieldIndex.Outfits:
+                        return Outfits;
+                    case SkyrimMod_FieldIndex.ArtObjects:
+                        return ArtObjects;
+                    case SkyrimMod_FieldIndex.MaterialObjects:
+                        return MaterialObjects;
+                    case SkyrimMod_FieldIndex.MovementTypes:
+                        return MovementTypes;
+                    case SkyrimMod_FieldIndex.SoundDescriptors:
+                        return SoundDescriptors;
+                    case SkyrimMod_FieldIndex.DualCastData:
+                        return DualCastData;
+                    case SkyrimMod_FieldIndex.SoundCategories:
+                        return SoundCategories;
+                    case SkyrimMod_FieldIndex.SoundOutputModels:
+                        return SoundOutputModels;
+                    case SkyrimMod_FieldIndex.CollisionLayers:
+                        return CollisionLayers;
+                    case SkyrimMod_FieldIndex.Colors:
+                        return Colors;
+                    case SkyrimMod_FieldIndex.ReverbParameters:
+                        return ReverbParameters;
+                    case SkyrimMod_FieldIndex.VolumetricLightings:
+                        return VolumetricLightings;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3841,6 +4153,48 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Relationships:
                         this.Relationships = new MaskItem<Exception?, Group.ErrorMask<Relationship.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Scenes:
+                        this.Scenes = new MaskItem<Exception?, Group.ErrorMask<Scene.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.AssociationTypes:
+                        this.AssociationTypes = new MaskItem<Exception?, Group.ErrorMask<AssociationType.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Outfits:
+                        this.Outfits = new MaskItem<Exception?, Group.ErrorMask<Outfit.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.ArtObjects:
+                        this.ArtObjects = new MaskItem<Exception?, Group.ErrorMask<ArtObject.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.MaterialObjects:
+                        this.MaterialObjects = new MaskItem<Exception?, Group.ErrorMask<MaterialObject.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.MovementTypes:
+                        this.MovementTypes = new MaskItem<Exception?, Group.ErrorMask<MovementType.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.SoundDescriptors:
+                        this.SoundDescriptors = new MaskItem<Exception?, Group.ErrorMask<SoundDescriptor.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.DualCastData:
+                        this.DualCastData = new MaskItem<Exception?, Group.ErrorMask<DualCastData.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.SoundCategories:
+                        this.SoundCategories = new MaskItem<Exception?, Group.ErrorMask<SoundCategory.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.SoundOutputModels:
+                        this.SoundOutputModels = new MaskItem<Exception?, Group.ErrorMask<SoundOutputModel.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.CollisionLayers:
+                        this.CollisionLayers = new MaskItem<Exception?, Group.ErrorMask<CollisionLayer.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Colors:
+                        this.Colors = new MaskItem<Exception?, Group.ErrorMask<ColorRecord.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.ReverbParameters:
+                        this.ReverbParameters = new MaskItem<Exception?, Group.ErrorMask<ReverbParameters.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.VolumetricLightings:
+                        this.VolumetricLightings = new MaskItem<Exception?, Group.ErrorMask<VolumetricLighting.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4152,6 +4506,48 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Relationships:
                         this.Relationships = (MaskItem<Exception?, Group.ErrorMask<Relationship.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Scenes:
+                        this.Scenes = (MaskItem<Exception?, Group.ErrorMask<Scene.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.AssociationTypes:
+                        this.AssociationTypes = (MaskItem<Exception?, Group.ErrorMask<AssociationType.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Outfits:
+                        this.Outfits = (MaskItem<Exception?, Group.ErrorMask<Outfit.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.ArtObjects:
+                        this.ArtObjects = (MaskItem<Exception?, Group.ErrorMask<ArtObject.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.MaterialObjects:
+                        this.MaterialObjects = (MaskItem<Exception?, Group.ErrorMask<MaterialObject.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.MovementTypes:
+                        this.MovementTypes = (MaskItem<Exception?, Group.ErrorMask<MovementType.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.SoundDescriptors:
+                        this.SoundDescriptors = (MaskItem<Exception?, Group.ErrorMask<SoundDescriptor.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.DualCastData:
+                        this.DualCastData = (MaskItem<Exception?, Group.ErrorMask<DualCastData.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.SoundCategories:
+                        this.SoundCategories = (MaskItem<Exception?, Group.ErrorMask<SoundCategory.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.SoundOutputModels:
+                        this.SoundOutputModels = (MaskItem<Exception?, Group.ErrorMask<SoundOutputModel.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.CollisionLayers:
+                        this.CollisionLayers = (MaskItem<Exception?, Group.ErrorMask<CollisionLayer.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Colors:
+                        this.Colors = (MaskItem<Exception?, Group.ErrorMask<ColorRecord.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.ReverbParameters:
+                        this.ReverbParameters = (MaskItem<Exception?, Group.ErrorMask<ReverbParameters.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.VolumetricLightings:
+                        this.VolumetricLightings = (MaskItem<Exception?, Group.ErrorMask<VolumetricLighting.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4260,6 +4656,20 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Shouts != null) return true;
                 if (EquipTypes != null) return true;
                 if (Relationships != null) return true;
+                if (Scenes != null) return true;
+                if (AssociationTypes != null) return true;
+                if (Outfits != null) return true;
+                if (ArtObjects != null) return true;
+                if (MaterialObjects != null) return true;
+                if (MovementTypes != null) return true;
+                if (SoundDescriptors != null) return true;
+                if (DualCastData != null) return true;
+                if (SoundCategories != null) return true;
+                if (SoundOutputModels != null) return true;
+                if (CollisionLayers != null) return true;
+                if (Colors != null) return true;
+                if (ReverbParameters != null) return true;
+                if (VolumetricLightings != null) return true;
                 return false;
             }
             #endregion
@@ -4394,6 +4804,20 @@ namespace Mutagen.Bethesda.Skyrim
                 Shouts?.ToString(fg);
                 EquipTypes?.ToString(fg);
                 Relationships?.ToString(fg);
+                Scenes?.ToString(fg);
+                AssociationTypes?.ToString(fg);
+                Outfits?.ToString(fg);
+                ArtObjects?.ToString(fg);
+                MaterialObjects?.ToString(fg);
+                MovementTypes?.ToString(fg);
+                SoundDescriptors?.ToString(fg);
+                DualCastData?.ToString(fg);
+                SoundCategories?.ToString(fg);
+                SoundOutputModels?.ToString(fg);
+                CollisionLayers?.ToString(fg);
+                Colors?.ToString(fg);
+                ReverbParameters?.ToString(fg);
+                VolumetricLightings?.ToString(fg);
             }
             #endregion
 
@@ -4502,6 +4926,20 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Shouts = this.Shouts.Combine(rhs.Shouts, (l, r) => l.Combine(r));
                 ret.EquipTypes = this.EquipTypes.Combine(rhs.EquipTypes, (l, r) => l.Combine(r));
                 ret.Relationships = this.Relationships.Combine(rhs.Relationships, (l, r) => l.Combine(r));
+                ret.Scenes = this.Scenes.Combine(rhs.Scenes, (l, r) => l.Combine(r));
+                ret.AssociationTypes = this.AssociationTypes.Combine(rhs.AssociationTypes, (l, r) => l.Combine(r));
+                ret.Outfits = this.Outfits.Combine(rhs.Outfits, (l, r) => l.Combine(r));
+                ret.ArtObjects = this.ArtObjects.Combine(rhs.ArtObjects, (l, r) => l.Combine(r));
+                ret.MaterialObjects = this.MaterialObjects.Combine(rhs.MaterialObjects, (l, r) => l.Combine(r));
+                ret.MovementTypes = this.MovementTypes.Combine(rhs.MovementTypes, (l, r) => l.Combine(r));
+                ret.SoundDescriptors = this.SoundDescriptors.Combine(rhs.SoundDescriptors, (l, r) => l.Combine(r));
+                ret.DualCastData = this.DualCastData.Combine(rhs.DualCastData, (l, r) => l.Combine(r));
+                ret.SoundCategories = this.SoundCategories.Combine(rhs.SoundCategories, (l, r) => l.Combine(r));
+                ret.SoundOutputModels = this.SoundOutputModels.Combine(rhs.SoundOutputModels, (l, r) => l.Combine(r));
+                ret.CollisionLayers = this.CollisionLayers.Combine(rhs.CollisionLayers, (l, r) => l.Combine(r));
+                ret.Colors = this.Colors.Combine(rhs.Colors, (l, r) => l.Combine(r));
+                ret.ReverbParameters = this.ReverbParameters.Combine(rhs.ReverbParameters, (l, r) => l.Combine(r));
+                ret.VolumetricLightings = this.VolumetricLightings.Combine(rhs.VolumetricLightings, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4623,6 +5061,20 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Shout.TranslationMask>?> Shouts;
             public MaskItem<bool, Group.TranslationMask<EquipType.TranslationMask>?> EquipTypes;
             public MaskItem<bool, Group.TranslationMask<Relationship.TranslationMask>?> Relationships;
+            public MaskItem<bool, Group.TranslationMask<Scene.TranslationMask>?> Scenes;
+            public MaskItem<bool, Group.TranslationMask<AssociationType.TranslationMask>?> AssociationTypes;
+            public MaskItem<bool, Group.TranslationMask<Outfit.TranslationMask>?> Outfits;
+            public MaskItem<bool, Group.TranslationMask<ArtObject.TranslationMask>?> ArtObjects;
+            public MaskItem<bool, Group.TranslationMask<MaterialObject.TranslationMask>?> MaterialObjects;
+            public MaskItem<bool, Group.TranslationMask<MovementType.TranslationMask>?> MovementTypes;
+            public MaskItem<bool, Group.TranslationMask<SoundDescriptor.TranslationMask>?> SoundDescriptors;
+            public MaskItem<bool, Group.TranslationMask<DualCastData.TranslationMask>?> DualCastData;
+            public MaskItem<bool, Group.TranslationMask<SoundCategory.TranslationMask>?> SoundCategories;
+            public MaskItem<bool, Group.TranslationMask<SoundOutputModel.TranslationMask>?> SoundOutputModels;
+            public MaskItem<bool, Group.TranslationMask<CollisionLayer.TranslationMask>?> CollisionLayers;
+            public MaskItem<bool, Group.TranslationMask<ColorRecord.TranslationMask>?> Colors;
+            public MaskItem<bool, Group.TranslationMask<ReverbParameters.TranslationMask>?> ReverbParameters;
+            public MaskItem<bool, Group.TranslationMask<VolumetricLighting.TranslationMask>?> VolumetricLightings;
             #endregion
 
             #region Ctors
@@ -4728,6 +5180,20 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Shouts = new MaskItem<bool, Group.TranslationMask<Shout.TranslationMask>?>(defaultOn, null);
                 this.EquipTypes = new MaskItem<bool, Group.TranslationMask<EquipType.TranslationMask>?>(defaultOn, null);
                 this.Relationships = new MaskItem<bool, Group.TranslationMask<Relationship.TranslationMask>?>(defaultOn, null);
+                this.Scenes = new MaskItem<bool, Group.TranslationMask<Scene.TranslationMask>?>(defaultOn, null);
+                this.AssociationTypes = new MaskItem<bool, Group.TranslationMask<AssociationType.TranslationMask>?>(defaultOn, null);
+                this.Outfits = new MaskItem<bool, Group.TranslationMask<Outfit.TranslationMask>?>(defaultOn, null);
+                this.ArtObjects = new MaskItem<bool, Group.TranslationMask<ArtObject.TranslationMask>?>(defaultOn, null);
+                this.MaterialObjects = new MaskItem<bool, Group.TranslationMask<MaterialObject.TranslationMask>?>(defaultOn, null);
+                this.MovementTypes = new MaskItem<bool, Group.TranslationMask<MovementType.TranslationMask>?>(defaultOn, null);
+                this.SoundDescriptors = new MaskItem<bool, Group.TranslationMask<SoundDescriptor.TranslationMask>?>(defaultOn, null);
+                this.DualCastData = new MaskItem<bool, Group.TranslationMask<DualCastData.TranslationMask>?>(defaultOn, null);
+                this.SoundCategories = new MaskItem<bool, Group.TranslationMask<SoundCategory.TranslationMask>?>(defaultOn, null);
+                this.SoundOutputModels = new MaskItem<bool, Group.TranslationMask<SoundOutputModel.TranslationMask>?>(defaultOn, null);
+                this.CollisionLayers = new MaskItem<bool, Group.TranslationMask<CollisionLayer.TranslationMask>?>(defaultOn, null);
+                this.Colors = new MaskItem<bool, Group.TranslationMask<ColorRecord.TranslationMask>?>(defaultOn, null);
+                this.ReverbParameters = new MaskItem<bool, Group.TranslationMask<ReverbParameters.TranslationMask>?>(defaultOn, null);
+                this.VolumetricLightings = new MaskItem<bool, Group.TranslationMask<VolumetricLighting.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -4843,13 +5309,28 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Shouts?.Overall ?? true, Shouts?.Specific?.GetCrystal()));
                 ret.Add((EquipTypes?.Overall ?? true, EquipTypes?.Specific?.GetCrystal()));
                 ret.Add((Relationships?.Overall ?? true, Relationships?.Specific?.GetCrystal()));
+                ret.Add((Scenes?.Overall ?? true, Scenes?.Specific?.GetCrystal()));
+                ret.Add((AssociationTypes?.Overall ?? true, AssociationTypes?.Specific?.GetCrystal()));
+                ret.Add((Outfits?.Overall ?? true, Outfits?.Specific?.GetCrystal()));
+                ret.Add((ArtObjects?.Overall ?? true, ArtObjects?.Specific?.GetCrystal()));
+                ret.Add((MaterialObjects?.Overall ?? true, MaterialObjects?.Specific?.GetCrystal()));
+                ret.Add((MovementTypes?.Overall ?? true, MovementTypes?.Specific?.GetCrystal()));
+                ret.Add((SoundDescriptors?.Overall ?? true, SoundDescriptors?.Specific?.GetCrystal()));
+                ret.Add((DualCastData?.Overall ?? true, DualCastData?.Specific?.GetCrystal()));
+                ret.Add((SoundCategories?.Overall ?? true, SoundCategories?.Specific?.GetCrystal()));
+                ret.Add((SoundOutputModels?.Overall ?? true, SoundOutputModels?.Specific?.GetCrystal()));
+                ret.Add((CollisionLayers?.Overall ?? true, CollisionLayers?.Specific?.GetCrystal()));
+                ret.Add((Colors?.Overall ?? true, Colors?.Specific?.GetCrystal()));
+                ret.Add((ReverbParameters?.Overall ?? true, ReverbParameters?.Specific?.GetCrystal()));
+                ret.Add((VolumetricLightings?.Overall ?? true, VolumetricLightings?.Specific?.GetCrystal()));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = SkyrimMod_Registration.TriggeringRecordType;
-        public override GameMode GameMode => GameMode.Skyrim;
+        public static readonly RecordType GrupRecordType = SkyrimMod_Registration.TriggeringRecordType;
+        public SkyrimRelease SkyrimRelease { get; }
+        public override GameRelease GameRelease => SkyrimRelease.ToGameRelease();
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
@@ -4865,10 +5346,13 @@ namespace Mutagen.Bethesda.Skyrim
             get => this.ModHeader.Stats.NextObjectID;
             set => this.ModHeader.Stats.NextObjectID = value;
         }
-        public SkyrimMod(ModKey modKey)
+        public SkyrimMod(
+            ModKey modKey,
+            SkyrimRelease release)
             : base(modKey)
         {
             this.ModHeader.Stats.NextObjectID = GetDefaultInitialNextObjectID();
+            this.SkyrimRelease = release;
             _GameSettings_Object = new Group<GameSetting>(this);
             _Keywords_Object = new Group<Keyword>(this);
             _LocationReferenceTypes_Object = new Group<LocationReferenceType>(this);
@@ -4967,6 +5451,20 @@ namespace Mutagen.Bethesda.Skyrim
             _Shouts_Object = new Group<Shout>(this);
             _EquipTypes_Object = new Group<EquipType>(this);
             _Relationships_Object = new Group<Relationship>(this);
+            _Scenes_Object = new Group<Scene>(this);
+            _AssociationTypes_Object = new Group<AssociationType>(this);
+            _Outfits_Object = new Group<Outfit>(this);
+            _ArtObjects_Object = new Group<ArtObject>(this);
+            _MaterialObjects_Object = new Group<MaterialObject>(this);
+            _MovementTypes_Object = new Group<MovementType>(this);
+            _SoundDescriptors_Object = new Group<SoundDescriptor>(this);
+            _DualCastData_Object = new Group<DualCastData>(this);
+            _SoundCategories_Object = new Group<SoundCategory>(this);
+            _SoundOutputModels_Object = new Group<SoundOutputModel>(this);
+            _CollisionLayers_Object = new Group<CollisionLayer>(this);
+            _Colors_Object = new Group<ColorRecord>(this);
+            _ReverbParameters_Object = new Group<ReverbParameters>(this);
+            _VolumetricLightings_Object = new Group<VolumetricLighting>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -5370,6 +5868,62 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Relationships ?? true)
             {
                 this.Relationships.RecordCache.Set(rhsMod.Relationships.RecordCache.Items);
+            }
+            if (mask?.Scenes ?? true)
+            {
+                this.Scenes.RecordCache.Set(rhsMod.Scenes.RecordCache.Items);
+            }
+            if (mask?.AssociationTypes ?? true)
+            {
+                this.AssociationTypes.RecordCache.Set(rhsMod.AssociationTypes.RecordCache.Items);
+            }
+            if (mask?.Outfits ?? true)
+            {
+                this.Outfits.RecordCache.Set(rhsMod.Outfits.RecordCache.Items);
+            }
+            if (mask?.ArtObjects ?? true)
+            {
+                this.ArtObjects.RecordCache.Set(rhsMod.ArtObjects.RecordCache.Items);
+            }
+            if (mask?.MaterialObjects ?? true)
+            {
+                this.MaterialObjects.RecordCache.Set(rhsMod.MaterialObjects.RecordCache.Items);
+            }
+            if (mask?.MovementTypes ?? true)
+            {
+                this.MovementTypes.RecordCache.Set(rhsMod.MovementTypes.RecordCache.Items);
+            }
+            if (mask?.SoundDescriptors ?? true)
+            {
+                this.SoundDescriptors.RecordCache.Set(rhsMod.SoundDescriptors.RecordCache.Items);
+            }
+            if (mask?.DualCastData ?? true)
+            {
+                this.DualCastData.RecordCache.Set(rhsMod.DualCastData.RecordCache.Items);
+            }
+            if (mask?.SoundCategories ?? true)
+            {
+                this.SoundCategories.RecordCache.Set(rhsMod.SoundCategories.RecordCache.Items);
+            }
+            if (mask?.SoundOutputModels ?? true)
+            {
+                this.SoundOutputModels.RecordCache.Set(rhsMod.SoundOutputModels.RecordCache.Items);
+            }
+            if (mask?.CollisionLayers ?? true)
+            {
+                this.CollisionLayers.RecordCache.Set(rhsMod.CollisionLayers.RecordCache.Items);
+            }
+            if (mask?.Colors ?? true)
+            {
+                this.Colors.RecordCache.Set(rhsMod.Colors.RecordCache.Items);
+            }
+            if (mask?.ReverbParameters ?? true)
+            {
+                this.ReverbParameters.RecordCache.Set(rhsMod.ReverbParameters.RecordCache.Items);
+            }
+            if (mask?.VolumetricLightings ?? true)
+            {
+                this.VolumetricLightings.RecordCache.Set(rhsMod.VolumetricLightings.RecordCache.Items);
             }
         }
 
@@ -6071,6 +6625,104 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Relationship>());
             }
+            if (mask?.Scenes ?? true)
+            {
+                this.Scenes.RecordCache.Set(
+                    rhs.Scenes.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Scene>());
+            }
+            if (mask?.AssociationTypes ?? true)
+            {
+                this.AssociationTypes.RecordCache.Set(
+                    rhs.AssociationTypes.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<AssociationType>());
+            }
+            if (mask?.Outfits ?? true)
+            {
+                this.Outfits.RecordCache.Set(
+                    rhs.Outfits.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Outfit>());
+            }
+            if (mask?.ArtObjects ?? true)
+            {
+                this.ArtObjects.RecordCache.Set(
+                    rhs.ArtObjects.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<ArtObject>());
+            }
+            if (mask?.MaterialObjects ?? true)
+            {
+                this.MaterialObjects.RecordCache.Set(
+                    rhs.MaterialObjects.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<MaterialObject>());
+            }
+            if (mask?.MovementTypes ?? true)
+            {
+                this.MovementTypes.RecordCache.Set(
+                    rhs.MovementTypes.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<MovementType>());
+            }
+            if (mask?.SoundDescriptors ?? true)
+            {
+                this.SoundDescriptors.RecordCache.Set(
+                    rhs.SoundDescriptors.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<SoundDescriptor>());
+            }
+            if (mask?.DualCastData ?? true)
+            {
+                this.DualCastData.RecordCache.Set(
+                    rhs.DualCastData.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<DualCastData>());
+            }
+            if (mask?.SoundCategories ?? true)
+            {
+                this.SoundCategories.RecordCache.Set(
+                    rhs.SoundCategories.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<SoundCategory>());
+            }
+            if (mask?.SoundOutputModels ?? true)
+            {
+                this.SoundOutputModels.RecordCache.Set(
+                    rhs.SoundOutputModels.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<SoundOutputModel>());
+            }
+            if (mask?.CollisionLayers ?? true)
+            {
+                this.CollisionLayers.RecordCache.Set(
+                    rhs.CollisionLayers.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<CollisionLayer>());
+            }
+            if (mask?.Colors ?? true)
+            {
+                this.Colors.RecordCache.Set(
+                    rhs.Colors.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<ColorRecord>());
+            }
+            if (mask?.ReverbParameters ?? true)
+            {
+                this.ReverbParameters.RecordCache.Set(
+                    rhs.ReverbParameters.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<ReverbParameters>());
+            }
+            if (mask?.VolumetricLightings ?? true)
+            {
+                this.VolumetricLightings.RecordCache.Set(
+                    rhs.VolumetricLightings.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<VolumetricLighting>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -6189,6 +6841,20 @@ namespace Mutagen.Bethesda.Skyrim
             count += Shouts.RecordCache.Count > 0 ? 1 : 0;
             count += EquipTypes.RecordCache.Count > 0 ? 1 : 0;
             count += Relationships.RecordCache.Count > 0 ? 1 : 0;
+            count += Scenes.RecordCache.Count > 0 ? 1 : 0;
+            count += AssociationTypes.RecordCache.Count > 0 ? 1 : 0;
+            count += Outfits.RecordCache.Count > 0 ? 1 : 0;
+            count += ArtObjects.RecordCache.Count > 0 ? 1 : 0;
+            count += MaterialObjects.RecordCache.Count > 0 ? 1 : 0;
+            count += MovementTypes.RecordCache.Count > 0 ? 1 : 0;
+            count += SoundDescriptors.RecordCache.Count > 0 ? 1 : 0;
+            count += DualCastData.RecordCache.Count > 0 ? 1 : 0;
+            count += SoundCategories.RecordCache.Count > 0 ? 1 : 0;
+            count += SoundOutputModels.RecordCache.Count > 0 ? 1 : 0;
+            count += CollisionLayers.RecordCache.Count > 0 ? 1 : 0;
+            count += Colors.RecordCache.Count > 0 ? 1 : 0;
+            count += ReverbParameters.RecordCache.Count > 0 ? 1 : 0;
+            count += VolumetricLightings.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -6220,10 +6886,12 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static SkyrimMod CreateFromBinary(
             MutagenFrame frame,
+            SkyrimRelease release,
             ModKey modKey,
             GroupMask? importMask = null)
         {
             return CreateFromBinary(
+                release: release,
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
@@ -6232,13 +6900,18 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static SkyrimMod CreateFromBinary(
             MutagenFrame frame,
+            SkyrimRelease release,
             ModKey modKey,
             RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
-            var ret = new SkyrimMod(modKey);
+            var ret = new SkyrimMod(
+                modKey: modKey,
+                release: release);
+            frame.MetaData.ModKey = modKey;
             ((SkyrimModSetterCommon)((ISkyrimModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
+                release: release,
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
@@ -6248,16 +6921,18 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static SkyrimMod CreateFromBinary(
             string path,
+            SkyrimRelease release,
             ModKey? modKeyOverride = null,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
+            var gameRelease = release.ToGameRelease();
+            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
             {
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim));
+                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
                 frame.MetaData.Parallel = parallel;
                 if (reader.Remaining < 12)
                 {
@@ -6266,9 +6941,10 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
                 }
                 return CreateFromBinary(
+                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -6277,17 +6953,19 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static SkyrimMod CreateFromBinary(
             string path,
+            SkyrimRelease release,
             ErrorMaskBuilder? errorMask,
             ModKey? modKeyOverride = null,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
+            var gameRelease = release.ToGameRelease();
+            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
             {
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim));
+                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
                 frame.MetaData.Parallel = parallel;
                 if (reader.Remaining < 12)
                 {
@@ -6296,9 +6974,10 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
                 }
                 return CreateFromBinary(
+                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame,
@@ -6309,16 +6988,18 @@ namespace Mutagen.Bethesda.Skyrim
         public static SkyrimMod CreateFromBinary(
             Stream stream,
             ModKey modKey,
+            SkyrimRelease release,
             RecordInfoCache infoCache,
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
+            using (var reader = new MutagenBinaryReadStream(stream, release.ToGameRelease()))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
                 frame.MetaData.Parallel = parallel;
                 return CreateFromBinary(
+                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -6328,17 +7009,19 @@ namespace Mutagen.Bethesda.Skyrim
         public static SkyrimMod CreateFromBinary(
             Stream stream,
             ModKey modKey,
+            SkyrimRelease release,
             RecordInfoCache infoCache,
             ErrorMaskBuilder? errorMask,
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
+            using (var reader = new MutagenBinaryReadStream(stream, release.ToGameRelease()))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
                 frame.MetaData.Parallel = parallel;
                 return CreateFromBinary(
+                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame,
@@ -6350,38 +7033,44 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
+            SkyrimRelease release,
             ModKey modKey,
             IStringsFolderLookup? stringsLookup = null)
         {
-            var meta = new ParsingBundle(GameMode.Skyrim);
+            var meta = new ParsingBundle(release.ToGameRelease());
             meta.RecordInfoCache = new RecordInfoCache(() => new MutagenMemoryReadStream(bytes, meta));
             meta.StringsLookup = stringsLookup;
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 stream: new MutagenMemoryReadStream(
                     data: bytes,
                     metaData: meta),
+                release: release,
                 modKey: modKey,
                 shouldDispose: false);
         }
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             string path,
+            SkyrimRelease release,
             ModKey? modKeyOverride = null,
             StringsReadParameters? stringsParam = null)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 path: path,
                 modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)),
-                stringsParam: stringsParam);
+                stringsParam: stringsParam,
+                release: release);
         }
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             IMutagenReadStream stream,
+            SkyrimRelease release,
             ModKey modKey)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 stream: stream,
                 modKey: modKey,
+                release: release,
                 shouldDispose: false);
         }
 
@@ -6511,13 +7200,26 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Shout> Shouts { get; }
         new Group<EquipType> EquipTypes { get; }
         new Group<Relationship> Relationships { get; }
+        new Group<Scene> Scenes { get; }
+        new Group<AssociationType> AssociationTypes { get; }
+        new Group<Outfit> Outfits { get; }
+        new Group<ArtObject> ArtObjects { get; }
+        new Group<MaterialObject> MaterialObjects { get; }
+        new Group<MovementType> MovementTypes { get; }
+        new Group<SoundDescriptor> SoundDescriptors { get; }
+        new Group<DualCastData> DualCastData { get; }
+        new Group<SoundCategory> SoundCategories { get; }
+        new Group<SoundOutputModel> SoundOutputModels { get; }
+        new Group<CollisionLayer> CollisionLayers { get; }
+        new Group<ColorRecord> Colors { get; }
+        new Group<ReverbParameters> ReverbParameters { get; }
+        new Group<VolumetricLighting> VolumetricLightings { get; }
     }
 
     public partial interface ISkyrimModGetter :
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ISkyrimModGetter>,
-        IXmlItem,
         IModGetter,
         ILinkedFormKeyContainer
     {
@@ -6628,6 +7330,24 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IShoutGetter> Shouts { get; }
         IGroupGetter<IEquipTypeGetter> EquipTypes { get; }
         IGroupGetter<IRelationshipGetter> Relationships { get; }
+        IGroupGetter<ISceneGetter> Scenes { get; }
+        IGroupGetter<IAssociationTypeGetter> AssociationTypes { get; }
+        IGroupGetter<IOutfitGetter> Outfits { get; }
+        IGroupGetter<IArtObjectGetter> ArtObjects { get; }
+        IGroupGetter<IMaterialObjectGetter> MaterialObjects { get; }
+        IGroupGetter<IMovementTypeGetter> MovementTypes { get; }
+        IGroupGetter<ISoundDescriptorGetter> SoundDescriptors { get; }
+        IGroupGetter<IDualCastDataGetter> DualCastData { get; }
+        IGroupGetter<ISoundCategoryGetter> SoundCategories { get; }
+        IGroupGetter<ISoundOutputModelGetter> SoundOutputModels { get; }
+        IGroupGetter<ICollisionLayerGetter> CollisionLayers { get; }
+        IGroupGetter<IColorRecordGetter> Colors { get; }
+        IGroupGetter<IReverbParametersGetter> ReverbParameters { get; }
+        IGroupGetter<IVolumetricLightingGetter> VolumetricLightings { get; }
+
+        #region Mutagen
+        SkyrimRelease SkyrimRelease { get; }
+        #endregion
 
     }
 
@@ -6785,131 +7505,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ISkyrimMod item,
-            XElement node,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ISkyrimMod item,
-            XElement node,
-            out SkyrimMod.ErrorMask errorMask,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SkyrimMod.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this ISkyrimMod item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((SkyrimModSetterCommon)((ISkyrimModGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ISkyrimMod item,
-            string path,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ISkyrimMod item,
-            string path,
-            out SkyrimMod.ErrorMask errorMask,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ISkyrimMod item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this ISkyrimMod item,
-            Stream stream,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ISkyrimMod item,
-            Stream stream,
-            out SkyrimMod.ErrorMask errorMask,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ISkyrimMod item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Mutagen
         public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>(this ISkyrimModGetter obj)
             where T : IMajorRecordCommonGetter
@@ -7027,11 +7622,13 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISkyrimMod item,
             MutagenFrame frame,
+            SkyrimRelease release,
             ModKey modKey,
             GroupMask? importMask = null)
         {
             CopyInFromBinary(
                 item: item,
+                release: release,
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
@@ -7041,12 +7638,14 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISkyrimMod item,
             MutagenFrame frame,
+            SkyrimRelease release,
             ModKey modKey,
             RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
             ((SkyrimModSetterCommon)((ISkyrimModGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
+                release: release,
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
@@ -7056,16 +7655,18 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISkyrimMod item,
             string path,
+            SkyrimRelease release,
             ModKey? modKeyOverride = null,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
+            var gameRelease = release.ToGameRelease();
+            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
             {
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim));
+                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
                 frame.MetaData.Parallel = parallel;
                 if (reader.Remaining < 12)
                 {
@@ -7074,10 +7675,11 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
                 }
                 CopyInFromBinary(
                     item: item,
+                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -7088,17 +7690,19 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMod item,
             Stream stream,
             ModKey modKey,
+            SkyrimRelease release,
             RecordInfoCache infoCache,
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
+            using (var reader = new MutagenBinaryReadStream(stream, release.ToGameRelease()))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
                 frame.MetaData.Parallel = parallel;
                 CopyInFromBinary(
                     item: item,
+                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -7217,6 +7821,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Shouts = 97,
         EquipTypes = 98,
         Relationships = 99,
+        Scenes = 100,
+        AssociationTypes = 101,
+        Outfits = 102,
+        ArtObjects = 103,
+        MaterialObjects = 104,
+        MovementTypes = 105,
+        SoundDescriptors = 106,
+        DualCastData = 107,
+        SoundCategories = 108,
+        SoundOutputModels = 109,
+        CollisionLayers = 110,
+        Colors = 111,
+        ReverbParameters = 112,
+        VolumetricLightings = 113,
     }
     #endregion
 
@@ -7234,9 +7852,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 100;
+        public const ushort AdditionalFieldCount = 114;
 
-        public const ushort FieldCount = 100;
+        public const ushort FieldCount = 114;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -7466,6 +8084,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.EquipTypes;
                 case "RELATIONSHIPS":
                     return (ushort)SkyrimMod_FieldIndex.Relationships;
+                case "SCENES":
+                    return (ushort)SkyrimMod_FieldIndex.Scenes;
+                case "ASSOCIATIONTYPES":
+                    return (ushort)SkyrimMod_FieldIndex.AssociationTypes;
+                case "OUTFITS":
+                    return (ushort)SkyrimMod_FieldIndex.Outfits;
+                case "ARTOBJECTS":
+                    return (ushort)SkyrimMod_FieldIndex.ArtObjects;
+                case "MATERIALOBJECTS":
+                    return (ushort)SkyrimMod_FieldIndex.MaterialObjects;
+                case "MOVEMENTTYPES":
+                    return (ushort)SkyrimMod_FieldIndex.MovementTypes;
+                case "SOUNDDESCRIPTORS":
+                    return (ushort)SkyrimMod_FieldIndex.SoundDescriptors;
+                case "DUALCASTDATA":
+                    return (ushort)SkyrimMod_FieldIndex.DualCastData;
+                case "SOUNDCATEGORIES":
+                    return (ushort)SkyrimMod_FieldIndex.SoundCategories;
+                case "SOUNDOUTPUTMODELS":
+                    return (ushort)SkyrimMod_FieldIndex.SoundOutputModels;
+                case "COLLISIONLAYERS":
+                    return (ushort)SkyrimMod_FieldIndex.CollisionLayers;
+                case "COLORS":
+                    return (ushort)SkyrimMod_FieldIndex.Colors;
+                case "REVERBPARAMETERS":
+                    return (ushort)SkyrimMod_FieldIndex.ReverbParameters;
+                case "VOLUMETRICLIGHTINGS":
+                    return (ushort)SkyrimMod_FieldIndex.VolumetricLightings;
                 default:
                     return null;
             }
@@ -7576,6 +8222,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Shouts:
                 case SkyrimMod_FieldIndex.EquipTypes:
                 case SkyrimMod_FieldIndex.Relationships:
+                case SkyrimMod_FieldIndex.Scenes:
+                case SkyrimMod_FieldIndex.AssociationTypes:
+                case SkyrimMod_FieldIndex.Outfits:
+                case SkyrimMod_FieldIndex.ArtObjects:
+                case SkyrimMod_FieldIndex.MaterialObjects:
+                case SkyrimMod_FieldIndex.MovementTypes:
+                case SkyrimMod_FieldIndex.SoundDescriptors:
+                case SkyrimMod_FieldIndex.DualCastData:
+                case SkyrimMod_FieldIndex.SoundCategories:
+                case SkyrimMod_FieldIndex.SoundOutputModels:
+                case SkyrimMod_FieldIndex.CollisionLayers:
+                case SkyrimMod_FieldIndex.Colors:
+                case SkyrimMod_FieldIndex.ReverbParameters:
+                case SkyrimMod_FieldIndex.VolumetricLightings:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7687,6 +8347,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Shouts:
                 case SkyrimMod_FieldIndex.EquipTypes:
                 case SkyrimMod_FieldIndex.Relationships:
+                case SkyrimMod_FieldIndex.Scenes:
+                case SkyrimMod_FieldIndex.AssociationTypes:
+                case SkyrimMod_FieldIndex.Outfits:
+                case SkyrimMod_FieldIndex.ArtObjects:
+                case SkyrimMod_FieldIndex.MaterialObjects:
+                case SkyrimMod_FieldIndex.MovementTypes:
+                case SkyrimMod_FieldIndex.SoundDescriptors:
+                case SkyrimMod_FieldIndex.DualCastData:
+                case SkyrimMod_FieldIndex.SoundCategories:
+                case SkyrimMod_FieldIndex.SoundOutputModels:
+                case SkyrimMod_FieldIndex.CollisionLayers:
+                case SkyrimMod_FieldIndex.Colors:
+                case SkyrimMod_FieldIndex.ReverbParameters:
+                case SkyrimMod_FieldIndex.VolumetricLightings:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7798,6 +8472,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Shouts:
                 case SkyrimMod_FieldIndex.EquipTypes:
                 case SkyrimMod_FieldIndex.Relationships:
+                case SkyrimMod_FieldIndex.Scenes:
+                case SkyrimMod_FieldIndex.AssociationTypes:
+                case SkyrimMod_FieldIndex.Outfits:
+                case SkyrimMod_FieldIndex.ArtObjects:
+                case SkyrimMod_FieldIndex.MaterialObjects:
+                case SkyrimMod_FieldIndex.MovementTypes:
+                case SkyrimMod_FieldIndex.SoundDescriptors:
+                case SkyrimMod_FieldIndex.DualCastData:
+                case SkyrimMod_FieldIndex.SoundCategories:
+                case SkyrimMod_FieldIndex.SoundOutputModels:
+                case SkyrimMod_FieldIndex.CollisionLayers:
+                case SkyrimMod_FieldIndex.Colors:
+                case SkyrimMod_FieldIndex.ReverbParameters:
+                case SkyrimMod_FieldIndex.VolumetricLightings:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -8009,6 +8697,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "EquipTypes";
                 case SkyrimMod_FieldIndex.Relationships:
                     return "Relationships";
+                case SkyrimMod_FieldIndex.Scenes:
+                    return "Scenes";
+                case SkyrimMod_FieldIndex.AssociationTypes:
+                    return "AssociationTypes";
+                case SkyrimMod_FieldIndex.Outfits:
+                    return "Outfits";
+                case SkyrimMod_FieldIndex.ArtObjects:
+                    return "ArtObjects";
+                case SkyrimMod_FieldIndex.MaterialObjects:
+                    return "MaterialObjects";
+                case SkyrimMod_FieldIndex.MovementTypes:
+                    return "MovementTypes";
+                case SkyrimMod_FieldIndex.SoundDescriptors:
+                    return "SoundDescriptors";
+                case SkyrimMod_FieldIndex.DualCastData:
+                    return "DualCastData";
+                case SkyrimMod_FieldIndex.SoundCategories:
+                    return "SoundCategories";
+                case SkyrimMod_FieldIndex.SoundOutputModels:
+                    return "SoundOutputModels";
+                case SkyrimMod_FieldIndex.CollisionLayers:
+                    return "CollisionLayers";
+                case SkyrimMod_FieldIndex.Colors:
+                    return "Colors";
+                case SkyrimMod_FieldIndex.ReverbParameters:
+                    return "ReverbParameters";
+                case SkyrimMod_FieldIndex.VolumetricLightings:
+                    return "VolumetricLightings";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -8119,6 +8835,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Shouts:
                 case SkyrimMod_FieldIndex.EquipTypes:
                 case SkyrimMod_FieldIndex.Relationships:
+                case SkyrimMod_FieldIndex.Scenes:
+                case SkyrimMod_FieldIndex.AssociationTypes:
+                case SkyrimMod_FieldIndex.Outfits:
+                case SkyrimMod_FieldIndex.ArtObjects:
+                case SkyrimMod_FieldIndex.MaterialObjects:
+                case SkyrimMod_FieldIndex.MovementTypes:
+                case SkyrimMod_FieldIndex.SoundDescriptors:
+                case SkyrimMod_FieldIndex.DualCastData:
+                case SkyrimMod_FieldIndex.SoundCategories:
+                case SkyrimMod_FieldIndex.SoundOutputModels:
+                case SkyrimMod_FieldIndex.CollisionLayers:
+                case SkyrimMod_FieldIndex.Colors:
+                case SkyrimMod_FieldIndex.ReverbParameters:
+                case SkyrimMod_FieldIndex.VolumetricLightings:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -8231,6 +8961,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Shouts:
                 case SkyrimMod_FieldIndex.EquipTypes:
                 case SkyrimMod_FieldIndex.Relationships:
+                case SkyrimMod_FieldIndex.Scenes:
+                case SkyrimMod_FieldIndex.AssociationTypes:
+                case SkyrimMod_FieldIndex.Outfits:
+                case SkyrimMod_FieldIndex.ArtObjects:
+                case SkyrimMod_FieldIndex.MaterialObjects:
+                case SkyrimMod_FieldIndex.MovementTypes:
+                case SkyrimMod_FieldIndex.SoundDescriptors:
+                case SkyrimMod_FieldIndex.DualCastData:
+                case SkyrimMod_FieldIndex.SoundCategories:
+                case SkyrimMod_FieldIndex.SoundOutputModels:
+                case SkyrimMod_FieldIndex.CollisionLayers:
+                case SkyrimMod_FieldIndex.Colors:
+                case SkyrimMod_FieldIndex.ReverbParameters:
+                case SkyrimMod_FieldIndex.VolumetricLightings:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -8442,12 +9186,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<EquipType>);
                 case SkyrimMod_FieldIndex.Relationships:
                     return typeof(Group<Relationship>);
+                case SkyrimMod_FieldIndex.Scenes:
+                    return typeof(Group<Scene>);
+                case SkyrimMod_FieldIndex.AssociationTypes:
+                    return typeof(Group<AssociationType>);
+                case SkyrimMod_FieldIndex.Outfits:
+                    return typeof(Group<Outfit>);
+                case SkyrimMod_FieldIndex.ArtObjects:
+                    return typeof(Group<ArtObject>);
+                case SkyrimMod_FieldIndex.MaterialObjects:
+                    return typeof(Group<MaterialObject>);
+                case SkyrimMod_FieldIndex.MovementTypes:
+                    return typeof(Group<MovementType>);
+                case SkyrimMod_FieldIndex.SoundDescriptors:
+                    return typeof(Group<SoundDescriptor>);
+                case SkyrimMod_FieldIndex.DualCastData:
+                    return typeof(Group<DualCastData>);
+                case SkyrimMod_FieldIndex.SoundCategories:
+                    return typeof(Group<SoundCategory>);
+                case SkyrimMod_FieldIndex.SoundOutputModels:
+                    return typeof(Group<SoundOutputModel>);
+                case SkyrimMod_FieldIndex.CollisionLayers:
+                    return typeof(Group<CollisionLayer>);
+                case SkyrimMod_FieldIndex.Colors:
+                    return typeof(Group<ColorRecord>);
+                case SkyrimMod_FieldIndex.ReverbParameters:
+                    return typeof(Group<ReverbParameters>);
+                case SkyrimMod_FieldIndex.VolumetricLightings:
+                    return typeof(Group<VolumetricLighting>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(SkyrimModXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.TES4;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
@@ -8589,93 +9360,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Shouts.Clear();
             item.EquipTypes.Clear();
             item.Relationships.Clear();
+            item.Scenes.Clear();
+            item.AssociationTypes.Clear();
+            item.Outfits.Clear();
+            item.ArtObjects.Clear();
+            item.MaterialObjects.Clear();
+            item.MovementTypes.Clear();
+            item.SoundDescriptors.Clear();
+            item.DualCastData.Clear();
+            item.SoundCategories.Clear();
+            item.SoundOutputModels.Clear();
+            item.CollisionLayers.Clear();
+            item.Colors.Clear();
+            item.ReverbParameters.Clear();
+            item.VolumetricLightings.Clear();
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            ISkyrimMod item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "ModHeader":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ModHeader);
-                    try
-                    {
-                        item.ModHeader.CopyInFromXml(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Cells":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Cells);
-                    try
-                    {
-                        item.Cells.CopyInFromXml<CellBlock>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            ISkyrimMod item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    SkyrimModXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ISkyrimMod obj)
@@ -8703,11 +9402,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ISkyrimMod item,
             MutagenFrame frame,
+            SkyrimRelease release,
             ModKey modKey,
             RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
-            frame.Reader.MetaData.MasterReferences = new MasterReferenceReader(modKey, item.ModHeader.MasterReferences);
             UtilityTranslation.ModParse(
                 record: item,
                 frame: frame,
@@ -8845,6 +9544,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Shouts = MaskItemExt.Factory(item.Shouts.GetEqualsMask(rhs.Shouts, include), include);
             ret.EquipTypes = MaskItemExt.Factory(item.EquipTypes.GetEqualsMask(rhs.EquipTypes, include), include);
             ret.Relationships = MaskItemExt.Factory(item.Relationships.GetEqualsMask(rhs.Relationships, include), include);
+            ret.Scenes = MaskItemExt.Factory(item.Scenes.GetEqualsMask(rhs.Scenes, include), include);
+            ret.AssociationTypes = MaskItemExt.Factory(item.AssociationTypes.GetEqualsMask(rhs.AssociationTypes, include), include);
+            ret.Outfits = MaskItemExt.Factory(item.Outfits.GetEqualsMask(rhs.Outfits, include), include);
+            ret.ArtObjects = MaskItemExt.Factory(item.ArtObjects.GetEqualsMask(rhs.ArtObjects, include), include);
+            ret.MaterialObjects = MaskItemExt.Factory(item.MaterialObjects.GetEqualsMask(rhs.MaterialObjects, include), include);
+            ret.MovementTypes = MaskItemExt.Factory(item.MovementTypes.GetEqualsMask(rhs.MovementTypes, include), include);
+            ret.SoundDescriptors = MaskItemExt.Factory(item.SoundDescriptors.GetEqualsMask(rhs.SoundDescriptors, include), include);
+            ret.DualCastData = MaskItemExt.Factory(item.DualCastData.GetEqualsMask(rhs.DualCastData, include), include);
+            ret.SoundCategories = MaskItemExt.Factory(item.SoundCategories.GetEqualsMask(rhs.SoundCategories, include), include);
+            ret.SoundOutputModels = MaskItemExt.Factory(item.SoundOutputModels.GetEqualsMask(rhs.SoundOutputModels, include), include);
+            ret.CollisionLayers = MaskItemExt.Factory(item.CollisionLayers.GetEqualsMask(rhs.CollisionLayers, include), include);
+            ret.Colors = MaskItemExt.Factory(item.Colors.GetEqualsMask(rhs.Colors, include), include);
+            ret.ReverbParameters = MaskItemExt.Factory(item.ReverbParameters.GetEqualsMask(rhs.ReverbParameters, include), include);
+            ret.VolumetricLightings = MaskItemExt.Factory(item.VolumetricLightings.GetEqualsMask(rhs.VolumetricLightings, include), include);
         }
         
         public string ToString(
@@ -9291,6 +10004,62 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Relationships?.ToString(fg, "Relationships");
             }
+            if (printMask?.Scenes?.Overall ?? true)
+            {
+                item.Scenes?.ToString(fg, "Scenes");
+            }
+            if (printMask?.AssociationTypes?.Overall ?? true)
+            {
+                item.AssociationTypes?.ToString(fg, "AssociationTypes");
+            }
+            if (printMask?.Outfits?.Overall ?? true)
+            {
+                item.Outfits?.ToString(fg, "Outfits");
+            }
+            if (printMask?.ArtObjects?.Overall ?? true)
+            {
+                item.ArtObjects?.ToString(fg, "ArtObjects");
+            }
+            if (printMask?.MaterialObjects?.Overall ?? true)
+            {
+                item.MaterialObjects?.ToString(fg, "MaterialObjects");
+            }
+            if (printMask?.MovementTypes?.Overall ?? true)
+            {
+                item.MovementTypes?.ToString(fg, "MovementTypes");
+            }
+            if (printMask?.SoundDescriptors?.Overall ?? true)
+            {
+                item.SoundDescriptors?.ToString(fg, "SoundDescriptors");
+            }
+            if (printMask?.DualCastData?.Overall ?? true)
+            {
+                item.DualCastData?.ToString(fg, "DualCastData");
+            }
+            if (printMask?.SoundCategories?.Overall ?? true)
+            {
+                item.SoundCategories?.ToString(fg, "SoundCategories");
+            }
+            if (printMask?.SoundOutputModels?.Overall ?? true)
+            {
+                item.SoundOutputModels?.ToString(fg, "SoundOutputModels");
+            }
+            if (printMask?.CollisionLayers?.Overall ?? true)
+            {
+                item.CollisionLayers?.ToString(fg, "CollisionLayers");
+            }
+            if (printMask?.Colors?.Overall ?? true)
+            {
+                item.Colors?.ToString(fg, "Colors");
+            }
+            if (printMask?.ReverbParameters?.Overall ?? true)
+            {
+                item.ReverbParameters?.ToString(fg, "ReverbParameters");
+            }
+            if (printMask?.VolumetricLightings?.Overall ?? true)
+            {
+                item.VolumetricLightings?.ToString(fg, "VolumetricLightings");
+            }
         }
         
         public bool HasBeenSet(
@@ -9404,6 +10173,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Shouts = new MaskItem<bool, Group.Mask<bool>?>(true, item.Shouts?.GetHasBeenSetMask());
             mask.EquipTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.EquipTypes?.GetHasBeenSetMask());
             mask.Relationships = new MaskItem<bool, Group.Mask<bool>?>(true, item.Relationships?.GetHasBeenSetMask());
+            mask.Scenes = new MaskItem<bool, Group.Mask<bool>?>(true, item.Scenes?.GetHasBeenSetMask());
+            mask.AssociationTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.AssociationTypes?.GetHasBeenSetMask());
+            mask.Outfits = new MaskItem<bool, Group.Mask<bool>?>(true, item.Outfits?.GetHasBeenSetMask());
+            mask.ArtObjects = new MaskItem<bool, Group.Mask<bool>?>(true, item.ArtObjects?.GetHasBeenSetMask());
+            mask.MaterialObjects = new MaskItem<bool, Group.Mask<bool>?>(true, item.MaterialObjects?.GetHasBeenSetMask());
+            mask.MovementTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.MovementTypes?.GetHasBeenSetMask());
+            mask.SoundDescriptors = new MaskItem<bool, Group.Mask<bool>?>(true, item.SoundDescriptors?.GetHasBeenSetMask());
+            mask.DualCastData = new MaskItem<bool, Group.Mask<bool>?>(true, item.DualCastData?.GetHasBeenSetMask());
+            mask.SoundCategories = new MaskItem<bool, Group.Mask<bool>?>(true, item.SoundCategories?.GetHasBeenSetMask());
+            mask.SoundOutputModels = new MaskItem<bool, Group.Mask<bool>?>(true, item.SoundOutputModels?.GetHasBeenSetMask());
+            mask.CollisionLayers = new MaskItem<bool, Group.Mask<bool>?>(true, item.CollisionLayers?.GetHasBeenSetMask());
+            mask.Colors = new MaskItem<bool, Group.Mask<bool>?>(true, item.Colors?.GetHasBeenSetMask());
+            mask.ReverbParameters = new MaskItem<bool, Group.Mask<bool>?>(true, item.ReverbParameters?.GetHasBeenSetMask());
+            mask.VolumetricLightings = new MaskItem<bool, Group.Mask<bool>?>(true, item.VolumetricLightings?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -9513,6 +10296,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Shouts, rhs.Shouts)) return false;
             if (!object.Equals(lhs.EquipTypes, rhs.EquipTypes)) return false;
             if (!object.Equals(lhs.Relationships, rhs.Relationships)) return false;
+            if (!object.Equals(lhs.Scenes, rhs.Scenes)) return false;
+            if (!object.Equals(lhs.AssociationTypes, rhs.AssociationTypes)) return false;
+            if (!object.Equals(lhs.Outfits, rhs.Outfits)) return false;
+            if (!object.Equals(lhs.ArtObjects, rhs.ArtObjects)) return false;
+            if (!object.Equals(lhs.MaterialObjects, rhs.MaterialObjects)) return false;
+            if (!object.Equals(lhs.MovementTypes, rhs.MovementTypes)) return false;
+            if (!object.Equals(lhs.SoundDescriptors, rhs.SoundDescriptors)) return false;
+            if (!object.Equals(lhs.DualCastData, rhs.DualCastData)) return false;
+            if (!object.Equals(lhs.SoundCategories, rhs.SoundCategories)) return false;
+            if (!object.Equals(lhs.SoundOutputModels, rhs.SoundOutputModels)) return false;
+            if (!object.Equals(lhs.CollisionLayers, rhs.CollisionLayers)) return false;
+            if (!object.Equals(lhs.Colors, rhs.Colors)) return false;
+            if (!object.Equals(lhs.ReverbParameters, rhs.ReverbParameters)) return false;
+            if (!object.Equals(lhs.VolumetricLightings, rhs.VolumetricLightings)) return false;
             return true;
         }
         
@@ -9619,6 +10416,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Shouts);
             hash.Add(item.EquipTypes);
             hash.Add(item.Relationships);
+            hash.Add(item.Scenes);
+            hash.Add(item.AssociationTypes);
+            hash.Add(item.Outfits);
+            hash.Add(item.ArtObjects);
+            hash.Add(item.MaterialObjects);
+            hash.Add(item.MovementTypes);
+            hash.Add(item.SoundDescriptors);
+            hash.Add(item.DualCastData);
+            hash.Add(item.SoundCategories);
+            hash.Add(item.SoundOutputModels);
+            hash.Add(item.CollisionLayers);
+            hash.Add(item.Colors);
+            hash.Add(item.ReverbParameters);
+            hash.Add(item.VolumetricLightings);
             return hash.ToHashCode();
         }
         
@@ -10130,6 +10941,76 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRelationship":
                 case "IRelationshipInternal":
                     return obj.Relationships.RecordCache;
+                case "Scene":
+                case "ISceneGetter":
+                case "IScene":
+                case "ISceneInternal":
+                    return obj.Scenes.RecordCache;
+                case "AssociationType":
+                case "IAssociationTypeGetter":
+                case "IAssociationType":
+                case "IAssociationTypeInternal":
+                    return obj.AssociationTypes.RecordCache;
+                case "Outfit":
+                case "IOutfitGetter":
+                case "IOutfit":
+                case "IOutfitInternal":
+                    return obj.Outfits.RecordCache;
+                case "ArtObject":
+                case "IArtObjectGetter":
+                case "IArtObject":
+                case "IArtObjectInternal":
+                    return obj.ArtObjects.RecordCache;
+                case "MaterialObject":
+                case "IMaterialObjectGetter":
+                case "IMaterialObject":
+                case "IMaterialObjectInternal":
+                    return obj.MaterialObjects.RecordCache;
+                case "MovementType":
+                case "IMovementTypeGetter":
+                case "IMovementType":
+                case "IMovementTypeInternal":
+                    return obj.MovementTypes.RecordCache;
+                case "SoundDescriptor":
+                case "ISoundDescriptorGetter":
+                case "ISoundDescriptor":
+                case "ISoundDescriptorInternal":
+                    return obj.SoundDescriptors.RecordCache;
+                case "DualCastData":
+                case "IDualCastDataGetter":
+                case "IDualCastData":
+                case "IDualCastDataInternal":
+                    return obj.DualCastData.RecordCache;
+                case "SoundCategory":
+                case "ISoundCategoryGetter":
+                case "ISoundCategory":
+                case "ISoundCategoryInternal":
+                    return obj.SoundCategories.RecordCache;
+                case "SoundOutputModel":
+                case "ISoundOutputModelGetter":
+                case "ISoundOutputModel":
+                case "ISoundOutputModelInternal":
+                    return obj.SoundOutputModels.RecordCache;
+                case "CollisionLayer":
+                case "ICollisionLayerGetter":
+                case "ICollisionLayer":
+                case "ICollisionLayerInternal":
+                    return obj.CollisionLayers.RecordCache;
+                case "ColorRecord":
+                case "IColorRecordGetter":
+                case "IColorRecord":
+                case "IColorRecordInternal":
+                    return obj.Colors.RecordCache;
+                case "ReverbParameters":
+                case "IReverbParametersGetter":
+                case "IReverbParameters":
+                case "IReverbParametersInternal":
+                    return obj.ReverbParameters.RecordCache;
+                case "VolumetricLighting":
+                case "IVolumetricLightingGetter":
+                case "IVolumetricLighting":
+                case "IVolumetricLightingInternal":
+                    return obj.VolumetricLightings.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -10143,113 +11024,128 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ModKey modKey)
         {
             var masterRefs = UtilityTranslation.ConstructWriteMasters(item, param);
-            var bundle = new WritingBundle(GameConstants.Skyrim);
+            var gameConstants = GameConstants.Get(item.SkyrimRelease.ToGameRelease());
+            var bundle = new WritingBundle(gameConstants);
             bundle.MasterReferences = masterRefs;
             SkyrimModBinaryWriteTranslation.WriteModHeader(
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[99];
+            Stream[] outputStreams = new Stream[113];
             List<Action> toDo = new List<Action>();
-            toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, masterRefs, 2, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Actions, masterRefs, 3, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.TextureSets, masterRefs, 4, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Globals, masterRefs, 5, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Classes, masterRefs, 6, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Factions, masterRefs, 7, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.HeadParts, masterRefs, 8, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Hairs, masterRefs, 9, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Eyes, masterRefs, 10, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Races, masterRefs, 11, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, masterRefs, 12, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, masterRefs, 13, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MagicEffects, masterRefs, 14, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, masterRefs, 15, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ObjectEffects, masterRefs, 16, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Spells, masterRefs, 17, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Scrolls, masterRefs, 18, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Activators, masterRefs, 19, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.TalkingActivators, masterRefs, 20, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Armors, masterRefs, 21, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Books, masterRefs, 22, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Containers, masterRefs, 23, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Doors, masterRefs, 24, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Ingredients, masterRefs, 25, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Lights, masterRefs, 26, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MiscItems, masterRefs, 27, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatuses, masterRefs, 28, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Statics, masterRefs, 29, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MoveableStatics, masterRefs, 30, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Grasses, masterRefs, 31, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Trees, masterRefs, 32, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Florae, masterRefs, 33, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Furniture, masterRefs, 34, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Weapons, masterRefs, 35, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Ammunitions, masterRefs, 36, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Npcs, masterRefs, 37, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LeveledNpcs, masterRefs, 38, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Keys, masterRefs, 39, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Ingestibles, masterRefs, 40, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.IdleMarkers, masterRefs, 41, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, masterRefs, 42, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Projectiles, masterRefs, 43, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Hazards, masterRefs, 44, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoulGems, masterRefs, 45, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LeveledItems, masterRefs, 46, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, masterRefs, 47, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Climates, masterRefs, 48, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, masterRefs, 49, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.VisualEffects, masterRefs, 50, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Regions, masterRefs, 51, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, masterRefs, 52, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteCellsParallel(item.Cells, masterRefs, 53, outputStreams));
-            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, masterRefs, 54, outputStreams));
-            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, masterRefs, 55, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Quests, masterRefs, 56, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, masterRefs, 57, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Packages, masterRefs, 58, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.CombatStyles, masterRefs, 59, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LoadScreens, masterRefs, 60, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, masterRefs, 61, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, masterRefs, 62, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Waters, masterRefs, 63, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.EffectShaders, masterRefs, 64, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Explosions, masterRefs, 65, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Debris, masterRefs, 66, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ImageSpaces, masterRefs, 67, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, masterRefs, 68, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.FormLists, masterRefs, 69, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Perks, masterRefs, 70, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.BodyParts, masterRefs, 71, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AddonNodes, masterRefs, 72, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, masterRefs, 73, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.CameraShots, masterRefs, 74, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.CameraPaths, masterRefs, 75, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.VoiceTypes, masterRefs, 76, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, masterRefs, 77, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Impacts, masterRefs, 78, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, masterRefs, 79, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, masterRefs, 80, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.EncounterZones, masterRefs, 81, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Locations, masterRefs, 82, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Messages, masterRefs, 83, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, masterRefs, 84, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, masterRefs, 85, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MusicTypes, masterRefs, 86, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Footsteps, masterRefs, 87, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.FootstepSets, masterRefs, 88, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, masterRefs, 89, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, masterRefs, 90, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, masterRefs, 91, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DialogBranches, masterRefs, 92, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MusicTracks, masterRefs, 93, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DialogViews, masterRefs, 94, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.WordsOfPower, masterRefs, 95, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Shouts, masterRefs, 96, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.EquipTypes, masterRefs, 97, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Relationships, masterRefs, 98, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, masterRefs, 2, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Actions, masterRefs, 3, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.TextureSets, masterRefs, 4, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Globals, masterRefs, 5, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Classes, masterRefs, 6, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Factions, masterRefs, 7, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.HeadParts, masterRefs, 8, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Hairs, masterRefs, 9, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Eyes, masterRefs, 10, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Races, masterRefs, 11, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, masterRefs, 12, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, masterRefs, 13, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MagicEffects, masterRefs, 14, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, masterRefs, 15, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ObjectEffects, masterRefs, 16, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Spells, masterRefs, 17, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Scrolls, masterRefs, 18, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Activators, masterRefs, 19, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.TalkingActivators, masterRefs, 20, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Armors, masterRefs, 21, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Books, masterRefs, 22, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Containers, masterRefs, 23, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Doors, masterRefs, 24, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Ingredients, masterRefs, 25, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Lights, masterRefs, 26, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MiscItems, masterRefs, 27, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatuses, masterRefs, 28, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Statics, masterRefs, 29, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MoveableStatics, masterRefs, 30, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Grasses, masterRefs, 31, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Trees, masterRefs, 32, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Florae, masterRefs, 33, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Furniture, masterRefs, 34, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, masterRefs, 35, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Ammunitions, masterRefs, 36, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Npcs, masterRefs, 37, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LeveledNpcs, masterRefs, 38, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Keys, masterRefs, 39, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Ingestibles, masterRefs, 40, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.IdleMarkers, masterRefs, 41, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, masterRefs, 42, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Projectiles, masterRefs, 43, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Hazards, masterRefs, 44, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoulGems, masterRefs, 45, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, masterRefs, 46, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, masterRefs, 47, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Climates, masterRefs, 48, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, masterRefs, 49, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.VisualEffects, masterRefs, 50, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Regions, masterRefs, 51, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, masterRefs, 52, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteCellsParallel(item.Cells, masterRefs, 53, gameConstants, outputStreams));
+            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, masterRefs, 54, gameConstants, outputStreams));
+            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, masterRefs, 55, gameConstants, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Quests, masterRefs, 56, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, masterRefs, 57, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Packages, masterRefs, 58, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, masterRefs, 59, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, masterRefs, 60, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, masterRefs, 61, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, masterRefs, 62, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Waters, masterRefs, 63, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.EffectShaders, masterRefs, 64, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Explosions, masterRefs, 65, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Debris, masterRefs, 66, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ImageSpaces, masterRefs, 67, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, masterRefs, 68, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, masterRefs, 69, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Perks, masterRefs, 70, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.BodyParts, masterRefs, 71, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AddonNodes, masterRefs, 72, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, masterRefs, 73, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CameraShots, masterRefs, 74, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CameraPaths, masterRefs, 75, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.VoiceTypes, masterRefs, 76, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, masterRefs, 77, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Impacts, masterRefs, 78, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, masterRefs, 79, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, masterRefs, 80, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.EncounterZones, masterRefs, 81, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Locations, masterRefs, 82, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Messages, masterRefs, 83, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, masterRefs, 84, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, masterRefs, 85, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MusicTypes, masterRefs, 86, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Footsteps, masterRefs, 87, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.FootstepSets, masterRefs, 88, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, masterRefs, 89, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, masterRefs, 90, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, masterRefs, 91, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DialogBranches, masterRefs, 92, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MusicTracks, masterRefs, 93, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DialogViews, masterRefs, 94, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.WordsOfPower, masterRefs, 95, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Shouts, masterRefs, 96, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.EquipTypes, masterRefs, 97, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Relationships, masterRefs, 98, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Scenes, masterRefs, 99, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AssociationTypes, masterRefs, 100, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, masterRefs, 101, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ArtObjects, masterRefs, 102, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MaterialObjects, masterRefs, 103, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MovementTypes, masterRefs, 104, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundDescriptors, masterRefs, 105, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DualCastData, masterRefs, 106, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundCategories, masterRefs, 107, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundOutputModels, masterRefs, 108, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CollisionLayers, masterRefs, 109, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Colors, masterRefs, 110, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ReverbParameters, masterRefs, 111, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.VolumetricLightings, masterRefs, 112, gameConstants, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -10260,22 +11156,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGroupGetter<T> group,
             MasterReferenceReader masters,
             int targetIndex,
+            GameConstants gameConstants,
             Stream[] streamDepositArray,
             StringsWriter? stringsWriter)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             if (group.RecordCache.Count == 0) return;
             var cuts = group.Records.Cut(CutCount).ToArray();
             Stream[] subStreams = new Stream[cuts.Length + 1];
-            byte[] groupBytes = new byte[GameConstants.Skyrim.GroupConstants.HeaderLength];
+            byte[] groupBytes = new byte[gameConstants.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
             var groupByteStream = new MemoryStream(groupBytes);
-            var bundle = new WritingBundle(GameConstants.Skyrim)
+            var bundle = new WritingBundle(gameConstants)
             {
                 MasterReferences = masters,
                 StringsWriter = stringsWriter
             };
-            using (var stream = new MutagenWriter(groupByteStream, GameConstants.Skyrim, dispose: false))
+            using (var stream = new MutagenWriter(groupByteStream, gameConstants, dispose: false))
             {
                 stream.Position += 8;
                 GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
@@ -10993,6 +11890,104 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Scenes is ILinkedFormKeyContainer SceneslinkCont)
+            {
+                foreach (var item in SceneslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.AssociationTypes is ILinkedFormKeyContainer AssociationTypeslinkCont)
+            {
+                foreach (var item in AssociationTypeslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Outfits is ILinkedFormKeyContainer OutfitslinkCont)
+            {
+                foreach (var item in OutfitslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ArtObjects is ILinkedFormKeyContainer ArtObjectslinkCont)
+            {
+                foreach (var item in ArtObjectslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.MaterialObjects is ILinkedFormKeyContainer MaterialObjectslinkCont)
+            {
+                foreach (var item in MaterialObjectslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.MovementTypes is ILinkedFormKeyContainer MovementTypeslinkCont)
+            {
+                foreach (var item in MovementTypeslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.SoundDescriptors is ILinkedFormKeyContainer SoundDescriptorslinkCont)
+            {
+                foreach (var item in SoundDescriptorslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DualCastData is ILinkedFormKeyContainer DualCastDatalinkCont)
+            {
+                foreach (var item in DualCastDatalinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.SoundCategories is ILinkedFormKeyContainer SoundCategorieslinkCont)
+            {
+                foreach (var item in SoundCategorieslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.SoundOutputModels is ILinkedFormKeyContainer SoundOutputModelslinkCont)
+            {
+                foreach (var item in SoundOutputModelslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.CollisionLayers is ILinkedFormKeyContainer CollisionLayerslinkCont)
+            {
+                foreach (var item in CollisionLayerslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Colors is ILinkedFormKeyContainer ColorslinkCont)
+            {
+                foreach (var item in ColorslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ReverbParameters is ILinkedFormKeyContainer ReverbParameterslinkCont)
+            {
+                foreach (var item in ReverbParameterslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.VolumetricLightings is ILinkedFormKeyContainer VolumetricLightingslinkCont)
+            {
+                foreach (var item in VolumetricLightingslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -11392,6 +12387,62 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Relationships.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Scenes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AssociationTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Outfits.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ArtObjects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MaterialObjects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MovementTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundDescriptors.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DualCastData.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundCategories.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundOutputModels.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CollisionLayers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Colors.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ReverbParameters.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.VolumetricLightings.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -12305,6 +13356,132 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                case "Scene":
+                case "ISceneGetter":
+                case "IScene":
+                case "ISceneInternal":
+                    foreach (var item in obj.Scenes.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AssociationType":
+                case "IAssociationTypeGetter":
+                case "IAssociationType":
+                case "IAssociationTypeInternal":
+                    foreach (var item in obj.AssociationTypes.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Outfit":
+                case "IOutfitGetter":
+                case "IOutfit":
+                case "IOutfitInternal":
+                    foreach (var item in obj.Outfits.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ArtObject":
+                case "IArtObjectGetter":
+                case "IArtObject":
+                case "IArtObjectInternal":
+                    foreach (var item in obj.ArtObjects.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MaterialObject":
+                case "IMaterialObjectGetter":
+                case "IMaterialObject":
+                case "IMaterialObjectInternal":
+                    foreach (var item in obj.MaterialObjects.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MovementType":
+                case "IMovementTypeGetter":
+                case "IMovementType":
+                case "IMovementTypeInternal":
+                    foreach (var item in obj.MovementTypes.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SoundDescriptor":
+                case "ISoundDescriptorGetter":
+                case "ISoundDescriptor":
+                case "ISoundDescriptorInternal":
+                    foreach (var item in obj.SoundDescriptors.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DualCastData":
+                case "IDualCastDataGetter":
+                case "IDualCastData":
+                case "IDualCastDataInternal":
+                    foreach (var item in obj.DualCastData.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SoundCategory":
+                case "ISoundCategoryGetter":
+                case "ISoundCategory":
+                case "ISoundCategoryInternal":
+                    foreach (var item in obj.SoundCategories.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SoundOutputModel":
+                case "ISoundOutputModelGetter":
+                case "ISoundOutputModel":
+                case "ISoundOutputModelInternal":
+                    foreach (var item in obj.SoundOutputModels.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CollisionLayer":
+                case "ICollisionLayerGetter":
+                case "ICollisionLayer":
+                case "ICollisionLayerInternal":
+                    foreach (var item in obj.CollisionLayers.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ColorRecord":
+                case "IColorRecordGetter":
+                case "IColorRecord":
+                case "IColorRecordInternal":
+                    foreach (var item in obj.Colors.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ReverbParameters":
+                case "IReverbParametersGetter":
+                case "IReverbParameters":
+                case "IReverbParametersInternal":
+                    foreach (var item in obj.ReverbParameters.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "VolumetricLighting":
+                case "IVolumetricLightingGetter":
+                case "IVolumetricLighting":
+                case "IVolumetricLightingInternal":
+                    foreach (var item in obj.VolumetricLightings.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -12557,6 +13734,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                case "IOutfitTarget":
+                case "IOutfitTargetGetter":
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Armor), throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledItem), throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "IComplexLocation":
                 case "IComplexLocationGetter":
                     foreach (var item in EnumerateMajorRecords(obj, typeof(Worldspace), throwIfUnknown))
@@ -12747,6 +13935,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 case "ISound":
                 case "ISoundGetter":
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(SoundDescriptor), throwIfUnknown))
+                    {
+                        yield return item;
+                    }
                     foreach (var item in EnumerateMajorRecords(obj, typeof(SoundMarker), throwIfUnknown))
                     {
                         yield return item;
@@ -14778,6 +15970,286 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Scenes) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Scenes);
+                try
+                {
+                    item.Scenes.DeepCopyIn(
+                        rhs: rhs.Scenes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Scenes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AssociationTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.AssociationTypes);
+                try
+                {
+                    item.AssociationTypes.DeepCopyIn(
+                        rhs: rhs.AssociationTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.AssociationTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Outfits) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Outfits);
+                try
+                {
+                    item.Outfits.DeepCopyIn(
+                        rhs: rhs.Outfits,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Outfits));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ArtObjects) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ArtObjects);
+                try
+                {
+                    item.ArtObjects.DeepCopyIn(
+                        rhs: rhs.ArtObjects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ArtObjects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MaterialObjects) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MaterialObjects);
+                try
+                {
+                    item.MaterialObjects.DeepCopyIn(
+                        rhs: rhs.MaterialObjects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MaterialObjects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MovementTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MovementTypes);
+                try
+                {
+                    item.MovementTypes.DeepCopyIn(
+                        rhs: rhs.MovementTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MovementTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.SoundDescriptors) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.SoundDescriptors);
+                try
+                {
+                    item.SoundDescriptors.DeepCopyIn(
+                        rhs: rhs.SoundDescriptors,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.SoundDescriptors));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DualCastData) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.DualCastData);
+                try
+                {
+                    item.DualCastData.DeepCopyIn(
+                        rhs: rhs.DualCastData,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.DualCastData));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.SoundCategories) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.SoundCategories);
+                try
+                {
+                    item.SoundCategories.DeepCopyIn(
+                        rhs: rhs.SoundCategories,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.SoundCategories));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.SoundOutputModels) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.SoundOutputModels);
+                try
+                {
+                    item.SoundOutputModels.DeepCopyIn(
+                        rhs: rhs.SoundOutputModels,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.SoundOutputModels));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CollisionLayers) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.CollisionLayers);
+                try
+                {
+                    item.CollisionLayers.DeepCopyIn(
+                        rhs: rhs.CollisionLayers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.CollisionLayers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Colors) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Colors);
+                try
+                {
+                    item.Colors.DeepCopyIn(
+                        rhs: rhs.Colors,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Colors));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ReverbParameters) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ReverbParameters);
+                try
+                {
+                    item.ReverbParameters.DeepCopyIn(
+                        rhs: rhs.ReverbParameters,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ReverbParameters));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.VolumetricLightings) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.VolumetricLightings);
+                try
+                {
+                    item.VolumetricLightings.DeepCopyIn(
+                        rhs: rhs.VolumetricLightings,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.VolumetricLightings));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -14854,3251 +16326,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class SkyrimModXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static SkyrimModXmlWriteTranslation Instance = new SkyrimModXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            ISkyrimModGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ModHeader) ?? true))
-            {
-                var ModHeaderItem = item.ModHeader;
-                ((ModHeaderXmlWriteTranslation)((IXmlItem)ModHeaderItem).XmlWriteTranslator).Write(
-                    item: ModHeaderItem,
-                    node: node,
-                    name: nameof(item.ModHeader),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.ModHeader,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ModHeader));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.GameSettings) ?? true))
-            {
-                var GameSettingsItem = item.GameSettings;
-                ((GroupXmlWriteTranslation)((IXmlItem)GameSettingsItem).XmlWriteTranslator).Write<IGameSettingGetter>(
-                    item: GameSettingsItem,
-                    node: node,
-                    name: nameof(item.GameSettings),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.GameSettings,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.GameSettings));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Keywords) ?? true))
-            {
-                var KeywordsItem = item.Keywords;
-                ((GroupXmlWriteTranslation)((IXmlItem)KeywordsItem).XmlWriteTranslator).Write<IKeywordGetter>(
-                    item: KeywordsItem,
-                    node: node,
-                    name: nameof(item.Keywords),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Keywords,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Keywords));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LocationReferenceTypes) ?? true))
-            {
-                var LocationReferenceTypesItem = item.LocationReferenceTypes;
-                ((GroupXmlWriteTranslation)((IXmlItem)LocationReferenceTypesItem).XmlWriteTranslator).Write<ILocationReferenceTypeGetter>(
-                    item: LocationReferenceTypesItem,
-                    node: node,
-                    name: nameof(item.LocationReferenceTypes),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.LocationReferenceTypes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LocationReferenceTypes));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Actions) ?? true))
-            {
-                var ActionsItem = item.Actions;
-                ((GroupXmlWriteTranslation)((IXmlItem)ActionsItem).XmlWriteTranslator).Write<IActionRecordGetter>(
-                    item: ActionsItem,
-                    node: node,
-                    name: nameof(item.Actions),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Actions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Actions));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.TextureSets) ?? true))
-            {
-                var TextureSetsItem = item.TextureSets;
-                ((GroupXmlWriteTranslation)((IXmlItem)TextureSetsItem).XmlWriteTranslator).Write<ITextureSetGetter>(
-                    item: TextureSetsItem,
-                    node: node,
-                    name: nameof(item.TextureSets),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.TextureSets,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.TextureSets));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Globals) ?? true))
-            {
-                var GlobalsItem = item.Globals;
-                ((GroupXmlWriteTranslation)((IXmlItem)GlobalsItem).XmlWriteTranslator).Write<IGlobalGetter>(
-                    item: GlobalsItem,
-                    node: node,
-                    name: nameof(item.Globals),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Globals,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Globals));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Classes) ?? true))
-            {
-                var ClassesItem = item.Classes;
-                ((GroupXmlWriteTranslation)((IXmlItem)ClassesItem).XmlWriteTranslator).Write<IClassGetter>(
-                    item: ClassesItem,
-                    node: node,
-                    name: nameof(item.Classes),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Classes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Classes));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Factions) ?? true))
-            {
-                var FactionsItem = item.Factions;
-                ((GroupXmlWriteTranslation)((IXmlItem)FactionsItem).XmlWriteTranslator).Write<IFactionGetter>(
-                    item: FactionsItem,
-                    node: node,
-                    name: nameof(item.Factions),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Factions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Factions));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.HeadParts) ?? true))
-            {
-                var HeadPartsItem = item.HeadParts;
-                ((GroupXmlWriteTranslation)((IXmlItem)HeadPartsItem).XmlWriteTranslator).Write<IHeadPartGetter>(
-                    item: HeadPartsItem,
-                    node: node,
-                    name: nameof(item.HeadParts),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.HeadParts,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.HeadParts));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Hairs) ?? true))
-            {
-                var HairsItem = item.Hairs;
-                ((GroupXmlWriteTranslation)((IXmlItem)HairsItem).XmlWriteTranslator).Write<IHairGetter>(
-                    item: HairsItem,
-                    node: node,
-                    name: nameof(item.Hairs),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Hairs,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Hairs));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Eyes) ?? true))
-            {
-                var EyesItem = item.Eyes;
-                ((GroupXmlWriteTranslation)((IXmlItem)EyesItem).XmlWriteTranslator).Write<IEyesGetter>(
-                    item: EyesItem,
-                    node: node,
-                    name: nameof(item.Eyes),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Eyes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Eyes));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Races) ?? true))
-            {
-                var RacesItem = item.Races;
-                ((GroupXmlWriteTranslation)((IXmlItem)RacesItem).XmlWriteTranslator).Write<IRaceGetter>(
-                    item: RacesItem,
-                    node: node,
-                    name: nameof(item.Races),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Races,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Races));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.SoundMarkers) ?? true))
-            {
-                var SoundMarkersItem = item.SoundMarkers;
-                ((GroupXmlWriteTranslation)((IXmlItem)SoundMarkersItem).XmlWriteTranslator).Write<ISoundMarkerGetter>(
-                    item: SoundMarkersItem,
-                    node: node,
-                    name: nameof(item.SoundMarkers),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.SoundMarkers,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.SoundMarkers));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AcousticSpaces) ?? true))
-            {
-                var AcousticSpacesItem = item.AcousticSpaces;
-                ((GroupXmlWriteTranslation)((IXmlItem)AcousticSpacesItem).XmlWriteTranslator).Write<IAcousticSpaceGetter>(
-                    item: AcousticSpacesItem,
-                    node: node,
-                    name: nameof(item.AcousticSpaces),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.AcousticSpaces,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.AcousticSpaces));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MagicEffects) ?? true))
-            {
-                var MagicEffectsItem = item.MagicEffects;
-                ((GroupXmlWriteTranslation)((IXmlItem)MagicEffectsItem).XmlWriteTranslator).Write<IMagicEffectGetter>(
-                    item: MagicEffectsItem,
-                    node: node,
-                    name: nameof(item.MagicEffects),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.MagicEffects,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MagicEffects));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LandscapeTextures) ?? true))
-            {
-                var LandscapeTexturesItem = item.LandscapeTextures;
-                ((GroupXmlWriteTranslation)((IXmlItem)LandscapeTexturesItem).XmlWriteTranslator).Write<ILandscapeTextureGetter>(
-                    item: LandscapeTexturesItem,
-                    node: node,
-                    name: nameof(item.LandscapeTextures),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.LandscapeTextures,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LandscapeTextures));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ObjectEffects) ?? true))
-            {
-                var ObjectEffectsItem = item.ObjectEffects;
-                ((GroupXmlWriteTranslation)((IXmlItem)ObjectEffectsItem).XmlWriteTranslator).Write<IObjectEffectGetter>(
-                    item: ObjectEffectsItem,
-                    node: node,
-                    name: nameof(item.ObjectEffects),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.ObjectEffects,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ObjectEffects));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Spells) ?? true))
-            {
-                var SpellsItem = item.Spells;
-                ((GroupXmlWriteTranslation)((IXmlItem)SpellsItem).XmlWriteTranslator).Write<ISpellGetter>(
-                    item: SpellsItem,
-                    node: node,
-                    name: nameof(item.Spells),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Spells,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Spells));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Scrolls) ?? true))
-            {
-                var ScrollsItem = item.Scrolls;
-                ((GroupXmlWriteTranslation)((IXmlItem)ScrollsItem).XmlWriteTranslator).Write<IScrollGetter>(
-                    item: ScrollsItem,
-                    node: node,
-                    name: nameof(item.Scrolls),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Scrolls,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Scrolls));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Activators) ?? true))
-            {
-                var ActivatorsItem = item.Activators;
-                ((GroupXmlWriteTranslation)((IXmlItem)ActivatorsItem).XmlWriteTranslator).Write<IActivatorGetter>(
-                    item: ActivatorsItem,
-                    node: node,
-                    name: nameof(item.Activators),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Activators,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Activators));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.TalkingActivators) ?? true))
-            {
-                var TalkingActivatorsItem = item.TalkingActivators;
-                ((GroupXmlWriteTranslation)((IXmlItem)TalkingActivatorsItem).XmlWriteTranslator).Write<ITalkingActivatorGetter>(
-                    item: TalkingActivatorsItem,
-                    node: node,
-                    name: nameof(item.TalkingActivators),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.TalkingActivators,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.TalkingActivators));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Armors) ?? true))
-            {
-                var ArmorsItem = item.Armors;
-                ((GroupXmlWriteTranslation)((IXmlItem)ArmorsItem).XmlWriteTranslator).Write<IArmorGetter>(
-                    item: ArmorsItem,
-                    node: node,
-                    name: nameof(item.Armors),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Armors,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Armors));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Books) ?? true))
-            {
-                var BooksItem = item.Books;
-                ((GroupXmlWriteTranslation)((IXmlItem)BooksItem).XmlWriteTranslator).Write<IBookGetter>(
-                    item: BooksItem,
-                    node: node,
-                    name: nameof(item.Books),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Books,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Books));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Containers) ?? true))
-            {
-                var ContainersItem = item.Containers;
-                ((GroupXmlWriteTranslation)((IXmlItem)ContainersItem).XmlWriteTranslator).Write<IContainerGetter>(
-                    item: ContainersItem,
-                    node: node,
-                    name: nameof(item.Containers),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Containers,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Containers));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Doors) ?? true))
-            {
-                var DoorsItem = item.Doors;
-                ((GroupXmlWriteTranslation)((IXmlItem)DoorsItem).XmlWriteTranslator).Write<IDoorGetter>(
-                    item: DoorsItem,
-                    node: node,
-                    name: nameof(item.Doors),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Doors,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Doors));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Ingredients) ?? true))
-            {
-                var IngredientsItem = item.Ingredients;
-                ((GroupXmlWriteTranslation)((IXmlItem)IngredientsItem).XmlWriteTranslator).Write<IIngredientGetter>(
-                    item: IngredientsItem,
-                    node: node,
-                    name: nameof(item.Ingredients),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Ingredients,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Ingredients));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Lights) ?? true))
-            {
-                var LightsItem = item.Lights;
-                ((GroupXmlWriteTranslation)((IXmlItem)LightsItem).XmlWriteTranslator).Write<ILightGetter>(
-                    item: LightsItem,
-                    node: node,
-                    name: nameof(item.Lights),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Lights,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Lights));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MiscItems) ?? true))
-            {
-                var MiscItemsItem = item.MiscItems;
-                ((GroupXmlWriteTranslation)((IXmlItem)MiscItemsItem).XmlWriteTranslator).Write<IMiscItemGetter>(
-                    item: MiscItemsItem,
-                    node: node,
-                    name: nameof(item.MiscItems),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.MiscItems,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MiscItems));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AlchemicalApparatuses) ?? true))
-            {
-                var AlchemicalApparatusesItem = item.AlchemicalApparatuses;
-                ((GroupXmlWriteTranslation)((IXmlItem)AlchemicalApparatusesItem).XmlWriteTranslator).Write<IAlchemicalApparatusGetter>(
-                    item: AlchemicalApparatusesItem,
-                    node: node,
-                    name: nameof(item.AlchemicalApparatuses),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.AlchemicalApparatuses,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.AlchemicalApparatuses));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Statics) ?? true))
-            {
-                var StaticsItem = item.Statics;
-                ((GroupXmlWriteTranslation)((IXmlItem)StaticsItem).XmlWriteTranslator).Write<IStaticGetter>(
-                    item: StaticsItem,
-                    node: node,
-                    name: nameof(item.Statics),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Statics,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Statics));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MoveableStatics) ?? true))
-            {
-                var MoveableStaticsItem = item.MoveableStatics;
-                ((GroupXmlWriteTranslation)((IXmlItem)MoveableStaticsItem).XmlWriteTranslator).Write<IMoveableStaticGetter>(
-                    item: MoveableStaticsItem,
-                    node: node,
-                    name: nameof(item.MoveableStatics),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.MoveableStatics,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MoveableStatics));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Grasses) ?? true))
-            {
-                var GrassesItem = item.Grasses;
-                ((GroupXmlWriteTranslation)((IXmlItem)GrassesItem).XmlWriteTranslator).Write<IGrassGetter>(
-                    item: GrassesItem,
-                    node: node,
-                    name: nameof(item.Grasses),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Grasses,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Grasses));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Trees) ?? true))
-            {
-                var TreesItem = item.Trees;
-                ((GroupXmlWriteTranslation)((IXmlItem)TreesItem).XmlWriteTranslator).Write<ITreeGetter>(
-                    item: TreesItem,
-                    node: node,
-                    name: nameof(item.Trees),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Trees,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Trees));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Florae) ?? true))
-            {
-                var FloraeItem = item.Florae;
-                ((GroupXmlWriteTranslation)((IXmlItem)FloraeItem).XmlWriteTranslator).Write<IFloraGetter>(
-                    item: FloraeItem,
-                    node: node,
-                    name: nameof(item.Florae),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Florae,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Florae));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Furniture) ?? true))
-            {
-                var FurnitureItem = item.Furniture;
-                ((GroupXmlWriteTranslation)((IXmlItem)FurnitureItem).XmlWriteTranslator).Write<IFurnitureGetter>(
-                    item: FurnitureItem,
-                    node: node,
-                    name: nameof(item.Furniture),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Furniture,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Furniture));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Weapons) ?? true))
-            {
-                var WeaponsItem = item.Weapons;
-                ((GroupXmlWriteTranslation)((IXmlItem)WeaponsItem).XmlWriteTranslator).Write<IWeaponGetter>(
-                    item: WeaponsItem,
-                    node: node,
-                    name: nameof(item.Weapons),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Weapons,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Weapons));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Ammunitions) ?? true))
-            {
-                var AmmunitionsItem = item.Ammunitions;
-                ((GroupXmlWriteTranslation)((IXmlItem)AmmunitionsItem).XmlWriteTranslator).Write<IAmmunitionGetter>(
-                    item: AmmunitionsItem,
-                    node: node,
-                    name: nameof(item.Ammunitions),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Ammunitions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Ammunitions));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Npcs) ?? true))
-            {
-                var NpcsItem = item.Npcs;
-                ((GroupXmlWriteTranslation)((IXmlItem)NpcsItem).XmlWriteTranslator).Write<INpcGetter>(
-                    item: NpcsItem,
-                    node: node,
-                    name: nameof(item.Npcs),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Npcs,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Npcs));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LeveledNpcs) ?? true))
-            {
-                var LeveledNpcsItem = item.LeveledNpcs;
-                ((GroupXmlWriteTranslation)((IXmlItem)LeveledNpcsItem).XmlWriteTranslator).Write<ILeveledNpcGetter>(
-                    item: LeveledNpcsItem,
-                    node: node,
-                    name: nameof(item.LeveledNpcs),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.LeveledNpcs,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LeveledNpcs));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Keys) ?? true))
-            {
-                var KeysItem = item.Keys;
-                ((GroupXmlWriteTranslation)((IXmlItem)KeysItem).XmlWriteTranslator).Write<IKeyGetter>(
-                    item: KeysItem,
-                    node: node,
-                    name: nameof(item.Keys),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Keys,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Keys));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Ingestibles) ?? true))
-            {
-                var IngestiblesItem = item.Ingestibles;
-                ((GroupXmlWriteTranslation)((IXmlItem)IngestiblesItem).XmlWriteTranslator).Write<IIngestibleGetter>(
-                    item: IngestiblesItem,
-                    node: node,
-                    name: nameof(item.Ingestibles),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Ingestibles,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Ingestibles));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.IdleMarkers) ?? true))
-            {
-                var IdleMarkersItem = item.IdleMarkers;
-                ((GroupXmlWriteTranslation)((IXmlItem)IdleMarkersItem).XmlWriteTranslator).Write<IIdleMarkerGetter>(
-                    item: IdleMarkersItem,
-                    node: node,
-                    name: nameof(item.IdleMarkers),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.IdleMarkers,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.IdleMarkers));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ConstructibleObjects) ?? true))
-            {
-                var ConstructibleObjectsItem = item.ConstructibleObjects;
-                ((GroupXmlWriteTranslation)((IXmlItem)ConstructibleObjectsItem).XmlWriteTranslator).Write<IConstructibleObjectGetter>(
-                    item: ConstructibleObjectsItem,
-                    node: node,
-                    name: nameof(item.ConstructibleObjects),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.ConstructibleObjects,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ConstructibleObjects));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Projectiles) ?? true))
-            {
-                var ProjectilesItem = item.Projectiles;
-                ((GroupXmlWriteTranslation)((IXmlItem)ProjectilesItem).XmlWriteTranslator).Write<IProjectileGetter>(
-                    item: ProjectilesItem,
-                    node: node,
-                    name: nameof(item.Projectiles),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Projectiles,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Projectiles));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Hazards) ?? true))
-            {
-                var HazardsItem = item.Hazards;
-                ((GroupXmlWriteTranslation)((IXmlItem)HazardsItem).XmlWriteTranslator).Write<IHazardGetter>(
-                    item: HazardsItem,
-                    node: node,
-                    name: nameof(item.Hazards),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Hazards,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Hazards));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.SoulGems) ?? true))
-            {
-                var SoulGemsItem = item.SoulGems;
-                ((GroupXmlWriteTranslation)((IXmlItem)SoulGemsItem).XmlWriteTranslator).Write<ISoulGemGetter>(
-                    item: SoulGemsItem,
-                    node: node,
-                    name: nameof(item.SoulGems),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.SoulGems,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.SoulGems));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LeveledItems) ?? true))
-            {
-                var LeveledItemsItem = item.LeveledItems;
-                ((GroupXmlWriteTranslation)((IXmlItem)LeveledItemsItem).XmlWriteTranslator).Write<ILeveledItemGetter>(
-                    item: LeveledItemsItem,
-                    node: node,
-                    name: nameof(item.LeveledItems),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.LeveledItems,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LeveledItems));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Weathers) ?? true))
-            {
-                var WeathersItem = item.Weathers;
-                ((GroupXmlWriteTranslation)((IXmlItem)WeathersItem).XmlWriteTranslator).Write<IWeatherGetter>(
-                    item: WeathersItem,
-                    node: node,
-                    name: nameof(item.Weathers),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Weathers,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Weathers));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Climates) ?? true))
-            {
-                var ClimatesItem = item.Climates;
-                ((GroupXmlWriteTranslation)((IXmlItem)ClimatesItem).XmlWriteTranslator).Write<IClimateGetter>(
-                    item: ClimatesItem,
-                    node: node,
-                    name: nameof(item.Climates),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Climates,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Climates));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ShaderParticleGeometries) ?? true))
-            {
-                var ShaderParticleGeometriesItem = item.ShaderParticleGeometries;
-                ((GroupXmlWriteTranslation)((IXmlItem)ShaderParticleGeometriesItem).XmlWriteTranslator).Write<IShaderParticleGeometryGetter>(
-                    item: ShaderParticleGeometriesItem,
-                    node: node,
-                    name: nameof(item.ShaderParticleGeometries),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.ShaderParticleGeometries,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ShaderParticleGeometries));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.VisualEffects) ?? true))
-            {
-                var VisualEffectsItem = item.VisualEffects;
-                ((GroupXmlWriteTranslation)((IXmlItem)VisualEffectsItem).XmlWriteTranslator).Write<IVisualEffectGetter>(
-                    item: VisualEffectsItem,
-                    node: node,
-                    name: nameof(item.VisualEffects),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.VisualEffects,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.VisualEffects));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Regions) ?? true))
-            {
-                var RegionsItem = item.Regions;
-                ((GroupXmlWriteTranslation)((IXmlItem)RegionsItem).XmlWriteTranslator).Write<IRegionGetter>(
-                    item: RegionsItem,
-                    node: node,
-                    name: nameof(item.Regions),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Regions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Regions));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps) ?? true))
-            {
-                var NavigationMeshInfoMapsItem = item.NavigationMeshInfoMaps;
-                ((GroupXmlWriteTranslation)((IXmlItem)NavigationMeshInfoMapsItem).XmlWriteTranslator).Write<INavigationMeshInfoMapGetter>(
-                    item: NavigationMeshInfoMapsItem,
-                    node: node,
-                    name: nameof(item.NavigationMeshInfoMaps),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Cells) ?? true))
-            {
-                var CellsItem = item.Cells;
-                ((ListGroupXmlWriteTranslation)((IXmlItem)CellsItem).XmlWriteTranslator).Write<ICellBlockGetter>(
-                    item: CellsItem,
-                    node: node,
-                    name: nameof(item.Cells),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Cells,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Cells));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Worldspaces) ?? true))
-            {
-                var WorldspacesItem = item.Worldspaces;
-                ((GroupXmlWriteTranslation)((IXmlItem)WorldspacesItem).XmlWriteTranslator).Write<IWorldspaceGetter>(
-                    item: WorldspacesItem,
-                    node: node,
-                    name: nameof(item.Worldspaces),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Worldspaces,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Worldspaces));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DialogTopics) ?? true))
-            {
-                var DialogTopicsItem = item.DialogTopics;
-                ((GroupXmlWriteTranslation)((IXmlItem)DialogTopicsItem).XmlWriteTranslator).Write<IDialogTopicGetter>(
-                    item: DialogTopicsItem,
-                    node: node,
-                    name: nameof(item.DialogTopics),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.DialogTopics,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.DialogTopics));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Quests) ?? true))
-            {
-                var QuestsItem = item.Quests;
-                ((GroupXmlWriteTranslation)((IXmlItem)QuestsItem).XmlWriteTranslator).Write<IQuestGetter>(
-                    item: QuestsItem,
-                    node: node,
-                    name: nameof(item.Quests),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Quests,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Quests));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.IdleAnimations) ?? true))
-            {
-                var IdleAnimationsItem = item.IdleAnimations;
-                ((GroupXmlWriteTranslation)((IXmlItem)IdleAnimationsItem).XmlWriteTranslator).Write<IIdleAnimationGetter>(
-                    item: IdleAnimationsItem,
-                    node: node,
-                    name: nameof(item.IdleAnimations),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.IdleAnimations,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.IdleAnimations));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Packages) ?? true))
-            {
-                var PackagesItem = item.Packages;
-                ((GroupXmlWriteTranslation)((IXmlItem)PackagesItem).XmlWriteTranslator).Write<IPackageGetter>(
-                    item: PackagesItem,
-                    node: node,
-                    name: nameof(item.Packages),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Packages,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Packages));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CombatStyles) ?? true))
-            {
-                var CombatStylesItem = item.CombatStyles;
-                ((GroupXmlWriteTranslation)((IXmlItem)CombatStylesItem).XmlWriteTranslator).Write<ICombatStyleGetter>(
-                    item: CombatStylesItem,
-                    node: node,
-                    name: nameof(item.CombatStyles),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.CombatStyles,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.CombatStyles));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LoadScreens) ?? true))
-            {
-                var LoadScreensItem = item.LoadScreens;
-                ((GroupXmlWriteTranslation)((IXmlItem)LoadScreensItem).XmlWriteTranslator).Write<ILoadScreenGetter>(
-                    item: LoadScreensItem,
-                    node: node,
-                    name: nameof(item.LoadScreens),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.LoadScreens,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LoadScreens));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LeveledSpells) ?? true))
-            {
-                var LeveledSpellsItem = item.LeveledSpells;
-                ((GroupXmlWriteTranslation)((IXmlItem)LeveledSpellsItem).XmlWriteTranslator).Write<ILeveledSpellGetter>(
-                    item: LeveledSpellsItem,
-                    node: node,
-                    name: nameof(item.LeveledSpells),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.LeveledSpells,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LeveledSpells));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AnimatedObjects) ?? true))
-            {
-                var AnimatedObjectsItem = item.AnimatedObjects;
-                ((GroupXmlWriteTranslation)((IXmlItem)AnimatedObjectsItem).XmlWriteTranslator).Write<IAnimatedObjectGetter>(
-                    item: AnimatedObjectsItem,
-                    node: node,
-                    name: nameof(item.AnimatedObjects),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.AnimatedObjects,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.AnimatedObjects));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Waters) ?? true))
-            {
-                var WatersItem = item.Waters;
-                ((GroupXmlWriteTranslation)((IXmlItem)WatersItem).XmlWriteTranslator).Write<IWaterGetter>(
-                    item: WatersItem,
-                    node: node,
-                    name: nameof(item.Waters),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Waters,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Waters));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.EffectShaders) ?? true))
-            {
-                var EffectShadersItem = item.EffectShaders;
-                ((GroupXmlWriteTranslation)((IXmlItem)EffectShadersItem).XmlWriteTranslator).Write<IEffectShaderGetter>(
-                    item: EffectShadersItem,
-                    node: node,
-                    name: nameof(item.EffectShaders),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.EffectShaders,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.EffectShaders));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Explosions) ?? true))
-            {
-                var ExplosionsItem = item.Explosions;
-                ((GroupXmlWriteTranslation)((IXmlItem)ExplosionsItem).XmlWriteTranslator).Write<IExplosionGetter>(
-                    item: ExplosionsItem,
-                    node: node,
-                    name: nameof(item.Explosions),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Explosions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Explosions));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Debris) ?? true))
-            {
-                var DebrisItem = item.Debris;
-                ((GroupXmlWriteTranslation)((IXmlItem)DebrisItem).XmlWriteTranslator).Write<IDebrisGetter>(
-                    item: DebrisItem,
-                    node: node,
-                    name: nameof(item.Debris),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Debris,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Debris));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ImageSpaces) ?? true))
-            {
-                var ImageSpacesItem = item.ImageSpaces;
-                ((GroupXmlWriteTranslation)((IXmlItem)ImageSpacesItem).XmlWriteTranslator).Write<IImageSpaceGetter>(
-                    item: ImageSpacesItem,
-                    node: node,
-                    name: nameof(item.ImageSpaces),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.ImageSpaces,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ImageSpaces));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ImageSpaceAdapters) ?? true))
-            {
-                var ImageSpaceAdaptersItem = item.ImageSpaceAdapters;
-                ((GroupXmlWriteTranslation)((IXmlItem)ImageSpaceAdaptersItem).XmlWriteTranslator).Write<IImageSpaceAdapterGetter>(
-                    item: ImageSpaceAdaptersItem,
-                    node: node,
-                    name: nameof(item.ImageSpaceAdapters),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.ImageSpaceAdapters,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ImageSpaceAdapters));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.FormLists) ?? true))
-            {
-                var FormListsItem = item.FormLists;
-                ((GroupXmlWriteTranslation)((IXmlItem)FormListsItem).XmlWriteTranslator).Write<IFormListGetter>(
-                    item: FormListsItem,
-                    node: node,
-                    name: nameof(item.FormLists),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.FormLists,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.FormLists));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Perks) ?? true))
-            {
-                var PerksItem = item.Perks;
-                ((GroupXmlWriteTranslation)((IXmlItem)PerksItem).XmlWriteTranslator).Write<IPerkGetter>(
-                    item: PerksItem,
-                    node: node,
-                    name: nameof(item.Perks),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Perks,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Perks));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.BodyParts) ?? true))
-            {
-                var BodyPartsItem = item.BodyParts;
-                ((GroupXmlWriteTranslation)((IXmlItem)BodyPartsItem).XmlWriteTranslator).Write<IBodyPartDataGetter>(
-                    item: BodyPartsItem,
-                    node: node,
-                    name: nameof(item.BodyParts),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.BodyParts,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.BodyParts));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AddonNodes) ?? true))
-            {
-                var AddonNodesItem = item.AddonNodes;
-                ((GroupXmlWriteTranslation)((IXmlItem)AddonNodesItem).XmlWriteTranslator).Write<IAddonNodeGetter>(
-                    item: AddonNodesItem,
-                    node: node,
-                    name: nameof(item.AddonNodes),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.AddonNodes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.AddonNodes));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ActorValueInformation) ?? true))
-            {
-                var ActorValueInformationItem = item.ActorValueInformation;
-                ((GroupXmlWriteTranslation)((IXmlItem)ActorValueInformationItem).XmlWriteTranslator).Write<IActorValueInformationGetter>(
-                    item: ActorValueInformationItem,
-                    node: node,
-                    name: nameof(item.ActorValueInformation),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.ActorValueInformation,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ActorValueInformation));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CameraShots) ?? true))
-            {
-                var CameraShotsItem = item.CameraShots;
-                ((GroupXmlWriteTranslation)((IXmlItem)CameraShotsItem).XmlWriteTranslator).Write<ICameraShotGetter>(
-                    item: CameraShotsItem,
-                    node: node,
-                    name: nameof(item.CameraShots),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.CameraShots,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.CameraShots));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CameraPaths) ?? true))
-            {
-                var CameraPathsItem = item.CameraPaths;
-                ((GroupXmlWriteTranslation)((IXmlItem)CameraPathsItem).XmlWriteTranslator).Write<ICameraPathGetter>(
-                    item: CameraPathsItem,
-                    node: node,
-                    name: nameof(item.CameraPaths),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.CameraPaths,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.CameraPaths));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.VoiceTypes) ?? true))
-            {
-                var VoiceTypesItem = item.VoiceTypes;
-                ((GroupXmlWriteTranslation)((IXmlItem)VoiceTypesItem).XmlWriteTranslator).Write<IVoiceTypeGetter>(
-                    item: VoiceTypesItem,
-                    node: node,
-                    name: nameof(item.VoiceTypes),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.VoiceTypes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.VoiceTypes));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MaterialTypes) ?? true))
-            {
-                var MaterialTypesItem = item.MaterialTypes;
-                ((GroupXmlWriteTranslation)((IXmlItem)MaterialTypesItem).XmlWriteTranslator).Write<IMaterialTypeGetter>(
-                    item: MaterialTypesItem,
-                    node: node,
-                    name: nameof(item.MaterialTypes),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.MaterialTypes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MaterialTypes));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Impacts) ?? true))
-            {
-                var ImpactsItem = item.Impacts;
-                ((GroupXmlWriteTranslation)((IXmlItem)ImpactsItem).XmlWriteTranslator).Write<IImpactGetter>(
-                    item: ImpactsItem,
-                    node: node,
-                    name: nameof(item.Impacts),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Impacts,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Impacts));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ImpactDataSets) ?? true))
-            {
-                var ImpactDataSetsItem = item.ImpactDataSets;
-                ((GroupXmlWriteTranslation)((IXmlItem)ImpactDataSetsItem).XmlWriteTranslator).Write<IImpactDataSetGetter>(
-                    item: ImpactDataSetsItem,
-                    node: node,
-                    name: nameof(item.ImpactDataSets),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.ImpactDataSets,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ImpactDataSets));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ArmorAddons) ?? true))
-            {
-                var ArmorAddonsItem = item.ArmorAddons;
-                ((GroupXmlWriteTranslation)((IXmlItem)ArmorAddonsItem).XmlWriteTranslator).Write<IArmorAddonGetter>(
-                    item: ArmorAddonsItem,
-                    node: node,
-                    name: nameof(item.ArmorAddons),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.ArmorAddons,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ArmorAddons));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.EncounterZones) ?? true))
-            {
-                var EncounterZonesItem = item.EncounterZones;
-                ((GroupXmlWriteTranslation)((IXmlItem)EncounterZonesItem).XmlWriteTranslator).Write<IEncounterZoneGetter>(
-                    item: EncounterZonesItem,
-                    node: node,
-                    name: nameof(item.EncounterZones),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.EncounterZones,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.EncounterZones));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Locations) ?? true))
-            {
-                var LocationsItem = item.Locations;
-                ((GroupXmlWriteTranslation)((IXmlItem)LocationsItem).XmlWriteTranslator).Write<ILocationGetter>(
-                    item: LocationsItem,
-                    node: node,
-                    name: nameof(item.Locations),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Locations,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Locations));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Messages) ?? true))
-            {
-                var MessagesItem = item.Messages;
-                ((GroupXmlWriteTranslation)((IXmlItem)MessagesItem).XmlWriteTranslator).Write<IMessageGetter>(
-                    item: MessagesItem,
-                    node: node,
-                    name: nameof(item.Messages),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Messages,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Messages));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DefaultObjectManagers) ?? true))
-            {
-                var DefaultObjectManagersItem = item.DefaultObjectManagers;
-                ((GroupXmlWriteTranslation)((IXmlItem)DefaultObjectManagersItem).XmlWriteTranslator).Write<IDefaultObjectManagerGetter>(
-                    item: DefaultObjectManagersItem,
-                    node: node,
-                    name: nameof(item.DefaultObjectManagers),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.DefaultObjectManagers,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.DefaultObjectManagers));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LightingTemplates) ?? true))
-            {
-                var LightingTemplatesItem = item.LightingTemplates;
-                ((GroupXmlWriteTranslation)((IXmlItem)LightingTemplatesItem).XmlWriteTranslator).Write<ILightingTemplateGetter>(
-                    item: LightingTemplatesItem,
-                    node: node,
-                    name: nameof(item.LightingTemplates),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.LightingTemplates,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LightingTemplates));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MusicTypes) ?? true))
-            {
-                var MusicTypesItem = item.MusicTypes;
-                ((GroupXmlWriteTranslation)((IXmlItem)MusicTypesItem).XmlWriteTranslator).Write<IMusicTypeGetter>(
-                    item: MusicTypesItem,
-                    node: node,
-                    name: nameof(item.MusicTypes),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.MusicTypes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MusicTypes));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Footsteps) ?? true))
-            {
-                var FootstepsItem = item.Footsteps;
-                ((GroupXmlWriteTranslation)((IXmlItem)FootstepsItem).XmlWriteTranslator).Write<IFootstepGetter>(
-                    item: FootstepsItem,
-                    node: node,
-                    name: nameof(item.Footsteps),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Footsteps,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Footsteps));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.FootstepSets) ?? true))
-            {
-                var FootstepSetsItem = item.FootstepSets;
-                ((GroupXmlWriteTranslation)((IXmlItem)FootstepSetsItem).XmlWriteTranslator).Write<IFootstepSetGetter>(
-                    item: FootstepSetsItem,
-                    node: node,
-                    name: nameof(item.FootstepSets),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.FootstepSets,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.FootstepSets));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes) ?? true))
-            {
-                var StoryManagerBranchNodesItem = item.StoryManagerBranchNodes;
-                ((GroupXmlWriteTranslation)((IXmlItem)StoryManagerBranchNodesItem).XmlWriteTranslator).Write<IStoryManagerBranchNodeGetter>(
-                    item: StoryManagerBranchNodesItem,
-                    node: node,
-                    name: nameof(item.StoryManagerBranchNodes),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.StoryManagerBranchNodes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes) ?? true))
-            {
-                var StoryManagerQuestNodesItem = item.StoryManagerQuestNodes;
-                ((GroupXmlWriteTranslation)((IXmlItem)StoryManagerQuestNodesItem).XmlWriteTranslator).Write<IStoryManagerQuestNodeGetter>(
-                    item: StoryManagerQuestNodesItem,
-                    node: node,
-                    name: nameof(item.StoryManagerQuestNodes),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.StoryManagerQuestNodes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.StoryManagerEventNodes) ?? true))
-            {
-                var StoryManagerEventNodesItem = item.StoryManagerEventNodes;
-                ((GroupXmlWriteTranslation)((IXmlItem)StoryManagerEventNodesItem).XmlWriteTranslator).Write<IStoryManagerEventNodeGetter>(
-                    item: StoryManagerEventNodesItem,
-                    node: node,
-                    name: nameof(item.StoryManagerEventNodes),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.StoryManagerEventNodes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.StoryManagerEventNodes));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DialogBranches) ?? true))
-            {
-                var DialogBranchesItem = item.DialogBranches;
-                ((GroupXmlWriteTranslation)((IXmlItem)DialogBranchesItem).XmlWriteTranslator).Write<IDialogBranchGetter>(
-                    item: DialogBranchesItem,
-                    node: node,
-                    name: nameof(item.DialogBranches),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.DialogBranches,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.DialogBranches));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MusicTracks) ?? true))
-            {
-                var MusicTracksItem = item.MusicTracks;
-                ((GroupXmlWriteTranslation)((IXmlItem)MusicTracksItem).XmlWriteTranslator).Write<IMusicTrackGetter>(
-                    item: MusicTracksItem,
-                    node: node,
-                    name: nameof(item.MusicTracks),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.MusicTracks,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MusicTracks));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DialogViews) ?? true))
-            {
-                var DialogViewsItem = item.DialogViews;
-                ((GroupXmlWriteTranslation)((IXmlItem)DialogViewsItem).XmlWriteTranslator).Write<IDialogViewGetter>(
-                    item: DialogViewsItem,
-                    node: node,
-                    name: nameof(item.DialogViews),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.DialogViews,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.DialogViews));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.WordsOfPower) ?? true))
-            {
-                var WordsOfPowerItem = item.WordsOfPower;
-                ((GroupXmlWriteTranslation)((IXmlItem)WordsOfPowerItem).XmlWriteTranslator).Write<IWordOfPowerGetter>(
-                    item: WordsOfPowerItem,
-                    node: node,
-                    name: nameof(item.WordsOfPower),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.WordsOfPower,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.WordsOfPower));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Shouts) ?? true))
-            {
-                var ShoutsItem = item.Shouts;
-                ((GroupXmlWriteTranslation)((IXmlItem)ShoutsItem).XmlWriteTranslator).Write<IShoutGetter>(
-                    item: ShoutsItem,
-                    node: node,
-                    name: nameof(item.Shouts),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Shouts,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Shouts));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.EquipTypes) ?? true))
-            {
-                var EquipTypesItem = item.EquipTypes;
-                ((GroupXmlWriteTranslation)((IXmlItem)EquipTypesItem).XmlWriteTranslator).Write<IEquipTypeGetter>(
-                    item: EquipTypesItem,
-                    node: node,
-                    name: nameof(item.EquipTypes),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.EquipTypes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.EquipTypes));
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Relationships) ?? true))
-            {
-                var RelationshipsItem = item.Relationships;
-                ((GroupXmlWriteTranslation)((IXmlItem)RelationshipsItem).XmlWriteTranslator).Write<IRelationshipGetter>(
-                    item: RelationshipsItem,
-                    node: node,
-                    name: nameof(item.Relationships),
-                    fieldIndex: (int)SkyrimMod_FieldIndex.Relationships,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Relationships));
-            }
-        }
-
-        public void Write(
-            XElement node,
-            ISkyrimModGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.SkyrimMod");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.SkyrimMod");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ISkyrimModGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            ISkyrimModGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (ISkyrimModGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class SkyrimModXmlCreateTranslation
-    {
-        public readonly static SkyrimModXmlCreateTranslation Instance = new SkyrimModXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            ISkyrimMod item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    SkyrimModXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            ISkyrimMod item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "GameSettings":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.GameSettings);
-                    try
-                    {
-                        item.GameSettings.CopyInFromXml<GameSetting>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Keywords":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keywords);
-                    try
-                    {
-                        item.Keywords.CopyInFromXml<Keyword>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LocationReferenceTypes":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
-                    try
-                    {
-                        item.LocationReferenceTypes.CopyInFromXml<LocationReferenceType>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Actions":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Actions);
-                    try
-                    {
-                        item.Actions.CopyInFromXml<ActionRecord>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TextureSets":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.TextureSets);
-                    try
-                    {
-                        item.TextureSets.CopyInFromXml<TextureSet>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Globals":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
-                    try
-                    {
-                        item.Globals.CopyInFromXml<Global>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Classes":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Classes);
-                    try
-                    {
-                        item.Classes.CopyInFromXml<Class>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Factions":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Factions);
-                    try
-                    {
-                        item.Factions.CopyInFromXml<Faction>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HeadParts":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.HeadParts);
-                    try
-                    {
-                        item.HeadParts.CopyInFromXml<HeadPart>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Hairs":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Hairs);
-                    try
-                    {
-                        item.Hairs.CopyInFromXml<Hair>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Eyes":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Eyes);
-                    try
-                    {
-                        item.Eyes.CopyInFromXml<Eyes>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Races":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Races);
-                    try
-                    {
-                        item.Races.CopyInFromXml<Race>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SoundMarkers":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.SoundMarkers);
-                    try
-                    {
-                        item.SoundMarkers.CopyInFromXml<SoundMarker>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AcousticSpaces":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.AcousticSpaces);
-                    try
-                    {
-                        item.AcousticSpaces.CopyInFromXml<AcousticSpace>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MagicEffects":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MagicEffects);
-                    try
-                    {
-                        item.MagicEffects.CopyInFromXml<MagicEffect>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LandscapeTextures":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LandscapeTextures);
-                    try
-                    {
-                        item.LandscapeTextures.CopyInFromXml<LandscapeTexture>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ObjectEffects":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ObjectEffects);
-                    try
-                    {
-                        item.ObjectEffects.CopyInFromXml<ObjectEffect>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Spells":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Spells);
-                    try
-                    {
-                        item.Spells.CopyInFromXml<Spell>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Scrolls":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Scrolls);
-                    try
-                    {
-                        item.Scrolls.CopyInFromXml<Scroll>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Activators":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Activators);
-                    try
-                    {
-                        item.Activators.CopyInFromXml<Activator>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TalkingActivators":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.TalkingActivators);
-                    try
-                    {
-                        item.TalkingActivators.CopyInFromXml<TalkingActivator>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Armors":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Armors);
-                    try
-                    {
-                        item.Armors.CopyInFromXml<Armor>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Books":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Books);
-                    try
-                    {
-                        item.Books.CopyInFromXml<Book>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Containers":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Containers);
-                    try
-                    {
-                        item.Containers.CopyInFromXml<Container>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Doors":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Doors);
-                    try
-                    {
-                        item.Doors.CopyInFromXml<Door>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Ingredients":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Ingredients);
-                    try
-                    {
-                        item.Ingredients.CopyInFromXml<Ingredient>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Lights":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Lights);
-                    try
-                    {
-                        item.Lights.CopyInFromXml<Light>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MiscItems":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MiscItems);
-                    try
-                    {
-                        item.MiscItems.CopyInFromXml<MiscItem>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AlchemicalApparatuses":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.AlchemicalApparatuses);
-                    try
-                    {
-                        item.AlchemicalApparatuses.CopyInFromXml<AlchemicalApparatus>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Statics":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Statics);
-                    try
-                    {
-                        item.Statics.CopyInFromXml<Static>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MoveableStatics":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MoveableStatics);
-                    try
-                    {
-                        item.MoveableStatics.CopyInFromXml<MoveableStatic>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Grasses":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Grasses);
-                    try
-                    {
-                        item.Grasses.CopyInFromXml<Grass>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Trees":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Trees);
-                    try
-                    {
-                        item.Trees.CopyInFromXml<Tree>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Florae":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Florae);
-                    try
-                    {
-                        item.Florae.CopyInFromXml<Flora>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Furniture":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Furniture);
-                    try
-                    {
-                        item.Furniture.CopyInFromXml<Furniture>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weapons":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Weapons);
-                    try
-                    {
-                        item.Weapons.CopyInFromXml<Weapon>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Ammunitions":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Ammunitions);
-                    try
-                    {
-                        item.Ammunitions.CopyInFromXml<Ammunition>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Npcs":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Npcs);
-                    try
-                    {
-                        item.Npcs.CopyInFromXml<Npc>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LeveledNpcs":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LeveledNpcs);
-                    try
-                    {
-                        item.LeveledNpcs.CopyInFromXml<LeveledNpc>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Keys":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keys);
-                    try
-                    {
-                        item.Keys.CopyInFromXml<Key>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Ingestibles":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Ingestibles);
-                    try
-                    {
-                        item.Ingestibles.CopyInFromXml<Ingestible>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "IdleMarkers":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.IdleMarkers);
-                    try
-                    {
-                        item.IdleMarkers.CopyInFromXml<IdleMarker>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ConstructibleObjects":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ConstructibleObjects);
-                    try
-                    {
-                        item.ConstructibleObjects.CopyInFromXml<ConstructibleObject>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Projectiles":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Projectiles);
-                    try
-                    {
-                        item.Projectiles.CopyInFromXml<Projectile>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Hazards":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Hazards);
-                    try
-                    {
-                        item.Hazards.CopyInFromXml<Hazard>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SoulGems":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.SoulGems);
-                    try
-                    {
-                        item.SoulGems.CopyInFromXml<SoulGem>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LeveledItems":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LeveledItems);
-                    try
-                    {
-                        item.LeveledItems.CopyInFromXml<LeveledItem>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weathers":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Weathers);
-                    try
-                    {
-                        item.Weathers.CopyInFromXml<Weather>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Climates":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Climates);
-                    try
-                    {
-                        item.Climates.CopyInFromXml<Climate>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ShaderParticleGeometries":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ShaderParticleGeometries);
-                    try
-                    {
-                        item.ShaderParticleGeometries.CopyInFromXml<ShaderParticleGeometry>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VisualEffects":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.VisualEffects);
-                    try
-                    {
-                        item.VisualEffects.CopyInFromXml<VisualEffect>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Regions":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Regions);
-                    try
-                    {
-                        item.Regions.CopyInFromXml<Region>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NavigationMeshInfoMaps":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps);
-                    try
-                    {
-                        item.NavigationMeshInfoMaps.CopyInFromXml<NavigationMeshInfoMap>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Worldspaces":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Worldspaces);
-                    try
-                    {
-                        item.Worldspaces.CopyInFromXml<Worldspace>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DialogTopics":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.DialogTopics);
-                    try
-                    {
-                        item.DialogTopics.CopyInFromXml<DialogTopic>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Quests":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Quests);
-                    try
-                    {
-                        item.Quests.CopyInFromXml<Quest>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "IdleAnimations":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.IdleAnimations);
-                    try
-                    {
-                        item.IdleAnimations.CopyInFromXml<IdleAnimation>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Packages":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Packages);
-                    try
-                    {
-                        item.Packages.CopyInFromXml<Package>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CombatStyles":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.CombatStyles);
-                    try
-                    {
-                        item.CombatStyles.CopyInFromXml<CombatStyle>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LoadScreens":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LoadScreens);
-                    try
-                    {
-                        item.LoadScreens.CopyInFromXml<LoadScreen>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LeveledSpells":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LeveledSpells);
-                    try
-                    {
-                        item.LeveledSpells.CopyInFromXml<LeveledSpell>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AnimatedObjects":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.AnimatedObjects);
-                    try
-                    {
-                        item.AnimatedObjects.CopyInFromXml<AnimatedObject>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Waters":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Waters);
-                    try
-                    {
-                        item.Waters.CopyInFromXml<Water>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EffectShaders":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.EffectShaders);
-                    try
-                    {
-                        item.EffectShaders.CopyInFromXml<EffectShader>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Explosions":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Explosions);
-                    try
-                    {
-                        item.Explosions.CopyInFromXml<Explosion>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Debris":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Debris);
-                    try
-                    {
-                        item.Debris.CopyInFromXml<Debris>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ImageSpaces":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ImageSpaces);
-                    try
-                    {
-                        item.ImageSpaces.CopyInFromXml<ImageSpace>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ImageSpaceAdapters":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ImageSpaceAdapters);
-                    try
-                    {
-                        item.ImageSpaceAdapters.CopyInFromXml<ImageSpaceAdapter>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FormLists":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.FormLists);
-                    try
-                    {
-                        item.FormLists.CopyInFromXml<FormList>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Perks":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Perks);
-                    try
-                    {
-                        item.Perks.CopyInFromXml<Perk>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BodyParts":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.BodyParts);
-                    try
-                    {
-                        item.BodyParts.CopyInFromXml<BodyPartData>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AddonNodes":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.AddonNodes);
-                    try
-                    {
-                        item.AddonNodes.CopyInFromXml<AddonNode>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ActorValueInformation":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ActorValueInformation);
-                    try
-                    {
-                        item.ActorValueInformation.CopyInFromXml<ActorValueInformation>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CameraShots":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.CameraShots);
-                    try
-                    {
-                        item.CameraShots.CopyInFromXml<CameraShot>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CameraPaths":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.CameraPaths);
-                    try
-                    {
-                        item.CameraPaths.CopyInFromXml<CameraPath>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VoiceTypes":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.VoiceTypes);
-                    try
-                    {
-                        item.VoiceTypes.CopyInFromXml<VoiceType>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaterialTypes":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MaterialTypes);
-                    try
-                    {
-                        item.MaterialTypes.CopyInFromXml<MaterialType>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Impacts":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Impacts);
-                    try
-                    {
-                        item.Impacts.CopyInFromXml<Impact>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ImpactDataSets":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ImpactDataSets);
-                    try
-                    {
-                        item.ImpactDataSets.CopyInFromXml<ImpactDataSet>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ArmorAddons":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ArmorAddons);
-                    try
-                    {
-                        item.ArmorAddons.CopyInFromXml<ArmorAddon>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EncounterZones":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.EncounterZones);
-                    try
-                    {
-                        item.EncounterZones.CopyInFromXml<EncounterZone>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Locations":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Locations);
-                    try
-                    {
-                        item.Locations.CopyInFromXml<Location>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Messages":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Messages);
-                    try
-                    {
-                        item.Messages.CopyInFromXml<Message>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DefaultObjectManagers":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.DefaultObjectManagers);
-                    try
-                    {
-                        item.DefaultObjectManagers.CopyInFromXml<DefaultObjectManager>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LightingTemplates":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LightingTemplates);
-                    try
-                    {
-                        item.LightingTemplates.CopyInFromXml<LightingTemplate>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MusicTypes":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MusicTypes);
-                    try
-                    {
-                        item.MusicTypes.CopyInFromXml<MusicType>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Footsteps":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Footsteps);
-                    try
-                    {
-                        item.Footsteps.CopyInFromXml<Footstep>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FootstepSets":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.FootstepSets);
-                    try
-                    {
-                        item.FootstepSets.CopyInFromXml<FootstepSet>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "StoryManagerBranchNodes":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes);
-                    try
-                    {
-                        item.StoryManagerBranchNodes.CopyInFromXml<StoryManagerBranchNode>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "StoryManagerQuestNodes":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes);
-                    try
-                    {
-                        item.StoryManagerQuestNodes.CopyInFromXml<StoryManagerQuestNode>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "StoryManagerEventNodes":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.StoryManagerEventNodes);
-                    try
-                    {
-                        item.StoryManagerEventNodes.CopyInFromXml<StoryManagerEventNode>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DialogBranches":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.DialogBranches);
-                    try
-                    {
-                        item.DialogBranches.CopyInFromXml<DialogBranch>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MusicTracks":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MusicTracks);
-                    try
-                    {
-                        item.MusicTracks.CopyInFromXml<MusicTrack>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DialogViews":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.DialogViews);
-                    try
-                    {
-                        item.DialogViews.CopyInFromXml<DialogView>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WordsOfPower":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.WordsOfPower);
-                    try
-                    {
-                        item.WordsOfPower.CopyInFromXml<WordOfPower>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Shouts":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Shouts);
-                    try
-                    {
-                        item.Shouts.CopyInFromXml<Shout>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EquipTypes":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.EquipTypes);
-                    try
-                    {
-                        item.EquipTypes.CopyInFromXml<EquipType>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Relationships":
-                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Relationships);
-                    try
-                    {
-                        item.Relationships.CopyInFromXml<Relationship>(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class SkyrimModXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this ISkyrimModGetter item,
-            XElement node,
-            out SkyrimMod.ErrorMask errorMask,
-            SkyrimMod.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((SkyrimModXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = SkyrimMod.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this ISkyrimModGetter item,
-            string path,
-            out SkyrimMod.ErrorMask errorMask,
-            SkyrimMod.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ISkyrimModGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ISkyrimModGetter item,
-            Stream stream,
-            out SkyrimMod.ErrorMask errorMask,
-            SkyrimMod.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this ISkyrimModGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this ISkyrimModGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((SkyrimModXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this ISkyrimModGetter item,
-            XElement node,
-            string? name = null,
-            SkyrimMod.TranslationMask? translationMask = null)
-        {
-            ((SkyrimModXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this ISkyrimModGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((SkyrimModXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ISkyrimModGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((SkyrimModXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Mutagen
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -18203,6 +16430,20 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Shouts;
         public bool EquipTypes;
         public bool Relationships;
+        public bool Scenes;
+        public bool AssociationTypes;
+        public bool Outfits;
+        public bool ArtObjects;
+        public bool MaterialObjects;
+        public bool MovementTypes;
+        public bool SoundDescriptors;
+        public bool DualCastData;
+        public bool SoundCategories;
+        public bool SoundOutputModels;
+        public bool CollisionLayers;
+        public bool Colors;
+        public bool ReverbParameters;
+        public bool VolumetricLightings;
         public GroupMask()
         {
         }
@@ -18307,11 +16548,57 @@ namespace Mutagen.Bethesda.Skyrim
             Shouts = defaultValue;
             EquipTypes = defaultValue;
             Relationships = defaultValue;
+            Scenes = defaultValue;
+            AssociationTypes = defaultValue;
+            Outfits = defaultValue;
+            ArtObjects = defaultValue;
+            MaterialObjects = defaultValue;
+            MovementTypes = defaultValue;
+            SoundDescriptors = defaultValue;
+            DualCastData = defaultValue;
+            SoundCategories = defaultValue;
+            SoundOutputModels = defaultValue;
+            CollisionLayers = defaultValue;
+            Colors = defaultValue;
+            ReverbParameters = defaultValue;
+            VolumetricLightings = defaultValue;
         }
     }
 
     public interface ISkyrimModDisposableGetter : ISkyrimModGetter, IModDisposeGetter
     {
+    }
+
+    /// <summary>
+    /// Different game release versions a Skyrim mod can have
+    /// </summary>
+    public enum SkyrimRelease
+    {
+        SkyrimLE,
+        SkyrimSE
+    }
+
+    public static class SkyrimReleaseExt
+    {
+        public static GameRelease ToGameRelease(this SkyrimRelease release)
+        {
+            return release switch
+            {
+                SkyrimRelease.SkyrimLE => GameRelease.SkyrimLE,
+                SkyrimRelease.SkyrimSE => GameRelease.SkyrimSE,
+                _ => throw new ArgumentException()
+            };
+        }
+
+        public static SkyrimRelease ToSkyrimRelease(this GameRelease release)
+        {
+            return release switch
+            {
+                GameRelease.SkyrimLE => SkyrimRelease.SkyrimLE,
+                GameRelease.SkyrimSE => SkyrimRelease.SkyrimSE,
+                _ => throw new ArgumentException()
+            };
+        }
     }
 }
 #endregion
@@ -19424,6 +17711,160 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
+            if (importMask?.Scenes ?? true)
+            {
+                var ScenesItem = item.Scenes;
+                if (ScenesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ScenesItem).BinaryWriteTranslator).Write<ISceneGetter>(
+                        item: ScenesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.AssociationTypes ?? true)
+            {
+                var AssociationTypesItem = item.AssociationTypes;
+                if (AssociationTypesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)AssociationTypesItem).BinaryWriteTranslator).Write<IAssociationTypeGetter>(
+                        item: AssociationTypesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Outfits ?? true)
+            {
+                var OutfitsItem = item.Outfits;
+                if (OutfitsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)OutfitsItem).BinaryWriteTranslator).Write<IOutfitGetter>(
+                        item: OutfitsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.ArtObjects ?? true)
+            {
+                var ArtObjectsItem = item.ArtObjects;
+                if (ArtObjectsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ArtObjectsItem).BinaryWriteTranslator).Write<IArtObjectGetter>(
+                        item: ArtObjectsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.MaterialObjects ?? true)
+            {
+                var MaterialObjectsItem = item.MaterialObjects;
+                if (MaterialObjectsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)MaterialObjectsItem).BinaryWriteTranslator).Write<IMaterialObjectGetter>(
+                        item: MaterialObjectsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.MovementTypes ?? true)
+            {
+                var MovementTypesItem = item.MovementTypes;
+                if (MovementTypesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)MovementTypesItem).BinaryWriteTranslator).Write<IMovementTypeGetter>(
+                        item: MovementTypesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.SoundDescriptors ?? true)
+            {
+                var SoundDescriptorsItem = item.SoundDescriptors;
+                if (SoundDescriptorsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)SoundDescriptorsItem).BinaryWriteTranslator).Write<ISoundDescriptorGetter>(
+                        item: SoundDescriptorsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.DualCastData ?? true)
+            {
+                var DualCastDataItem = item.DualCastData;
+                if (DualCastDataItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)DualCastDataItem).BinaryWriteTranslator).Write<IDualCastDataGetter>(
+                        item: DualCastDataItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.SoundCategories ?? true)
+            {
+                var SoundCategoriesItem = item.SoundCategories;
+                if (SoundCategoriesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)SoundCategoriesItem).BinaryWriteTranslator).Write<ISoundCategoryGetter>(
+                        item: SoundCategoriesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.SoundOutputModels ?? true)
+            {
+                var SoundOutputModelsItem = item.SoundOutputModels;
+                if (SoundOutputModelsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)SoundOutputModelsItem).BinaryWriteTranslator).Write<ISoundOutputModelGetter>(
+                        item: SoundOutputModelsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.CollisionLayers ?? true)
+            {
+                var CollisionLayersItem = item.CollisionLayers;
+                if (CollisionLayersItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)CollisionLayersItem).BinaryWriteTranslator).Write<ICollisionLayerGetter>(
+                        item: CollisionLayersItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Colors ?? true)
+            {
+                var ColorsItem = item.Colors;
+                if (ColorsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ColorsItem).BinaryWriteTranslator).Write<IColorRecordGetter>(
+                        item: ColorsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.ReverbParameters ?? true)
+            {
+                var ReverbParametersItem = item.ReverbParameters;
+                if (ReverbParametersItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ReverbParametersItem).BinaryWriteTranslator).Write<IReverbParametersGetter>(
+                        item: ReverbParametersItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.VolumetricLightings ?? true)
+            {
+                var VolumetricLightingsItem = item.VolumetricLightings;
+                if (VolumetricLightingsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)VolumetricLightingsItem).BinaryWriteTranslator).Write<IVolumetricLightingGetter>(
+                        item: VolumetricLightingsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
         }
 
         public void Write(
@@ -19474,7 +17915,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ISkyrimMod item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -19490,8 +17931,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ModHeader.CopyInFromBinary(
                         frame: frame,
                         recordTypeConverter: null);
-                    frame.MetaData.MasterReferences!.SetTo(item.ModHeader.MasterReferences);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
+                    return (int)SkyrimMod_FieldIndex.ModHeader;
                 }
                 case RecordTypeInts.GMST:
                 {
@@ -19505,7 +17945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.GameSettings);
+                    return (int)SkyrimMod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.KYWD:
                 {
@@ -19519,7 +17959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keywords);
+                    return (int)SkyrimMod_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.LCRT:
                 {
@@ -19533,7 +17973,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
+                    return (int)SkyrimMod_FieldIndex.LocationReferenceTypes;
                 }
                 case RecordTypeInts.AACT:
                 {
@@ -19547,7 +17987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Actions);
+                    return (int)SkyrimMod_FieldIndex.Actions;
                 }
                 case RecordTypeInts.TXST:
                 {
@@ -19561,7 +18001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TextureSets);
+                    return (int)SkyrimMod_FieldIndex.TextureSets;
                 }
                 case RecordTypeInts.GLOB:
                 {
@@ -19575,7 +18015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Globals);
+                    return (int)SkyrimMod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.CLAS:
                 {
@@ -19589,7 +18029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Classes);
+                    return (int)SkyrimMod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
@@ -19603,7 +18043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Factions);
+                    return (int)SkyrimMod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HDPT:
                 {
@@ -19617,7 +18057,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.HeadParts);
+                    return (int)SkyrimMod_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.HAIR:
                 {
@@ -19631,7 +18071,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hairs);
+                    return (int)SkyrimMod_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.EYES:
                 {
@@ -19645,7 +18085,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Eyes);
+                    return (int)SkyrimMod_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.RACE:
                 {
@@ -19659,7 +18099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Races);
+                    return (int)SkyrimMod_FieldIndex.Races;
                 }
                 case RecordTypeInts.SOUN:
                 {
@@ -19673,7 +18113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoundMarkers);
+                    return (int)SkyrimMod_FieldIndex.SoundMarkers;
                 }
                 case RecordTypeInts.ASPC:
                 {
@@ -19687,7 +18127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AcousticSpaces);
+                    return (int)SkyrimMod_FieldIndex.AcousticSpaces;
                 }
                 case RecordTypeInts.MGEF:
                 {
@@ -19701,7 +18141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MagicEffects);
+                    return (int)SkyrimMod_FieldIndex.MagicEffects;
                 }
                 case RecordTypeInts.LTEX:
                 {
@@ -19715,7 +18155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LandscapeTextures);
+                    return (int)SkyrimMod_FieldIndex.LandscapeTextures;
                 }
                 case RecordTypeInts.ENCH:
                 {
@@ -19729,7 +18169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ObjectEffects);
+                    return (int)SkyrimMod_FieldIndex.ObjectEffects;
                 }
                 case RecordTypeInts.SPEL:
                 {
@@ -19743,7 +18183,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Spells);
+                    return (int)SkyrimMod_FieldIndex.Spells;
                 }
                 case RecordTypeInts.SCRL:
                 {
@@ -19757,7 +18197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Scrolls);
+                    return (int)SkyrimMod_FieldIndex.Scrolls;
                 }
                 case RecordTypeInts.ACTI:
                 {
@@ -19771,7 +18211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Activators);
+                    return (int)SkyrimMod_FieldIndex.Activators;
                 }
                 case RecordTypeInts.TACT:
                 {
@@ -19785,7 +18225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TalkingActivators);
+                    return (int)SkyrimMod_FieldIndex.TalkingActivators;
                 }
                 case RecordTypeInts.ARMO:
                 {
@@ -19799,7 +18239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Armors);
+                    return (int)SkyrimMod_FieldIndex.Armors;
                 }
                 case RecordTypeInts.BOOK:
                 {
@@ -19813,7 +18253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Books);
+                    return (int)SkyrimMod_FieldIndex.Books;
                 }
                 case RecordTypeInts.CONT:
                 {
@@ -19827,7 +18267,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Containers);
+                    return (int)SkyrimMod_FieldIndex.Containers;
                 }
                 case RecordTypeInts.DOOR:
                 {
@@ -19841,7 +18281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Doors);
+                    return (int)SkyrimMod_FieldIndex.Doors;
                 }
                 case RecordTypeInts.INGR:
                 {
@@ -19855,7 +18295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingredients);
+                    return (int)SkyrimMod_FieldIndex.Ingredients;
                 }
                 case RecordTypeInts.LIGH:
                 {
@@ -19869,7 +18309,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Lights);
+                    return (int)SkyrimMod_FieldIndex.Lights;
                 }
                 case RecordTypeInts.MISC:
                 {
@@ -19883,7 +18323,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MiscItems);
+                    return (int)SkyrimMod_FieldIndex.MiscItems;
                 }
                 case RecordTypeInts.APPA:
                 {
@@ -19897,7 +18337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AlchemicalApparatuses);
+                    return (int)SkyrimMod_FieldIndex.AlchemicalApparatuses;
                 }
                 case RecordTypeInts.STAT:
                 {
@@ -19911,7 +18351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Statics);
+                    return (int)SkyrimMod_FieldIndex.Statics;
                 }
                 case RecordTypeInts.MSTT:
                 {
@@ -19925,7 +18365,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MoveableStatics);
+                    return (int)SkyrimMod_FieldIndex.MoveableStatics;
                 }
                 case RecordTypeInts.GRAS:
                 {
@@ -19939,7 +18379,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Grasses);
+                    return (int)SkyrimMod_FieldIndex.Grasses;
                 }
                 case RecordTypeInts.TREE:
                 {
@@ -19953,7 +18393,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Trees);
+                    return (int)SkyrimMod_FieldIndex.Trees;
                 }
                 case RecordTypeInts.FLOR:
                 {
@@ -19967,7 +18407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Florae);
+                    return (int)SkyrimMod_FieldIndex.Florae;
                 }
                 case RecordTypeInts.FURN:
                 {
@@ -19981,7 +18421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Furniture);
+                    return (int)SkyrimMod_FieldIndex.Furniture;
                 }
                 case RecordTypeInts.WEAP:
                 {
@@ -19995,7 +18435,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weapons);
+                    return (int)SkyrimMod_FieldIndex.Weapons;
                 }
                 case RecordTypeInts.AMMO:
                 {
@@ -20009,7 +18449,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ammunitions);
+                    return (int)SkyrimMod_FieldIndex.Ammunitions;
                 }
                 case RecordTypeInts.NPC_:
                 {
@@ -20023,7 +18463,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Npcs);
+                    return (int)SkyrimMod_FieldIndex.Npcs;
                 }
                 case RecordTypeInts.LVLN:
                 {
@@ -20037,7 +18477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledNpcs);
+                    return (int)SkyrimMod_FieldIndex.LeveledNpcs;
                 }
                 case RecordTypeInts.KEYM:
                 {
@@ -20051,7 +18491,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keys);
+                    return (int)SkyrimMod_FieldIndex.Keys;
                 }
                 case RecordTypeInts.ALCH:
                 {
@@ -20065,7 +18505,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingestibles);
+                    return (int)SkyrimMod_FieldIndex.Ingestibles;
                 }
                 case RecordTypeInts.IDLM:
                 {
@@ -20079,7 +18519,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.IdleMarkers);
+                    return (int)SkyrimMod_FieldIndex.IdleMarkers;
                 }
                 case RecordTypeInts.COBJ:
                 {
@@ -20093,7 +18533,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ConstructibleObjects);
+                    return (int)SkyrimMod_FieldIndex.ConstructibleObjects;
                 }
                 case RecordTypeInts.PROJ:
                 {
@@ -20107,7 +18547,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Projectiles);
+                    return (int)SkyrimMod_FieldIndex.Projectiles;
                 }
                 case RecordTypeInts.HAZD:
                 {
@@ -20121,7 +18561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hazards);
+                    return (int)SkyrimMod_FieldIndex.Hazards;
                 }
                 case RecordTypeInts.SLGM:
                 {
@@ -20135,7 +18575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoulGems);
+                    return (int)SkyrimMod_FieldIndex.SoulGems;
                 }
                 case RecordTypeInts.LVLI:
                 {
@@ -20149,7 +18589,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledItems);
+                    return (int)SkyrimMod_FieldIndex.LeveledItems;
                 }
                 case RecordTypeInts.WTHR:
                 {
@@ -20163,7 +18603,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weathers);
+                    return (int)SkyrimMod_FieldIndex.Weathers;
                 }
                 case RecordTypeInts.CLMT:
                 {
@@ -20177,7 +18617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Climates);
+                    return (int)SkyrimMod_FieldIndex.Climates;
                 }
                 case RecordTypeInts.SPGD:
                 {
@@ -20191,7 +18631,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ShaderParticleGeometries);
+                    return (int)SkyrimMod_FieldIndex.ShaderParticleGeometries;
                 }
                 case RecordTypeInts.RFCT:
                 {
@@ -20205,7 +18645,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.VisualEffects);
+                    return (int)SkyrimMod_FieldIndex.VisualEffects;
                 }
                 case RecordTypeInts.REGN:
                 {
@@ -20219,7 +18659,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Regions);
+                    return (int)SkyrimMod_FieldIndex.Regions;
                 }
                 case RecordTypeInts.NAVI:
                 {
@@ -20233,7 +18673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps);
+                    return (int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps;
                 }
                 case RecordTypeInts.CELL:
                 {
@@ -20247,7 +18687,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Cells);
+                    return (int)SkyrimMod_FieldIndex.Cells;
                 }
                 case RecordTypeInts.WRLD:
                 {
@@ -20261,7 +18701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Worldspaces);
+                    return (int)SkyrimMod_FieldIndex.Worldspaces;
                 }
                 case RecordTypeInts.DIAL:
                 {
@@ -20275,7 +18715,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogTopics);
+                    return (int)SkyrimMod_FieldIndex.DialogTopics;
                 }
                 case RecordTypeInts.QUST:
                 {
@@ -20289,7 +18729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Quests);
+                    return (int)SkyrimMod_FieldIndex.Quests;
                 }
                 case RecordTypeInts.IDLE:
                 {
@@ -20303,7 +18743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.IdleAnimations);
+                    return (int)SkyrimMod_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.PACK:
                 {
@@ -20317,7 +18757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Packages);
+                    return (int)SkyrimMod_FieldIndex.Packages;
                 }
                 case RecordTypeInts.CSTY:
                 {
@@ -20331,7 +18771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CombatStyles);
+                    return (int)SkyrimMod_FieldIndex.CombatStyles;
                 }
                 case RecordTypeInts.LSCR:
                 {
@@ -20345,7 +18785,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LoadScreens);
+                    return (int)SkyrimMod_FieldIndex.LoadScreens;
                 }
                 case RecordTypeInts.LVSP:
                 {
@@ -20359,7 +18799,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledSpells);
+                    return (int)SkyrimMod_FieldIndex.LeveledSpells;
                 }
                 case RecordTypeInts.ANIO:
                 {
@@ -20373,7 +18813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AnimatedObjects);
+                    return (int)SkyrimMod_FieldIndex.AnimatedObjects;
                 }
                 case RecordTypeInts.WATR:
                 {
@@ -20387,7 +18827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Waters);
+                    return (int)SkyrimMod_FieldIndex.Waters;
                 }
                 case RecordTypeInts.EFSH:
                 {
@@ -20401,7 +18841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EffectShaders);
+                    return (int)SkyrimMod_FieldIndex.EffectShaders;
                 }
                 case RecordTypeInts.EXPL:
                 {
@@ -20415,7 +18855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Explosions);
+                    return (int)SkyrimMod_FieldIndex.Explosions;
                 }
                 case RecordTypeInts.DEBR:
                 {
@@ -20429,7 +18869,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Debris);
+                    return (int)SkyrimMod_FieldIndex.Debris;
                 }
                 case RecordTypeInts.IMGS:
                 {
@@ -20443,7 +18883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImageSpaces);
+                    return (int)SkyrimMod_FieldIndex.ImageSpaces;
                 }
                 case RecordTypeInts.IMAD:
                 {
@@ -20457,7 +18897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImageSpaceAdapters);
+                    return (int)SkyrimMod_FieldIndex.ImageSpaceAdapters;
                 }
                 case RecordTypeInts.FLST:
                 {
@@ -20471,7 +18911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.FormLists);
+                    return (int)SkyrimMod_FieldIndex.FormLists;
                 }
                 case RecordTypeInts.PERK:
                 {
@@ -20485,7 +18925,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Perks);
+                    return (int)SkyrimMod_FieldIndex.Perks;
                 }
                 case RecordTypeInts.BPTD:
                 {
@@ -20499,7 +18939,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.BodyParts);
+                    return (int)SkyrimMod_FieldIndex.BodyParts;
                 }
                 case RecordTypeInts.ADDN:
                 {
@@ -20513,7 +18953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AddonNodes);
+                    return (int)SkyrimMod_FieldIndex.AddonNodes;
                 }
                 case RecordTypeInts.AVIF:
                 {
@@ -20527,7 +18967,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ActorValueInformation);
+                    return (int)SkyrimMod_FieldIndex.ActorValueInformation;
                 }
                 case RecordTypeInts.CAMS:
                 {
@@ -20541,7 +18981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CameraShots);
+                    return (int)SkyrimMod_FieldIndex.CameraShots;
                 }
                 case RecordTypeInts.CPTH:
                 {
@@ -20555,7 +18995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CameraPaths);
+                    return (int)SkyrimMod_FieldIndex.CameraPaths;
                 }
                 case RecordTypeInts.VTYP:
                 {
@@ -20569,7 +19009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.VoiceTypes);
+                    return (int)SkyrimMod_FieldIndex.VoiceTypes;
                 }
                 case RecordTypeInts.MATT:
                 {
@@ -20583,7 +19023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MaterialTypes);
+                    return (int)SkyrimMod_FieldIndex.MaterialTypes;
                 }
                 case RecordTypeInts.IPCT:
                 {
@@ -20597,7 +19037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Impacts);
+                    return (int)SkyrimMod_FieldIndex.Impacts;
                 }
                 case RecordTypeInts.IPDS:
                 {
@@ -20611,7 +19051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImpactDataSets);
+                    return (int)SkyrimMod_FieldIndex.ImpactDataSets;
                 }
                 case RecordTypeInts.ARMA:
                 {
@@ -20625,7 +19065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ArmorAddons);
+                    return (int)SkyrimMod_FieldIndex.ArmorAddons;
                 }
                 case RecordTypeInts.ECZN:
                 {
@@ -20639,7 +19079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EncounterZones);
+                    return (int)SkyrimMod_FieldIndex.EncounterZones;
                 }
                 case RecordTypeInts.LCTN:
                 {
@@ -20653,7 +19093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Locations);
+                    return (int)SkyrimMod_FieldIndex.Locations;
                 }
                 case RecordTypeInts.MESG:
                 {
@@ -20667,7 +19107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Messages);
+                    return (int)SkyrimMod_FieldIndex.Messages;
                 }
                 case RecordTypeInts.DOBJ:
                 {
@@ -20681,7 +19121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DefaultObjectManagers);
+                    return (int)SkyrimMod_FieldIndex.DefaultObjectManagers;
                 }
                 case RecordTypeInts.LGTM:
                 {
@@ -20695,7 +19135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LightingTemplates);
+                    return (int)SkyrimMod_FieldIndex.LightingTemplates;
                 }
                 case RecordTypeInts.MUSC:
                 {
@@ -20709,7 +19149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MusicTypes);
+                    return (int)SkyrimMod_FieldIndex.MusicTypes;
                 }
                 case RecordTypeInts.FSTP:
                 {
@@ -20723,7 +19163,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Footsteps);
+                    return (int)SkyrimMod_FieldIndex.Footsteps;
                 }
                 case RecordTypeInts.FSTS:
                 {
@@ -20737,7 +19177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.FootstepSets);
+                    return (int)SkyrimMod_FieldIndex.FootstepSets;
                 }
                 case RecordTypeInts.SMBN:
                 {
@@ -20751,7 +19191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes);
+                    return (int)SkyrimMod_FieldIndex.StoryManagerBranchNodes;
                 }
                 case RecordTypeInts.SMQN:
                 {
@@ -20765,7 +19205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes);
+                    return (int)SkyrimMod_FieldIndex.StoryManagerQuestNodes;
                 }
                 case RecordTypeInts.SMEN:
                 {
@@ -20779,7 +19219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerEventNodes);
+                    return (int)SkyrimMod_FieldIndex.StoryManagerEventNodes;
                 }
                 case RecordTypeInts.DLBR:
                 {
@@ -20793,7 +19233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogBranches);
+                    return (int)SkyrimMod_FieldIndex.DialogBranches;
                 }
                 case RecordTypeInts.MUST:
                 {
@@ -20807,7 +19247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MusicTracks);
+                    return (int)SkyrimMod_FieldIndex.MusicTracks;
                 }
                 case RecordTypeInts.DLVW:
                 {
@@ -20821,7 +19261,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogViews);
+                    return (int)SkyrimMod_FieldIndex.DialogViews;
                 }
                 case RecordTypeInts.WOOP:
                 {
@@ -20835,7 +19275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.WordsOfPower);
+                    return (int)SkyrimMod_FieldIndex.WordsOfPower;
                 }
                 case RecordTypeInts.SHOU:
                 {
@@ -20849,7 +19289,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Shouts);
+                    return (int)SkyrimMod_FieldIndex.Shouts;
                 }
                 case RecordTypeInts.EQUP:
                 {
@@ -20863,7 +19303,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EquipTypes);
+                    return (int)SkyrimMod_FieldIndex.EquipTypes;
                 }
                 case RecordTypeInts.RELA:
                 {
@@ -20877,11 +19317,207 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Relationships);
+                    return (int)SkyrimMod_FieldIndex.Relationships;
+                }
+                case RecordTypeInts.SCEN:
+                {
+                    if (importMask?.Scenes ?? true)
+                    {
+                        item.Scenes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.Scenes;
+                }
+                case RecordTypeInts.ASTP:
+                {
+                    if (importMask?.AssociationTypes ?? true)
+                    {
+                        item.AssociationTypes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.AssociationTypes;
+                }
+                case RecordTypeInts.OTFT:
+                {
+                    if (importMask?.Outfits ?? true)
+                    {
+                        item.Outfits.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.Outfits;
+                }
+                case RecordTypeInts.ARTO:
+                {
+                    if (importMask?.ArtObjects ?? true)
+                    {
+                        item.ArtObjects.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.ArtObjects;
+                }
+                case RecordTypeInts.MATO:
+                {
+                    if (importMask?.MaterialObjects ?? true)
+                    {
+                        item.MaterialObjects.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.MaterialObjects;
+                }
+                case RecordTypeInts.MOVT:
+                {
+                    if (importMask?.MovementTypes ?? true)
+                    {
+                        item.MovementTypes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.MovementTypes;
+                }
+                case RecordTypeInts.SNDR:
+                {
+                    if (importMask?.SoundDescriptors ?? true)
+                    {
+                        item.SoundDescriptors.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.SoundDescriptors;
+                }
+                case RecordTypeInts.DUAL:
+                {
+                    if (importMask?.DualCastData ?? true)
+                    {
+                        item.DualCastData.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.DualCastData;
+                }
+                case RecordTypeInts.SNCT:
+                {
+                    if (importMask?.SoundCategories ?? true)
+                    {
+                        item.SoundCategories.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.SoundCategories;
+                }
+                case RecordTypeInts.SOPM:
+                {
+                    if (importMask?.SoundOutputModels ?? true)
+                    {
+                        item.SoundOutputModels.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.SoundOutputModels;
+                }
+                case RecordTypeInts.COLL:
+                {
+                    if (importMask?.CollisionLayers ?? true)
+                    {
+                        item.CollisionLayers.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.CollisionLayers;
+                }
+                case RecordTypeInts.CLFM:
+                {
+                    if (importMask?.Colors ?? true)
+                    {
+                        item.Colors.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.Colors;
+                }
+                case RecordTypeInts.REVB:
+                {
+                    if (importMask?.ReverbParameters ?? true)
+                    {
+                        item.ReverbParameters.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.ReverbParameters;
+                }
+                case RecordTypeInts.VOLI:
+                {
+                    if (importMask?.VolumetricLightings ?? true)
+                    {
+                        item.VolumetricLightings.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.VolumetricLightings;
                 }
                 default:
                     frame.Position += contentLength;
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
 
@@ -20921,7 +19557,7 @@ namespace Mutagen.Bethesda.Skyrim
                 path: path);
             bool disposeStrings = param.StringsWriter == null;
             var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null);
-            var bundle = new WritingBundle(item.GameMode)
+            var bundle = new WritingBundle(item.SkyrimRelease.ToGameRelease())
             {
                 StringsWriter = stringsWriter
             };
@@ -20959,7 +19595,7 @@ namespace Mutagen.Bethesda.Skyrim
             var modKey = item.ModKey;
             using (var writer = new MutagenWriter(
                 stream: stream,
-                new WritingBundle(item.GameMode),
+                new WritingBundle(item.SkyrimRelease.ToGameRelease()),
                 dispose: false))
             {
                 SkyrimModBinaryWriteTranslation.Instance.Write(
@@ -21002,7 +19638,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModGetter)rhs, include);
 
-        public GameMode GameMode => GameMode.Skyrim;
+        public SkyrimRelease SkyrimRelease { get; }
+        public GameRelease GameRelease => SkyrimRelease.ToGameRelease();
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param: param);
@@ -21020,23 +19657,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((SkyrimModXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         public ModKey ModKey { get; }
         private readonly BinaryOverlayFactoryPackage _package;
         private readonly IBinaryReadStream _data;
@@ -21547,12 +20167,84 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IRelationshipGetter>? _Relationships => _RelationshipsLocation.HasValue ? GroupBinaryOverlay<IRelationshipGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _RelationshipsLocation!.Value.Min, _RelationshipsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IRelationshipGetter> Relationships => _Relationships ?? new Group<Relationship>(this);
         #endregion
+        #region Scenes
+        private RangeInt64? _ScenesLocation;
+        private IGroupGetter<ISceneGetter>? _Scenes => _ScenesLocation.HasValue ? GroupBinaryOverlay<ISceneGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ScenesLocation!.Value.Min, _ScenesLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<ISceneGetter> Scenes => _Scenes ?? new Group<Scene>(this);
+        #endregion
+        #region AssociationTypes
+        private RangeInt64? _AssociationTypesLocation;
+        private IGroupGetter<IAssociationTypeGetter>? _AssociationTypes => _AssociationTypesLocation.HasValue ? GroupBinaryOverlay<IAssociationTypeGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _AssociationTypesLocation!.Value.Min, _AssociationTypesLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IAssociationTypeGetter> AssociationTypes => _AssociationTypes ?? new Group<AssociationType>(this);
+        #endregion
+        #region Outfits
+        private RangeInt64? _OutfitsLocation;
+        private IGroupGetter<IOutfitGetter>? _Outfits => _OutfitsLocation.HasValue ? GroupBinaryOverlay<IOutfitGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _OutfitsLocation!.Value.Min, _OutfitsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IOutfitGetter> Outfits => _Outfits ?? new Group<Outfit>(this);
+        #endregion
+        #region ArtObjects
+        private RangeInt64? _ArtObjectsLocation;
+        private IGroupGetter<IArtObjectGetter>? _ArtObjects => _ArtObjectsLocation.HasValue ? GroupBinaryOverlay<IArtObjectGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ArtObjectsLocation!.Value.Min, _ArtObjectsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IArtObjectGetter> ArtObjects => _ArtObjects ?? new Group<ArtObject>(this);
+        #endregion
+        #region MaterialObjects
+        private RangeInt64? _MaterialObjectsLocation;
+        private IGroupGetter<IMaterialObjectGetter>? _MaterialObjects => _MaterialObjectsLocation.HasValue ? GroupBinaryOverlay<IMaterialObjectGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _MaterialObjectsLocation!.Value.Min, _MaterialObjectsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IMaterialObjectGetter> MaterialObjects => _MaterialObjects ?? new Group<MaterialObject>(this);
+        #endregion
+        #region MovementTypes
+        private RangeInt64? _MovementTypesLocation;
+        private IGroupGetter<IMovementTypeGetter>? _MovementTypes => _MovementTypesLocation.HasValue ? GroupBinaryOverlay<IMovementTypeGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _MovementTypesLocation!.Value.Min, _MovementTypesLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IMovementTypeGetter> MovementTypes => _MovementTypes ?? new Group<MovementType>(this);
+        #endregion
+        #region SoundDescriptors
+        private RangeInt64? _SoundDescriptorsLocation;
+        private IGroupGetter<ISoundDescriptorGetter>? _SoundDescriptors => _SoundDescriptorsLocation.HasValue ? GroupBinaryOverlay<ISoundDescriptorGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _SoundDescriptorsLocation!.Value.Min, _SoundDescriptorsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<ISoundDescriptorGetter> SoundDescriptors => _SoundDescriptors ?? new Group<SoundDescriptor>(this);
+        #endregion
+        #region DualCastData
+        private RangeInt64? _DualCastDataLocation;
+        private IGroupGetter<IDualCastDataGetter>? _DualCastData => _DualCastDataLocation.HasValue ? GroupBinaryOverlay<IDualCastDataGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _DualCastDataLocation!.Value.Min, _DualCastDataLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IDualCastDataGetter> DualCastData => _DualCastData ?? new Group<DualCastData>(this);
+        #endregion
+        #region SoundCategories
+        private RangeInt64? _SoundCategoriesLocation;
+        private IGroupGetter<ISoundCategoryGetter>? _SoundCategories => _SoundCategoriesLocation.HasValue ? GroupBinaryOverlay<ISoundCategoryGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _SoundCategoriesLocation!.Value.Min, _SoundCategoriesLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<ISoundCategoryGetter> SoundCategories => _SoundCategories ?? new Group<SoundCategory>(this);
+        #endregion
+        #region SoundOutputModels
+        private RangeInt64? _SoundOutputModelsLocation;
+        private IGroupGetter<ISoundOutputModelGetter>? _SoundOutputModels => _SoundOutputModelsLocation.HasValue ? GroupBinaryOverlay<ISoundOutputModelGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _SoundOutputModelsLocation!.Value.Min, _SoundOutputModelsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<ISoundOutputModelGetter> SoundOutputModels => _SoundOutputModels ?? new Group<SoundOutputModel>(this);
+        #endregion
+        #region CollisionLayers
+        private RangeInt64? _CollisionLayersLocation;
+        private IGroupGetter<ICollisionLayerGetter>? _CollisionLayers => _CollisionLayersLocation.HasValue ? GroupBinaryOverlay<ICollisionLayerGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _CollisionLayersLocation!.Value.Min, _CollisionLayersLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<ICollisionLayerGetter> CollisionLayers => _CollisionLayers ?? new Group<CollisionLayer>(this);
+        #endregion
+        #region Colors
+        private RangeInt64? _ColorsLocation;
+        private IGroupGetter<IColorRecordGetter>? _Colors => _ColorsLocation.HasValue ? GroupBinaryOverlay<IColorRecordGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ColorsLocation!.Value.Min, _ColorsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IColorRecordGetter> Colors => _Colors ?? new Group<ColorRecord>(this);
+        #endregion
+        #region ReverbParameters
+        private RangeInt64? _ReverbParametersLocation;
+        private IGroupGetter<IReverbParametersGetter>? _ReverbParameters => _ReverbParametersLocation.HasValue ? GroupBinaryOverlay<IReverbParametersGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ReverbParametersLocation!.Value.Min, _ReverbParametersLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IReverbParametersGetter> ReverbParameters => _ReverbParameters ?? new Group<ReverbParameters>(this);
+        #endregion
+        #region VolumetricLightings
+        private RangeInt64? _VolumetricLightingsLocation;
+        private IGroupGetter<IVolumetricLightingGetter>? _VolumetricLightings => _VolumetricLightingsLocation.HasValue ? GroupBinaryOverlay<IVolumetricLightingGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _VolumetricLightingsLocation!.Value.Min, _VolumetricLightingsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IVolumetricLightingGetter> VolumetricLightings => _VolumetricLightings ?? new Group<VolumetricLighting>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
-            bool shouldDispose)
+            bool shouldDispose,
+            SkyrimRelease release)
         {
             this.ModKey = modKey;
+            this.SkyrimRelease = release;
             this._data = stream;
             this._package = new BinaryOverlayFactoryPackage(stream.MetaData);
             this._package.MetaData.MasterReferences = new MasterReferenceReader(modKey);
@@ -21562,12 +20254,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static SkyrimModBinaryOverlay SkyrimModFactory(
             ReadOnlyMemorySlice<byte> data,
             ModKey modKey,
+            SkyrimRelease release,
             IStringsFolderLookup? stringsLookup = null)
         {
-            var meta = new ParsingBundle(GameMode.Skyrim);
+            var meta = new ParsingBundle(release.ToGameRelease());
             meta.RecordInfoCache = new RecordInfoCache(() => new MutagenMemoryReadStream(data, meta));
             meta.StringsLookup = stringsLookup;
             return SkyrimModFactory(
+                release: release,
                 stream: new MutagenMemoryReadStream(
                     data: data,
                     metaData: meta),
@@ -21578,11 +20272,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static SkyrimModBinaryOverlay SkyrimModFactory(
             string path,
             ModKey modKey,
+            SkyrimRelease release,
             StringsReadParameters? stringsParam = null)
         {
-            var meta = new ParsingBundle(GameMode.Skyrim)
+            var meta = new ParsingBundle(release.ToGameRelease())
             {
-                RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Skyrim))
+                RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, release.ToGameRelease()))
             };
             var stream = new MutagenBinaryReadStream(
                 path: path,
@@ -21594,21 +20289,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var flags = stream.GetInt32(offset: 8);
             if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
             {
-                meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
+                meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
             }
             return SkyrimModFactory(
                 stream: stream,
                 modKey: modKey,
+                release: release,
                 shouldDispose: true);
         }
 
         public static SkyrimModBinaryOverlay SkyrimModFactory(
             IMutagenReadStream stream,
             ModKey modKey,
+            SkyrimRelease release,
             bool shouldDispose)
         {
             var ret = new SkyrimModBinaryOverlay(
                 stream: stream,
+                release: release,
                 modKey: modKey,
                 shouldDispose: shouldDispose);
             BinaryOverlay.FillModTypes(
@@ -21619,7 +20317,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             IBinaryReadStream stream,
             long finalPos,
             int offset,
@@ -21640,505 +20338,575 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 Master = master.Master,
                                 FileSize = master.FileSize,
                             }));
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
+                    return (int)SkyrimMod_FieldIndex.ModHeader;
                 }
                 case RecordTypeInts.GMST:
                 {
                     _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.GameSettings);
+                    return (int)SkyrimMod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.KYWD:
                 {
                     _KeywordsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keywords);
+                    return (int)SkyrimMod_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.LCRT:
                 {
                     _LocationReferenceTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
+                    return (int)SkyrimMod_FieldIndex.LocationReferenceTypes;
                 }
                 case RecordTypeInts.AACT:
                 {
                     _ActionsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Actions);
+                    return (int)SkyrimMod_FieldIndex.Actions;
                 }
                 case RecordTypeInts.TXST:
                 {
                     _TextureSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TextureSets);
+                    return (int)SkyrimMod_FieldIndex.TextureSets;
                 }
                 case RecordTypeInts.GLOB:
                 {
                     _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Globals);
+                    return (int)SkyrimMod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.CLAS:
                 {
                     _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Classes);
+                    return (int)SkyrimMod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
                     _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Factions);
+                    return (int)SkyrimMod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HDPT:
                 {
                     _HeadPartsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.HeadParts);
+                    return (int)SkyrimMod_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.HAIR:
                 {
                     _HairsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hairs);
+                    return (int)SkyrimMod_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.EYES:
                 {
                     _EyesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Eyes);
+                    return (int)SkyrimMod_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.RACE:
                 {
                     _RacesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Races);
+                    return (int)SkyrimMod_FieldIndex.Races;
                 }
                 case RecordTypeInts.SOUN:
                 {
                     _SoundMarkersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoundMarkers);
+                    return (int)SkyrimMod_FieldIndex.SoundMarkers;
                 }
                 case RecordTypeInts.ASPC:
                 {
                     _AcousticSpacesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AcousticSpaces);
+                    return (int)SkyrimMod_FieldIndex.AcousticSpaces;
                 }
                 case RecordTypeInts.MGEF:
                 {
                     _MagicEffectsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MagicEffects);
+                    return (int)SkyrimMod_FieldIndex.MagicEffects;
                 }
                 case RecordTypeInts.LTEX:
                 {
                     _LandscapeTexturesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LandscapeTextures);
+                    return (int)SkyrimMod_FieldIndex.LandscapeTextures;
                 }
                 case RecordTypeInts.ENCH:
                 {
                     _ObjectEffectsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ObjectEffects);
+                    return (int)SkyrimMod_FieldIndex.ObjectEffects;
                 }
                 case RecordTypeInts.SPEL:
                 {
                     _SpellsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Spells);
+                    return (int)SkyrimMod_FieldIndex.Spells;
                 }
                 case RecordTypeInts.SCRL:
                 {
                     _ScrollsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Scrolls);
+                    return (int)SkyrimMod_FieldIndex.Scrolls;
                 }
                 case RecordTypeInts.ACTI:
                 {
                     _ActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Activators);
+                    return (int)SkyrimMod_FieldIndex.Activators;
                 }
                 case RecordTypeInts.TACT:
                 {
                     _TalkingActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TalkingActivators);
+                    return (int)SkyrimMod_FieldIndex.TalkingActivators;
                 }
                 case RecordTypeInts.ARMO:
                 {
                     _ArmorsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Armors);
+                    return (int)SkyrimMod_FieldIndex.Armors;
                 }
                 case RecordTypeInts.BOOK:
                 {
                     _BooksLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Books);
+                    return (int)SkyrimMod_FieldIndex.Books;
                 }
                 case RecordTypeInts.CONT:
                 {
                     _ContainersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Containers);
+                    return (int)SkyrimMod_FieldIndex.Containers;
                 }
                 case RecordTypeInts.DOOR:
                 {
                     _DoorsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Doors);
+                    return (int)SkyrimMod_FieldIndex.Doors;
                 }
                 case RecordTypeInts.INGR:
                 {
                     _IngredientsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingredients);
+                    return (int)SkyrimMod_FieldIndex.Ingredients;
                 }
                 case RecordTypeInts.LIGH:
                 {
                     _LightsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Lights);
+                    return (int)SkyrimMod_FieldIndex.Lights;
                 }
                 case RecordTypeInts.MISC:
                 {
                     _MiscItemsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MiscItems);
+                    return (int)SkyrimMod_FieldIndex.MiscItems;
                 }
                 case RecordTypeInts.APPA:
                 {
                     _AlchemicalApparatusesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AlchemicalApparatuses);
+                    return (int)SkyrimMod_FieldIndex.AlchemicalApparatuses;
                 }
                 case RecordTypeInts.STAT:
                 {
                     _StaticsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Statics);
+                    return (int)SkyrimMod_FieldIndex.Statics;
                 }
                 case RecordTypeInts.MSTT:
                 {
                     _MoveableStaticsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MoveableStatics);
+                    return (int)SkyrimMod_FieldIndex.MoveableStatics;
                 }
                 case RecordTypeInts.GRAS:
                 {
                     _GrassesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Grasses);
+                    return (int)SkyrimMod_FieldIndex.Grasses;
                 }
                 case RecordTypeInts.TREE:
                 {
                     _TreesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Trees);
+                    return (int)SkyrimMod_FieldIndex.Trees;
                 }
                 case RecordTypeInts.FLOR:
                 {
                     _FloraeLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Florae);
+                    return (int)SkyrimMod_FieldIndex.Florae;
                 }
                 case RecordTypeInts.FURN:
                 {
                     _FurnitureLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Furniture);
+                    return (int)SkyrimMod_FieldIndex.Furniture;
                 }
                 case RecordTypeInts.WEAP:
                 {
                     _WeaponsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weapons);
+                    return (int)SkyrimMod_FieldIndex.Weapons;
                 }
                 case RecordTypeInts.AMMO:
                 {
                     _AmmunitionsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ammunitions);
+                    return (int)SkyrimMod_FieldIndex.Ammunitions;
                 }
                 case RecordTypeInts.NPC_:
                 {
                     _NpcsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Npcs);
+                    return (int)SkyrimMod_FieldIndex.Npcs;
                 }
                 case RecordTypeInts.LVLN:
                 {
                     _LeveledNpcsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledNpcs);
+                    return (int)SkyrimMod_FieldIndex.LeveledNpcs;
                 }
                 case RecordTypeInts.KEYM:
                 {
                     _KeysLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keys);
+                    return (int)SkyrimMod_FieldIndex.Keys;
                 }
                 case RecordTypeInts.ALCH:
                 {
                     _IngestiblesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingestibles);
+                    return (int)SkyrimMod_FieldIndex.Ingestibles;
                 }
                 case RecordTypeInts.IDLM:
                 {
                     _IdleMarkersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.IdleMarkers);
+                    return (int)SkyrimMod_FieldIndex.IdleMarkers;
                 }
                 case RecordTypeInts.COBJ:
                 {
                     _ConstructibleObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ConstructibleObjects);
+                    return (int)SkyrimMod_FieldIndex.ConstructibleObjects;
                 }
                 case RecordTypeInts.PROJ:
                 {
                     _ProjectilesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Projectiles);
+                    return (int)SkyrimMod_FieldIndex.Projectiles;
                 }
                 case RecordTypeInts.HAZD:
                 {
                     _HazardsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hazards);
+                    return (int)SkyrimMod_FieldIndex.Hazards;
                 }
                 case RecordTypeInts.SLGM:
                 {
                     _SoulGemsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoulGems);
+                    return (int)SkyrimMod_FieldIndex.SoulGems;
                 }
                 case RecordTypeInts.LVLI:
                 {
                     _LeveledItemsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledItems);
+                    return (int)SkyrimMod_FieldIndex.LeveledItems;
                 }
                 case RecordTypeInts.WTHR:
                 {
                     _WeathersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weathers);
+                    return (int)SkyrimMod_FieldIndex.Weathers;
                 }
                 case RecordTypeInts.CLMT:
                 {
                     _ClimatesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Climates);
+                    return (int)SkyrimMod_FieldIndex.Climates;
                 }
                 case RecordTypeInts.SPGD:
                 {
                     _ShaderParticleGeometriesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ShaderParticleGeometries);
+                    return (int)SkyrimMod_FieldIndex.ShaderParticleGeometries;
                 }
                 case RecordTypeInts.RFCT:
                 {
                     _VisualEffectsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.VisualEffects);
+                    return (int)SkyrimMod_FieldIndex.VisualEffects;
                 }
                 case RecordTypeInts.REGN:
                 {
                     _RegionsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Regions);
+                    return (int)SkyrimMod_FieldIndex.Regions;
                 }
                 case RecordTypeInts.NAVI:
                 {
                     _NavigationMeshInfoMapsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps);
+                    return (int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps;
                 }
                 case RecordTypeInts.CELL:
                 {
                     _CellsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Cells);
+                    return (int)SkyrimMod_FieldIndex.Cells;
                 }
                 case RecordTypeInts.WRLD:
                 {
                     _WorldspacesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Worldspaces);
+                    return (int)SkyrimMod_FieldIndex.Worldspaces;
                 }
                 case RecordTypeInts.DIAL:
                 {
                     _DialogTopicsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogTopics);
+                    return (int)SkyrimMod_FieldIndex.DialogTopics;
                 }
                 case RecordTypeInts.QUST:
                 {
                     _QuestsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Quests);
+                    return (int)SkyrimMod_FieldIndex.Quests;
                 }
                 case RecordTypeInts.IDLE:
                 {
                     _IdleAnimationsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.IdleAnimations);
+                    return (int)SkyrimMod_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.PACK:
                 {
                     _PackagesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Packages);
+                    return (int)SkyrimMod_FieldIndex.Packages;
                 }
                 case RecordTypeInts.CSTY:
                 {
                     _CombatStylesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CombatStyles);
+                    return (int)SkyrimMod_FieldIndex.CombatStyles;
                 }
                 case RecordTypeInts.LSCR:
                 {
                     _LoadScreensLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LoadScreens);
+                    return (int)SkyrimMod_FieldIndex.LoadScreens;
                 }
                 case RecordTypeInts.LVSP:
                 {
                     _LeveledSpellsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledSpells);
+                    return (int)SkyrimMod_FieldIndex.LeveledSpells;
                 }
                 case RecordTypeInts.ANIO:
                 {
                     _AnimatedObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AnimatedObjects);
+                    return (int)SkyrimMod_FieldIndex.AnimatedObjects;
                 }
                 case RecordTypeInts.WATR:
                 {
                     _WatersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Waters);
+                    return (int)SkyrimMod_FieldIndex.Waters;
                 }
                 case RecordTypeInts.EFSH:
                 {
                     _EffectShadersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EffectShaders);
+                    return (int)SkyrimMod_FieldIndex.EffectShaders;
                 }
                 case RecordTypeInts.EXPL:
                 {
                     _ExplosionsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Explosions);
+                    return (int)SkyrimMod_FieldIndex.Explosions;
                 }
                 case RecordTypeInts.DEBR:
                 {
                     _DebrisLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Debris);
+                    return (int)SkyrimMod_FieldIndex.Debris;
                 }
                 case RecordTypeInts.IMGS:
                 {
                     _ImageSpacesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImageSpaces);
+                    return (int)SkyrimMod_FieldIndex.ImageSpaces;
                 }
                 case RecordTypeInts.IMAD:
                 {
                     _ImageSpaceAdaptersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImageSpaceAdapters);
+                    return (int)SkyrimMod_FieldIndex.ImageSpaceAdapters;
                 }
                 case RecordTypeInts.FLST:
                 {
                     _FormListsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.FormLists);
+                    return (int)SkyrimMod_FieldIndex.FormLists;
                 }
                 case RecordTypeInts.PERK:
                 {
                     _PerksLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Perks);
+                    return (int)SkyrimMod_FieldIndex.Perks;
                 }
                 case RecordTypeInts.BPTD:
                 {
                     _BodyPartsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.BodyParts);
+                    return (int)SkyrimMod_FieldIndex.BodyParts;
                 }
                 case RecordTypeInts.ADDN:
                 {
                     _AddonNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AddonNodes);
+                    return (int)SkyrimMod_FieldIndex.AddonNodes;
                 }
                 case RecordTypeInts.AVIF:
                 {
                     _ActorValueInformationLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ActorValueInformation);
+                    return (int)SkyrimMod_FieldIndex.ActorValueInformation;
                 }
                 case RecordTypeInts.CAMS:
                 {
                     _CameraShotsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CameraShots);
+                    return (int)SkyrimMod_FieldIndex.CameraShots;
                 }
                 case RecordTypeInts.CPTH:
                 {
                     _CameraPathsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CameraPaths);
+                    return (int)SkyrimMod_FieldIndex.CameraPaths;
                 }
                 case RecordTypeInts.VTYP:
                 {
                     _VoiceTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.VoiceTypes);
+                    return (int)SkyrimMod_FieldIndex.VoiceTypes;
                 }
                 case RecordTypeInts.MATT:
                 {
                     _MaterialTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MaterialTypes);
+                    return (int)SkyrimMod_FieldIndex.MaterialTypes;
                 }
                 case RecordTypeInts.IPCT:
                 {
                     _ImpactsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Impacts);
+                    return (int)SkyrimMod_FieldIndex.Impacts;
                 }
                 case RecordTypeInts.IPDS:
                 {
                     _ImpactDataSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImpactDataSets);
+                    return (int)SkyrimMod_FieldIndex.ImpactDataSets;
                 }
                 case RecordTypeInts.ARMA:
                 {
                     _ArmorAddonsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ArmorAddons);
+                    return (int)SkyrimMod_FieldIndex.ArmorAddons;
                 }
                 case RecordTypeInts.ECZN:
                 {
                     _EncounterZonesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EncounterZones);
+                    return (int)SkyrimMod_FieldIndex.EncounterZones;
                 }
                 case RecordTypeInts.LCTN:
                 {
                     _LocationsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Locations);
+                    return (int)SkyrimMod_FieldIndex.Locations;
                 }
                 case RecordTypeInts.MESG:
                 {
                     _MessagesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Messages);
+                    return (int)SkyrimMod_FieldIndex.Messages;
                 }
                 case RecordTypeInts.DOBJ:
                 {
                     _DefaultObjectManagersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DefaultObjectManagers);
+                    return (int)SkyrimMod_FieldIndex.DefaultObjectManagers;
                 }
                 case RecordTypeInts.LGTM:
                 {
                     _LightingTemplatesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LightingTemplates);
+                    return (int)SkyrimMod_FieldIndex.LightingTemplates;
                 }
                 case RecordTypeInts.MUSC:
                 {
                     _MusicTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MusicTypes);
+                    return (int)SkyrimMod_FieldIndex.MusicTypes;
                 }
                 case RecordTypeInts.FSTP:
                 {
                     _FootstepsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Footsteps);
+                    return (int)SkyrimMod_FieldIndex.Footsteps;
                 }
                 case RecordTypeInts.FSTS:
                 {
                     _FootstepSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.FootstepSets);
+                    return (int)SkyrimMod_FieldIndex.FootstepSets;
                 }
                 case RecordTypeInts.SMBN:
                 {
                     _StoryManagerBranchNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes);
+                    return (int)SkyrimMod_FieldIndex.StoryManagerBranchNodes;
                 }
                 case RecordTypeInts.SMQN:
                 {
                     _StoryManagerQuestNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes);
+                    return (int)SkyrimMod_FieldIndex.StoryManagerQuestNodes;
                 }
                 case RecordTypeInts.SMEN:
                 {
                     _StoryManagerEventNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerEventNodes);
+                    return (int)SkyrimMod_FieldIndex.StoryManagerEventNodes;
                 }
                 case RecordTypeInts.DLBR:
                 {
                     _DialogBranchesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogBranches);
+                    return (int)SkyrimMod_FieldIndex.DialogBranches;
                 }
                 case RecordTypeInts.MUST:
                 {
                     _MusicTracksLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MusicTracks);
+                    return (int)SkyrimMod_FieldIndex.MusicTracks;
                 }
                 case RecordTypeInts.DLVW:
                 {
                     _DialogViewsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogViews);
+                    return (int)SkyrimMod_FieldIndex.DialogViews;
                 }
                 case RecordTypeInts.WOOP:
                 {
                     _WordsOfPowerLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.WordsOfPower);
+                    return (int)SkyrimMod_FieldIndex.WordsOfPower;
                 }
                 case RecordTypeInts.SHOU:
                 {
                     _ShoutsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Shouts);
+                    return (int)SkyrimMod_FieldIndex.Shouts;
                 }
                 case RecordTypeInts.EQUP:
                 {
                     _EquipTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EquipTypes);
+                    return (int)SkyrimMod_FieldIndex.EquipTypes;
                 }
                 case RecordTypeInts.RELA:
                 {
                     _RelationshipsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Relationships);
+                    return (int)SkyrimMod_FieldIndex.Relationships;
+                }
+                case RecordTypeInts.SCEN:
+                {
+                    _ScenesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.Scenes;
+                }
+                case RecordTypeInts.ASTP:
+                {
+                    _AssociationTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.AssociationTypes;
+                }
+                case RecordTypeInts.OTFT:
+                {
+                    _OutfitsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.Outfits;
+                }
+                case RecordTypeInts.ARTO:
+                {
+                    _ArtObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.ArtObjects;
+                }
+                case RecordTypeInts.MATO:
+                {
+                    _MaterialObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.MaterialObjects;
+                }
+                case RecordTypeInts.MOVT:
+                {
+                    _MovementTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.MovementTypes;
+                }
+                case RecordTypeInts.SNDR:
+                {
+                    _SoundDescriptorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.SoundDescriptors;
+                }
+                case RecordTypeInts.DUAL:
+                {
+                    _DualCastDataLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.DualCastData;
+                }
+                case RecordTypeInts.SNCT:
+                {
+                    _SoundCategoriesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.SoundCategories;
+                }
+                case RecordTypeInts.SOPM:
+                {
+                    _SoundOutputModelsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.SoundOutputModels;
+                }
+                case RecordTypeInts.COLL:
+                {
+                    _CollisionLayersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.CollisionLayers;
+                }
+                case RecordTypeInts.CLFM:
+                {
+                    _ColorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.Colors;
+                }
+                case RecordTypeInts.REVB:
+                {
+                    _ReverbParametersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.ReverbParameters;
+                }
+                case RecordTypeInts.VOLI:
+                {
+                    _VolumetricLightingsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.VolumetricLightings;
                 }
                 default:
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
         #region To String

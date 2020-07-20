@@ -14,5 +14,6 @@ namespace Mutagen.Bethesda.UnitTests
         public static readonly FormKey Form1 = new FormKey(ModKey, 0x123456);
         public static readonly FormKey Form2 = new FormKey(ModKey, 0x12345F);
         public static readonly FormKey Form3 = new FormKey(ModKey, 0x223456);
+        public static readonly string TempFolderPath = "MutagenUnitTests";
     }
 }

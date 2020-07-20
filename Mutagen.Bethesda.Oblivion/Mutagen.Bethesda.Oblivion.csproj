@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.11</Version>
+    <Version>0.12</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -309,9 +309,6 @@
       <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ProtocolDefinition_Oblivion.cs" />
-    <Compile Include="Records\RecordTypeInts.cs" />
-    <Compile Include="Records\RecordTypes.cs" />
-    <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
     <Compile Include="Records\Group_Generated.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
@@ -918,10 +915,13 @@
     <Compile Include="Interfaces\IOwner_Generated.cs" />
     <Compile Include="Interfaces\IPlaced_Generated.cs" />
     <Compile Include="WarmupOblivion_Generated.cs" />
+    <Compile Include="Interfaces\LinkInterfaceMapping_Generated.cs" />
+    <Compile Include="Records\RecordTypes_Generated.cs" />
+    <Compile Include="Records\RecordTypeInts_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Loqui" Version="1.1.16" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.23" />
+    <PackageReference Include="Loqui" Version="1.1.18" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.31" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />

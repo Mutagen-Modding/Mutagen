@@ -1,8 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SoundDescriptor" objType="Record" recordType="SNDR" baseClass="SkyrimMajorRecord" GUID="8ef28a33-b4e1-488e-bd9a-9231e58a3aad" ID="82">
     <Fields>
+      <ByteArray name="CNAM" recordType="CNAM" />
+      <FormLink name="Category" refName="SoundCategory" recordType="GNAM" />
+      <FormLink name="AlternateSoundFor" recordType="SNAM" refName="SoundDescriptor" />
+      <List name="SoundFiles">
+        <String recordType="ANAM" />
+      </List>
+      <FormLink name="OutputModel" recordType="ONAM" refName="SoundOutputModel" />
+      <String name="String" recordType="FNAM" />
+      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <RefDirect name="LoopAndRumble" refName="SoundLoopAndRumble" />
+      <Data recordType="BNAM">
+        <Fields>
+          <Int8 name="PercentFrequencyShift" />
+          <Int8 name="PercentFrequencyVariance" />
+          <Int8 name="Priority" />
+          <Int8 name="Variance" />
+          <Float name="StaticAttenuation" integerType="UShort" divisor="100" />
+        </Fields>
+      </Data>
     </Fields>
     <LinkInterface>ISound</LinkInterface>
+  </Object>
+  <Object name="SoundLoopAndRumble" objType="Subrecord" recordType="LNAM" GUID="97e1c779-cd41-49df-bf1c-a6d6644860dc" ID="474">
+    <Fields>
+      <UInt8 name="Unknown" />
+      <Enum name="Loop" enumName="SoundDescriptor.LoopType" byteLength="1" />
+      <UInt8 name="Unknown2" />
+      <UInt8 name="RumbleValues" />
+    </Fields>
   </Object>
 </Loqui>

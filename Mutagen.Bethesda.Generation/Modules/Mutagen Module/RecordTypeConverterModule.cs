@@ -37,18 +37,30 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task PreLoad(ObjectGeneration obj)
         {
-            var recTypeOverrides = obj.Node.Element(XName.Get("BaseRecordTypeOverrides", LoquiGenerator.Namespace));
-            if (recTypeOverrides == null) return;
-            var recConversions = recTypeOverrides.Elements(XName.Get("Mapping", LoquiGenerator.Namespace));
-            if (recConversions == null || !recConversions.Any()) return;
             var objData = obj.GetObjectData();
-            objData.BaseRecordTypeConverter = new RecordTypeConverter(
-                recConversions.Select((n) =>
+            objData.BaseRecordTypeConverter = GetConverter(obj.Node.Element(XName.Get("BaseRecordTypeOverrides", LoquiGenerator.Namespace)));
+
+            var gameModeOverrides = obj.Node.Element(XName.Get("GameModeOverride", LoquiGenerator.Namespace));
+            if (gameModeOverrides != null)
+            {
+                var mode = gameModeOverrides.GetAttribute<GameRelease>("release", throwException: true);
+                if (objData.GameReleaseConverters == null)
                 {
-                    return new KeyValuePair<RecordType, RecordType>(
-                        new RecordType(n.GetAttribute("From")),
-                        new RecordType(n.GetAttribute("To")));
-                }).ToArray());
+                    objData.GameReleaseConverters = new Dictionary<GameRelease, RecordTypeConverter>();
+                }
+                objData.GameReleaseConverters[mode] = GetConverter(gameModeOverrides);
+            }
+
+            var versionModeOverrides = obj.Node.Element(XName.Get("VersionOverride", LoquiGenerator.Namespace));
+            if (versionModeOverrides != null)
+            {
+                var version = versionModeOverrides.GetAttribute<byte>("version", throwException: true);
+                if (objData.VersionConverters == null)
+                {
+                    objData.VersionConverters = new Dictionary<byte, RecordTypeConverter>();
+                }
+                objData.VersionConverters[version] = GetConverter(versionModeOverrides);
+            }
             await base.PreLoad(obj);
         }
 
@@ -73,6 +85,60 @@ namespace Mutagen.Bethesda.Generation
                 }
                 var fieldData = loquiType.GetFieldData();
                 GenerateConverterMember(fg, loquiType.TargetObjectGeneration, fieldData.RecordTypeConverter, field.Name);
+            }
+            if (objData.GameReleaseConverters != null)
+            {
+                foreach (var kv in objData.GameReleaseConverters)
+                {
+                    GenerateConverterMember(fg, obj, kv.Value, kv.Key.ToString());
+                }
+                using (var args = new FunctionWrapper(fg,
+                    $"public static {nameof(RecordTypeConverter)}? Get"))
+                {
+                    args.Add($"{nameof(GameRelease)} release");
+                }
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"return release switch");
+                    using (new BraceWrapper(fg) { AppendSemicolon = true })
+                    {
+                        using (var comma = new CommaWrapper(fg))
+                        {
+                            foreach (var kv in objData.GameReleaseConverters)
+                            {
+                                comma.Add($"{nameof(GameRelease)}.{kv.Key} => {kv.Key}Converter");
+                            }
+                            comma.Add($"_ => default({nameof(RecordTypeConverter)})");
+                        }
+                    }
+                }
+            }
+            if (objData.VersionConverters != null)
+            {
+                foreach (var kv in objData.VersionConverters)
+                {
+                    GenerateConverterMember(fg, obj, kv.Value, $"Version{kv.Key}");
+                }
+                using (var args = new FunctionWrapper(fg,
+                    $"public static {nameof(RecordTypeConverter)}? Get"))
+                {
+                    args.Add($"int? version");
+                }
+                using (new BraceWrapper(fg))
+                {
+                    bool first = true;
+                    fg.AppendLine($"if (version == null) return default({nameof(RecordTypeConverter)});");
+                    foreach (var kv in objData.VersionConverters.OrderBy(kv => kv.Key))
+                    {
+                        fg.AppendLine($"{(first ? null : "else ")}if (version.Value >= {kv.Key})");
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine($"return Version{kv.Key}Converter;");
+                        }
+                        first = false;
+                    }
+                    fg.AppendLine($"return default({nameof(RecordTypeConverter)});");
+                }
             }
             return base.GenerateInRegistration(obj, fg);
         }

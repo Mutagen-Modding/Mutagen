@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda
                 List<int> locations = new List<int>();
 
                 stream.Position -= package.MetaData.Constants.GroupConstants.HeaderLength;
-                var groupMeta = package.MetaData.Constants.GetGroup(stream);
+                var groupMeta = stream.GetGroup(package);
                 var finalPos = stream.Position + groupMeta.TotalLength;
                 stream.Position += package.MetaData.Constants.GroupConstants.HeaderLength;
                 // Parse locations
                 while (stream.Position < finalPos)
                 {
-                    VariableHeader meta = package.MetaData.Constants.Constants(objectType).VariableMeta(stream.RemainingSpan);
+                    VariableHeader meta = package.MetaData.Constants.Constants(objectType).VariableMeta(stream.RemainingMemory);
                     locations.Add(checked((int)stream.Position - offset));
                     stream.Position += checked((int)meta.TotalLength);
                 }

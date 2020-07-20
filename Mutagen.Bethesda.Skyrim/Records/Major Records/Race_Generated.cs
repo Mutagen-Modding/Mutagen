@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -55,12 +49,12 @@ namespace Mutagen.Bethesda.Skyrim
         TranslatedString? IRaceGetter.Name => this.Name;
         #endregion
         #region Description
-        public String Description { get; set; } = string.Empty;
+        public TranslatedString Description { get; set; } = string.Empty;
         #endregion
         #region ActorEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ASpell>>? _ActorEffect;
-        public ExtendedList<IFormLink<ASpell>>? ActorEffect
+        private IExtendedList<IFormLink<ASpell>>? _ActorEffect;
+        public IExtendedList<IFormLink<ASpell>>? ActorEffect
         {
             get => this._ActorEffect;
             set => this._ActorEffect = value;
@@ -89,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -231,8 +225,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MovementTypeNames
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String> _MovementTypeNames = new ExtendedList<String>();
-        public ExtendedList<String> MovementTypeNames
+        private IExtendedList<String> _MovementTypeNames = new ExtendedList<String>();
+        public IExtendedList<String> MovementTypeNames
         {
             get => this._MovementTypeNames;
             protected set => this._MovementTypeNames = value;
@@ -273,8 +267,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Attacks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Attack> _Attacks = new ExtendedList<Attack>();
-        public ExtendedList<Attack> Attacks
+        private IExtendedList<Attack> _Attacks = new ExtendedList<Attack>();
+        public IExtendedList<Attack> Attacks
         {
             get => this._Attacks;
             protected set => this._Attacks = value;
@@ -291,8 +285,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Hair>>? _Hairs;
-        public ExtendedList<IFormLink<Hair>>? Hairs
+        private IExtendedList<IFormLink<Hair>>? _Hairs;
+        public IExtendedList<IFormLink<Hair>>? Hairs
         {
             get => this._Hairs;
             set => this._Hairs = value;
@@ -305,8 +299,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Eyes>>? _Eyes;
-        public ExtendedList<IFormLink<Eyes>>? Eyes
+        private IExtendedList<IFormLink<Eyes>>? _Eyes;
+        public IExtendedList<IFormLink<Eyes>>? Eyes
         {
             get => this._Eyes;
             set => this._Eyes = value;
@@ -362,8 +356,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MovementTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RaceMovementType> _MovementTypes = new ExtendedList<RaceMovementType>();
-        public ExtendedList<RaceMovementType> MovementTypes
+        private IExtendedList<RaceMovementType> _MovementTypes = new ExtendedList<RaceMovementType>();
+        public IExtendedList<RaceMovementType> MovementTypes
         {
             get => this._MovementTypes;
             protected set => this._MovementTypes = value;
@@ -381,8 +375,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region EquipmentSlots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<EquipType>> _EquipmentSlots = new ExtendedList<IFormLink<EquipType>>();
-        public ExtendedList<IFormLink<EquipType>> EquipmentSlots
+        private IExtendedList<IFormLink<EquipType>> _EquipmentSlots = new ExtendedList<IFormLink<EquipType>>();
+        public IExtendedList<IFormLink<EquipType>> EquipmentSlots
         {
             get => this._EquipmentSlots;
             protected set => this._EquipmentSlots = value;
@@ -437,6 +431,16 @@ namespace Mutagen.Bethesda.Skyrim
         public GenderedItem<HeadData?>? HeadData { get; set; }
         IGenderedItemGetter<IHeadDataGetter?>? IRaceGetter.HeadData => this.HeadData;
         #endregion
+        #region MorphRace
+        public FormLinkNullable<Race> MorphRace { get; set; } = new FormLinkNullable<Race>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IRaceGetter> IRaceGetter.MorphRace => this.MorphRace;
+        #endregion
+        #region ArmorRace
+        public FormLinkNullable<Race> ArmorRace { get; set; } = new FormLinkNullable<Race>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IRaceGetter> IRaceGetter.ArmorRace => this.ArmorRace;
+        #endregion
         #region DATADataTypeState
         public Race.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
@@ -467,135 +471,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => RaceXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((RaceXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Race CreateFromXml(
-            XElement node,
-            Race.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Race CreateFromXml(
-            XElement node,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Race.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Race CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Race();
-            ((RaceSetterCommon)((IRaceGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Race CreateFromXml(
-            string path,
-            Race.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Race CreateFromXml(
-            string path,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Race CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Race.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Race CreateFromXml(
-            Stream stream,
-            Race.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Race CreateFromXml(
-            Stream stream,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Race CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Race.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -678,13 +553,15 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseMovementDefaultSneak = initialValue;
                 this.BaseMovementDefaultSprint = initialValue;
                 this.HeadData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>(initialValue, default);
+                this.MorphRace = initialValue;
+                this.ArmorRace = initialValue;
                 this.DATADataTypeState = initialValue;
             }
 
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -757,11 +634,13 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem BaseMovementDefaultSneak,
                 TItem BaseMovementDefaultSprint,
                 TItem HeadData,
+                TItem MorphRace,
+                TItem ArmorRace,
                 TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -835,6 +714,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseMovementDefaultSneak = BaseMovementDefaultSneak;
                 this.BaseMovementDefaultSprint = BaseMovementDefaultSprint;
                 this.HeadData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>(HeadData, default);
+                this.MorphRace = MorphRace;
+                this.ArmorRace = ArmorRace;
                 this.DATADataTypeState = DATADataTypeState;
             }
 
@@ -916,6 +797,8 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem BaseMovementDefaultSneak;
             public TItem BaseMovementDefaultSprint;
             public MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>? HeadData;
+            public TItem MorphRace;
+            public TItem ArmorRace;
             public TItem DATADataTypeState;
             #endregion
 
@@ -999,6 +882,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.BaseMovementDefaultSneak, rhs.BaseMovementDefaultSneak)) return false;
                 if (!object.Equals(this.BaseMovementDefaultSprint, rhs.BaseMovementDefaultSprint)) return false;
                 if (!object.Equals(this.HeadData, rhs.HeadData)) return false;
+                if (!object.Equals(this.MorphRace, rhs.MorphRace)) return false;
+                if (!object.Equals(this.ArmorRace, rhs.ArmorRace)) return false;
                 if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
@@ -1074,6 +959,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.BaseMovementDefaultSneak);
                 hash.Add(this.BaseMovementDefaultSprint);
                 hash.Add(this.HeadData);
+                hash.Add(this.MorphRace);
+                hash.Add(this.ArmorRace);
                 hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -1318,6 +1205,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!GenderedItem.AllMask(
                     this.HeadData,
                     eval: eval)) return false;
+                if (!eval(this.MorphRace)) return false;
+                if (!eval(this.ArmorRace)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
@@ -1560,6 +1449,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (GenderedItem.AnyMask(
                     this.HeadData,
                     eval: eval)) return true;
+                if (eval(this.MorphRace)) return true;
+                if (eval(this.ArmorRace)) return true;
                 if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
@@ -1809,6 +1700,8 @@ namespace Mutagen.Bethesda.Skyrim
                     this.HeadData,
                     eval,
                     (m, e) => m?.Translate(e));
+                obj.MorphRace = eval(this.MorphRace);
+                obj.ArmorRace = eval(this.ArmorRace);
                 obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
@@ -2369,6 +2262,14 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendLine($"HeadData => {HeadData}");
                     }
+                    if (printMask?.MorphRace ?? true)
+                    {
+                        fg.AppendItem(MorphRace, "MorphRace");
+                    }
+                    if (printMask?.ArmorRace ?? true)
+                    {
+                        fg.AppendItem(ArmorRace, "ArmorRace");
+                    }
                     if (printMask?.DATADataTypeState ?? true)
                     {
                         fg.AppendItem(DATADataTypeState, "DATADataTypeState");
@@ -2454,6 +2355,8 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? BaseMovementDefaultSneak;
             public Exception? BaseMovementDefaultSprint;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? HeadData;
+            public Exception? MorphRace;
+            public Exception? ArmorRace;
             public Exception? DATADataTypeState;
             #endregion
 
@@ -2601,6 +2504,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return BaseMovementDefaultSprint;
                     case Race_FieldIndex.HeadData:
                         return HeadData;
+                    case Race_FieldIndex.MorphRace:
+                        return MorphRace;
+                    case Race_FieldIndex.ArmorRace:
+                        return ArmorRace;
                     case Race_FieldIndex.DATADataTypeState:
                         return DATADataTypeState;
                     default:
@@ -2819,6 +2726,12 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Race_FieldIndex.HeadData:
                         this.HeadData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.MorphRace:
+                        this.MorphRace = ex;
+                        break;
+                    case Race_FieldIndex.ArmorRace:
+                        this.ArmorRace = ex;
                         break;
                     case Race_FieldIndex.DATADataTypeState:
                         this.DATADataTypeState = ex;
@@ -3041,6 +2954,12 @@ namespace Mutagen.Bethesda.Skyrim
                     case Race_FieldIndex.HeadData:
                         this.HeadData = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
+                    case Race_FieldIndex.MorphRace:
+                        this.MorphRace = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.ArmorRace:
+                        this.ArmorRace = (Exception?)obj;
+                        break;
                     case Race_FieldIndex.DATADataTypeState:
                         this.DATADataTypeState = (Exception?)obj;
                         break;
@@ -3122,6 +3041,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (BaseMovementDefaultSneak != null) return true;
                 if (BaseMovementDefaultSprint != null) return true;
                 if (HeadData != null) return true;
+                if (MorphRace != null) return true;
+                if (ArmorRace != null) return true;
                 if (DATADataTypeState != null) return true;
                 return false;
             }
@@ -3512,6 +3433,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     fg.AppendLine($"HeadData => {HeadData}");
                 }
+                fg.AppendItem(MorphRace, "MorphRace");
+                fg.AppendItem(ArmorRace, "ArmorRace");
                 fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
@@ -3590,6 +3513,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.BaseMovementDefaultSneak = this.BaseMovementDefaultSneak.Combine(rhs.BaseMovementDefaultSneak);
                 ret.BaseMovementDefaultSprint = this.BaseMovementDefaultSprint.Combine(rhs.BaseMovementDefaultSprint);
                 ret.HeadData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.HeadData?.Overall, rhs.HeadData?.Overall), GenderedItem.Combine(this.HeadData?.Specific, rhs.HeadData?.Specific));
+                ret.MorphRace = this.MorphRace.Combine(rhs.MorphRace);
+                ret.ArmorRace = this.ArmorRace.Combine(rhs.ArmorRace);
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
@@ -3682,6 +3607,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool BaseMovementDefaultSneak;
             public bool BaseMovementDefaultSprint;
             public MaskItem<bool, GenderedItem<HeadData.TranslationMask?>?> HeadData;
+            public bool MorphRace;
+            public bool ArmorRace;
             public bool DATADataTypeState;
             #endregion
 
@@ -3758,6 +3685,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseMovementDefaultSneak = defaultOn;
                 this.BaseMovementDefaultSprint = defaultOn;
                 this.HeadData = new MaskItem<bool, GenderedItem<HeadData.TranslationMask?>?>(defaultOn, default);
+                this.MorphRace = defaultOn;
+                this.ArmorRace = defaultOn;
                 this.DATADataTypeState = defaultOn;
             }
 
@@ -3835,13 +3764,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((BaseMovementDefaultSneak, null));
                 ret.Add((BaseMovementDefaultSprint, null));
                 ret.Add((HeadData?.Overall ?? true, null));
+                ret.Add((MorphRace, null));
+                ret.Add((ArmorRace, null));
                 ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3949,11 +3880,11 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRaceInternal>
     {
         new TranslatedString? Name { get; set; }
-        new String Description { get; set; }
-        new ExtendedList<IFormLink<ASpell>>? ActorEffect { get; set; }
+        new TranslatedString Description { get; set; }
+        new IExtendedList<IFormLink<ASpell>>? ActorEffect { get; set; }
         new FormLinkNullable<Armor> Skin { get; set; }
         new BodyTemplate? BodyTemplate { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new SkillBoost SkillBoost0 { get; set; }
         new SkillBoost SkillBoost1 { get; set; }
         new SkillBoost SkillBoost2 { get; set; }
@@ -3985,7 +3916,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single AngularTolerance { get; set; }
         new MountData MountData { get; set; }
         new GenderedItem<SimpleModel?>? SkeletalModel { get; set; }
-        new ExtendedList<String> MovementTypeNames { get; }
+        new IExtendedList<String> MovementTypeNames { get; }
         new GenderedItem<IFormLink<VoiceType>> Voices { get; set; }
         new GenderedItem<IFormLink<Armor>>? DecapitateArmors { get; set; }
         new GenderedItem<IFormLink<ColorRecord>>? DefaultHairColors { get; set; }
@@ -3993,10 +3924,10 @@ namespace Mutagen.Bethesda.Skyrim
         new Single FacegenMainClamp { get; set; }
         new Single FacegenFaceClamp { get; set; }
         new FormLinkNullable<Race> AttackRace { get; set; }
-        new ExtendedList<Attack> Attacks { get; }
+        new IExtendedList<Attack> Attacks { get; }
         new GenderedItem<BodyData?> BodyData { get; set; }
-        new ExtendedList<IFormLink<Hair>>? Hairs { get; set; }
-        new ExtendedList<IFormLink<Eyes>>? Eyes { get; set; }
+        new IExtendedList<IFormLink<Hair>>? Hairs { get; set; }
+        new IExtendedList<IFormLink<Eyes>>? Eyes { get; set; }
         new FormLinkNullable<BodyPartData> BodyPartData { get; set; }
         new GenderedItem<Model?> BehaviorGraph { get; set; }
         new FormLinkNullable<MaterialType> MaterialType { get; set; }
@@ -4005,9 +3936,9 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<SoundDescriptor> OpenLootSound { get; set; }
         new FormLinkNullable<SoundDescriptor> CloseLootSound { get; set; }
         new IDictionary<BipedObject, String> BipedObjectNames { get; }
-        new ExtendedList<RaceMovementType> MovementTypes { get; }
+        new IExtendedList<RaceMovementType> MovementTypes { get; }
         new EquipTypeFlag? EquipmentFlags { get; set; }
-        new ExtendedList<IFormLink<EquipType>> EquipmentSlots { get; }
+        new IExtendedList<IFormLink<EquipType>> EquipmentSlots { get; }
         new FormLinkNullable<EquipType> UnarmedEquipSlot { get; set; }
         new FaceFxPhonemes FaceFxPhonemes { get; set; }
         new FormLinkNullable<MovementType> BaseMovementDefaultWalk { get; set; }
@@ -4017,6 +3948,8 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<MovementType> BaseMovementDefaultSneak { get; set; }
         new FormLinkNullable<MovementType> BaseMovementDefaultSprint { get; set; }
         new GenderedItem<HeadData?>? HeadData { get; set; }
+        new FormLinkNullable<Race> MorphRace { get; set; }
+        new FormLinkNullable<Race> ArmorRace { get; set; }
         new Race.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Race.MajorFlag MajorFlags { get; set; }
@@ -4048,13 +3981,12 @@ namespace Mutagen.Bethesda.Skyrim
         IRelatableGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IRaceGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Race_Registration.Instance;
+        static new ILoquiRegistration Registration => Race_Registration.Instance;
         TranslatedString? Name { get; }
-        String Description { get; }
+        TranslatedString Description { get; }
         IReadOnlyList<IFormLink<IASpellGetter>>? ActorEffect { get; }
         IFormLinkNullable<IArmorGetter> Skin { get; }
         IBodyTemplateGetter? BodyTemplate { get; }
@@ -4122,6 +4054,8 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSneak { get; }
         IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSprint { get; }
         IGenderedItemGetter<IHeadDataGetter?>? HeadData { get; }
+        IFormLinkNullable<IRaceGetter> MorphRace { get; }
+        IFormLinkNullable<IRaceGetter> ArmorRace { get; }
         Race.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
@@ -4261,131 +4195,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IRaceInternal item,
-            XElement node,
-            Race.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IRaceInternal item,
-            XElement node,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Race.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IRaceInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRaceInternal item,
-            string path,
-            Race.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRaceInternal item,
-            string path,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRaceInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Race.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IRaceInternal item,
-            Stream stream,
-            Race.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRaceInternal item,
-            Stream stream,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IRaceInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Race.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -4423,7 +4232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -4496,7 +4305,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         BaseMovementDefaultSneak = 72,
         BaseMovementDefaultSprint = 73,
         HeadData = 74,
-        DATADataTypeState = 75,
+        MorphRace = 75,
+        ArmorRace = 76,
+        DATADataTypeState = 77,
     }
     #endregion
 
@@ -4514,9 +4325,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "54b1dfac-1494-41b6-b6d3-653bc47987eb";
 
-        public const ushort AdditionalFieldCount = 70;
+        public const ushort AdditionalFieldCount = 72;
 
-        public const ushort FieldCount = 76;
+        public const ushort FieldCount = 78;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -4684,6 +4495,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Race_FieldIndex.BaseMovementDefaultSprint;
                 case "HEADDATA":
                     return (ushort)Race_FieldIndex.HeadData;
+                case "MORPHRACE":
+                    return (ushort)Race_FieldIndex.MorphRace;
+                case "ARMORRACE":
+                    return (ushort)Race_FieldIndex.ArmorRace;
                 case "DATADATATYPESTATE":
                     return (ushort)Race_FieldIndex.DATADataTypeState;
                 default:
@@ -4766,6 +4581,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BaseMovementDefaultSneak:
                 case Race_FieldIndex.BaseMovementDefaultSprint:
                 case Race_FieldIndex.HeadData:
+                case Race_FieldIndex.MorphRace:
+                case Race_FieldIndex.ArmorRace:
                 case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
@@ -4848,6 +4665,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BaseMovementDefaultFly:
                 case Race_FieldIndex.BaseMovementDefaultSneak:
                 case Race_FieldIndex.BaseMovementDefaultSprint:
+                case Race_FieldIndex.MorphRace:
+                case Race_FieldIndex.ArmorRace:
                 case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
@@ -4929,6 +4748,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BaseMovementDefaultSneak:
                 case Race_FieldIndex.BaseMovementDefaultSprint:
                 case Race_FieldIndex.HeadData:
+                case Race_FieldIndex.MorphRace:
+                case Race_FieldIndex.ArmorRace:
                 case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
@@ -5079,6 +4900,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "BaseMovementDefaultSprint";
                 case Race_FieldIndex.HeadData:
                     return "HeadData";
+                case Race_FieldIndex.MorphRace:
+                    return "MorphRace";
+                case Race_FieldIndex.ArmorRace:
+                    return "ArmorRace";
                 case Race_FieldIndex.DATADataTypeState:
                     return "DATADataTypeState";
                 default:
@@ -5160,6 +4985,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BaseMovementDefaultSneak:
                 case Race_FieldIndex.BaseMovementDefaultSprint:
                 case Race_FieldIndex.HeadData:
+                case Race_FieldIndex.MorphRace:
+                case Race_FieldIndex.ArmorRace:
                 case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
@@ -5241,6 +5068,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BaseMovementDefaultSneak:
                 case Race_FieldIndex.BaseMovementDefaultSprint:
                 case Race_FieldIndex.HeadData:
+                case Race_FieldIndex.MorphRace:
+                case Race_FieldIndex.ArmorRace:
                 case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
@@ -5256,15 +5085,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.Name:
                     return typeof(TranslatedString);
                 case Race_FieldIndex.Description:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Race_FieldIndex.ActorEffect:
-                    return typeof(ExtendedList<IFormLink<ASpell>>);
+                    return typeof(IExtendedList<IFormLink<ASpell>>);
                 case Race_FieldIndex.Skin:
                     return typeof(FormLinkNullable<Armor>);
                 case Race_FieldIndex.BodyTemplate:
                     return typeof(BodyTemplate);
                 case Race_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Race_FieldIndex.SkillBoost0:
                     return typeof(SkillBoost);
                 case Race_FieldIndex.SkillBoost1:
@@ -5328,7 +5157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.SkeletalModel:
                     return typeof(GenderedItem<SimpleModel?>);
                 case Race_FieldIndex.MovementTypeNames:
-                    return typeof(ExtendedList<String>);
+                    return typeof(IExtendedList<String>);
                 case Race_FieldIndex.Voices:
                     return typeof(GenderedItem<IFormLink<VoiceType>>);
                 case Race_FieldIndex.DecapitateArmors:
@@ -5344,13 +5173,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.AttackRace:
                     return typeof(FormLinkNullable<Race>);
                 case Race_FieldIndex.Attacks:
-                    return typeof(ExtendedList<Attack>);
+                    return typeof(IExtendedList<Attack>);
                 case Race_FieldIndex.BodyData:
                     return typeof(GenderedItem<BodyData?>);
                 case Race_FieldIndex.Hairs:
-                    return typeof(ExtendedList<IFormLink<Hair>>);
+                    return typeof(IExtendedList<IFormLink<Hair>>);
                 case Race_FieldIndex.Eyes:
-                    return typeof(ExtendedList<IFormLink<Eyes>>);
+                    return typeof(IExtendedList<IFormLink<Eyes>>);
                 case Race_FieldIndex.BodyPartData:
                     return typeof(FormLinkNullable<BodyPartData>);
                 case Race_FieldIndex.BehaviorGraph:
@@ -5368,11 +5197,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BipedObjectNames:
                     return typeof(Dictionary<BipedObject, String>);
                 case Race_FieldIndex.MovementTypes:
-                    return typeof(ExtendedList<RaceMovementType>);
+                    return typeof(IExtendedList<RaceMovementType>);
                 case Race_FieldIndex.EquipmentFlags:
                     return typeof(EquipTypeFlag);
                 case Race_FieldIndex.EquipmentSlots:
-                    return typeof(ExtendedList<IFormLink<EquipType>>);
+                    return typeof(IExtendedList<IFormLink<EquipType>>);
                 case Race_FieldIndex.UnarmedEquipSlot:
                     return typeof(FormLinkNullable<EquipType>);
                 case Race_FieldIndex.FaceFxPhonemes:
@@ -5391,6 +5220,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(FormLinkNullable<MovementType>);
                 case Race_FieldIndex.HeadData:
                     return typeof(GenderedItem<HeadData?>);
+                case Race_FieldIndex.MorphRace:
+                    return typeof(FormLinkNullable<Race>);
+                case Race_FieldIndex.ArmorRace:
+                    return typeof(FormLinkNullable<Race>);
                 case Race_FieldIndex.DATADataTypeState:
                     return typeof(Race.DATADataType);
                 default:
@@ -5398,7 +5231,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(RaceXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.RACE;
         public static RecordTypeConverter SkeletalModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
@@ -5460,7 +5292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Name = default;
-            item.Description = string.Empty;
+            item.Description.Clear();
             item.ActorEffect = null;
             item.Skin = FormLinkNullable<Armor>.Null;
             item.BodyTemplate = null;
@@ -5533,6 +5365,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BaseMovementDefaultSneak = FormLinkNullable<MovementType>.Null;
             item.BaseMovementDefaultSprint = FormLinkNullable<MovementType>.Null;
             item.HeadData = null;
+            item.MorphRace = FormLinkNullable<Race>.Null;
+            item.ArmorRace = FormLinkNullable<Race>.Null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -5546,87 +5380,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IRaceInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IRaceInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IRaceInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                item.DATADataTypeState |= Race.DATADataType.Break0;
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    RaceXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Race)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Race)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -5828,6 +5581,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs: rhs.HeadData,
                 maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
                 include: include);
+            ret.MorphRace = object.Equals(item.MorphRace, rhs.MorphRace);
+            ret.ArmorRace = object.Equals(item.ArmorRace, rhs.ArmorRace);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -6341,6 +6096,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 HeadDataItem?.ToString(fg, "HeadData");
             }
+            if ((printMask?.MorphRace ?? true)
+                && item.MorphRace.TryGet(out var MorphRaceItem))
+            {
+                fg.AppendItem(MorphRaceItem, "MorphRace");
+            }
+            if ((printMask?.ArmorRace ?? true)
+                && item.ArmorRace.TryGet(out var ArmorRaceItem))
+            {
+                fg.AppendItem(ArmorRaceItem, "ArmorRace");
+            }
             if (printMask?.DATADataTypeState ?? true)
             {
                 fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
@@ -6384,6 +6149,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.BaseMovementDefaultSneak.HasValue && checkMask.BaseMovementDefaultSneak.Value != (item.BaseMovementDefaultSneak.FormKey != null)) return false;
             if (checkMask.BaseMovementDefaultSprint.HasValue && checkMask.BaseMovementDefaultSprint.Value != (item.BaseMovementDefaultSprint.FormKey != null)) return false;
             if (checkMask.HeadData?.Overall ?? false) return false;
+            if (checkMask.MorphRace.HasValue && checkMask.MorphRace.Value != (item.MorphRace.FormKey != null)) return false;
+            if (checkMask.ArmorRace.HasValue && checkMask.ArmorRace.Value != (item.ArmorRace.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -6473,6 +6240,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.HeadData = GenderedItem.HasBeenSetMaskHelper(
                 item.HeadData,
                 (i) => i?.GetHasBeenSetMask());
+            mask.MorphRace = (item.MorphRace.FormKey != null);
+            mask.ArmorRace = (item.ArmorRace.FormKey != null);
             mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -6487,7 +6256,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Race_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Race_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Race_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Race_FieldIndex)((int)index);
@@ -6508,7 +6277,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Race_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Race_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Race_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Race_FieldIndex)((int)index);
@@ -6594,6 +6363,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.BaseMovementDefaultSneak.Equals(rhs.BaseMovementDefaultSneak)) return false;
             if (!lhs.BaseMovementDefaultSprint.Equals(rhs.BaseMovementDefaultSprint)) return false;
             if (!Equals(lhs.HeadData, rhs.HeadData)) return false;
+            if (!lhs.MorphRace.Equals(rhs.MorphRace)) return false;
+            if (!lhs.ArmorRace.Equals(rhs.ArmorRace)) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
@@ -6757,6 +6528,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(HashCode.Combine(HeadDataitem.Male, HeadDataitem.Female));
             }
+            if (item.MorphRace.TryGet(out var MorphRaceitem))
+            {
+                hash.Add(MorphRaceitem);
+            }
+            if (item.ArmorRace.TryGet(out var ArmorRaceitem))
+            {
+                hash.Add(ArmorRaceitem);
+            }
             hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -6886,6 +6665,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.BaseMovementDefaultSprint.FormKey.TryGet(out var BaseMovementDefaultSprintKey))
             {
                 yield return BaseMovementDefaultSprintKey;
+            }
+            if (obj.MorphRace.FormKey.TryGet(out var MorphRaceKey))
+            {
+                yield return MorphRaceKey;
+            }
+            if (obj.ArmorRace.FormKey.TryGet(out var ArmorRaceKey))
+            {
+                yield return ArmorRaceKey;
             }
             yield break;
         }
@@ -7589,6 +7376,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask: errorMask,
                         default(TranslationCrystal)));
             }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
+            {
+                item.MorphRace = rhs.MorphRace.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
+            {
+                item.ArmorRace = rhs.ArmorRace.FormKey;
+            }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
@@ -7715,2499 +7510,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class RaceXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static RaceXmlWriteTranslation Instance = new RaceXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IRaceGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Race_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Description) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Description),
-                    item: item.Description,
-                    fieldIndex: (int)Race_FieldIndex.Description,
-                    errorMask: errorMask);
-            }
-            if ((item.ActorEffect != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.ActorEffect) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IASpellGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ActorEffect),
-                    item: item.ActorEffect,
-                    fieldIndex: (int)Race_FieldIndex.ActorEffect,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.ActorEffect),
-                    transl: (XElement subNode, IFormLink<IASpellGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.Skin.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Skin) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Skin),
-                    item: item.Skin.FormKey,
-                    fieldIndex: (int)Race_FieldIndex.Skin,
-                    errorMask: errorMask);
-            }
-            if ((item.BodyTemplate != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BodyTemplate) ?? true))
-            {
-                if (item.BodyTemplate.TryGet(out var BodyTemplateItem))
-                {
-                    ((BodyTemplateXmlWriteTranslation)((IXmlItem)BodyTemplateItem).XmlWriteTranslator).Write(
-                        item: BodyTemplateItem,
-                        node: node,
-                        name: nameof(item.BodyTemplate),
-                        fieldIndex: (int)Race_FieldIndex.BodyTemplate,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.BodyTemplate));
-                }
-            }
-            if ((item.Keywords != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Keywords) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IKeywordGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Keywords),
-                    item: item.Keywords,
-                    fieldIndex: (int)Race_FieldIndex.Keywords,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Keywords),
-                    transl: (XElement subNode, IFormLink<IKeywordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost0) ?? true))
-            {
-                var SkillBoost0Item = item.SkillBoost0;
-                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost0Item).XmlWriteTranslator).Write(
-                    item: SkillBoost0Item,
-                    node: node,
-                    name: nameof(item.SkillBoost0),
-                    fieldIndex: (int)Race_FieldIndex.SkillBoost0,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost0));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost1) ?? true))
-            {
-                var SkillBoost1Item = item.SkillBoost1;
-                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost1Item).XmlWriteTranslator).Write(
-                    item: SkillBoost1Item,
-                    node: node,
-                    name: nameof(item.SkillBoost1),
-                    fieldIndex: (int)Race_FieldIndex.SkillBoost1,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost1));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost2) ?? true))
-            {
-                var SkillBoost2Item = item.SkillBoost2;
-                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost2Item).XmlWriteTranslator).Write(
-                    item: SkillBoost2Item,
-                    node: node,
-                    name: nameof(item.SkillBoost2),
-                    fieldIndex: (int)Race_FieldIndex.SkillBoost2,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost2));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost3) ?? true))
-            {
-                var SkillBoost3Item = item.SkillBoost3;
-                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost3Item).XmlWriteTranslator).Write(
-                    item: SkillBoost3Item,
-                    node: node,
-                    name: nameof(item.SkillBoost3),
-                    fieldIndex: (int)Race_FieldIndex.SkillBoost3,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost3));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost4) ?? true))
-            {
-                var SkillBoost4Item = item.SkillBoost4;
-                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost4Item).XmlWriteTranslator).Write(
-                    item: SkillBoost4Item,
-                    node: node,
-                    name: nameof(item.SkillBoost4),
-                    fieldIndex: (int)Race_FieldIndex.SkillBoost4,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost4));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost5) ?? true))
-            {
-                var SkillBoost5Item = item.SkillBoost5;
-                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost5Item).XmlWriteTranslator).Write(
-                    item: SkillBoost5Item,
-                    node: node,
-                    name: nameof(item.SkillBoost5),
-                    fieldIndex: (int)Race_FieldIndex.SkillBoost5,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost5));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost6) ?? true))
-            {
-                var SkillBoost6Item = item.SkillBoost6;
-                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost6Item).XmlWriteTranslator).Write(
-                    item: SkillBoost6Item,
-                    node: node,
-                    name: nameof(item.SkillBoost6),
-                    fieldIndex: (int)Race_FieldIndex.SkillBoost6,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost6));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
-            {
-                Int16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)Race_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
-            {
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Height),
-                        item: item.Height.Male,
-                        errorMask: errorMask);
-                }
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Height),
-                        item: item.Height.Female,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Weight) ?? true))
-            {
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Weight),
-                        item: item.Weight.Male,
-                        errorMask: errorMask);
-                }
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Weight),
-                        item: item.Weight.Female,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Race.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Race_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Starting) ?? true))
-            {
-                DictXmlTranslation<BasicStat, Single>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Starting),
-                    items: item.Starting,
-                    fieldIndex: (int)Race_FieldIndex.Starting,
-                    errorMask: errorMask,
-                    translationMask: translationMask,
-                    keyTransl: (XElement subNode, BasicStat subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
-                    {
-                        EnumXmlTranslation<BasicStat>.Instance.Write(
-                            node: subNode,
-                            name: "Key",
-                            item: subItem,
-                            errorMask: dictSubMask);
-                    },
-                    valTransl: (XElement subNode, Single subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: "Value",
-                            item: subItem,
-                            errorMask: dictSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.BaseCarryWeight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BaseCarryWeight),
-                    item: item.BaseCarryWeight,
-                    fieldIndex: (int)Race_FieldIndex.BaseCarryWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMass) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BaseMass),
-                    item: item.BaseMass,
-                    fieldIndex: (int)Race_FieldIndex.BaseMass,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.AccelerationRate) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AccelerationRate),
-                    item: item.AccelerationRate,
-                    fieldIndex: (int)Race_FieldIndex.AccelerationRate,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.DecelerationRate) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DecelerationRate),
-                    item: item.DecelerationRate,
-                    fieldIndex: (int)Race_FieldIndex.DecelerationRate,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Size) ?? true))
-            {
-                EnumXmlTranslation<Size>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Size),
-                    item: item.Size,
-                    fieldIndex: (int)Race_FieldIndex.Size,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.HeadBipedObject) ?? true))
-            {
-                EnumXmlTranslation<BipedObject>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HeadBipedObject),
-                    item: item.HeadBipedObject,
-                    fieldIndex: (int)Race_FieldIndex.HeadBipedObject,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.HairBipedObject) ?? true))
-            {
-                EnumXmlTranslation<BipedObject>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HairBipedObject),
-                    item: item.HairBipedObject,
-                    fieldIndex: (int)Race_FieldIndex.HairBipedObject,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.InjuredHealthPercent) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.InjuredHealthPercent),
-                    item: item.InjuredHealthPercent,
-                    fieldIndex: (int)Race_FieldIndex.InjuredHealthPercent,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.ShieldBipedObject) ?? true))
-            {
-                EnumXmlTranslation<BipedObject>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ShieldBipedObject),
-                    item: item.ShieldBipedObject,
-                    fieldIndex: (int)Race_FieldIndex.ShieldBipedObject,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Regen) ?? true))
-            {
-                DictXmlTranslation<BasicStat, Single>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Regen),
-                    items: item.Regen,
-                    fieldIndex: (int)Race_FieldIndex.Regen,
-                    errorMask: errorMask,
-                    translationMask: translationMask,
-                    keyTransl: (XElement subNode, BasicStat subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
-                    {
-                        EnumXmlTranslation<BasicStat>.Instance.Write(
-                            node: subNode,
-                            name: "Key",
-                            item: subItem,
-                            errorMask: dictSubMask);
-                    },
-                    valTransl: (XElement subNode, Single subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: "Value",
-                            item: subItem,
-                            errorMask: dictSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedDamage) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.UnarmedDamage),
-                    item: item.UnarmedDamage,
-                    fieldIndex: (int)Race_FieldIndex.UnarmedDamage,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedReach) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.UnarmedReach),
-                    item: item.UnarmedReach,
-                    fieldIndex: (int)Race_FieldIndex.UnarmedReach,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.BodyBipedObject) ?? true))
-            {
-                EnumXmlTranslation<BipedObject>.Instance.Write(
-                    node: node,
-                    name: nameof(item.BodyBipedObject),
-                    item: item.BodyBipedObject,
-                    fieldIndex: (int)Race_FieldIndex.BodyBipedObject,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.AimAngleTolerance) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AimAngleTolerance),
-                    item: item.AimAngleTolerance,
-                    fieldIndex: (int)Race_FieldIndex.AimAngleTolerance,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.FlightRadius) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FlightRadius),
-                    item: item.FlightRadius,
-                    fieldIndex: (int)Race_FieldIndex.FlightRadius,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.AngularAccelerationRate) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AngularAccelerationRate),
-                    item: item.AngularAccelerationRate,
-                    fieldIndex: (int)Race_FieldIndex.AngularAccelerationRate,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.AngularTolerance) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AngularTolerance),
-                    item: item.AngularTolerance,
-                    fieldIndex: (int)Race_FieldIndex.AngularTolerance,
-                    errorMask: errorMask);
-            }
-            if (!item.DATADataTypeState.HasFlag(Race.DATADataType.Break0))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.MountData) ?? true))
-                {
-                    var MountDataItem = item.MountData;
-                    ((MountDataXmlWriteTranslation)((IXmlItem)MountDataItem).XmlWriteTranslator).Write(
-                        item: MountDataItem,
-                        node: node,
-                        name: nameof(item.MountData),
-                        fieldIndex: (int)Race_FieldIndex.MountData,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.MountData));
-                }
-            }
-            else
-            {
-                node.Add(new XElement("HasDATADataType"));
-            }
-            if ((item.SkeletalModel != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkeletalModel) ?? true))
-            {
-                {
-                    if (item.SkeletalModel.Male.TryGet(out var Item))
-                    {
-                        ((SimpleModelXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: node,
-                            name: nameof(item.SkeletalModel),
-                            errorMask: errorMask,
-                            translationMask: translationMask);
-                    }
-                }
-                {
-                    if (item.SkeletalModel.Female.TryGet(out var Item))
-                    {
-                        ((SimpleModelXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: node,
-                            name: nameof(item.SkeletalModel),
-                            errorMask: errorMask,
-                            translationMask: translationMask);
-                    }
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
-            {
-                ListXmlTranslation<String>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MovementTypeNames),
-                    item: item.MovementTypeNames,
-                    fieldIndex: (int)Race_FieldIndex.MovementTypeNames,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.MovementTypeNames),
-                    transl: (XElement subNode, String subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
-            {
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Voices),
-                        item: item.Voices.Male.FormKey,
-                        errorMask: errorMask);
-                }
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Voices),
-                        item: item.Voices.Female.FormKey,
-                        errorMask: errorMask);
-                }
-            }
-            if ((item.DecapitateArmors != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DecapitateArmors) ?? true))
-            {
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.DecapitateArmors),
-                        item: item.DecapitateArmors.Male.FormKey,
-                        errorMask: errorMask);
-                }
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.DecapitateArmors),
-                        item: item.DecapitateArmors.Female.FormKey,
-                        errorMask: errorMask);
-                }
-            }
-            if ((item.DefaultHairColors != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
-            {
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.DefaultHairColors),
-                        item: item.DefaultHairColors.Male.FormKey,
-                        errorMask: errorMask);
-                }
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.DefaultHairColors),
-                        item: item.DefaultHairColors.Female.FormKey,
-                        errorMask: errorMask);
-                }
-            }
-            if ((item.NumberOfTintsInList != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.NumberOfTintsInList) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NumberOfTintsInList),
-                    item: item.NumberOfTintsInList.Value,
-                    fieldIndex: (int)Race_FieldIndex.NumberOfTintsInList,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenMainClamp) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FacegenMainClamp),
-                    item: item.FacegenMainClamp,
-                    fieldIndex: (int)Race_FieldIndex.FacegenMainClamp,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenFaceClamp) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FacegenFaceClamp),
-                    item: item.FacegenFaceClamp,
-                    fieldIndex: (int)Race_FieldIndex.FacegenFaceClamp,
-                    errorMask: errorMask);
-            }
-            if ((item.AttackRace.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.AttackRace) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AttackRace),
-                    item: item.AttackRace.FormKey,
-                    fieldIndex: (int)Race_FieldIndex.AttackRace,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
-            {
-                ListXmlTranslation<IAttackGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Attacks),
-                    item: item.Attacks,
-                    fieldIndex: (int)Race_FieldIndex.Attacks,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Attacks),
-                    transl: (XElement subNode, IAttackGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((AttackXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
-            {
-                {
-                    if (item.BodyData.Male.TryGet(out var Item))
-                    {
-                        ((BodyDataXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: node,
-                            name: nameof(item.BodyData),
-                            errorMask: errorMask,
-                            translationMask: translationMask);
-                    }
-                }
-                {
-                    if (item.BodyData.Female.TryGet(out var Item))
-                    {
-                        ((BodyDataXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: node,
-                            name: nameof(item.BodyData),
-                            errorMask: errorMask,
-                            translationMask: translationMask);
-                    }
-                }
-            }
-            if ((item.Hairs != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IHairGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Hairs),
-                    item: item.Hairs,
-                    fieldIndex: (int)Race_FieldIndex.Hairs,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Hairs),
-                    transl: (XElement subNode, IFormLink<IHairGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.Eyes != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Eyes) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IEyesGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Eyes),
-                    item: item.Eyes,
-                    fieldIndex: (int)Race_FieldIndex.Eyes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Eyes),
-                    transl: (XElement subNode, IFormLink<IEyesGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.BodyPartData.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BodyPartData) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BodyPartData),
-                    item: item.BodyPartData.FormKey,
-                    fieldIndex: (int)Race_FieldIndex.BodyPartData,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.BehaviorGraph) ?? true))
-            {
-                {
-                    if (item.BehaviorGraph.Male.TryGet(out var Item))
-                    {
-                        ((ModelXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: node,
-                            name: nameof(item.BehaviorGraph),
-                            errorMask: errorMask,
-                            translationMask: translationMask);
-                    }
-                }
-                {
-                    if (item.BehaviorGraph.Female.TryGet(out var Item))
-                    {
-                        ((ModelXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: node,
-                            name: nameof(item.BehaviorGraph),
-                            errorMask: errorMask,
-                            translationMask: translationMask);
-                    }
-                }
-            }
-            if ((item.MaterialType.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.MaterialType) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaterialType),
-                    item: item.MaterialType.FormKey,
-                    fieldIndex: (int)Race_FieldIndex.MaterialType,
-                    errorMask: errorMask);
-            }
-            if ((item.ImpactDataSet.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.ImpactDataSet) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ImpactDataSet),
-                    item: item.ImpactDataSet.FormKey,
-                    fieldIndex: (int)Race_FieldIndex.ImpactDataSet,
-                    errorMask: errorMask);
-            }
-            if ((item.DecapitationFX.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.DecapitationFX) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DecapitationFX),
-                    item: item.DecapitationFX.FormKey,
-                    fieldIndex: (int)Race_FieldIndex.DecapitationFX,
-                    errorMask: errorMask);
-            }
-            if ((item.OpenLootSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.OpenLootSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.OpenLootSound),
-                    item: item.OpenLootSound.FormKey,
-                    fieldIndex: (int)Race_FieldIndex.OpenLootSound,
-                    errorMask: errorMask);
-            }
-            if ((item.CloseLootSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.CloseLootSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CloseLootSound),
-                    item: item.CloseLootSound.FormKey,
-                    fieldIndex: (int)Race_FieldIndex.CloseLootSound,
-                    errorMask: errorMask);
-            }
-            if ((item.BipedObjectNames != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BipedObjectNames) ?? true))
-            {
-                DictXmlTranslation<BipedObject, String>.Instance.Write(
-                    node: node,
-                    name: nameof(item.BipedObjectNames),
-                    items: item.BipedObjectNames,
-                    fieldIndex: (int)Race_FieldIndex.BipedObjectNames,
-                    errorMask: errorMask,
-                    translationMask: translationMask,
-                    keyTransl: (XElement subNode, BipedObject subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
-                    {
-                        EnumXmlTranslation<BipedObject>.Instance.Write(
-                            node: subNode,
-                            name: "Key",
-                            item: subItem,
-                            errorMask: dictSubMask);
-                    },
-                    valTransl: (XElement subNode, String subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: "Value",
-                            item: subItem,
-                            errorMask: dictSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypes) ?? true))
-            {
-                ListXmlTranslation<IRaceMovementTypeGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MovementTypes),
-                    item: item.MovementTypes,
-                    fieldIndex: (int)Race_FieldIndex.MovementTypes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.MovementTypes),
-                    transl: (XElement subNode, IRaceMovementTypeGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((RaceMovementTypeXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.EquipmentFlags != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.EquipmentFlags) ?? true))
-            {
-                EnumXmlTranslation<EquipTypeFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.EquipmentFlags),
-                    item: item.EquipmentFlags,
-                    fieldIndex: (int)Race_FieldIndex.EquipmentFlags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.EquipmentSlots) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IEquipTypeGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.EquipmentSlots),
-                    item: item.EquipmentSlots,
-                    fieldIndex: (int)Race_FieldIndex.EquipmentSlots,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.EquipmentSlots),
-                    transl: (XElement subNode, IFormLink<IEquipTypeGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.UnarmedEquipSlot.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedEquipSlot) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.UnarmedEquipSlot),
-                    item: item.UnarmedEquipSlot.FormKey,
-                    fieldIndex: (int)Race_FieldIndex.UnarmedEquipSlot,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
-            {
-                var FaceFxPhonemesItem = item.FaceFxPhonemes;
-                ((FaceFxPhonemesXmlWriteTranslation)((IXmlItem)FaceFxPhonemesItem).XmlWriteTranslator).Write(
-                    item: FaceFxPhonemesItem,
-                    node: node,
-                    name: nameof(item.FaceFxPhonemes),
-                    fieldIndex: (int)Race_FieldIndex.FaceFxPhonemes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceFxPhonemes));
-            }
-            if ((item.BaseMovementDefaultWalk.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultWalk) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BaseMovementDefaultWalk),
-                    item: item.BaseMovementDefaultWalk.FormKey,
-                    fieldIndex: (int)Race_FieldIndex.BaseMovementDefaultWalk,
-                    errorMask: errorMask);
-            }
-            if ((item.BaseMovementDefaultRun.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultRun) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BaseMovementDefaultRun),
-                    item: item.BaseMovementDefaultRun.FormKey,
-                    fieldIndex: (int)Race_FieldIndex.BaseMovementDefaultRun,
-                    errorMask: errorMask);
-            }
-            if ((item.BaseMovementDefaultSwim.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSwim) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BaseMovementDefaultSwim),
-                    item: item.BaseMovementDefaultSwim.FormKey,
-                    fieldIndex: (int)Race_FieldIndex.BaseMovementDefaultSwim,
-                    errorMask: errorMask);
-            }
-            if ((item.BaseMovementDefaultFly.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultFly) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BaseMovementDefaultFly),
-                    item: item.BaseMovementDefaultFly.FormKey,
-                    fieldIndex: (int)Race_FieldIndex.BaseMovementDefaultFly,
-                    errorMask: errorMask);
-            }
-            if ((item.BaseMovementDefaultSneak.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSneak) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BaseMovementDefaultSneak),
-                    item: item.BaseMovementDefaultSneak.FormKey,
-                    fieldIndex: (int)Race_FieldIndex.BaseMovementDefaultSneak,
-                    errorMask: errorMask);
-            }
-            if ((item.BaseMovementDefaultSprint.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSprint) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BaseMovementDefaultSprint),
-                    item: item.BaseMovementDefaultSprint.FormKey,
-                    fieldIndex: (int)Race_FieldIndex.BaseMovementDefaultSprint,
-                    errorMask: errorMask);
-            }
-            if ((item.HeadData != null)
-                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.HeadData) ?? true))
-            {
-                {
-                    if (item.HeadData.Male.TryGet(out var Item))
-                    {
-                        ((HeadDataXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: node,
-                            name: nameof(item.HeadData),
-                            errorMask: errorMask,
-                            translationMask: translationMask);
-                    }
-                }
-                {
-                    if (item.HeadData.Female.TryGet(out var Item))
-                    {
-                        ((HeadDataXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: node,
-                            name: nameof(item.HeadData),
-                            errorMask: errorMask,
-                            translationMask: translationMask);
-                    }
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Race.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Race_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IRaceGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Race");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Race");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IRaceGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IRaceGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IRaceGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class RaceXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static RaceXmlCreateTranslation Instance = new RaceXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IRaceInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    RaceXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IRaceInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Name":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Description":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Description);
-                    try
-                    {
-                        item.Description = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ActorEffect":
-                    errorMask?.PushIndex((int)Race_FieldIndex.ActorEffect);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<ASpell>>.Instance.Parse(
-                            node: node,
-                            enumer: out var ActorEffectItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.ActorEffect = ActorEffectItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.ActorEffect = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Skin":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Skin);
-                    try
-                    {
-                        item.Skin = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BodyTemplate":
-                    errorMask?.PushIndex((int)Race_FieldIndex.BodyTemplate);
-                    try
-                    {
-                        item.BodyTemplate = LoquiXmlTranslation<BodyTemplate>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.BodyTemplate));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Keywords":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Keywords);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
-                            node: node,
-                            enumer: out var KeywordsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Keywords = KeywordsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Keywords = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkillBoost0":
-                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost0);
-                    try
-                    {
-                        item.SkillBoost0 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost0));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkillBoost1":
-                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost1);
-                    try
-                    {
-                        item.SkillBoost1 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost1));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkillBoost2":
-                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost2);
-                    try
-                    {
-                        item.SkillBoost2 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost2));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkillBoost3":
-                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost3);
-                    try
-                    {
-                        item.SkillBoost3 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost3));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkillBoost4":
-                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost4);
-                    try
-                    {
-                        item.SkillBoost4 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost4));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkillBoost5":
-                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost5);
-                    try
-                    {
-                        item.SkillBoost5 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost5));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkillBoost6":
-                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost6);
-                    try
-                    {
-                        item.SkillBoost6 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost6));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Unknown);
-                    try
-                    {
-                        item.Unknown = Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Height":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Height);
-                    try
-                    {
-                        item.Height = new GenderedItem<Single>(
-                            male: FloatXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask),
-                            female: FloatXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weight":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Weight);
-                    try
-                    {
-                        item.Weight = new GenderedItem<Single>(
-                            male: FloatXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask),
-                            female: FloatXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Race.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Starting":
-                    DictXmlTranslation<BasicStat, Single>.Instance.ParseInto(
-                        node: node,
-                        item: item.Starting,
-                        fieldIndex: (int)Race_FieldIndex.Starting,
-                        errorMask: errorMask,
-                        translationMask: translationMask,
-                        keyTransl: EnumXmlTranslation<BasicStat>.Instance.Parse,
-                        valTransl: FloatXmlTranslation.Instance.Parse);
-                    break;
-                case "BaseCarryWeight":
-                    errorMask?.PushIndex((int)Race_FieldIndex.BaseCarryWeight);
-                    try
-                    {
-                        item.BaseCarryWeight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BaseMass":
-                    errorMask?.PushIndex((int)Race_FieldIndex.BaseMass);
-                    try
-                    {
-                        item.BaseMass = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AccelerationRate":
-                    errorMask?.PushIndex((int)Race_FieldIndex.AccelerationRate);
-                    try
-                    {
-                        item.AccelerationRate = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DecelerationRate":
-                    errorMask?.PushIndex((int)Race_FieldIndex.DecelerationRate);
-                    try
-                    {
-                        item.DecelerationRate = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Size":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Size);
-                    try
-                    {
-                        item.Size = EnumXmlTranslation<Size>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HeadBipedObject":
-                    errorMask?.PushIndex((int)Race_FieldIndex.HeadBipedObject);
-                    try
-                    {
-                        item.HeadBipedObject = EnumXmlTranslation<BipedObject>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HairBipedObject":
-                    errorMask?.PushIndex((int)Race_FieldIndex.HairBipedObject);
-                    try
-                    {
-                        item.HairBipedObject = EnumXmlTranslation<BipedObject>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "InjuredHealthPercent":
-                    errorMask?.PushIndex((int)Race_FieldIndex.InjuredHealthPercent);
-                    try
-                    {
-                        item.InjuredHealthPercent = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ShieldBipedObject":
-                    errorMask?.PushIndex((int)Race_FieldIndex.ShieldBipedObject);
-                    try
-                    {
-                        item.ShieldBipedObject = EnumXmlTranslation<BipedObject>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Regen":
-                    DictXmlTranslation<BasicStat, Single>.Instance.ParseInto(
-                        node: node,
-                        item: item.Regen,
-                        fieldIndex: (int)Race_FieldIndex.Regen,
-                        errorMask: errorMask,
-                        translationMask: translationMask,
-                        keyTransl: EnumXmlTranslation<BasicStat>.Instance.Parse,
-                        valTransl: FloatXmlTranslation.Instance.Parse);
-                    break;
-                case "UnarmedDamage":
-                    errorMask?.PushIndex((int)Race_FieldIndex.UnarmedDamage);
-                    try
-                    {
-                        item.UnarmedDamage = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnarmedReach":
-                    errorMask?.PushIndex((int)Race_FieldIndex.UnarmedReach);
-                    try
-                    {
-                        item.UnarmedReach = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BodyBipedObject":
-                    errorMask?.PushIndex((int)Race_FieldIndex.BodyBipedObject);
-                    try
-                    {
-                        item.BodyBipedObject = EnumXmlTranslation<BipedObject>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AimAngleTolerance":
-                    errorMask?.PushIndex((int)Race_FieldIndex.AimAngleTolerance);
-                    try
-                    {
-                        item.AimAngleTolerance = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FlightRadius":
-                    errorMask?.PushIndex((int)Race_FieldIndex.FlightRadius);
-                    try
-                    {
-                        item.FlightRadius = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AngularAccelerationRate":
-                    errorMask?.PushIndex((int)Race_FieldIndex.AngularAccelerationRate);
-                    try
-                    {
-                        item.AngularAccelerationRate = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AngularTolerance":
-                    errorMask?.PushIndex((int)Race_FieldIndex.AngularTolerance);
-                    try
-                    {
-                        item.AngularTolerance = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MountData":
-                    errorMask?.PushIndex((int)Race_FieldIndex.MountData);
-                    try
-                    {
-                        item.MountData = LoquiXmlTranslation<MountData>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.MountData));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~Race.DATADataType.Break0;
-                    break;
-                case "SkeletalModel":
-                    errorMask?.PushIndex((int)Race_FieldIndex.SkeletalModel);
-                    try
-                    {
-                        item.SkeletalModel = new GenderedItem<SimpleModel?>(
-                            male: LoquiXmlTranslation<SimpleModel>.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: null),
-                            female: LoquiXmlTranslation<SimpleModel>.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: null));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MovementTypeNames":
-                    errorMask?.PushIndex((int)Race_FieldIndex.MovementTypeNames);
-                    try
-                    {
-                        if (ListXmlTranslation<String>.Instance.Parse(
-                            node: node,
-                            enumer: out var MovementTypeNamesItem,
-                            transl: StringXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.MovementTypeNames.SetTo(MovementTypeNamesItem);
-                        }
-                        else
-                        {
-                            item.MovementTypeNames.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Voices":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Voices);
-                    try
-                    {
-                        item.Voices = new GenderedItem<IFormLink<VoiceType>>(
-                            male: new FormLink<VoiceType>(FormKeyXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask)),
-                            female: new FormLink<VoiceType>(FormKeyXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask)));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DecapitateArmors":
-                    errorMask?.PushIndex((int)Race_FieldIndex.DecapitateArmors);
-                    try
-                    {
-                        item.DecapitateArmors = new GenderedItem<IFormLink<Armor>>(
-                            male: new FormLink<Armor>(FormKeyXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask)),
-                            female: new FormLink<Armor>(FormKeyXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask)));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DefaultHairColors":
-                    errorMask?.PushIndex((int)Race_FieldIndex.DefaultHairColors);
-                    try
-                    {
-                        item.DefaultHairColors = new GenderedItem<IFormLink<ColorRecord>>(
-                            male: new FormLink<ColorRecord>(FormKeyXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask)),
-                            female: new FormLink<ColorRecord>(FormKeyXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask)));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NumberOfTintsInList":
-                    errorMask?.PushIndex((int)Race_FieldIndex.NumberOfTintsInList);
-                    try
-                    {
-                        item.NumberOfTintsInList = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FacegenMainClamp":
-                    errorMask?.PushIndex((int)Race_FieldIndex.FacegenMainClamp);
-                    try
-                    {
-                        item.FacegenMainClamp = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FacegenFaceClamp":
-                    errorMask?.PushIndex((int)Race_FieldIndex.FacegenFaceClamp);
-                    try
-                    {
-                        item.FacegenFaceClamp = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AttackRace":
-                    errorMask?.PushIndex((int)Race_FieldIndex.AttackRace);
-                    try
-                    {
-                        item.AttackRace = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Attacks":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Attacks);
-                    try
-                    {
-                        if (ListXmlTranslation<Attack>.Instance.Parse(
-                            node: node,
-                            enumer: out var AttacksItem,
-                            transl: LoquiXmlTranslation<Attack>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Attacks.SetTo(AttacksItem);
-                        }
-                        else
-                        {
-                            item.Attacks.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BodyData":
-                    errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
-                    try
-                    {
-                        item.BodyData = new GenderedItem<BodyData?>(
-                            male: LoquiXmlTranslation<BodyData>.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: null),
-                            female: LoquiXmlTranslation<BodyData>.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: null));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Hairs":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Hairs);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Hair>>.Instance.Parse(
-                            node: node,
-                            enumer: out var HairsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Hairs = HairsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Hairs = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Eyes":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Eyes);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Eyes>>.Instance.Parse(
-                            node: node,
-                            enumer: out var EyesItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Eyes = EyesItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Eyes = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BodyPartData":
-                    errorMask?.PushIndex((int)Race_FieldIndex.BodyPartData);
-                    try
-                    {
-                        item.BodyPartData = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BehaviorGraph":
-                    errorMask?.PushIndex((int)Race_FieldIndex.BehaviorGraph);
-                    try
-                    {
-                        item.BehaviorGraph = new GenderedItem<Model?>(
-                            male: LoquiXmlTranslation<Model>.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: null),
-                            female: LoquiXmlTranslation<Model>.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: null));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaterialType":
-                    errorMask?.PushIndex((int)Race_FieldIndex.MaterialType);
-                    try
-                    {
-                        item.MaterialType = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ImpactDataSet":
-                    errorMask?.PushIndex((int)Race_FieldIndex.ImpactDataSet);
-                    try
-                    {
-                        item.ImpactDataSet = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DecapitationFX":
-                    errorMask?.PushIndex((int)Race_FieldIndex.DecapitationFX);
-                    try
-                    {
-                        item.DecapitationFX = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "OpenLootSound":
-                    errorMask?.PushIndex((int)Race_FieldIndex.OpenLootSound);
-                    try
-                    {
-                        item.OpenLootSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CloseLootSound":
-                    errorMask?.PushIndex((int)Race_FieldIndex.CloseLootSound);
-                    try
-                    {
-                        item.CloseLootSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BipedObjectNames":
-                    DictXmlTranslation<BipedObject, String>.Instance.ParseInto(
-                        node: node,
-                        item: item.BipedObjectNames,
-                        fieldIndex: (int)Race_FieldIndex.BipedObjectNames,
-                        errorMask: errorMask,
-                        translationMask: translationMask,
-                        keyTransl: EnumXmlTranslation<BipedObject>.Instance.Parse,
-                        valTransl: StringXmlTranslation.Instance.Parse);
-                    break;
-                case "MovementTypes":
-                    errorMask?.PushIndex((int)Race_FieldIndex.MovementTypes);
-                    try
-                    {
-                        if (ListXmlTranslation<RaceMovementType>.Instance.Parse(
-                            node: node,
-                            enumer: out var MovementTypesItem,
-                            transl: LoquiXmlTranslation<RaceMovementType>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.MovementTypes.SetTo(MovementTypesItem);
-                        }
-                        else
-                        {
-                            item.MovementTypes.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EquipmentFlags":
-                    errorMask?.PushIndex((int)Race_FieldIndex.EquipmentFlags);
-                    try
-                    {
-                        item.EquipmentFlags = EnumXmlTranslation<EquipTypeFlag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EquipmentSlots":
-                    errorMask?.PushIndex((int)Race_FieldIndex.EquipmentSlots);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<EquipType>>.Instance.Parse(
-                            node: node,
-                            enumer: out var EquipmentSlotsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.EquipmentSlots.SetTo(EquipmentSlotsItem);
-                        }
-                        else
-                        {
-                            item.EquipmentSlots.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnarmedEquipSlot":
-                    errorMask?.PushIndex((int)Race_FieldIndex.UnarmedEquipSlot);
-                    try
-                    {
-                        item.UnarmedEquipSlot = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FaceFxPhonemes":
-                    errorMask?.PushIndex((int)Race_FieldIndex.FaceFxPhonemes);
-                    try
-                    {
-                        item.FaceFxPhonemes = LoquiXmlTranslation<FaceFxPhonemes>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceFxPhonemes));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BaseMovementDefaultWalk":
-                    errorMask?.PushIndex((int)Race_FieldIndex.BaseMovementDefaultWalk);
-                    try
-                    {
-                        item.BaseMovementDefaultWalk = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BaseMovementDefaultRun":
-                    errorMask?.PushIndex((int)Race_FieldIndex.BaseMovementDefaultRun);
-                    try
-                    {
-                        item.BaseMovementDefaultRun = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BaseMovementDefaultSwim":
-                    errorMask?.PushIndex((int)Race_FieldIndex.BaseMovementDefaultSwim);
-                    try
-                    {
-                        item.BaseMovementDefaultSwim = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BaseMovementDefaultFly":
-                    errorMask?.PushIndex((int)Race_FieldIndex.BaseMovementDefaultFly);
-                    try
-                    {
-                        item.BaseMovementDefaultFly = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BaseMovementDefaultSneak":
-                    errorMask?.PushIndex((int)Race_FieldIndex.BaseMovementDefaultSneak);
-                    try
-                    {
-                        item.BaseMovementDefaultSneak = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BaseMovementDefaultSprint":
-                    errorMask?.PushIndex((int)Race_FieldIndex.BaseMovementDefaultSprint);
-                    try
-                    {
-                        item.BaseMovementDefaultSprint = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HeadData":
-                    errorMask?.PushIndex((int)Race_FieldIndex.HeadData);
-                    try
-                    {
-                        item.HeadData = new GenderedItem<HeadData?>(
-                            male: LoquiXmlTranslation<HeadData>.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: null),
-                            female: LoquiXmlTranslation<HeadData>.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask,
-                                translationMask: null));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Race_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Race.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class RaceXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IRaceGetter item,
-            XElement node,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((RaceXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Race.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IRaceGetter item,
-            string path,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IRaceGetter item,
-            Stream stream,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -10216,6 +7518,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IBinaryWriteTranslator
     {
         public new readonly static RaceBinaryWriteTranslation Instance = new RaceBinaryWriteTranslation();
+
+        static partial void WriteBinaryBodyTemplateCustom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryBodyTemplate(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryBodyTemplateCustom(
+                writer: writer,
+                item: item);
+        }
 
         static partial void WriteBinaryFlags2Custom(
             MutagenWriter writer,
@@ -10313,7 +7628,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IASpellGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.ActorEffect,
@@ -10331,13 +7647,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Skin,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
-            if (item.BodyTemplate.TryGet(out var BodyTemplateItem))
-            {
-                ((BodyTemplateBinaryWriteTranslation)((IBinaryItem)BodyTemplateItem).BinaryWriteTranslator).Write(
-                    item: BodyTemplateItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            RaceBinaryWriteTranslation.WriteBinaryBodyTemplate(
+                writer: writer,
+                item: item);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
@@ -10716,6 +8028,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: conv);
                     }
                 });
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MorphRace,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM8));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ArmorRace,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
         }
 
         public void Write(
@@ -10731,10 +8051,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -10790,9 +8112,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRaceInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -10807,15 +8130,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Name);
+                    return (int)Race_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Description);
+                    return (int)Race_FieldIndex.Description;
                 }
                 case RecordTypeInts.SPLO:
                 case RecordTypeInts.SPCT:
@@ -10827,8 +8151,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPCT),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<ASpell>>();
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.ActorEffect);
+                        .CastExtendedList<IFormLink<ASpell>>();
+                    return (int)Race_FieldIndex.ActorEffect;
                 }
                 case RecordTypeInts.WNAM:
                 {
@@ -10836,12 +8160,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Skin = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Skin);
+                    return (int)Race_FieldIndex.Skin;
                 }
                 case RecordTypeInts.BODT:
+                case RecordTypeInts.BOD2:
                 {
-                    item.BodyTemplate = Mutagen.Bethesda.Skyrim.BodyTemplate.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyTemplate);
+                    RaceBinaryCreateTranslation.FillBinaryBodyTemplateCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return (int)Race_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -10853,8 +8180,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Keywords);
+                        .CastExtendedList<IFormLink<Keyword>>();
+                    return (int)Race_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -10905,10 +8232,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Race.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)Race_FieldIndex.AngularTolerance);
+                        return (int)Race_FieldIndex.AngularTolerance;
                     }
                     item.MountData = Mutagen.Bethesda.Skyrim.MountData.CreateFromBinary(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.MountData);
+                    return (int)Race_FieldIndex.MountData;
                 }
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.FNAM:
@@ -10919,7 +8246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         femaleMarker: RecordTypes.FNAM,
                         recordTypeConverter: Race_Registration.SkeletalModelConverter,
                         transl: SimpleModel.TryCreateFromBinary);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.SkeletalModel);
+                    return (int)Race_FieldIndex.SkeletalModel;
                 }
                 case RecordTypeInts.MTNM:
                 {
@@ -10932,9 +8259,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                                     r,
                                     item: out listSubItem,
-                                    parseWhole: true);
+                                    parseWhole: true,
+                                    binaryType: StringBinaryType.Plain);
                             }));
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.MovementTypeNames);
+                    return (int)Race_FieldIndex.MovementTypeNames;
                 }
                 case RecordTypeInts.VTCK:
                 {
@@ -10942,7 +8270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Voices = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<VoiceType>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Voices);
+                    return (int)Race_FieldIndex.Voices;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -10950,7 +8278,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DecapitateArmors = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<Armor>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.DecapitateArmors);
+                    return (int)Race_FieldIndex.DecapitateArmors;
                 }
                 case RecordTypeInts.HCLF:
                 {
@@ -10958,25 +8286,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DefaultHairColors = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLink<ColorRecord>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHairColors);
+                    return (int)Race_FieldIndex.DefaultHairColors;
                 }
                 case RecordTypeInts.TINL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NumberOfTintsInList = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.NumberOfTintsInList);
+                    return (int)Race_FieldIndex.NumberOfTintsInList;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FacegenMainClamp = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FacegenMainClamp);
+                    return (int)Race_FieldIndex.FacegenMainClamp;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FacegenFaceClamp = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FacegenFaceClamp);
+                    return (int)Race_FieldIndex.FacegenFaceClamp;
                 }
                 case RecordTypeInts.ATKR:
                 {
@@ -10984,7 +8312,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AttackRace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.AttackRace);
+                    return (int)Race_FieldIndex.AttackRace;
                 }
                 case RecordTypeInts.ATKD:
                 case RecordTypeInts.ATKE:
@@ -10995,7 +8323,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: Attack_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Attack.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Attacks);
+                    return (int)Race_FieldIndex.Attacks;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -11005,7 +8333,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
                         transl: BodyData.TryCreateFromBinary);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
+                    return (int)Race_FieldIndex.BodyData;
                 }
                 case RecordTypeInts.HNAM:
                 {
@@ -11014,8 +8342,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Hair>>();
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
+                        .CastExtendedList<IFormLink<Hair>>();
+                    return (int)Race_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.ENAM:
                 {
@@ -11024,8 +8352,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eyes>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Eyes>>();
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
+                        .CastExtendedList<IFormLink<Eyes>>();
+                    return (int)Race_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -11033,7 +8361,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.BodyPartData = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyPartData);
+                    return (int)Race_FieldIndex.BodyPartData;
                 }
                 case RecordTypeInts.NAM3:
                 {
@@ -11043,7 +8371,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
                         transl: Model.TryCreateFromBinary);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BehaviorGraph);
+                    return (int)Race_FieldIndex.BehaviorGraph;
                 }
                 case RecordTypeInts.NAM4:
                 {
@@ -11051,7 +8379,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MaterialType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.MaterialType);
+                    return (int)Race_FieldIndex.MaterialType;
                 }
                 case RecordTypeInts.NAM5:
                 {
@@ -11059,7 +8387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImpactDataSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.ImpactDataSet);
+                    return (int)Race_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.NAM7:
                 {
@@ -11067,7 +8395,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DecapitationFX = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.DecapitationFX);
+                    return (int)Race_FieldIndex.DecapitationFX;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -11075,7 +8403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.OpenLootSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.OpenLootSound);
+                    return (int)Race_FieldIndex.OpenLootSound;
                 }
                 case RecordTypeInts.LNAM:
                 {
@@ -11083,14 +8411,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CloseLootSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.CloseLootSound);
+                    return (int)Race_FieldIndex.CloseLootSound;
                 }
                 case RecordTypeInts.NAME:
                 {
                     RaceBinaryCreateTranslation.FillBinaryBipedObjectNamesCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BipedObjectNames);
+                    return (int)Race_FieldIndex.BipedObjectNames;
                 }
                 case RecordTypeInts.MTYP:
                 case RecordTypeInts.SPED:
@@ -11101,13 +8429,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RaceMovementType_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: RaceMovementType.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.MovementTypes);
+                    return (int)Race_FieldIndex.MovementTypes;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EquipmentFlags = EnumBinaryTranslation<EquipTypeFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.EquipmentFlags);
+                    return (int)Race_FieldIndex.EquipmentFlags;
                 }
                 case RecordTypeInts.QNAM:
                 {
@@ -11116,7 +8444,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.EquipmentSlots);
+                    return (int)Race_FieldIndex.EquipmentSlots;
                 }
                 case RecordTypeInts.UNES:
                 {
@@ -11124,21 +8452,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.UnarmedEquipSlot = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.UnarmedEquipSlot);
+                    return (int)Race_FieldIndex.UnarmedEquipSlot;
                 }
                 case RecordTypeInts.PHTN:
                 {
                     RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesListingParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.PHWT:
                 {
                     RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesRawParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.WKMV:
                 {
@@ -11146,7 +8474,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.BaseMovementDefaultWalk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultWalk);
+                    return (int)Race_FieldIndex.BaseMovementDefaultWalk;
                 }
                 case RecordTypeInts.RNMV:
                 {
@@ -11154,7 +8482,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.BaseMovementDefaultRun = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultRun);
+                    return (int)Race_FieldIndex.BaseMovementDefaultRun;
                 }
                 case RecordTypeInts.SWMV:
                 {
@@ -11162,7 +8490,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.BaseMovementDefaultSwim = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultSwim);
+                    return (int)Race_FieldIndex.BaseMovementDefaultSwim;
                 }
                 case RecordTypeInts.FLMV:
                 {
@@ -11170,7 +8498,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.BaseMovementDefaultFly = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultFly);
+                    return (int)Race_FieldIndex.BaseMovementDefaultFly;
                 }
                 case RecordTypeInts.SNMV:
                 {
@@ -11178,7 +8506,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.BaseMovementDefaultSneak = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultSneak);
+                    return (int)Race_FieldIndex.BaseMovementDefaultSneak;
                 }
                 case RecordTypeInts.SPMV:
                 {
@@ -11186,7 +8514,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.BaseMovementDefaultSprint = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultSprint);
+                    return (int)Race_FieldIndex.BaseMovementDefaultSprint;
                 }
                 case RecordTypeInts.NAM0:
                 {
@@ -11197,16 +8525,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         marker: RecordTypes.NAM0,
                         femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
                         transl: HeadData.TryCreateFromBinary);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.HeadData);
+                    return (int)Race_FieldIndex.HeadData;
+                }
+                case RecordTypeInts.NAM8:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MorphRace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return (int)Race_FieldIndex.MorphRace;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ArmorRace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return (int)Race_FieldIndex.ArmorRace;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
         }
+
+        static partial void FillBinaryBodyTemplateCustom(
+            MutagenFrame frame,
+            IRaceInternal item);
 
         static partial void FillBinaryFlags2Custom(
             MutagenFrame frame,
@@ -11269,21 +8618,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => RaceXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((RaceXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -11302,18 +8636,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants)) : string.Empty;
+        public TranslatedString Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : string.Empty;
         #endregion
         public IReadOnlyList<IFormLink<IASpellGetter>>? ActorEffect { get; private set; }
         #region Skin
         private int? _SkinLocation;
         public bool Skin_IsSet => _SkinLocation.HasValue;
-        public IFormLinkNullable<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public IFormLinkNullable<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
         #endregion
         #region BodyTemplate
-        private RangeInt32? _BodyTemplateLocation;
-        public IBodyTemplateGetter? BodyTemplate => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new OverlayStream(_data.Slice(_BodyTemplateLocation!.Value.Min), _package), _package) : default;
-        public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
+        partial void BodyTemplateCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset);
+        public IBodyTemplateGetter? BodyTemplate => GetBodyTemplateCustom();
         #endregion
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
         private int? _DATALocation;
@@ -11375,8 +8711,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 if (!_Height_IsSet) return new GenderedItem<Single>(default, default);
                 var data = _data.Span.Slice(_HeightLocation);
                 return new GenderedItem<Single>(
-                    SpanExt.GetFloat(data),
-                    SpanExt.GetFloat(data.Slice(4)));
+                    data.Float(),
+                    data.Slice(4).Float());
             }
         }
         #endregion
@@ -11390,8 +8726,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 if (!_Weight_IsSet) return new GenderedItem<Single>(default, default);
                 var data = _data.Span.Slice(_WeightLocation);
                 return new GenderedItem<Single>(
-                    SpanExt.GetFloat(data),
-                    SpanExt.GetFloat(data.Slice(4)));
+                    data.Float(),
+                    data.Slice(4).Float());
             }
         }
         #endregion
@@ -11410,22 +8746,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region BaseCarryWeight
         private int _BaseCarryWeightLocation => _DATALocation!.Value + 0x30;
         private bool _BaseCarryWeight_IsSet => _DATALocation.HasValue;
-        public Single BaseCarryWeight => _BaseCarryWeight_IsSet ? SpanExt.GetFloat(_data.Slice(_BaseCarryWeightLocation, 4)) : default;
+        public Single BaseCarryWeight => _BaseCarryWeight_IsSet ? _data.Slice(_BaseCarryWeightLocation, 4).Float() : default;
         #endregion
         #region BaseMass
         private int _BaseMassLocation => _DATALocation!.Value + 0x34;
         private bool _BaseMass_IsSet => _DATALocation.HasValue;
-        public Single BaseMass => _BaseMass_IsSet ? SpanExt.GetFloat(_data.Slice(_BaseMassLocation, 4)) : default;
+        public Single BaseMass => _BaseMass_IsSet ? _data.Slice(_BaseMassLocation, 4).Float() : default;
         #endregion
         #region AccelerationRate
         private int _AccelerationRateLocation => _DATALocation!.Value + 0x38;
         private bool _AccelerationRate_IsSet => _DATALocation.HasValue;
-        public Single AccelerationRate => _AccelerationRate_IsSet ? SpanExt.GetFloat(_data.Slice(_AccelerationRateLocation, 4)) : default;
+        public Single AccelerationRate => _AccelerationRate_IsSet ? _data.Slice(_AccelerationRateLocation, 4).Float() : default;
         #endregion
         #region DecelerationRate
         private int _DecelerationRateLocation => _DATALocation!.Value + 0x3C;
         private bool _DecelerationRate_IsSet => _DATALocation.HasValue;
-        public Single DecelerationRate => _DecelerationRate_IsSet ? SpanExt.GetFloat(_data.Slice(_DecelerationRateLocation, 4)) : default;
+        public Single DecelerationRate => _DecelerationRate_IsSet ? _data.Slice(_DecelerationRateLocation, 4).Float() : default;
         #endregion
         #region Size
         private int _SizeLocation => _DATALocation!.Value + 0x40;
@@ -11445,7 +8781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region InjuredHealthPercent
         private int _InjuredHealthPercentLocation => _DATALocation!.Value + 0x4C;
         private bool _InjuredHealthPercent_IsSet => _DATALocation.HasValue;
-        public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? SpanExt.GetFloat(_data.Slice(_InjuredHealthPercentLocation, 4)) : default;
+        public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? _data.Slice(_InjuredHealthPercentLocation, 4).Float() : default;
         #endregion
         #region ShieldBipedObject
         private int _ShieldBipedObjectLocation => _DATALocation!.Value + 0x50;
@@ -11463,12 +8799,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region UnarmedDamage
         private int _UnarmedDamageLocation => _DATALocation!.Value + 0x60;
         private bool _UnarmedDamage_IsSet => _DATALocation.HasValue;
-        public Single UnarmedDamage => _UnarmedDamage_IsSet ? SpanExt.GetFloat(_data.Slice(_UnarmedDamageLocation, 4)) : default;
+        public Single UnarmedDamage => _UnarmedDamage_IsSet ? _data.Slice(_UnarmedDamageLocation, 4).Float() : default;
         #endregion
         #region UnarmedReach
         private int _UnarmedReachLocation => _DATALocation!.Value + 0x64;
         private bool _UnarmedReach_IsSet => _DATALocation.HasValue;
-        public Single UnarmedReach => _UnarmedReach_IsSet ? SpanExt.GetFloat(_data.Slice(_UnarmedReachLocation, 4)) : default;
+        public Single UnarmedReach => _UnarmedReach_IsSet ? _data.Slice(_UnarmedReachLocation, 4).Float() : default;
         #endregion
         #region BodyBipedObject
         private int _BodyBipedObjectLocation => _DATALocation!.Value + 0x68;
@@ -11478,22 +8814,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AimAngleTolerance
         private int _AimAngleToleranceLocation => _DATALocation!.Value + 0x6C;
         private bool _AimAngleTolerance_IsSet => _DATALocation.HasValue;
-        public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? SpanExt.GetFloat(_data.Slice(_AimAngleToleranceLocation, 4)) : default;
+        public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? _data.Slice(_AimAngleToleranceLocation, 4).Float() : default;
         #endregion
         #region FlightRadius
         private int _FlightRadiusLocation => _DATALocation!.Value + 0x70;
         private bool _FlightRadius_IsSet => _DATALocation.HasValue;
-        public Single FlightRadius => _FlightRadius_IsSet ? SpanExt.GetFloat(_data.Slice(_FlightRadiusLocation, 4)) : default;
+        public Single FlightRadius => _FlightRadius_IsSet ? _data.Slice(_FlightRadiusLocation, 4).Float() : default;
         #endregion
         #region AngularAccelerationRate
         private int _AngularAccelerationRateLocation => _DATALocation!.Value + 0x74;
         private bool _AngularAccelerationRate_IsSet => _DATALocation.HasValue;
-        public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? SpanExt.GetFloat(_data.Slice(_AngularAccelerationRateLocation, 4)) : default;
+        public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? _data.Slice(_AngularAccelerationRateLocation, 4).Float() : default;
         #endregion
         #region AngularTolerance
         private int _AngularToleranceLocation => _DATALocation!.Value + 0x78;
         private bool _AngularTolerance_IsSet => _DATALocation.HasValue;
-        public Single AngularTolerance => _AngularTolerance_IsSet ? SpanExt.GetFloat(_data.Slice(_AngularToleranceLocation, 4)) : default;
+        public Single AngularTolerance => _AngularTolerance_IsSet ? _data.Slice(_AngularToleranceLocation, 4).Float() : default;
         #endregion
         #region Flags2
         partial void Flags2CustomParse(
@@ -11559,16 +8895,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region FacegenMainClamp
         private int? _FacegenMainClampLocation;
-        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenMainClampLocation.Value, _package.MetaData.Constants)) : default;
+        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region FacegenFaceClamp
         private int? _FacegenFaceClampLocation;
-        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenFaceClampLocation.Value, _package.MetaData.Constants)) : default;
+        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region AttackRace
         private int? _AttackRaceLocation;
         public bool AttackRace_IsSet => _AttackRaceLocation.HasValue;
-        public IFormLinkNullable<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullable<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = ListExt.Empty<AttackBinaryOverlay>();
         #region BodyData
@@ -11580,7 +8916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region BodyPartData
         private int? _BodyPartDataLocation;
         public bool BodyPartData_IsSet => _BodyPartDataLocation.HasValue;
-        public IFormLinkNullable<IBodyPartDataGetter> BodyPartData => _BodyPartDataLocation.HasValue ? new FormLinkNullable<IBodyPartDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BodyPartDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBodyPartDataGetter>.Null;
+        public IFormLinkNullable<IBodyPartDataGetter> BodyPartData => _BodyPartDataLocation.HasValue ? new FormLinkNullable<IBodyPartDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BodyPartDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBodyPartDataGetter>.Null;
         #endregion
         #region ExtraNAM2
         partial void ExtraNAM2CustomParse(
@@ -11595,38 +8931,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region MaterialType
         private int? _MaterialTypeLocation;
         public bool MaterialType_IsSet => _MaterialTypeLocation.HasValue;
-        public IFormLinkNullable<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public IFormLinkNullable<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
         #endregion
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;
         public bool ImpactDataSet_IsSet => _ImpactDataSetLocation.HasValue;
-        public IFormLinkNullable<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
+        public IFormLinkNullable<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
         #endregion
         #region DecapitationFX
         private int? _DecapitationFXLocation;
         public bool DecapitationFX_IsSet => _DecapitationFXLocation.HasValue;
-        public IFormLinkNullable<IArtObjectGetter> DecapitationFX => _DecapitationFXLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DecapitationFXLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        public IFormLinkNullable<IArtObjectGetter> DecapitationFX => _DecapitationFXLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DecapitationFXLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
         #endregion
         #region OpenLootSound
         private int? _OpenLootSoundLocation;
         public bool OpenLootSound_IsSet => _OpenLootSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> OpenLootSound => _OpenLootSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OpenLootSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> OpenLootSound => _OpenLootSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OpenLootSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region CloseLootSound
         private int? _CloseLootSoundLocation;
         public bool CloseLootSound_IsSet => _CloseLootSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> CloseLootSound => _CloseLootSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CloseLootSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> CloseLootSound => _CloseLootSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CloseLootSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         public IReadOnlyList<IRaceMovementTypeGetter> MovementTypes { get; private set; } = ListExt.Empty<RaceMovementTypeBinaryOverlay>();
         #region EquipmentFlags
         private int? _EquipmentFlagsLocation;
-        public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipmentFlagsLocation!.Value, _package.MetaData.Constants)) : default(EquipTypeFlag?);
+        public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentFlagsLocation!.Value, _package.MetaData.Constants)) : default(EquipTypeFlag?);
         #endregion
         public IReadOnlyList<IFormLink<IEquipTypeGetter>> EquipmentSlots { get; private set; } = ListExt.Empty<IFormLink<IEquipTypeGetter>>();
         #region UnarmedEquipSlot
         private int? _UnarmedEquipSlotLocation;
         public bool UnarmedEquipSlot_IsSet => _UnarmedEquipSlotLocation.HasValue;
-        public IFormLinkNullable<IEquipTypeGetter> UnarmedEquipSlot => _UnarmedEquipSlotLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _UnarmedEquipSlotLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        public IFormLinkNullable<IEquipTypeGetter> UnarmedEquipSlot => _UnarmedEquipSlotLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnarmedEquipSlotLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
         #region FaceFxPhonemesListingParsing
         partial void FaceFxPhonemesListingParsingCustomParse(
@@ -11641,36 +8977,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region BaseMovementDefaultWalk
         private int? _BaseMovementDefaultWalkLocation;
         public bool BaseMovementDefaultWalk_IsSet => _BaseMovementDefaultWalkLocation.HasValue;
-        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultWalk => _BaseMovementDefaultWalkLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseMovementDefaultWalkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultWalk => _BaseMovementDefaultWalkLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultWalkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultRun
         private int? _BaseMovementDefaultRunLocation;
         public bool BaseMovementDefaultRun_IsSet => _BaseMovementDefaultRunLocation.HasValue;
-        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultRun => _BaseMovementDefaultRunLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseMovementDefaultRunLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultRun => _BaseMovementDefaultRunLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultRunLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultSwim
         private int? _BaseMovementDefaultSwimLocation;
         public bool BaseMovementDefaultSwim_IsSet => _BaseMovementDefaultSwimLocation.HasValue;
-        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSwim => _BaseMovementDefaultSwimLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseMovementDefaultSwimLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSwim => _BaseMovementDefaultSwimLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultSwimLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultFly
         private int? _BaseMovementDefaultFlyLocation;
         public bool BaseMovementDefaultFly_IsSet => _BaseMovementDefaultFlyLocation.HasValue;
-        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultFly => _BaseMovementDefaultFlyLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseMovementDefaultFlyLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultFly => _BaseMovementDefaultFlyLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultFlyLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultSneak
         private int? _BaseMovementDefaultSneakLocation;
         public bool BaseMovementDefaultSneak_IsSet => _BaseMovementDefaultSneakLocation.HasValue;
-        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSneak => _BaseMovementDefaultSneakLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseMovementDefaultSneakLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSneak => _BaseMovementDefaultSneakLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultSneakLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultSprint
         private int? _BaseMovementDefaultSprintLocation;
         public bool BaseMovementDefaultSprint_IsSet => _BaseMovementDefaultSprintLocation.HasValue;
-        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSprint => _BaseMovementDefaultSprintLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseMovementDefaultSprintLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSprint => _BaseMovementDefaultSprintLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultSprintLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region HeadData
         private IGenderedItemGetter<IHeadDataGetter?>? _HeadDataOverlay;
         public IGenderedItemGetter<IHeadDataGetter?>? HeadData => _HeadDataOverlay;
+        #endregion
+        #region MorphRace
+        private int? _MorphRaceLocation;
+        public bool MorphRace_IsSet => _MorphRaceLocation.HasValue;
+        public IFormLinkNullable<IRaceGetter> MorphRace => _MorphRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MorphRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        #endregion
+        #region ArmorRace
+        private int? _ArmorRaceLocation;
+        public bool ArmorRace_IsSet => _ArmorRaceLocation.HasValue;
+        public IFormLinkNullable<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ArmorRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -11697,8 +9043,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new RaceBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -11724,12 +9071,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -11738,17 +9086,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Name);
+                    return (int)Race_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Description);
+                    return (int)Race_FieldIndex.Description;
                 }
                 case RecordTypeInts.SPLO:
                 case RecordTypeInts.SPCT:
                 {
-                    this.ActorEffect = BinaryOverlayList<IFormLink<IASpellGetter>>.FactoryByCountPerItem(
+                    this.ActorEffect = BinaryOverlayList.FactoryByCountPerItem<IFormLink<IASpellGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -11756,22 +9104,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.SPCT,
                         subrecordType: RecordTypes.SPLO,
                         getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.ActorEffect);
+                    return (int)Race_FieldIndex.ActorEffect;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     _SkinLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Skin);
+                    return (int)Race_FieldIndex.Skin;
                 }
                 case RecordTypeInts.BODT:
+                case RecordTypeInts.BOD2:
                 {
-                    _BodyTemplateLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyTemplate);
+                    BodyTemplateCustomParse(
+                        stream,
+                        finalPos,
+                        offset);
+                    return (int)Race_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -11779,7 +9131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Keywords);
+                    return (int)Race_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -11789,7 +9141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.DATADataTypeState |= Race.DATADataType.Break0;
                     }
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.MountData);
+                    return (int)Race_FieldIndex.MountData;
                 }
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.FNAM:
@@ -11801,56 +9153,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         creator: (s, p, r) => SimpleModelBinaryOverlay.SimpleModelFactory(s, p, r),
                         recordTypeConverter: Race_Registration.SkeletalModelConverter);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.SkeletalModel);
+                    return (int)Race_FieldIndex.SkeletalModel;
                 }
                 case RecordTypeInts.MTNM:
                 {
-                    this.MovementTypeNames = BinaryOverlayList<String>.FactoryByArray(
+                    this.MovementTypeNames = BinaryOverlayList.FactoryByArray<String>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordMemoryFrame(s).Content),
+                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordFrame(s).Content),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: false,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.MovementTypeNames);
+                    return (int)Race_FieldIndex.MovementTypeNames;
                 }
                 case RecordTypeInts.VTCK:
                 {
                     _VoicesLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Voices);
+                    return (int)Race_FieldIndex.Voices;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _DecapitateArmorsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.DecapitateArmors);
+                    return (int)Race_FieldIndex.DecapitateArmors;
                 }
                 case RecordTypeInts.HCLF:
                 {
                     _DefaultHairColorsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHairColors);
+                    return (int)Race_FieldIndex.DefaultHairColors;
                 }
                 case RecordTypeInts.TINL:
                 {
                     _NumberOfTintsInListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.NumberOfTintsInList);
+                    return (int)Race_FieldIndex.NumberOfTintsInList;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     _FacegenMainClampLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FacegenMainClamp);
+                    return (int)Race_FieldIndex.FacegenMainClamp;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     _FacegenFaceClampLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.FacegenFaceClamp);
+                    return (int)Race_FieldIndex.FacegenFaceClamp;
                 }
                 case RecordTypeInts.ATKR:
                 {
                     _AttackRaceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.AttackRace);
+                    return (int)Race_FieldIndex.AttackRace;
                 }
                 case RecordTypeInts.ATKD:
                 case RecordTypeInts.ATKE:
@@ -11860,7 +9212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: Attack_Registration.TriggeringRecordTypes,
                         factory:  AttackBinaryOverlay.AttackFactory);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Attacks);
+                    return (int)Race_FieldIndex.Attacks;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -11872,36 +9224,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         creator: (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
+                    return (int)Race_FieldIndex.BodyData;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Hairs = BinaryOverlayList<IFormLink<IHairGetter>>.FactoryByStartIndex(
+                    this.Hairs = BinaryOverlayList.FactoryByStartIndex<IFormLink<IHairGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IHairGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Hairs);
+                    return (int)Race_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Eyes = BinaryOverlayList<IFormLink<IEyesGetter>>.FactoryByStartIndex(
+                    this.Eyes = BinaryOverlayList.FactoryByStartIndex<IFormLink<IEyesGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IEyesGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
+                    return (int)Race_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     _BodyPartDataLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyPartData);
+                    return (int)Race_FieldIndex.BodyPartData;
                 }
                 case RecordTypeInts.NAM3:
                 {
@@ -11913,32 +9265,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         creator: (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BehaviorGraph);
+                    return (int)Race_FieldIndex.BehaviorGraph;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     _MaterialTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.MaterialType);
+                    return (int)Race_FieldIndex.MaterialType;
                 }
                 case RecordTypeInts.NAM5:
                 {
                     _ImpactDataSetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.ImpactDataSet);
+                    return (int)Race_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     _DecapitationFXLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.DecapitationFX);
+                    return (int)Race_FieldIndex.DecapitationFX;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     _OpenLootSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.OpenLootSound);
+                    return (int)Race_FieldIndex.OpenLootSound;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     _CloseLootSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.CloseLootSound);
+                    return (int)Race_FieldIndex.CloseLootSound;
                 }
                 case RecordTypeInts.NAME:
                 {
@@ -11946,7 +9298,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BipedObjectNames);
+                    return (int)Race_FieldIndex.BipedObjectNames;
                 }
                 case RecordTypeInts.MTYP:
                 case RecordTypeInts.SPED:
@@ -11956,16 +9308,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: RaceMovementType_Registration.TriggeringRecordTypes,
                         factory:  RaceMovementTypeBinaryOverlay.RaceMovementTypeFactory);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.MovementTypes);
+                    return (int)Race_FieldIndex.MovementTypes;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     _EquipmentFlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.EquipmentFlags);
+                    return (int)Race_FieldIndex.EquipmentFlags;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    this.EquipmentSlots = BinaryOverlayList<IFormLink<IEquipTypeGetter>>.FactoryByArray(
+                    this.EquipmentSlots = BinaryOverlayList.FactoryByArray<IFormLink<IEquipTypeGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IEquipTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -11975,56 +9327,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.EquipmentSlots);
+                    return (int)Race_FieldIndex.EquipmentSlots;
                 }
                 case RecordTypeInts.UNES:
                 {
                     _UnarmedEquipSlotLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.UnarmedEquipSlot);
+                    return (int)Race_FieldIndex.UnarmedEquipSlot;
                 }
                 case RecordTypeInts.PHTN:
                 {
                     FaceFxPhonemesListingParsingCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.PHWT:
                 {
                     FaceFxPhonemesRawParsingCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.WKMV:
                 {
                     _BaseMovementDefaultWalkLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultWalk);
+                    return (int)Race_FieldIndex.BaseMovementDefaultWalk;
                 }
                 case RecordTypeInts.RNMV:
                 {
                     _BaseMovementDefaultRunLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultRun);
+                    return (int)Race_FieldIndex.BaseMovementDefaultRun;
                 }
                 case RecordTypeInts.SWMV:
                 {
                     _BaseMovementDefaultSwimLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultSwim);
+                    return (int)Race_FieldIndex.BaseMovementDefaultSwim;
                 }
                 case RecordTypeInts.FLMV:
                 {
                     _BaseMovementDefaultFlyLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultFly);
+                    return (int)Race_FieldIndex.BaseMovementDefaultFly;
                 }
                 case RecordTypeInts.SNMV:
                 {
                     _BaseMovementDefaultSneakLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultSneak);
+                    return (int)Race_FieldIndex.BaseMovementDefaultSneak;
                 }
                 case RecordTypeInts.SPMV:
                 {
                     _BaseMovementDefaultSprintLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.BaseMovementDefaultSprint);
+                    return (int)Race_FieldIndex.BaseMovementDefaultSprint;
                 }
                 case RecordTypeInts.NAM0:
                 {
@@ -12036,7 +9388,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         creator: (s, p, r) => HeadDataBinaryOverlay.HeadDataFactory(s, p, r),
                         femaleRecordConverter: Race_Registration.HeadDataFemaleConverter);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.HeadData);
+                    return (int)Race_FieldIndex.HeadData;
+                }
+                case RecordTypeInts.NAM8:
+                {
+                    _MorphRaceLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.MorphRace;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    _ArmorRaceLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.ArmorRace;
                 }
                 default:
                     return base.FillRecordType(
@@ -12044,7 +9406,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

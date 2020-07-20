@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -49,6 +43,27 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IArtObjectGetter.ObjectBounds => ObjectBounds;
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IArtObjectGetter.Model => this.Model;
+        #endregion
+        #region Type
+        public ArtObject.TypeEnum? Type { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ArtObject.TypeEnum? IArtObjectGetter.Type => this.Type;
+        #endregion
 
         #region To String
 
@@ -79,135 +94,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ArtObjectXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ArtObjectXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new ArtObject CreateFromXml(
-            XElement node,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static ArtObject CreateFromXml(
-            XElement node,
-            out ArtObject.ErrorMask errorMask,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ArtObject.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static ArtObject CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new ArtObject();
-            ((ArtObjectSetterCommon)((IArtObjectGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static ArtObject CreateFromXml(
-            string path,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ArtObject CreateFromXml(
-            string path,
-            out ArtObject.ErrorMask errorMask,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ArtObject CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static ArtObject CreateFromXml(
-            Stream stream,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ArtObject CreateFromXml(
-            Stream stream,
-            out ArtObject.ErrorMask errorMask,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ArtObject CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -218,23 +104,32 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Type = initialValue;
             }
 
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem ObjectBounds,
+                TItem Model,
+                TItem Type)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Type = Type;
             }
 
             #pragma warning disable CS8618
@@ -243,6 +138,12 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem Type;
             #endregion
 
             #region Equals
@@ -256,11 +157,17 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Model);
+                hash.Add(this.Type);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +178,17 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Type)) return false;
                 return true;
             }
             #endregion
@@ -279,6 +197,17 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Type)) return true;
                 return false;
             }
             #endregion
@@ -294,6 +223,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Type = eval(this.Type);
             }
             #endregion
 
@@ -316,6 +248,18 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        fg.AppendItem(Type, "Type");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +271,24 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Type;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ArtObject_FieldIndex enu = (ArtObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case ArtObject_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case ArtObject_FieldIndex.Model:
+                        return Model;
+                    case ArtObject_FieldIndex.Type:
+                        return Type;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +299,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ArtObject_FieldIndex enu = (ArtObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case ArtObject_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case ArtObject_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case ArtObject_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +319,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ArtObject_FieldIndex enu = (ArtObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case ArtObject_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case ArtObject_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case ArtObject_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +337,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Model != null) return true;
+                if (Type != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +375,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                ObjectBounds?.ToString(fg);
+                Model?.ToString(fg);
+                fg.AppendItem(Type, "Type");
             }
             #endregion
 
@@ -406,6 +386,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Type = this.Type.Combine(rhs.Type);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +410,41 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool Type;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Type = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Type, null));
+            }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ArtObject_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = ArtObject_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => ArtObjectCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ArtObjectCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArtObjectCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArtObjectCommon.Instance.RemapLinks(this, mapping);
         public ArtObject(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -526,8 +531,13 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArtObject :
         IArtObjectGetter,
         ISkyrimMajorRecord,
+        IModeled,
+        IObjectBounded,
         ILoquiObjectSetter<IArtObjectInternal>
     {
+        new ObjectBounds ObjectBounds { get; set; }
+        new Model? Model { get; set; }
+        new ArtObject.TypeEnum? Type { get; set; }
     }
 
     public partial interface IArtObjectInternal :
@@ -539,11 +549,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IArtObjectGetter :
         ISkyrimMajorRecordGetter,
+        IModeledGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IArtObjectGetter>,
-        IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ArtObject_Registration.Instance;
+        static new ILoquiRegistration Registration => ArtObject_Registration.Instance;
+        IObjectBoundsGetter ObjectBounds { get; }
+        IModelGetter? Model { get; }
+        ArtObject.TypeEnum? Type { get; }
 
     }
 
@@ -678,131 +693,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IArtObjectInternal item,
-            XElement node,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IArtObjectInternal item,
-            XElement node,
-            out ArtObject.ErrorMask errorMask,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ArtObject.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IArtObjectInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ArtObjectSetterCommon)((IArtObjectGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IArtObjectInternal item,
-            string path,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IArtObjectInternal item,
-            string path,
-            out ArtObject.ErrorMask errorMask,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IArtObjectInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IArtObjectInternal item,
-            Stream stream,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IArtObjectInternal item,
-            Stream stream,
-            out ArtObject.ErrorMask errorMask,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IArtObjectInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ArtObject.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -840,10 +730,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        ObjectBounds = 6,
+        Model = 7,
+        Type = 8,
     }
     #endregion
 
@@ -861,9 +754,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "2c9154ee-5886-44e0-a073-67c19feaeda8";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(ArtObject.Mask<>);
 
@@ -893,6 +786,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "OBJECTBOUNDS":
+                    return (ushort)ArtObject_FieldIndex.ObjectBounds;
+                case "MODEL":
+                    return (ushort)ArtObject_FieldIndex.Model;
+                case "TYPE":
+                    return (ushort)ArtObject_FieldIndex.Type;
                 default:
                     return null;
             }
@@ -903,6 +802,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArtObject_FieldIndex enu = (ArtObject_FieldIndex)index;
             switch (enu)
             {
+                case ArtObject_FieldIndex.ObjectBounds:
+                case ArtObject_FieldIndex.Model:
+                case ArtObject_FieldIndex.Type:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -913,6 +816,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArtObject_FieldIndex enu = (ArtObject_FieldIndex)index;
             switch (enu)
             {
+                case ArtObject_FieldIndex.ObjectBounds:
+                case ArtObject_FieldIndex.Model:
+                    return true;
+                case ArtObject_FieldIndex.Type:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -923,6 +831,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArtObject_FieldIndex enu = (ArtObject_FieldIndex)index;
             switch (enu)
             {
+                case ArtObject_FieldIndex.ObjectBounds:
+                case ArtObject_FieldIndex.Model:
+                case ArtObject_FieldIndex.Type:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -933,6 +845,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArtObject_FieldIndex enu = (ArtObject_FieldIndex)index;
             switch (enu)
             {
+                case ArtObject_FieldIndex.ObjectBounds:
+                    return "ObjectBounds";
+                case ArtObject_FieldIndex.Model:
+                    return "Model";
+                case ArtObject_FieldIndex.Type:
+                    return "Type";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -943,6 +861,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArtObject_FieldIndex enu = (ArtObject_FieldIndex)index;
             switch (enu)
             {
+                case ArtObject_FieldIndex.ObjectBounds:
+                case ArtObject_FieldIndex.Model:
+                case ArtObject_FieldIndex.Type:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -953,6 +875,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArtObject_FieldIndex enu = (ArtObject_FieldIndex)index;
             switch (enu)
             {
+                case ArtObject_FieldIndex.ObjectBounds:
+                case ArtObject_FieldIndex.Model:
+                case ArtObject_FieldIndex.Type:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -963,12 +889,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArtObject_FieldIndex enu = (ArtObject_FieldIndex)index;
             switch (enu)
             {
+                case ArtObject_FieldIndex.ObjectBounds:
+                    return typeof(ObjectBounds);
+                case ArtObject_FieldIndex.Model:
+                    return typeof(Model);
+                case ArtObject_FieldIndex.Type:
+                    return typeof(ArtObject.TypeEnum);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ArtObjectXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.ARTO;
         public static readonly Type BinaryWriteTranslation = typeof(ArtObjectBinaryWriteTranslation);
         #region Interface
@@ -1012,6 +943,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IArtObjectInternal item)
         {
             ClearPartial();
+            item.ObjectBounds.Clear();
+            item.Model = null;
+            item.Type = default;
             base.Clear(item);
         }
         
@@ -1024,86 +958,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IArtObjectInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IArtObjectInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IArtObjectInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    ArtObjectXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (ArtObject)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (ArtObject)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1169,6 +1023,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Type = item.Type == rhs.Type;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1220,12 +1081,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
+            {
+                ModelItem?.ToString(fg, "Model");
+            }
+            if ((printMask?.Type ?? true)
+                && item.Type.TryGet(out var TypeItem))
+            {
+                fg.AppendItem(TypeItem, "Type");
+            }
         }
         
         public bool HasBeenSet(
             IArtObjectGetter item,
             ArtObject.Mask<bool?> checkMask)
         {
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Type.HasValue && checkMask.Type.Value != (item.Type != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1235,6 +1113,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IArtObjectGetter item,
             ArtObject.Mask<bool> mask)
         {
+            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.Type = (item.Type != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1248,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ArtObject_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (ArtObject_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (ArtObject_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (ArtObject_FieldIndex)((int)index);
@@ -1269,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ArtObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (ArtObject_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (ArtObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (ArtObject_FieldIndex)((int)index);
@@ -1286,6 +1168,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (lhs.Type != rhs.Type) return false;
             return true;
         }
         
@@ -1310,6 +1195,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IArtObjectGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            if (item.Model.TryGet(out var Modelitem))
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.Type.TryGet(out var Typeitem))
+            {
+                hash.Add(Typeitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1338,6 +1232,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
+            }
+            if (obj.Model.TryGet(out var ModelItems))
+            {
+                foreach (var item in ModelItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1386,6 +1287,58 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)ArtObject_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)ArtObject_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)ArtObject_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)ArtObject_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArtObject_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)ArtObject_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model.TryGet(out var rhsModel))
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ArtObject_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArtObject_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1508,210 +1461,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class ArtObjectXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static ArtObjectXmlWriteTranslation Instance = new ArtObjectXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IArtObjectGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IArtObjectGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ArtObject");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ArtObject");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IArtObjectGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IArtObjectGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IArtObjectGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class ArtObjectXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static ArtObjectXmlCreateTranslation Instance = new ArtObjectXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IArtObjectInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ArtObjectXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IArtObjectInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class ArtObjectXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IArtObjectGetter item,
-            XElement node,
-            out ArtObject.ErrorMask errorMask,
-            ArtObject.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ArtObjectXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ArtObject.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IArtObjectGetter item,
-            string path,
-            out ArtObject.ErrorMask errorMask,
-            ArtObject.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IArtObjectGetter item,
-            Stream stream,
-            out ArtObject.ErrorMask errorMask,
-            ArtObject.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -1720,6 +1469,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IBinaryWriteTranslator
     {
         public new readonly static ArtObjectBinaryWriteTranslation Instance = new ArtObjectBinaryWriteTranslation();
+
+        public static void WriteRecordTypes(
+            IArtObjectGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            if (item.Model.TryGet(out var ModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ArtObject.TypeEnum>.Instance.WriteNullable(
+                writer,
+                item.Type,
+                length: 4,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
+        }
 
         public void Write(
             MutagenWriter writer,
@@ -1734,10 +1511,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                writer.MetaData.FormVersion = item.FormVersion;
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -1790,6 +1569,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IArtObjectInternal item,
+            MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)ArtObject_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.MODL:
+                {
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return (int)ArtObject_FieldIndex.Model;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Type = EnumBinaryTranslation<ArtObject.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)ArtObject_FieldIndex.Type;
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1825,20 +1643,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IArtObjectGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ArtObjectXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ArtObjectXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
+        protected override IEnumerable<FormKey> LinkFormKeys => ArtObjectCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ArtObjectCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArtObjectCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArtObjectCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ArtObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1851,6 +1660,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        #region Type
+        private int? _TypeLocation;
+        public ArtObject.TypeEnum? Type => _TypeLocation.HasValue ? (ArtObject.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(ArtObject.TypeEnum?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1876,8 +1695,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new ArtObjectBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1903,6 +1723,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return (int)ArtObject_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.MODL:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return (int)ArtObject_FieldIndex.Model;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _TypeLocation = (stream.Position - offset);
+                    return (int)ArtObject_FieldIndex.Type;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void ToString(

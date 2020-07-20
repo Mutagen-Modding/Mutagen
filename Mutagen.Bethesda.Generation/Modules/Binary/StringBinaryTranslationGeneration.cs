@@ -20,6 +20,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var str = typeGen as Mutagen.Bethesda.Generation.StringType;
             if (str.BinaryType != StringBinaryType.NullTerminate) return false;
+            if (str.Translated.HasValue) return false;
             return !squashedRepeatedList;
         }
 
@@ -27,6 +28,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var str = typeGen as Mutagen.Bethesda.Generation.StringType;
             if (str.BinaryType != StringBinaryType.NullTerminate) return false;
+            if (str.Translated.HasValue) return false;
             return true;
         }
 
@@ -146,6 +148,7 @@ namespace Mutagen.Bethesda.Generation
                 return;
             }
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
+            var stringType = typeGen as StringType;
             var data = typeGen.GetFieldData();
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{this.Namespace}StringBinaryTranslation.Instance.Parse"))
@@ -157,10 +160,14 @@ namespace Mutagen.Bethesda.Generation
                 }
                 args.Add($"item: out {outItemAccessor.DirectAccess}");
                 args.Add($"parseWhole: {(data.HasTrigger ? "true" : "false")}");
-
                 if (data.Length.HasValue)
                 {
                     args.Add($"length: {data.Length.Value}");
+                }
+                args.Add($"binaryType: {nameof(StringBinaryType)}.{stringType.BinaryType}");
+                if (stringType.Translated.HasValue)
+                {
+                    args.Add($"source: {nameof(StringsSource)}.{stringType.Translated.Value}");
                 }
             }
         }

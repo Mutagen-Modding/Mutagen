@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (field is ContainerType contType)
                 {
-                    if (!contType.SubTypeGeneration.TryGetFieldData(out var subData)) continue;
+                    var subData = contType.SubTypeGeneration.GetFieldData();
                     if (contType.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counterRecType)
                         && !string.IsNullOrWhiteSpace((string)counterRecType))
                     {
@@ -167,20 +167,20 @@ namespace Mutagen.Bethesda.Generation
                     {
                         case DictMode.KeyedValue:
                             {
-                                if (!dict.ValueTypeGen.TryGetFieldData(out var subData)) continue;
+                                var subData = dict.ValueTypeGen.GetFieldData();
                                 if (!subData.HasTrigger) continue;
                                 recordTypes.Add(subData.TriggeringRecordTypes);
                                 break;
                             }
                         case DictMode.KeyValue:
                             {
-                                if (dict.KeyTypeGen.TryGetFieldData(out var subData)
-                                    && subData.HasTrigger)
+                                var subData = dict.KeyTypeGen.GetFieldData();
+                                if (subData.HasTrigger)
                                 {
                                     recordTypes.Add(subData.TriggeringRecordTypes);
                                 }
-                                if (dict.ValueTypeGen.TryGetFieldData(out subData)
-                                    && subData.HasTrigger)
+                                subData = dict.ValueTypeGen.GetFieldData();
+                                if (subData.HasTrigger)
                                 {
                                     recordTypes.Add(subData.TriggeringRecordTypes);
                                 }
@@ -542,8 +542,9 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (!field.IntegrateField
                     && !(field is DataType)
+                    && !(field is MarkerType)
                     && !(field is CustomLogic)) continue;
-                if (!field.TryGetFieldData(out var fieldData)) break;
+                var fieldData = field.GetFieldData();
                 if (!fieldData.HasTrigger) break;
                 recTypes.Add(fieldData.TriggeringRecordTypes);
                 fieldData.IsTriggerForObject = true;
@@ -558,6 +559,28 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
             data.TriggeringRecordTypes.Add(recTypes);
+
+            if (data.GameReleaseConverters != null)
+            {
+                foreach (var trigger in data.TriggeringRecordTypes.ToList())
+                {
+                    foreach (var gameConv in data.GameReleaseConverters)
+                    {
+                        data.TriggeringRecordTypes.Add(gameConv.Value.ConvertToCustom(trigger));
+                    }
+                }
+            }
+
+            if (data.VersionConverters != null)
+            {
+                foreach (var trigger in data.TriggeringRecordTypes.ToList())
+                {
+                    foreach (var gameConv in data.VersionConverters)
+                    {
+                        data.TriggeringRecordTypes.Add(gameConv.Value.ConvertToCustom(trigger));
+                    }
+                }
+            }
         }
 
         private async Task SetObjectTrigger(ObjectGeneration obj)
@@ -578,6 +601,28 @@ namespace Mutagen.Bethesda.Generation
             if (obj.TryGetCustomRecordTypeTriggers(out var customTypeTriggers))
             {
                 data.TriggeringRecordTypes.Add(customTypeTriggers);
+            }
+
+            if (data.GameReleaseConverters != null)
+            {
+                foreach (var trigger in data.TriggeringRecordTypes.ToList())
+                {
+                    foreach (var gameConv in data.GameReleaseConverters)
+                    {
+                        data.TriggeringRecordTypes.Add(gameConv.Value.ConvertToCustom(trigger));
+                    }
+                }
+            }
+
+            if (data.VersionConverters != null)
+            {
+                foreach (var trigger in data.TriggeringRecordTypes.ToList())
+                {
+                    foreach (var gameConv in data.VersionConverters)
+                    {
+                        data.TriggeringRecordTypes.Add(gameConv.Value.ConvertToCustom(trigger));
+                    }
+                }
             }
 
             if (data.TriggeringRecordTypes.Count > 0)
@@ -668,7 +713,7 @@ namespace Mutagen.Bethesda.Generation
             else if (await obj.IsSingleTriggerSource())
             {
                 await obj.IsSingleTriggerSource();
-                fg.AppendLine($"public new static readonly {nameof(RecordType)} {Mutagen.Bethesda.Internals.Constants.GrupRecordTypeMember} = {obj.RegistrationName}.{Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember};");
+                fg.AppendLine($"public{obj.NewOverride(b => !b.Abstract)}static readonly {nameof(RecordType)} {Mutagen.Bethesda.Internals.Constants.GrupRecordTypeMember} = {obj.RegistrationName}.{Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember};");
             }
             await base.GenerateInClass(obj, fg);
         }
@@ -696,7 +741,9 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
-            fg.Generate(Path.Combine(proto.DefFileLocation.FullName, "RecordTypes.cs"));
+            var path = Path.Combine(proto.DefFileLocation.FullName, $"RecordTypes{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
+            fg.Generate(path);
+            proto.GeneratedFiles.Add(path, ProjItemType.Compile);
             fg = new FileGeneration();
             using (var n = new NamespaceWrapper(fg, $"{proto.DefaultNamespace}.Internals"))
             {
@@ -711,7 +758,9 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
-            fg.Generate(Path.Combine(proto.DefFileLocation.FullName, "RecordTypeInts.cs"));
+            path = Path.Combine(proto.DefFileLocation.FullName, $"RecordTypeInts{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
+            fg.Generate(path);
+            proto.GeneratedFiles.Add(path, ProjItemType.Compile);
         }
     }
 }

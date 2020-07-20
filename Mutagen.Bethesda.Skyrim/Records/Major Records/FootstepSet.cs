@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
 
                 IReadOnlyList<IFormLink<IFootstepGetter>> Get(int index)
                 {
-                    var ret =  BinaryOverlayList<IFormLink<IFootstepGetter>>.FactoryByCount(
+                    var ret =  BinaryOverlayList.FactoryByCount<IFormLink<IFootstepGetter>>(
                         _data.Slice(stream.Position - offset, 4 * counts[index]),
                         _package,
                         itemLength: 4,

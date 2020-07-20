@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -88,8 +82,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region PerkTree
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ActorValuePerkNode> _PerkTree = new ExtendedList<ActorValuePerkNode>();
-        public ExtendedList<ActorValuePerkNode> PerkTree
+        private IExtendedList<ActorValuePerkNode> _PerkTree = new ExtendedList<ActorValuePerkNode>();
+        public IExtendedList<ActorValuePerkNode> PerkTree
         {
             get => this._PerkTree;
             protected set => this._PerkTree = value;
@@ -130,135 +124,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ActorValueInformationXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ActorValueInformationXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new ActorValueInformation CreateFromXml(
-            XElement node,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static ActorValueInformation CreateFromXml(
-            XElement node,
-            out ActorValueInformation.ErrorMask errorMask,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ActorValueInformation.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static ActorValueInformation CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new ActorValueInformation();
-            ((ActorValueInformationSetterCommon)((IActorValueInformationGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static ActorValueInformation CreateFromXml(
-            string path,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ActorValueInformation CreateFromXml(
-            string path,
-            out ActorValueInformation.ErrorMask errorMask,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ActorValueInformation CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static ActorValueInformation CreateFromXml(
-            Stream stream,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ActorValueInformation CreateFromXml(
-            Stream stream,
-            out ActorValueInformation.ErrorMask errorMask,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ActorValueInformation CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -280,7 +145,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -293,7 +158,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -755,7 +620,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ActorValueInformation_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = ActorValueInformation_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ActorValueInformationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -856,7 +721,7 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Abbreviation { get; set; }
         new MemorySlice<Byte>? CNAM { get; set; }
         new ActorValueSkill? Skill { get; set; }
-        new ExtendedList<ActorValuePerkNode> PerkTree { get; }
+        new IExtendedList<ActorValuePerkNode> PerkTree { get; }
     }
 
     public partial interface IActorValueInformationInternal :
@@ -870,11 +735,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IActorValueInformationGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ActorValueInformation_Registration.Instance;
+        static new ILoquiRegistration Registration => ActorValueInformation_Registration.Instance;
         TranslatedString? Name { get; }
         TranslatedString? Description { get; }
         String? Abbreviation { get; }
@@ -1015,131 +879,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IActorValueInformationInternal item,
-            XElement node,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IActorValueInformationInternal item,
-            XElement node,
-            out ActorValueInformation.ErrorMask errorMask,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ActorValueInformation.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IActorValueInformationInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ActorValueInformationSetterCommon)((IActorValueInformationGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IActorValueInformationInternal item,
-            string path,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IActorValueInformationInternal item,
-            string path,
-            out ActorValueInformation.ErrorMask errorMask,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IActorValueInformationInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IActorValueInformationInternal item,
-            Stream stream,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IActorValueInformationInternal item,
-            Stream stream,
-            out ActorValueInformation.ErrorMask errorMask,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IActorValueInformationInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ActorValueInformation.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1177,7 +916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1378,13 +1117,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ActorValueInformation_FieldIndex.Skill:
                     return typeof(ActorValueSkill);
                 case ActorValueInformation_FieldIndex.PerkTree:
-                    return typeof(ExtendedList<ActorValuePerkNode>);
+                    return typeof(IExtendedList<ActorValuePerkNode>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ActorValueInformationXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.AVIF;
         public static readonly Type BinaryWriteTranslation = typeof(ActorValueInformationBinaryWriteTranslation);
         #region Interface
@@ -1446,86 +1184,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IActorValueInformationInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IActorValueInformationInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IActorValueInformationInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    ActorValueInformationXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (ActorValueInformation)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (ActorValueInformation)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1740,7 +1398,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ActorValueInformation_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (ActorValueInformation_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (ActorValueInformation_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (ActorValueInformation_FieldIndex)((int)index);
@@ -1761,7 +1419,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ActorValueInformation_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (ActorValueInformation_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (ActorValueInformation_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (ActorValueInformation_FieldIndex)((int)index);
@@ -2104,403 +1762,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class ActorValueInformationXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static ActorValueInformationXmlWriteTranslation Instance = new ActorValueInformationXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IActorValueInformationGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)ActorValueInformation_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((item.Description != null)
-                && (translationMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Description) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Description),
-                    item: item.Description,
-                    fieldIndex: (int)ActorValueInformation_FieldIndex.Description,
-                    errorMask: errorMask);
-            }
-            if ((item.Abbreviation != null)
-                && (translationMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Abbreviation) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Abbreviation),
-                    item: item.Abbreviation,
-                    fieldIndex: (int)ActorValueInformation_FieldIndex.Abbreviation,
-                    errorMask: errorMask);
-            }
-            if ((item.CNAM != null)
-                && (translationMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.CNAM) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CNAM),
-                    item: item.CNAM.Value,
-                    fieldIndex: (int)ActorValueInformation_FieldIndex.CNAM,
-                    errorMask: errorMask);
-            }
-            if ((item.Skill != null)
-                && (translationMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Skill) ?? true))
-            {
-                if (item.Skill.TryGet(out var SkillItem))
-                {
-                    ((ActorValueSkillXmlWriteTranslation)((IXmlItem)SkillItem).XmlWriteTranslator).Write(
-                        item: SkillItem,
-                        node: node,
-                        name: nameof(item.Skill),
-                        fieldIndex: (int)ActorValueInformation_FieldIndex.Skill,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)ActorValueInformation_FieldIndex.Skill));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.PerkTree) ?? true))
-            {
-                ListXmlTranslation<IActorValuePerkNodeGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.PerkTree),
-                    item: item.PerkTree,
-                    fieldIndex: (int)ActorValueInformation_FieldIndex.PerkTree,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ActorValueInformation_FieldIndex.PerkTree),
-                    transl: (XElement subNode, IActorValuePerkNodeGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ActorValuePerkNodeXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IActorValueInformationGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ActorValueInformation");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ActorValueInformation");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IActorValueInformationGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IActorValueInformationGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IActorValueInformationGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class ActorValueInformationXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static ActorValueInformationXmlCreateTranslation Instance = new ActorValueInformationXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IActorValueInformationInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ActorValueInformationXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IActorValueInformationInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Name":
-                    errorMask?.PushIndex((int)ActorValueInformation_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Description":
-                    errorMask?.PushIndex((int)ActorValueInformation_FieldIndex.Description);
-                    try
-                    {
-                        item.Description = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Abbreviation":
-                    errorMask?.PushIndex((int)ActorValueInformation_FieldIndex.Abbreviation);
-                    try
-                    {
-                        item.Abbreviation = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CNAM":
-                    errorMask?.PushIndex((int)ActorValueInformation_FieldIndex.CNAM);
-                    try
-                    {
-                        item.CNAM = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Skill":
-                    errorMask?.PushIndex((int)ActorValueInformation_FieldIndex.Skill);
-                    try
-                    {
-                        item.Skill = LoquiXmlTranslation<ActorValueSkill>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)ActorValueInformation_FieldIndex.Skill));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PerkTree":
-                    errorMask?.PushIndex((int)ActorValueInformation_FieldIndex.PerkTree);
-                    try
-                    {
-                        if (ListXmlTranslation<ActorValuePerkNode>.Instance.Parse(
-                            node: node,
-                            enumer: out var PerkTreeItem,
-                            transl: LoquiXmlTranslation<ActorValuePerkNode>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.PerkTree.SetTo(PerkTreeItem);
-                        }
-                        else
-                        {
-                            item.PerkTree.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class ActorValueInformationXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IActorValueInformationGetter item,
-            XElement node,
-            out ActorValueInformation.ErrorMask errorMask,
-            ActorValueInformation.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ActorValueInformationXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ActorValueInformation.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IActorValueInformationGetter item,
-            string path,
-            out ActorValueInformation.ErrorMask errorMask,
-            ActorValueInformation.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IActorValueInformationGetter item,
-            Stream stream,
-            out ActorValueInformation.ErrorMask errorMask,
-            ActorValueInformation.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2573,10 +1834,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -2629,9 +1892,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IActorValueInformationInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2646,7 +1910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Name);
+                    return (int)ActorValueInformation_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -2655,7 +1919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Description);
+                    return (int)ActorValueInformation_FieldIndex.Description;
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -2663,18 +1927,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Abbreviation = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Abbreviation);
+                    return (int)ActorValueInformation_FieldIndex.Abbreviation;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.CNAM);
+                    return (int)ActorValueInformation_FieldIndex.CNAM;
                 }
                 case RecordTypeInts.AVSK:
                 {
                     item.Skill = Mutagen.Bethesda.Skyrim.ActorValueSkill.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Skill);
+                    return (int)ActorValueInformation_FieldIndex.Skill;
                 }
                 case RecordTypeInts.PNAM:
                 {
@@ -2684,12 +1948,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.PNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: ActorValuePerkNode.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.PerkTree);
+                    return (int)ActorValueInformation_FieldIndex.PerkTree;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -2735,21 +2000,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ActorValueInformationCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValueInformationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValueInformationCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ActorValueInformationXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ActorValueInformationXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ActorValueInformationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2809,8 +2059,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new ActorValueInformationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2836,12 +2087,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2850,27 +2102,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Name);
+                    return (int)ActorValueInformation_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Description);
+                    return (int)ActorValueInformation_FieldIndex.Description;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     _AbbreviationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Abbreviation);
+                    return (int)ActorValueInformation_FieldIndex.Abbreviation;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _CNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.CNAM);
+                    return (int)ActorValueInformation_FieldIndex.CNAM;
                 }
                 case RecordTypeInts.AVSK:
                 {
                     _SkillLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Skill);
+                    return (int)ActorValueInformation_FieldIndex.Skill;
                 }
                 case RecordTypeInts.PNAM:
                 {
@@ -2879,7 +2131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: RecordTypes.PNAM,
                         factory:  ActorValuePerkNodeBinaryOverlay.ActorValuePerkNodeFactory);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.PerkTree);
+                    return (int)ActorValueInformation_FieldIndex.PerkTree;
                 }
                 default:
                     return base.FillRecordType(
@@ -2887,7 +2139,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

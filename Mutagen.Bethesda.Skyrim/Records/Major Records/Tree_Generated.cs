@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -158,135 +152,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => TreeXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((TreeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Tree CreateFromXml(
-            XElement node,
-            Tree.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Tree CreateFromXml(
-            XElement node,
-            out Tree.ErrorMask errorMask,
-            Tree.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Tree.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Tree CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Tree();
-            ((TreeSetterCommon)((ITreeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Tree CreateFromXml(
-            string path,
-            Tree.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Tree CreateFromXml(
-            string path,
-            out Tree.ErrorMask errorMask,
-            Tree.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Tree CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Tree.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Tree CreateFromXml(
-            Stream stream,
-            Tree.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Tree CreateFromXml(
-            Stream stream,
-            out Tree.ErrorMask errorMask,
-            Tree.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Tree CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Tree.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -315,7 +180,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -335,7 +200,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -927,7 +792,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Tree_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Tree_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => TreeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1070,11 +935,10 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         ILoquiObject<ITreeGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Tree_Registration.Instance;
+        static new ILoquiRegistration Registration => Tree_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
         IModelGetter? Model { get; }
@@ -1226,131 +1090,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ITreeInternal item,
-            XElement node,
-            Tree.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ITreeInternal item,
-            XElement node,
-            out Tree.ErrorMask errorMask,
-            Tree.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Tree.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this ITreeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((TreeSetterCommon)((ITreeGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ITreeInternal item,
-            string path,
-            Tree.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ITreeInternal item,
-            string path,
-            out Tree.ErrorMask errorMask,
-            Tree.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ITreeInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Tree.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this ITreeInternal item,
-            Stream stream,
-            Tree.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ITreeInternal item,
-            Stream stream,
-            out Tree.ErrorMask errorMask,
-            Tree.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ITreeInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Tree.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1388,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1678,7 +1417,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(TreeXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.TREE;
         public static readonly Type BinaryWriteTranslation = typeof(TreeBinaryWriteTranslation);
         #region Interface
@@ -1747,86 +1485,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ITreeInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            ITreeInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            ITreeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    TreeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Tree)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Tree)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2079,7 +1737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Tree_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Tree_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Tree_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Tree_FieldIndex)((int)index);
@@ -2100,7 +1758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Tree_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Tree_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Tree_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Tree_FieldIndex)((int)index);
@@ -2541,586 +2199,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class TreeXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static TreeXmlWriteTranslation Instance = new TreeXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            ITreeGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.VirtualMachineAdapter != null)
-                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.VirtualMachineAdapter) ?? true))
-            {
-                if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
-                {
-                    ((VirtualMachineAdapterXmlWriteTranslation)((IXmlItem)VirtualMachineAdapterItem).XmlWriteTranslator).Write(
-                        item: VirtualMachineAdapterItem,
-                        node: node,
-                        name: nameof(item.VirtualMachineAdapter),
-                        fieldIndex: (int)Tree_FieldIndex.VirtualMachineAdapter,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.VirtualMachineAdapter));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.ObjectBounds) ?? true))
-            {
-                var ObjectBoundsItem = item.ObjectBounds;
-                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    node: node,
-                    name: nameof(item.ObjectBounds),
-                    fieldIndex: (int)Tree_FieldIndex.ObjectBounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.ObjectBounds));
-            }
-            if ((item.Model != null)
-                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
-            {
-                if (item.Model.TryGet(out var ModelItem))
-                {
-                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                        item: ModelItem,
-                        node: node,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)Tree_FieldIndex.Model,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.Model));
-                }
-            }
-            if ((item.Ingredient.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Ingredient) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Ingredient),
-                    item: item.Ingredient.FormKey,
-                    fieldIndex: (int)Tree_FieldIndex.Ingredient,
-                    errorMask: errorMask);
-            }
-            if ((item.HarvestSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.HarvestSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HarvestSound),
-                    item: item.HarvestSound.FormKey,
-                    fieldIndex: (int)Tree_FieldIndex.HarvestSound,
-                    errorMask: errorMask);
-            }
-            if ((item.Production != null)
-                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Production) ?? true))
-            {
-                if (item.Production.TryGet(out var ProductionItem))
-                {
-                    ((SeasonalIngredientProductionXmlWriteTranslation)((IXmlItem)ProductionItem).XmlWriteTranslator).Write(
-                        item: ProductionItem,
-                        node: node,
-                        name: nameof(item.Production),
-                        fieldIndex: (int)Tree_FieldIndex.Production,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.Production));
-                }
-            }
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Tree_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.TrunkFlexibility) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TrunkFlexibility),
-                    item: item.TrunkFlexibility,
-                    fieldIndex: (int)Tree_FieldIndex.TrunkFlexibility,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchFlexibility) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BranchFlexibility),
-                    item: item.BranchFlexibility,
-                    fieldIndex: (int)Tree_FieldIndex.BranchFlexibility,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Unknown) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)Tree_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafAmplitude) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LeafAmplitude),
-                    item: item.LeafAmplitude,
-                    fieldIndex: (int)Tree_FieldIndex.LeafAmplitude,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafFrequency) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LeafFrequency),
-                    item: item.LeafFrequency,
-                    fieldIndex: (int)Tree_FieldIndex.LeafFrequency,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Tree.CNAMDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CNAMDataTypeState),
-                    item: item.CNAMDataTypeState,
-                    fieldIndex: (int)Tree_FieldIndex.CNAMDataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            ITreeGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Tree");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Tree");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ITreeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ITreeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ITreeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class TreeXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static TreeXmlCreateTranslation Instance = new TreeXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            ITreeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    TreeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            ITreeInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "VirtualMachineAdapter":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.VirtualMachineAdapter);
-                    try
-                    {
-                        item.VirtualMachineAdapter = LoquiXmlTranslation<VirtualMachineAdapter>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.VirtualMachineAdapter));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ObjectBounds":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.ObjectBounds);
-                    try
-                    {
-                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.ObjectBounds));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.Model);
-                    try
-                    {
-                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.Model));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Ingredient":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.Ingredient);
-                    try
-                    {
-                        item.Ingredient = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HarvestSound":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.HarvestSound);
-                    try
-                    {
-                        item.HarvestSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Production":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.Production);
-                    try
-                    {
-                        item.Production = LoquiXmlTranslation<SeasonalIngredientProduction>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.Production));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Name":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TrunkFlexibility":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.TrunkFlexibility);
-                    try
-                    {
-                        item.TrunkFlexibility = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BranchFlexibility":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.BranchFlexibility);
-                    try
-                    {
-                        item.BranchFlexibility = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.Unknown);
-                    try
-                    {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            fallbackLength: 32,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LeafAmplitude":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.LeafAmplitude);
-                    try
-                    {
-                        item.LeafAmplitude = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LeafFrequency":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.LeafFrequency);
-                    try
-                    {
-                        item.LeafFrequency = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CNAMDataTypeState":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.CNAMDataTypeState);
-                    try
-                    {
-                        item.CNAMDataTypeState = EnumXmlTranslation<Tree.CNAMDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class TreeXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this ITreeGetter item,
-            XElement node,
-            out Tree.ErrorMask errorMask,
-            Tree.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((TreeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Tree.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this ITreeGetter item,
-            string path,
-            out Tree.ErrorMask errorMask,
-            Tree.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ITreeGetter item,
-            Stream stream,
-            out Tree.ErrorMask errorMask,
-            Tree.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3221,10 +2299,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -3277,9 +2357,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ITreeInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3290,19 +2371,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.VirtualMachineAdapter);
+                    return (int)Tree_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.ObjectBounds);
+                    return (int)Tree_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
+                    return (int)Tree_FieldIndex.Model;
                 }
                 case RecordTypeInts.PFIG:
                 {
@@ -3310,7 +2391,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Ingredient = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Ingredient);
+                    return (int)Tree_FieldIndex.Ingredient;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -3318,12 +2399,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.HarvestSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.HarvestSound);
+                    return (int)Tree_FieldIndex.HarvestSound;
                 }
                 case RecordTypeInts.PFPC:
                 {
                     item.Production = Mutagen.Bethesda.Skyrim.SeasonalIngredientProduction.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Production);
+                    return (int)Tree_FieldIndex.Production;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -3332,7 +2413,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Name);
+                    return (int)Tree_FieldIndex.Name;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -3343,12 +2424,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(32));
                     item.LeafAmplitude = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.LeafFrequency = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.LeafFrequency);
+                    return (int)Tree_FieldIndex.LeafFrequency;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3395,21 +2477,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TreeCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TreeCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => TreeXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((TreeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TreeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3436,12 +2503,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Ingredient
         private int? _IngredientLocation;
         public bool Ingredient_IsSet => _IngredientLocation.HasValue;
-        public IFormLinkNullable<IHarvestTargetGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IHarvestTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IngredientLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHarvestTargetGetter>.Null;
+        public IFormLinkNullable<IHarvestTargetGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IHarvestTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IngredientLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHarvestTargetGetter>.Null;
         #endregion
         #region HarvestSound
         private int? _HarvestSoundLocation;
         public bool HarvestSound_IsSet => _HarvestSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> HarvestSound => _HarvestSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HarvestSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> HarvestSound => _HarvestSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HarvestSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region Production
         private RangeInt32? _ProductionLocation;
@@ -3457,12 +2524,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region TrunkFlexibility
         private int _TrunkFlexibilityLocation => _CNAMLocation!.Value;
         private bool _TrunkFlexibility_IsSet => _CNAMLocation.HasValue;
-        public Single TrunkFlexibility => _TrunkFlexibility_IsSet ? SpanExt.GetFloat(_data.Slice(_TrunkFlexibilityLocation, 4)) : default;
+        public Single TrunkFlexibility => _TrunkFlexibility_IsSet ? _data.Slice(_TrunkFlexibilityLocation, 4).Float() : default;
         #endregion
         #region BranchFlexibility
         private int _BranchFlexibilityLocation => _CNAMLocation!.Value + 0x4;
         private bool _BranchFlexibility_IsSet => _CNAMLocation.HasValue;
-        public Single BranchFlexibility => _BranchFlexibility_IsSet ? SpanExt.GetFloat(_data.Slice(_BranchFlexibilityLocation, 4)) : default;
+        public Single BranchFlexibility => _BranchFlexibility_IsSet ? _data.Slice(_BranchFlexibilityLocation, 4).Float() : default;
         #endregion
         #region Unknown
         private int _UnknownLocation => _CNAMLocation!.Value + 0x8;
@@ -3472,12 +2539,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region LeafAmplitude
         private int _LeafAmplitudeLocation => _CNAMLocation!.Value + 0x28;
         private bool _LeafAmplitude_IsSet => _CNAMLocation.HasValue;
-        public Single LeafAmplitude => _LeafAmplitude_IsSet ? SpanExt.GetFloat(_data.Slice(_LeafAmplitudeLocation, 4)) : default;
+        public Single LeafAmplitude => _LeafAmplitude_IsSet ? _data.Slice(_LeafAmplitudeLocation, 4).Float() : default;
         #endregion
         #region LeafFrequency
         private int _LeafFrequencyLocation => _CNAMLocation!.Value + 0x2C;
         private bool _LeafFrequency_IsSet => _CNAMLocation.HasValue;
-        public Single LeafFrequency => _LeafFrequency_IsSet ? SpanExt.GetFloat(_data.Slice(_LeafFrequencyLocation, 4)) : default;
+        public Single LeafFrequency => _LeafFrequency_IsSet ? _data.Slice(_LeafFrequencyLocation, 4).Float() : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3504,8 +2571,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new TreeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3531,12 +2599,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3545,12 +2614,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.VirtualMachineAdapter);
+                    return (int)Tree_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.ObjectBounds);
+                    return (int)Tree_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3558,32 +2627,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
+                    return (int)Tree_FieldIndex.Model;
                 }
                 case RecordTypeInts.PFIG:
                 {
                     _IngredientLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Ingredient);
+                    return (int)Tree_FieldIndex.Ingredient;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _HarvestSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.HarvestSound);
+                    return (int)Tree_FieldIndex.HarvestSound;
                 }
                 case RecordTypeInts.PFPC:
                 {
                     _ProductionLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Production);
+                    return (int)Tree_FieldIndex.Production;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Name);
+                    return (int)Tree_FieldIndex.Name;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _CNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.LeafFrequency);
+                    return (int)Tree_FieldIndex.LeafFrequency;
                 }
                 default:
                     return base.FillRecordType(
@@ -3591,7 +2660,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

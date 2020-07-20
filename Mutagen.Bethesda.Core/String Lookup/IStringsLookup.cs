@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// Interface for looking up TranslatedStrings contents from a single source
     /// </summary>
-    public interface IStringsLookup
+    public interface IStringsLookup : IEnumerable<KeyValuePair<uint, string>>
     {
         /// <summary>
         /// Attempts to retrieve a string given its index key

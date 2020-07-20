@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Tests
             using var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Import");
             var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestingConstants.OBLIVION_ESM);
             mod.WriteToBinary(oblivionOutputPath);
-            var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, constants: GameConstants.Get(GameMode.Oblivion));
+            var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, constants: GameConstants.Get(GameRelease.Oblivion));
             using var reader = new BinaryReadStream(oblivionOutputPath);
             foreach (var rec in fileLocs.ListedRecords.Keys)
             {
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     Npcs = true
                 });
-            var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, GameMode.Oblivion);
+            var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, GameRelease.Oblivion);
             using var reader = new BinaryReadStream(oblivionOutputPath);
             foreach (var rec in fileLocs.ListedRecords.Keys)
             {
@@ -70,14 +70,14 @@ namespace Mutagen.Bethesda.Tests
             }
         }
         
-        public static async Task BaseGroupIterator(Target settings, DataFolderLocations locs)
-        {
-            if (!settings.ExpectedBaseGroupCount.TryGet(out var expected)) return;
-            var loc = settings.GetFilePath(locs);
-            using var stream = new MutagenBinaryReadStream(loc.Path, settings.GameMode);
-            var grups = RecordLocator.IterateBaseGroupLocations(stream).ToArray();
-            Assert.Equal(expected, grups.Length);
-        }
+        //public static async Task BaseGroupIterator(Target settings, DataFolderLocations locs)
+        //{
+        //    if (!settings.ExpectedBaseGroupCount.TryGet(out var expected)) return;
+        //    var loc = settings.GetFilePath(locs);
+        //    using var stream = new MutagenBinaryReadStream(loc.Path, settings.GameRelease);
+        //    var grups = RecordLocator.IterateBaseGroupLocations(stream).ToArray();
+        //    Assert.Equal(expected, grups.Length);
+        //}
 
         public static async Task RecordEnumerations(TestingSettings settings, Target target)
         {

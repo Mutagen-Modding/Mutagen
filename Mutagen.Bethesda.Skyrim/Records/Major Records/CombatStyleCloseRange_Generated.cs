@@ -15,14 +15,8 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -88,137 +82,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => CombatStyleCloseRangeXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((CombatStyleCloseRangeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static CombatStyleCloseRange CreateFromXml(
-            XElement node,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static CombatStyleCloseRange CreateFromXml(
-            XElement node,
-            out CombatStyleCloseRange.ErrorMask errorMask,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CombatStyleCloseRange.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static CombatStyleCloseRange CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new CombatStyleCloseRange();
-            ((CombatStyleCloseRangeSetterCommon)((ICombatStyleCloseRangeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static CombatStyleCloseRange CreateFromXml(
-            string path,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static CombatStyleCloseRange CreateFromXml(
-            string path,
-            out CombatStyleCloseRange.ErrorMask errorMask,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static CombatStyleCloseRange CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static CombatStyleCloseRange CreateFromXml(
-            Stream stream,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static CombatStyleCloseRange CreateFromXml(
-            Stream stream,
-            out CombatStyleCloseRange.ErrorMask errorMask,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static CombatStyleCloseRange CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -602,7 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = CombatStyleCloseRange_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = CombatStyleCloseRange_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
@@ -690,7 +553,6 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICombatStyleCloseRangeGetter :
         ILoquiObject,
         ILoquiObject<ICombatStyleCloseRangeGetter>,
-        IXmlItem,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -861,131 +723,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ICombatStyleCloseRange item,
-            XElement node,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ICombatStyleCloseRange item,
-            XElement node,
-            out CombatStyleCloseRange.ErrorMask errorMask,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CombatStyleCloseRange.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this ICombatStyleCloseRange item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((CombatStyleCloseRangeSetterCommon)((ICombatStyleCloseRangeGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICombatStyleCloseRange item,
-            string path,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICombatStyleCloseRange item,
-            string path,
-            out CombatStyleCloseRange.ErrorMask errorMask,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICombatStyleCloseRange item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this ICombatStyleCloseRange item,
-            Stream stream,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICombatStyleCloseRange item,
-            Stream stream,
-            out CombatStyleCloseRange.ErrorMask errorMask,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICombatStyleCloseRange item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1211,7 +948,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(CombatStyleCloseRangeXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.CSCR;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleCloseRangeBinaryWriteTranslation);
         #region Interface
@@ -1261,34 +997,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FlankDistance = default;
             item.StalkTime = default;
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            ICombatStyleCloseRange item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    CombatStyleCloseRangeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1577,424 +1285,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class CombatStyleCloseRangeXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static CombatStyleCloseRangeXmlWriteTranslation Instance = new CombatStyleCloseRangeXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            ICombatStyleCloseRangeGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleCloseRange_FieldIndex.Versioning) ?? true))
-            {
-                EnumXmlTranslation<CombatStyleCloseRange.VersioningBreaks>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Versioning),
-                    item: item.Versioning,
-                    fieldIndex: (int)CombatStyleCloseRange_FieldIndex.Versioning,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleCloseRange_FieldIndex.CircleMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CircleMult),
-                    item: item.CircleMult,
-                    fieldIndex: (int)CombatStyleCloseRange_FieldIndex.CircleMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleCloseRange_FieldIndex.FallbackMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FallbackMult),
-                    item: item.FallbackMult,
-                    fieldIndex: (int)CombatStyleCloseRange_FieldIndex.FallbackMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleCloseRange_FieldIndex.FlankDistance) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FlankDistance),
-                    item: item.FlankDistance,
-                    fieldIndex: (int)CombatStyleCloseRange_FieldIndex.FlankDistance,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleCloseRange_FieldIndex.StalkTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.StalkTime),
-                    item: item.StalkTime,
-                    fieldIndex: (int)CombatStyleCloseRange_FieldIndex.StalkTime,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            ICombatStyleCloseRangeGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.CombatStyleCloseRange");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.CombatStyleCloseRange");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ICombatStyleCloseRangeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            ICombatStyleCloseRangeGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (ICombatStyleCloseRangeGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class CombatStyleCloseRangeXmlCreateTranslation
-    {
-        public readonly static CombatStyleCloseRangeXmlCreateTranslation Instance = new CombatStyleCloseRangeXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            ICombatStyleCloseRange item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    CombatStyleCloseRangeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            ICombatStyleCloseRange item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Versioning":
-                    errorMask?.PushIndex((int)CombatStyleCloseRange_FieldIndex.Versioning);
-                    try
-                    {
-                        item.Versioning = EnumXmlTranslation<CombatStyleCloseRange.VersioningBreaks>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CircleMult":
-                    errorMask?.PushIndex((int)CombatStyleCloseRange_FieldIndex.CircleMult);
-                    try
-                    {
-                        item.CircleMult = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FallbackMult":
-                    errorMask?.PushIndex((int)CombatStyleCloseRange_FieldIndex.FallbackMult);
-                    try
-                    {
-                        item.FallbackMult = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FlankDistance":
-                    errorMask?.PushIndex((int)CombatStyleCloseRange_FieldIndex.FlankDistance);
-                    try
-                    {
-                        item.FlankDistance = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "StalkTime":
-                    errorMask?.PushIndex((int)CombatStyleCloseRange_FieldIndex.StalkTime);
-                    try
-                    {
-                        item.StalkTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class CombatStyleCloseRangeXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this ICombatStyleCloseRangeGetter item,
-            XElement node,
-            out CombatStyleCloseRange.ErrorMask errorMask,
-            CombatStyleCloseRange.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((CombatStyleCloseRangeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CombatStyleCloseRange.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this ICombatStyleCloseRangeGetter item,
-            string path,
-            out CombatStyleCloseRange.ErrorMask errorMask,
-            CombatStyleCloseRange.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ICombatStyleCloseRangeGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ICombatStyleCloseRangeGetter item,
-            Stream stream,
-            out CombatStyleCloseRange.ErrorMask errorMask,
-            CombatStyleCloseRange.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this ICombatStyleCloseRangeGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this ICombatStyleCloseRangeGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((CombatStyleCloseRangeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this ICombatStyleCloseRangeGetter item,
-            XElement node,
-            string? name = null,
-            CombatStyleCloseRange.TranslationMask? translationMask = null)
-        {
-            ((CombatStyleCloseRangeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this ICombatStyleCloseRangeGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((CombatStyleCloseRangeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ICombatStyleCloseRangeGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((CombatStyleCloseRangeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2122,23 +1412,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleCloseRangeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => CombatStyleCloseRangeXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((CombatStyleCloseRangeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CombatStyleCloseRangeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -2153,10 +1426,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public CombatStyleCloseRange.VersioningBreaks Versioning { get; private set; }
-        public Single CircleMult => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single FallbackMult => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single FlankDistance => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
-        public Single StalkTime => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
+        public Single CircleMult => _data.Slice(0x0, 0x4).Float();
+        public Single FallbackMult => _data.Slice(0x4, 0x4).Float();
+        public Single FlankDistance => _data.Slice(0x8, 0x4).Float();
+        public Single StalkTime => _data.Slice(0xC, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2181,7 +1454,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new CombatStyleCloseRangeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             if (ret._data.Length <= 0x8)
             {

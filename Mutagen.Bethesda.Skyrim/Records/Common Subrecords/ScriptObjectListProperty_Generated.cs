@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -48,6 +42,20 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Objects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private IExtendedList<ScriptObjectProperty> _Objects = new ExtendedList<ScriptObjectProperty>();
+        public IExtendedList<ScriptObjectProperty> Objects
+        {
+            get => this._Objects;
+            protected set => this._Objects = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IScriptObjectPropertyGetter> IScriptObjectListPropertyGetter.Objects => _Objects;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -78,135 +86,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ScriptObjectListPropertyXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ScriptObjectListPropertyXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new ScriptObjectListProperty CreateFromXml(
-            XElement node,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static ScriptObjectListProperty CreateFromXml(
-            XElement node,
-            out ScriptObjectListProperty.ErrorMask errorMask,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptObjectListProperty.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static ScriptObjectListProperty CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new ScriptObjectListProperty();
-            ((ScriptObjectListPropertySetterCommon)((IScriptObjectListPropertyGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static ScriptObjectListProperty CreateFromXml(
-            string path,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ScriptObjectListProperty CreateFromXml(
-            string path,
-            out ScriptObjectListProperty.ErrorMask errorMask,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ScriptObjectListProperty CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static ScriptObjectListProperty CreateFromXml(
-            Stream stream,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ScriptObjectListProperty CreateFromXml(
-            Stream stream,
-            out ScriptObjectListProperty.ErrorMask errorMask,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ScriptObjectListProperty CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             ScriptProperty.Mask<TItem>,
@@ -217,15 +96,18 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScriptObjectProperty.Mask<TItem>?>>());
             }
 
             public Mask(
                 TItem Name,
-                TItem Flags)
+                TItem Flags,
+                TItem Objects)
             : base(
                 Name: Name,
                 Flags: Flags)
             {
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptObjectProperty.Mask<TItem>?>>?>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, ScriptObjectProperty.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -234,6 +116,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptObjectProperty.Mask<TItem>?>>?>? Objects;
             #endregion
 
             #region Equals
@@ -247,11 +133,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Objects, rhs.Objects)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Objects);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -262,6 +150,18 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Objects != null)
+                {
+                    if (!eval(this.Objects.Overall)) return false;
+                    if (this.Objects.Specific != null)
+                    {
+                        foreach (var item in this.Objects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -270,6 +170,18 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Objects != null)
+                {
+                    if (eval(this.Objects.Overall)) return true;
+                    if (this.Objects.Specific != null)
+                    {
+                        foreach (var item in this.Objects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -285,6 +197,21 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Objects != null)
+                {
+                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptObjectProperty.Mask<R>?>>?>(eval(this.Objects.Overall), Enumerable.Empty<MaskItemIndexed<R, ScriptObjectProperty.Mask<R>?>>());
+                    if (Objects.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ScriptObjectProperty.Mask<R>?>>();
+                        obj.Objects.Specific = l;
+                        foreach (var item in Objects.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, ScriptObjectProperty.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ScriptObjectProperty.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -307,6 +234,29 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if ((printMask?.Objects?.Overall ?? true)
+                        && Objects.TryGet(out var ObjectsItem))
+                    {
+                        fg.AppendLine("Objects =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ObjectsItem.Overall);
+                            if (ObjectsItem.Specific != null)
+                            {
+                                foreach (var subItem in ObjectsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -318,12 +268,18 @@ namespace Mutagen.Bethesda.Skyrim
             ScriptProperty.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptObjectProperty.ErrorMask?>>?>? Objects;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ScriptObjectListProperty_FieldIndex enu = (ScriptObjectListProperty_FieldIndex)index;
                 switch (enu)
                 {
+                    case ScriptObjectListProperty_FieldIndex.Objects:
+                        return Objects;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -334,6 +290,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ScriptObjectListProperty_FieldIndex enu = (ScriptObjectListProperty_FieldIndex)index;
                 switch (enu)
                 {
+                    case ScriptObjectListProperty_FieldIndex.Objects:
+                        this.Objects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptObjectProperty.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -345,6 +304,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ScriptObjectListProperty_FieldIndex enu = (ScriptObjectListProperty_FieldIndex)index;
                 switch (enu)
                 {
+                    case ScriptObjectListProperty_FieldIndex.Objects:
+                        this.Objects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptObjectProperty.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -354,6 +316,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Objects != null) return true;
                 return false;
             }
             #endregion
@@ -389,6 +352,28 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                if (Objects.TryGet(out var ObjectsItem))
+                {
+                    fg.AppendLine("Objects =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ObjectsItem.Overall);
+                        if (ObjectsItem.Specific != null)
+                        {
+                            foreach (var subItem in ObjectsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             #endregion
 
@@ -397,6 +382,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Objects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptObjectProperty.ErrorMask?>>?>(ExceptionExt.Combine(this.Objects?.Overall, rhs.Objects?.Overall), ExceptionExt.Combine(this.Objects?.Specific, rhs.Objects?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -418,15 +404,34 @@ namespace Mutagen.Bethesda.Skyrim
             ScriptProperty.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, ScriptObjectProperty.TranslationMask?> Objects;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Objects = new MaskItem<bool, ScriptObjectProperty.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Objects?.Overall ?? true, Objects?.Specific?.GetCrystal()));
+            }
         }
+        #endregion
+
+        #region Mutagen
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => ScriptObjectListPropertyCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ScriptObjectListPropertyCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectListPropertyCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectListPropertyCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -498,15 +503,17 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptProperty,
         ILoquiObjectSetter<IScriptObjectListProperty>
     {
+        new IExtendedList<ScriptObjectProperty> Objects { get; }
     }
 
     public partial interface IScriptObjectListPropertyGetter :
         IScriptPropertyGetter,
         ILoquiObject<IScriptObjectListPropertyGetter>,
-        IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ScriptObjectListProperty_Registration.Instance;
+        static new ILoquiRegistration Registration => ScriptObjectListProperty_Registration.Instance;
+        IReadOnlyList<IScriptObjectPropertyGetter> Objects { get; }
 
     }
 
@@ -641,131 +648,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IScriptObjectListProperty item,
-            XElement node,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IScriptObjectListProperty item,
-            XElement node,
-            out ScriptObjectListProperty.ErrorMask errorMask,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptObjectListProperty.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptObjectListProperty item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ScriptObjectListPropertySetterCommon)((IScriptObjectListPropertyGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptObjectListProperty item,
-            string path,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptObjectListProperty item,
-            string path,
-            out ScriptObjectListProperty.ErrorMask errorMask,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptObjectListProperty item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IScriptObjectListProperty item,
-            Stream stream,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptObjectListProperty item,
-            Stream stream,
-            out ScriptObjectListProperty.ErrorMask errorMask,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptObjectListProperty item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ScriptObjectListProperty.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -803,6 +685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         Name = 0,
         Flags = 1,
+        Objects = 2,
     }
     #endregion
 
@@ -820,9 +703,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "f1e67286-b4d7-4f4f-bec6-fdc8a8a9f58b";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(ScriptObjectListProperty.Mask<>);
 
@@ -852,6 +735,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "OBJECTS":
+                    return (ushort)ScriptObjectListProperty_FieldIndex.Objects;
                 default:
                     return null;
             }
@@ -862,6 +747,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptObjectListProperty_FieldIndex enu = (ScriptObjectListProperty_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectListProperty_FieldIndex.Objects:
+                    return true;
                 default:
                     return ScriptProperty_Registration.GetNthIsEnumerable(index);
             }
@@ -872,6 +759,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptObjectListProperty_FieldIndex enu = (ScriptObjectListProperty_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectListProperty_FieldIndex.Objects:
+                    return true;
                 default:
                     return ScriptProperty_Registration.GetNthIsLoqui(index);
             }
@@ -882,6 +771,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptObjectListProperty_FieldIndex enu = (ScriptObjectListProperty_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectListProperty_FieldIndex.Objects:
+                    return false;
                 default:
                     return ScriptProperty_Registration.GetNthIsSingleton(index);
             }
@@ -892,6 +783,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptObjectListProperty_FieldIndex enu = (ScriptObjectListProperty_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectListProperty_FieldIndex.Objects:
+                    return "Objects";
                 default:
                     return ScriptProperty_Registration.GetNthName(index);
             }
@@ -902,6 +795,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptObjectListProperty_FieldIndex enu = (ScriptObjectListProperty_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectListProperty_FieldIndex.Objects:
+                    return false;
                 default:
                     return ScriptProperty_Registration.IsNthDerivative(index);
             }
@@ -912,6 +807,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptObjectListProperty_FieldIndex enu = (ScriptObjectListProperty_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectListProperty_FieldIndex.Objects:
+                    return false;
                 default:
                     return ScriptProperty_Registration.IsProtected(index);
             }
@@ -922,12 +819,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptObjectListProperty_FieldIndex enu = (ScriptObjectListProperty_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectListProperty_FieldIndex.Objects:
+                    return typeof(IExtendedList<ScriptObjectProperty>);
                 default:
                     return ScriptProperty_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ScriptObjectListPropertyXmlWriteTranslation);
         public static readonly Type BinaryWriteTranslation = typeof(ScriptObjectListPropertyBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -970,6 +868,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IScriptObjectListProperty item)
         {
             ClearPartial();
+            item.Objects.Clear();
             base.Clear(item);
         }
         
@@ -977,47 +876,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IScriptObjectListProperty)item);
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IScriptObjectListProperty item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ScriptObjectListPropertyXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IScriptProperty item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (ScriptObjectListProperty)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1071,6 +929,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Objects = item.Objects.CollectionEqualsHelper(
+                rhs.Objects,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1122,6 +984,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.Objects?.Overall ?? true)
+            {
+                fg.AppendLine("Objects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Objects)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
         }
         
         public bool HasBeenSet(
@@ -1137,6 +1017,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IScriptObjectListPropertyGetter item,
             ScriptObjectListProperty.Mask<bool> mask)
         {
+            var ObjectsItem = item.Objects;
+            mask.Objects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ScriptObjectProperty.Mask<bool>?>>?>(true, ObjectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ScriptObjectProperty.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1163,6 +1045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!lhs.Objects.SequenceEqual(rhs.Objects)) return false;
             return true;
         }
         
@@ -1178,6 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IScriptObjectListPropertyGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Objects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1199,6 +1083,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<FormKey> GetLinkFormKeys(IScriptObjectListPropertyGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Objects.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
@@ -1225,6 +1113,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (IScriptPropertyGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)ScriptObjectListProperty_FieldIndex.Objects) ?? true))
+            {
+                errorMask?.PushIndex((int)ScriptObjectListProperty_FieldIndex.Objects);
+                try
+                {
+                    item.Objects.SetTo(
+                        rhs.Objects
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         
@@ -1309,195 +1221,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class ScriptObjectListPropertyXmlWriteTranslation :
-        ScriptPropertyXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static ScriptObjectListPropertyXmlWriteTranslation Instance = new ScriptObjectListPropertyXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IScriptObjectListPropertyGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ScriptPropertyXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IScriptObjectListPropertyGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ScriptObjectListProperty");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ScriptObjectListProperty");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IScriptObjectListPropertyGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IScriptPropertyGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IScriptObjectListPropertyGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class ScriptObjectListPropertyXmlCreateTranslation : ScriptPropertyXmlCreateTranslation
-    {
-        public new readonly static ScriptObjectListPropertyXmlCreateTranslation Instance = new ScriptObjectListPropertyXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IScriptObjectListProperty item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ScriptObjectListPropertyXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IScriptObjectListProperty item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    ScriptPropertyXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class ScriptObjectListPropertyXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IScriptObjectListPropertyGetter item,
-            XElement node,
-            out ScriptObjectListProperty.ErrorMask errorMask,
-            ScriptObjectListProperty.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ScriptObjectListPropertyXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptObjectListProperty.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IScriptObjectListPropertyGetter item,
-            string path,
-            out ScriptObjectListProperty.ErrorMask errorMask,
-            ScriptObjectListProperty.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IScriptObjectListPropertyGetter item,
-            Stream stream,
-            out ScriptObjectListProperty.ErrorMask errorMask,
-            ScriptObjectListProperty.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -1507,12 +1230,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ScriptObjectListPropertyBinaryWriteTranslation Instance = new ScriptObjectListPropertyBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IScriptObjectListPropertyGetter item,
+            MutagenWriter writer)
+        {
+            ScriptPropertyBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IScriptObjectPropertyGetter>.Instance.Write(
+                writer: writer,
+                items: item.Objects,
+                countLengthLength: 4,
+                transl: (MutagenWriter subWriter, IScriptObjectPropertyGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ScriptObjectPropertyBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IScriptObjectListPropertyGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ScriptPropertyBinaryWriteTranslation.WriteEmbedded(
+            WriteEmbedded(
                 item: item,
                 writer: writer);
         }
@@ -1544,6 +1288,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ScriptObjectListPropertyBinaryCreateTranslation : ScriptPropertyBinaryCreateTranslation
     {
         public new readonly static ScriptObjectListPropertyBinaryCreateTranslation Instance = new ScriptObjectListPropertyBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IScriptObjectListProperty item,
+            MutagenFrame frame)
+        {
+            ScriptPropertyBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+            item.Objects.SetTo(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptObjectProperty>.Instance.Parse(
+                    amount: frame.ReadInt32(),
+                    frame: frame,
+                    transl: ScriptObjectProperty.TryCreateFromBinary));
+        }
 
     }
 
@@ -1580,20 +1338,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptObjectListPropertyGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ScriptObjectListPropertyXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ScriptObjectListPropertyXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
+        protected override IEnumerable<FormKey> LinkFormKeys => ScriptObjectListPropertyCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ScriptObjectListPropertyCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectListPropertyCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectListPropertyCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptObjectListPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1606,6 +1355,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Objects
+        public IReadOnlyList<IScriptObjectPropertyGetter> Objects => BinaryOverlayList.FactoryByLazyParse<ScriptObjectPropertyBinaryOverlay>(_data, _package, countLength: 4, (s, p) => ScriptObjectPropertyBinaryOverlay.ScriptObjectPropertyFactory(s, p));
+        protected int ObjectsEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1631,6 +1384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
+            stream.Position += ret.ObjectsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

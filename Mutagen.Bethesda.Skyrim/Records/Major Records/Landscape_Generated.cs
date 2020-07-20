@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -95,8 +89,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Layers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<BaseLayer> _Layers = new ExtendedList<BaseLayer>();
-        public ExtendedList<BaseLayer> Layers
+        private IExtendedList<BaseLayer> _Layers = new ExtendedList<BaseLayer>();
+        public IExtendedList<BaseLayer> Layers
         {
             get => this._Layers;
             protected set => this._Layers = value;
@@ -109,8 +103,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Textures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<LandscapeTexture>>? _Textures;
-        public ExtendedList<IFormLink<LandscapeTexture>>? Textures
+        private IExtendedList<IFormLink<LandscapeTexture>>? _Textures;
+        public IExtendedList<IFormLink<LandscapeTexture>>? Textures
         {
             get => this._Textures;
             set => this._Textures = value;
@@ -151,135 +145,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => LandscapeXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((LandscapeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Landscape CreateFromXml(
-            XElement node,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Landscape CreateFromXml(
-            XElement node,
-            out Landscape.ErrorMask errorMask,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Landscape.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Landscape CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Landscape();
-            ((LandscapeSetterCommon)((ILandscapeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Landscape CreateFromXml(
-            string path,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Landscape CreateFromXml(
-            string path,
-            out Landscape.ErrorMask errorMask,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Landscape CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Landscape CreateFromXml(
-            Stream stream,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Landscape CreateFromXml(
-            Stream stream,
-            out Landscape.ErrorMask errorMask,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Landscape CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -301,7 +166,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -314,7 +179,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -841,7 +706,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Landscape_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Landscape_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LandscapeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -940,8 +805,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? VertexNormals { get; set; }
         new MemorySlice<Byte>? VertexHeightMap { get; set; }
         new MemorySlice<Byte>? VertexColors { get; set; }
-        new ExtendedList<BaseLayer> Layers { get; }
-        new ExtendedList<IFormLink<LandscapeTexture>>? Textures { get; set; }
+        new IExtendedList<BaseLayer> Layers { get; }
+        new IExtendedList<IFormLink<LandscapeTexture>>? Textures { get; set; }
     }
 
     public partial interface ILandscapeInternal :
@@ -954,11 +819,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILandscapeGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<ILandscapeGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Landscape_Registration.Instance;
+        static new ILoquiRegistration Registration => Landscape_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? DATA { get; }
         ReadOnlyMemorySlice<Byte>? VertexNormals { get; }
         ReadOnlyMemorySlice<Byte>? VertexHeightMap { get; }
@@ -1099,131 +963,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ILandscapeInternal item,
-            XElement node,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ILandscapeInternal item,
-            XElement node,
-            out Landscape.ErrorMask errorMask,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Landscape.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this ILandscapeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((LandscapeSetterCommon)((ILandscapeGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILandscapeInternal item,
-            string path,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILandscapeInternal item,
-            string path,
-            out Landscape.ErrorMask errorMask,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILandscapeInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this ILandscapeInternal item,
-            Stream stream,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILandscapeInternal item,
-            Stream stream,
-            out Landscape.ErrorMask errorMask,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILandscapeInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Landscape.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1261,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1460,15 +1199,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Landscape_FieldIndex.VertexColors:
                     return typeof(MemorySlice<Byte>);
                 case Landscape_FieldIndex.Layers:
-                    return typeof(ExtendedList<BaseLayer>);
+                    return typeof(IExtendedList<BaseLayer>);
                 case Landscape_FieldIndex.Textures:
-                    return typeof(ExtendedList<IFormLink<LandscapeTexture>>);
+                    return typeof(IExtendedList<IFormLink<LandscapeTexture>>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(LandscapeXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.LAND;
         public static readonly Type BinaryWriteTranslation = typeof(LandscapeBinaryWriteTranslation);
         #region Interface
@@ -1530,86 +1268,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ILandscapeInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            ILandscapeInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            ILandscapeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    LandscapeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Landscape)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Landscape)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1835,7 +1493,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Landscape_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Landscape_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Landscape_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Landscape_FieldIndex)((int)index);
@@ -1856,7 +1514,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Landscape_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Landscape_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Landscape_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Landscape_FieldIndex)((int)index);
@@ -2225,417 +1883,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class LandscapeXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static LandscapeXmlWriteTranslation Instance = new LandscapeXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            ILandscapeGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.DATA != null)
-                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.DATA) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATA),
-                    item: item.DATA.Value,
-                    fieldIndex: (int)Landscape_FieldIndex.DATA,
-                    errorMask: errorMask);
-            }
-            if ((item.VertexNormals != null)
-                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VertexNormals),
-                    item: item.VertexNormals.Value,
-                    fieldIndex: (int)Landscape_FieldIndex.VertexNormals,
-                    errorMask: errorMask);
-            }
-            if ((item.VertexHeightMap != null)
-                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VertexHeightMap),
-                    item: item.VertexHeightMap.Value,
-                    fieldIndex: (int)Landscape_FieldIndex.VertexHeightMap,
-                    errorMask: errorMask);
-            }
-            if ((item.VertexColors != null)
-                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VertexColors),
-                    item: item.VertexColors.Value,
-                    fieldIndex: (int)Landscape_FieldIndex.VertexColors,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
-            {
-                ListXmlTranslation<IBaseLayerGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Layers),
-                    item: item.Layers,
-                    fieldIndex: (int)Landscape_FieldIndex.Layers,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Landscape_FieldIndex.Layers),
-                    transl: (XElement subNode, IBaseLayerGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((BaseLayerXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Textures != null)
-                && (translationMask?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
-            {
-                ListXmlTranslation<IFormLink<ILandscapeTextureGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Textures),
-                    item: item.Textures,
-                    fieldIndex: (int)Landscape_FieldIndex.Textures,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Landscape_FieldIndex.Textures),
-                    transl: (XElement subNode, IFormLink<ILandscapeTextureGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            ILandscapeGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Landscape");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Landscape");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILandscapeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILandscapeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILandscapeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class LandscapeXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static LandscapeXmlCreateTranslation Instance = new LandscapeXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            ILandscapeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    LandscapeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            ILandscapeInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "DATA":
-                    errorMask?.PushIndex((int)Landscape_FieldIndex.DATA);
-                    try
-                    {
-                        item.DATA = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VertexNormals":
-                    errorMask?.PushIndex((int)Landscape_FieldIndex.VertexNormals);
-                    try
-                    {
-                        item.VertexNormals = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VertexHeightMap":
-                    errorMask?.PushIndex((int)Landscape_FieldIndex.VertexHeightMap);
-                    try
-                    {
-                        item.VertexHeightMap = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VertexColors":
-                    errorMask?.PushIndex((int)Landscape_FieldIndex.VertexColors);
-                    try
-                    {
-                        item.VertexColors = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Layers":
-                    errorMask?.PushIndex((int)Landscape_FieldIndex.Layers);
-                    try
-                    {
-                        if (ListXmlTranslation<BaseLayer>.Instance.Parse(
-                            node: node,
-                            enumer: out var LayersItem,
-                            transl: LoquiXmlTranslation<BaseLayer>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Layers.SetTo(LayersItem);
-                        }
-                        else
-                        {
-                            item.Layers.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Textures":
-                    errorMask?.PushIndex((int)Landscape_FieldIndex.Textures);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<LandscapeTexture>>.Instance.Parse(
-                            node: node,
-                            enumer: out var TexturesItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Textures = TexturesItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Textures = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class LandscapeXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this ILandscapeGetter item,
-            XElement node,
-            out Landscape.ErrorMask errorMask,
-            Landscape.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((LandscapeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Landscape.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this ILandscapeGetter item,
-            string path,
-            out Landscape.ErrorMask errorMask,
-            Landscape.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ILandscapeGetter item,
-            Stream stream,
-            out Landscape.ErrorMask errorMask,
-            Landscape.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2706,10 +1953,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -2762,9 +2011,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILandscapeInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2776,25 +2026,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DATA = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.DATA);
+                    return (int)Landscape_FieldIndex.DATA;
                 }
                 case RecordTypeInts.VNML:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VertexNormals = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
+                    return (int)Landscape_FieldIndex.VertexNormals;
                 }
                 case RecordTypeInts.VHGT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VertexHeightMap = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
+                    return (int)Landscape_FieldIndex.VertexHeightMap;
                 }
                 case RecordTypeInts.VCLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VertexColors = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexColors);
+                    return (int)Landscape_FieldIndex.VertexColors;
                 }
                 case RecordTypeInts.BTXT:
                 case RecordTypeInts.ATXT:
@@ -2824,7 +2074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                         throw new NotImplementedException();
                                 }
                             }));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Layers);
+                    return (int)Landscape_FieldIndex.Layers;
                 }
                 case RecordTypeInts.VTEX:
                 {
@@ -2833,13 +2083,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LandscapeTexture>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<LandscapeTexture>>();
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
+                        .CastExtendedList<IFormLink<LandscapeTexture>>();
+                    return (int)Landscape_FieldIndex.Textures;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -2885,21 +2136,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LandscapeCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => LandscapeXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((LandscapeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LandscapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2955,8 +2191,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new LandscapeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2982,12 +2219,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2996,22 +2234,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.DATA);
+                    return (int)Landscape_FieldIndex.DATA;
                 }
                 case RecordTypeInts.VNML:
                 {
                     _VertexNormalsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
+                    return (int)Landscape_FieldIndex.VertexNormals;
                 }
                 case RecordTypeInts.VHGT:
                 {
                     _VertexHeightMapLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
+                    return (int)Landscape_FieldIndex.VertexHeightMap;
                 }
                 case RecordTypeInts.VCLR:
                 {
                     _VertexColorsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexColors);
+                    return (int)Landscape_FieldIndex.VertexColors;
                 }
                 case RecordTypeInts.BTXT:
                 case RecordTypeInts.ATXT:
@@ -3032,19 +2270,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                     throw new NotImplementedException();
                             }
                         });
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Layers);
+                    return (int)Landscape_FieldIndex.Layers;
                 }
                 case RecordTypeInts.VTEX:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Textures = BinaryOverlayList<IFormLink<ILandscapeTextureGetter>>.FactoryByStartIndex(
+                    this.Textures = BinaryOverlayList.FactoryByStartIndex<IFormLink<ILandscapeTextureGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
+                    return (int)Landscape_FieldIndex.Textures;
                 }
                 default:
                     return base.FillRecordType(
@@ -3052,7 +2290,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

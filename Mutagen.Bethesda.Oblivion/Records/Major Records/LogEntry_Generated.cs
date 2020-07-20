@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -54,8 +48,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -109,137 +103,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public override int GetHashCode() => ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => LogEntryXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((LogEntryXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static LogEntry CreateFromXml(
-            XElement node,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static LogEntry CreateFromXml(
-            XElement node,
-            out LogEntry.ErrorMask errorMask,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LogEntry.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static LogEntry CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new LogEntry();
-            ((LogEntrySetterCommon)((ILogEntryGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static LogEntry CreateFromXml(
-            string path,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static LogEntry CreateFromXml(
-            string path,
-            out LogEntry.ErrorMask errorMask,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static LogEntry CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static LogEntry CreateFromXml(
-            Stream stream,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static LogEntry CreateFromXml(
-            Stream stream,
-            out LogEntry.ErrorMask errorMask,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static LogEntry CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -758,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ILogEntry>
     {
         new LogEntry.Flag? Flags { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
         new String? Entry { get; set; }
         new ScriptFields? ResultScript { get; set; }
     }
@@ -766,7 +629,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILogEntryGetter :
         ILoquiObject,
         ILoquiObject<ILogEntryGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -937,131 +799,6 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ILogEntry item,
-            XElement node,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ILogEntry item,
-            XElement node,
-            out LogEntry.ErrorMask errorMask,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LogEntry.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this ILogEntry item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((LogEntrySetterCommon)((ILogEntryGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILogEntry item,
-            string path,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILogEntry item,
-            string path,
-            out LogEntry.ErrorMask errorMask,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILogEntry item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this ILogEntry item,
-            Stream stream,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILogEntry item,
-            Stream stream,
-            out LogEntry.ErrorMask errorMask,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILogEntry item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1267,7 +1004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LogEntry_FieldIndex.Flags:
                     return typeof(LogEntry.Flag);
                 case LogEntry_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case LogEntry_FieldIndex.Entry:
                     return typeof(String);
                 case LogEntry_FieldIndex.ResultScript:
@@ -1277,7 +1014,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(LogEntryXmlWriteTranslation);
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1341,34 +1077,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Entry = default;
             item.ResultScript = null;
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            ILogEntry item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    LogEntryXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1730,426 +1438,6 @@ namespace Mutagen.Bethesda.Oblivion
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public partial class LogEntryXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static LogEntryXmlWriteTranslation Instance = new LogEntryXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            ILogEntryGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<LogEntry.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)LogEntry_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Conditions) ?? true))
-            {
-                ListXmlTranslation<IConditionGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Conditions),
-                    item: item.Conditions,
-                    fieldIndex: (int)LogEntry_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.Conditions),
-                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Entry != null)
-                && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.Entry) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Entry),
-                    item: item.Entry,
-                    fieldIndex: (int)LogEntry_FieldIndex.Entry,
-                    errorMask: errorMask);
-            }
-            if ((item.ResultScript != null)
-                && (translationMask?.GetShouldTranslate((int)LogEntry_FieldIndex.ResultScript) ?? true))
-            {
-                if (item.ResultScript.TryGet(out var ResultScriptItem))
-                {
-                    ((ScriptFieldsXmlWriteTranslation)((IXmlItem)ResultScriptItem).XmlWriteTranslator).Write(
-                        item: ResultScriptItem,
-                        node: node,
-                        name: nameof(item.ResultScript),
-                        fieldIndex: (int)LogEntry_FieldIndex.ResultScript,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.ResultScript));
-                }
-            }
-        }
-
-        public void Write(
-            XElement node,
-            ILogEntryGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LogEntry");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LogEntry");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILogEntryGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            ILogEntryGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (ILogEntryGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class LogEntryXmlCreateTranslation
-    {
-        public readonly static LogEntryXmlCreateTranslation Instance = new LogEntryXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            ILogEntry item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    LogEntryXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            ILogEntry item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Flags":
-                    errorMask?.PushIndex((int)LogEntry_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<LogEntry.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conditions":
-                    errorMask?.PushIndex((int)LogEntry_FieldIndex.Conditions);
-                    try
-                    {
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Entry":
-                    errorMask?.PushIndex((int)LogEntry_FieldIndex.Entry);
-                    try
-                    {
-                        item.Entry = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ResultScript":
-                    errorMask?.PushIndex((int)LogEntry_FieldIndex.ResultScript);
-                    try
-                    {
-                        item.ResultScript = LoquiXmlTranslation<ScriptFields>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.ResultScript));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Oblivion
-{
-    #region Xml Write Mixins
-    public static class LogEntryXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this ILogEntryGetter item,
-            XElement node,
-            out LogEntry.ErrorMask errorMask,
-            LogEntry.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((LogEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LogEntry.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this ILogEntryGetter item,
-            string path,
-            out LogEntry.ErrorMask errorMask,
-            LogEntry.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ILogEntryGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ILogEntryGetter item,
-            Stream stream,
-            out LogEntry.ErrorMask errorMask,
-            LogEntry.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this ILogEntryGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this ILogEntryGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((LogEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this ILogEntryGetter item,
-            XElement node,
-            string? name = null,
-            LogEntry.TranslationMask? translationMask = null)
-        {
-            ((LogEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this ILogEntryGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((LogEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ILogEntryGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((LogEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -2226,10 +1514,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILogEntry item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2239,43 +1528,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.QSDT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Flags) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Flags) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<LogEntry.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Flags);
+                    return (int)LogEntry_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Conditions) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Conditions) return ParseResult.Stop;
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Conditions);
+                    return (int)LogEntry_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Entry) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Entry) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Entry = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Entry);
+                    return (int)LogEntry_FieldIndex.Entry;
                 }
                 case RecordTypeInts.SCHD:
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.ResultScript) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.ResultScript) return ParseResult.Stop;
                     item.ResultScript = Mutagen.Bethesda.Oblivion.ScriptFields.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.ResultScript);
+                    return (int)LogEntry_FieldIndex.ResultScript;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2336,23 +1625,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LogEntryCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LogEntryCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => LogEntryXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((LogEntryXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LogEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -2368,7 +1640,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Flags
         private int? _FlagsLocation;
-        public LogEntry.Flag? Flags => _FlagsLocation.HasValue ? (LogEntry.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LogEntry.Flag?);
+        public LogEntry.Flag? Flags => _FlagsLocation.HasValue ? (LogEntry.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LogEntry.Flag?);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();
         #region Entry
@@ -2421,12 +1693,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2434,15 +1707,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.QSDT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Flags) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Flags) return ParseResult.Stop;
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Flags);
+                    return (int)LogEntry_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Conditions) return TryGet<int?>.Failure;
-                    this.Conditions = BinaryOverlayList<ConditionBinaryOverlay>.FactoryByArray(
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Conditions) return ParseResult.Stop;
+                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -2452,26 +1725,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Conditions);
+                    return (int)LogEntry_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Entry) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Entry) return ParseResult.Stop;
                     _EntryLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Entry);
+                    return (int)LogEntry_FieldIndex.Entry;
                 }
                 case RecordTypeInts.SCHD:
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.ResultScript) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.ResultScript) return ParseResult.Stop;
                     this.ResultScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.ResultScript);
+                    return (int)LogEntry_FieldIndex.ResultScript;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -49,6 +43,17 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region ParentTitle
+        public GenderedItem<String?>? ParentTitle { get; set; }
+        IGenderedItemGetter<String?>? IAssociationTypeGetter.ParentTitle => this.ParentTitle;
+        #endregion
+        #region Title
+        public GenderedItem<String?>? Title { get; set; }
+        IGenderedItemGetter<String?>? IAssociationTypeGetter.Title => this.Title;
+        #endregion
+        #region Flags
+        public AssociationType.Flag Flags { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -79,135 +84,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => AssociationTypeXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((AssociationTypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new AssociationType CreateFromXml(
-            XElement node,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static AssociationType CreateFromXml(
-            XElement node,
-            out AssociationType.ErrorMask errorMask,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = AssociationType.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static AssociationType CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new AssociationType();
-            ((AssociationTypeSetterCommon)((IAssociationTypeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static AssociationType CreateFromXml(
-            string path,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static AssociationType CreateFromXml(
-            string path,
-            out AssociationType.ErrorMask errorMask,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static AssociationType CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static AssociationType CreateFromXml(
-            Stream stream,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static AssociationType CreateFromXml(
-            Stream stream,
-            out AssociationType.ErrorMask errorMask,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static AssociationType CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -218,23 +94,32 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ParentTitle = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
+                this.Title = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
+                this.Flags = initialValue;
             }
 
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem ParentTitle,
+                TItem Title,
+                TItem Flags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.ParentTitle = new MaskItem<TItem, GenderedItem<TItem>?>(ParentTitle, default);
+                this.Title = new MaskItem<TItem, GenderedItem<TItem>?>(Title, default);
+                this.Flags = Flags;
             }
 
             #pragma warning disable CS8618
@@ -243,6 +128,12 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, GenderedItem<TItem>?>? ParentTitle;
+            public MaskItem<TItem, GenderedItem<TItem>?>? Title;
+            public TItem Flags;
             #endregion
 
             #region Equals
@@ -256,11 +147,17 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ParentTitle, rhs.ParentTitle)) return false;
+                if (!object.Equals(this.Title, rhs.Title)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ParentTitle);
+                hash.Add(this.Title);
+                hash.Add(this.Flags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +168,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!GenderedItem.All(
+                    this.ParentTitle,
+                    eval: eval)) return false;
+                if (!GenderedItem.All(
+                    this.Title,
+                    eval: eval)) return false;
+                if (!eval(this.Flags)) return false;
                 return true;
             }
             #endregion
@@ -279,6 +183,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (GenderedItem.Any(
+                    this.ParentTitle,
+                    eval: eval)) return true;
+                if (GenderedItem.Any(
+                    this.Title,
+                    eval: eval)) return true;
+                if (eval(this.Flags)) return true;
                 return false;
             }
             #endregion
@@ -294,6 +205,13 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ParentTitle = GenderedItem.TranslateHelper(
+                    this.ParentTitle,
+                    eval);
+                obj.Title = GenderedItem.TranslateHelper(
+                    this.Title,
+                    eval);
+                obj.Flags = eval(this.Flags);
             }
             #endregion
 
@@ -316,6 +234,20 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (ParentTitle != null
+                        && (printMask?.ParentTitle?.Overall ?? true))
+                    {
+                        fg.AppendLine($"ParentTitle => {ParentTitle}");
+                    }
+                    if (Title != null
+                        && (printMask?.Title?.Overall ?? true))
+                    {
+                        fg.AppendLine($"Title => {Title}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +259,24 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? ParentTitle;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? Title;
+            public Exception? Flags;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
                 switch (enu)
                 {
+                    case AssociationType_FieldIndex.ParentTitle:
+                        return ParentTitle;
+                    case AssociationType_FieldIndex.Title:
+                        return Title;
+                    case AssociationType_FieldIndex.Flags:
+                        return Flags;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +287,15 @@ namespace Mutagen.Bethesda.Skyrim
                 AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
                 switch (enu)
                 {
+                    case AssociationType_FieldIndex.ParentTitle:
+                        this.ParentTitle = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case AssociationType_FieldIndex.Title:
+                        this.Title = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case AssociationType_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +307,15 @@ namespace Mutagen.Bethesda.Skyrim
                 AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
                 switch (enu)
                 {
+                    case AssociationType_FieldIndex.ParentTitle:
+                        this.ParentTitle = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case AssociationType_FieldIndex.Title:
+                        this.Title = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case AssociationType_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +325,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ParentTitle != null) return true;
+                if (Title != null) return true;
+                if (Flags != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +363,15 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                if (ParentTitle != null)
+                {
+                    fg.AppendLine($"ParentTitle => {ParentTitle}");
+                }
+                if (Title != null)
+                {
+                    fg.AppendLine($"Title => {Title}");
+                }
+                fg.AppendItem(Flags, "Flags");
             }
             #endregion
 
@@ -406,6 +380,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ParentTitle = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.ParentTitle?.Overall, rhs.ParentTitle?.Overall), GenderedItem.Combine(this.ParentTitle?.Specific, rhs.ParentTitle?.Specific));
+                ret.Title = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Title?.Overall, rhs.Title?.Overall), GenderedItem.Combine(this.Title?.Specific, rhs.Title?.Specific));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +404,35 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, GenderedItem<bool>?> ParentTitle;
+            public MaskItem<bool, GenderedItem<bool>?> Title;
+            public bool Flags;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.ParentTitle = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
+                this.Title = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
+                this.Flags = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ParentTitle?.Overall ?? true, null));
+                ret.Add((Title?.Overall ?? true, null));
+                ret.Add((Flags, null));
+            }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = AssociationType_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = AssociationType_Registration.TriggeringRecordType;
         public AssociationType(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -528,6 +521,9 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IAssociationTypeInternal>
     {
+        new GenderedItem<String?>? ParentTitle { get; set; }
+        new GenderedItem<String?>? Title { get; set; }
+        new AssociationType.Flag Flags { get; set; }
     }
 
     public partial interface IAssociationTypeInternal :
@@ -535,15 +531,19 @@ namespace Mutagen.Bethesda.Skyrim
         IAssociationType,
         IAssociationTypeGetter
     {
+        new GenderedItem<String?>? ParentTitle { get; set; }
+        new GenderedItem<String?>? Title { get; set; }
     }
 
     public partial interface IAssociationTypeGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IAssociationTypeGetter>,
-        IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => AssociationType_Registration.Instance;
+        static new ILoquiRegistration Registration => AssociationType_Registration.Instance;
+        IGenderedItemGetter<String?>? ParentTitle { get; }
+        IGenderedItemGetter<String?>? Title { get; }
+        AssociationType.Flag Flags { get; }
 
     }
 
@@ -678,131 +678,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IAssociationTypeInternal item,
-            XElement node,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IAssociationTypeInternal item,
-            XElement node,
-            out AssociationType.ErrorMask errorMask,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = AssociationType.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IAssociationTypeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((AssociationTypeSetterCommon)((IAssociationTypeGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAssociationTypeInternal item,
-            string path,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAssociationTypeInternal item,
-            string path,
-            out AssociationType.ErrorMask errorMask,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAssociationTypeInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IAssociationTypeInternal item,
-            Stream stream,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAssociationTypeInternal item,
-            Stream stream,
-            out AssociationType.ErrorMask errorMask,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAssociationTypeInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            AssociationType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -840,10 +715,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        ParentTitle = 6,
+        Title = 7,
+        Flags = 8,
     }
     #endregion
 
@@ -861,9 +739,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "5de359e7-27e8-4476-9bde-27a98d336b5e";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(AssociationType.Mask<>);
 
@@ -893,6 +771,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "PARENTTITLE":
+                    return (ushort)AssociationType_FieldIndex.ParentTitle;
+                case "TITLE":
+                    return (ushort)AssociationType_FieldIndex.Title;
+                case "FLAGS":
+                    return (ushort)AssociationType_FieldIndex.Flags;
                 default:
                     return null;
             }
@@ -903,6 +787,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
             switch (enu)
             {
+                case AssociationType_FieldIndex.ParentTitle:
+                case AssociationType_FieldIndex.Title:
+                case AssociationType_FieldIndex.Flags:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -913,6 +801,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
             switch (enu)
             {
+                case AssociationType_FieldIndex.ParentTitle:
+                case AssociationType_FieldIndex.Title:
+                case AssociationType_FieldIndex.Flags:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -923,6 +815,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
             switch (enu)
             {
+                case AssociationType_FieldIndex.ParentTitle:
+                case AssociationType_FieldIndex.Title:
+                case AssociationType_FieldIndex.Flags:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -933,6 +829,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
             switch (enu)
             {
+                case AssociationType_FieldIndex.ParentTitle:
+                    return "ParentTitle";
+                case AssociationType_FieldIndex.Title:
+                    return "Title";
+                case AssociationType_FieldIndex.Flags:
+                    return "Flags";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -943,6 +845,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
             switch (enu)
             {
+                case AssociationType_FieldIndex.ParentTitle:
+                case AssociationType_FieldIndex.Title:
+                case AssociationType_FieldIndex.Flags:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -953,6 +859,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
             switch (enu)
             {
+                case AssociationType_FieldIndex.ParentTitle:
+                case AssociationType_FieldIndex.Title:
+                case AssociationType_FieldIndex.Flags:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -963,12 +873,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
             switch (enu)
             {
+                case AssociationType_FieldIndex.ParentTitle:
+                    return typeof(GenderedItem<String?>);
+                case AssociationType_FieldIndex.Title:
+                    return typeof(GenderedItem<String?>);
+                case AssociationType_FieldIndex.Flags:
+                    return typeof(AssociationType.Flag);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(AssociationTypeXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.ASTP;
         public static readonly Type BinaryWriteTranslation = typeof(AssociationTypeBinaryWriteTranslation);
         #region Interface
@@ -1012,6 +927,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IAssociationTypeInternal item)
         {
             ClearPartial();
+            item.ParentTitle = null;
+            item.Title = null;
+            item.Flags = default;
             base.Clear(item);
         }
         
@@ -1024,86 +942,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IAssociationTypeInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IAssociationTypeInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IAssociationTypeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    AssociationTypeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (AssociationType)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (AssociationType)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1169,6 +1007,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.ParentTitle = GenderedItem.EqualityMaskHelper(
+                lhs: item.ParentTitle,
+                rhs: rhs.ParentTitle,
+                maskGetter: (l, r, i) => EqualityComparer<String?>.Default.Equals(l, r),
+                include: include);
+            ret.Title = GenderedItem.EqualityMaskHelper(
+                lhs: item.Title,
+                rhs: rhs.Title,
+                maskGetter: (l, r, i) => EqualityComparer<String?>.Default.Equals(l, r),
+                include: include);
+            ret.Flags = item.Flags == rhs.Flags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1220,12 +1069,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.ParentTitle?.Overall ?? true)
+                && item.ParentTitle.TryGet(out var ParentTitleItem))
+            {
+                ParentTitleItem?.ToString(fg, "ParentTitle");
+            }
+            if ((printMask?.Title?.Overall ?? true)
+                && item.Title.TryGet(out var TitleItem))
+            {
+                TitleItem?.ToString(fg, "Title");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
         }
         
         public bool HasBeenSet(
             IAssociationTypeGetter item,
             AssociationType.Mask<bool?> checkMask)
         {
+            if (checkMask.ParentTitle?.Overall ?? false) return false;
+            if (checkMask.Title?.Overall ?? false) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1235,6 +1100,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAssociationTypeGetter item,
             AssociationType.Mask<bool> mask)
         {
+            mask.ParentTitle = item.ParentTitle == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
+            mask.Title = item.Title == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
+            mask.Flags = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1248,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (AssociationType_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (AssociationType_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (AssociationType_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (AssociationType_FieldIndex)((int)index);
@@ -1269,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (AssociationType_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (AssociationType_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (AssociationType_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (AssociationType_FieldIndex)((int)index);
@@ -1286,6 +1154,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!Equals(lhs.ParentTitle, rhs.ParentTitle)) return false;
+            if (!Equals(lhs.Title, rhs.Title)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
             return true;
         }
         
@@ -1310,6 +1181,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IAssociationTypeGetter item)
         {
             var hash = new HashCode();
+            if (item.ParentTitle.TryGet(out var ParentTitleitem))
+            {
+                hash.Add(HashCode.Combine(ParentTitleitem.Male, ParentTitleitem.Female));
+            }
+            if (item.Title.TryGet(out var Titleitem))
+            {
+                hash.Add(HashCode.Combine(Titleitem.Male, Titleitem.Female));
+            }
+            hash.Add(item.Flags);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1386,6 +1266,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if (!rhs.ParentTitle.TryGet(out var rhsParentTitleitem))
+            {
+                item.ParentTitle = null;
+            }
+            else
+            {
+                item.ParentTitle = new GenderedItem<String?>(
+                    male: rhsParentTitleitem.Male,
+                    female: rhsParentTitleitem.Female);
+            }
+            if (!rhs.Title.TryGet(out var rhsTitleitem))
+            {
+                item.Title = null;
+            }
+            else
+            {
+                item.Title = new GenderedItem<String?>(
+                    male: rhsTitleitem.Male,
+                    female: rhsTitleitem.Female);
+            }
+            if ((copyMask?.GetShouldTranslate((int)AssociationType_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1508,210 +1412,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class AssociationTypeXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static AssociationTypeXmlWriteTranslation Instance = new AssociationTypeXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IAssociationTypeGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IAssociationTypeGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.AssociationType");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.AssociationType");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IAssociationTypeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IAssociationTypeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IAssociationTypeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class AssociationTypeXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static AssociationTypeXmlCreateTranslation Instance = new AssociationTypeXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IAssociationTypeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    AssociationTypeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IAssociationTypeInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class AssociationTypeXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IAssociationTypeGetter item,
-            XElement node,
-            out AssociationType.ErrorMask errorMask,
-            AssociationType.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((AssociationTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = AssociationType.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IAssociationTypeGetter item,
-            string path,
-            out AssociationType.ErrorMask errorMask,
-            AssociationType.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IAssociationTypeGetter item,
-            Stream stream,
-            out AssociationType.ErrorMask errorMask,
-            AssociationType.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -1720,6 +1420,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IBinaryWriteTranslator
     {
         public new readonly static AssociationTypeBinaryWriteTranslation Instance = new AssociationTypeBinaryWriteTranslation();
+
+        public static void WriteRecordTypes(
+            IAssociationTypeGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.ParentTitle,
+                maleMarker: RecordTypes.MPRT,
+                femaleMarker: RecordTypes.FPRT,
+                transl: StringBinaryTranslation.Instance.WriteNullable);
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.Title,
+                maleMarker: RecordTypes.MCHT,
+                femaleMarker: RecordTypes.FCHT,
+                transl: StringBinaryTranslation.Instance.WriteNullable);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<AssociationType.Flag>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 4,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
+        }
 
         public void Write(
             MutagenWriter writer,
@@ -1734,10 +1462,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                writer.MetaData.FormVersion = item.FormVersion;
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -1790,6 +1520,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IAssociationTypeInternal item,
+            MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.MPRT:
+                case RecordTypeInts.FPRT:
+                {
+                    item.ParentTitle = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<String>(
+                        frame: frame,
+                        maleMarker: RecordTypes.MPRT,
+                        femaleMarker: RecordTypes.FPRT,
+                        transl: StringBinaryTranslation.Instance.Parse,
+                        skipMarker: false);
+                    return (int)AssociationType_FieldIndex.ParentTitle;
+                }
+                case RecordTypeInts.MCHT:
+                case RecordTypeInts.FCHT:
+                {
+                    item.Title = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<String>(
+                        frame: frame,
+                        maleMarker: RecordTypes.MCHT,
+                        femaleMarker: RecordTypes.FCHT,
+                        transl: StringBinaryTranslation.Instance.Parse,
+                        skipMarker: false);
+                    return (int)AssociationType_FieldIndex.Title;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<AssociationType.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)AssociationType_FieldIndex.Flags;
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1825,21 +1604,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAssociationTypeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => AssociationTypeXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((AssociationTypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AssociationTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -1851,6 +1615,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region ParentTitle
+        private IGenderedItemGetter<String?>? _ParentTitleOverlay;
+        public IGenderedItemGetter<String?>? ParentTitle => _ParentTitleOverlay;
+        #endregion
+        #region Title
+        private IGenderedItemGetter<String?>? _TitleOverlay;
+        public IGenderedItemGetter<String?>? Title => _TitleOverlay;
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public AssociationType.Flag Flags => _FlagsLocation.HasValue ? (AssociationType.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(AssociationType.Flag);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1876,8 +1652,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new AssociationTypeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1903,6 +1680,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.MPRT:
+                case RecordTypeInts.FPRT:
+                {
+                    _ParentTitleOverlay = GenderedItemBinaryOverlay.Factory<String>(
+                        package: _package,
+                        male: RecordTypes.MPRT,
+                        female: RecordTypes.FPRT,
+                        stream: stream,
+                        creator: (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)));
+                    return (int)AssociationType_FieldIndex.ParentTitle;
+                }
+                case RecordTypeInts.MCHT:
+                case RecordTypeInts.FCHT:
+                {
+                    _TitleOverlay = GenderedItemBinaryOverlay.Factory<String>(
+                        package: _package,
+                        male: RecordTypes.MCHT,
+                        female: RecordTypes.FCHT,
+                        stream: stream,
+                        creator: (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)));
+                    return (int)AssociationType_FieldIndex.Title;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)AssociationType_FieldIndex.Flags;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void ToString(

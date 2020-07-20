@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -55,8 +49,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<PerkCondition> _Conditions = new ExtendedList<PerkCondition>();
-        public ExtendedList<PerkCondition> Conditions
+        private IExtendedList<PerkCondition> _Conditions = new ExtendedList<PerkCondition>();
+        public IExtendedList<PerkCondition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -97,140 +91,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object XmlWriteTranslator => APerkEffectXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((APerkEffectXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static APerkEffect CreateFromXml(
-            XElement node,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static APerkEffect CreateFromXml(
-            XElement node,
-            out APerkEffect.ErrorMask errorMask,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = APerkEffect.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static APerkEffect CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if (!LoquiXmlTranslation.Instance.TryCreate<APerkEffect>(node, out var ret, errorMask, translationMask))
-            {
-                throw new ArgumentException($"Unknown APerkEffect subclass: {node.Name.LocalName}");
-            }
-            ((APerkEffectSetterCommon)((IAPerkEffectGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static APerkEffect CreateFromXml(
-            string path,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static APerkEffect CreateFromXml(
-            string path,
-            out APerkEffect.ErrorMask errorMask,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static APerkEffect CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static APerkEffect CreateFromXml(
-            Stream stream,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static APerkEffect CreateFromXml(
-            Stream stream,
-            out APerkEffect.ErrorMask errorMask,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static APerkEffect CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -662,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = APerkEffect_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = APerkEffect_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual IEnumerable<FormKey> LinkFormKeys => APerkEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -715,14 +575,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Byte Rank { get; set; }
         new Byte Priority { get; set; }
-        new ExtendedList<PerkCondition> Conditions { get; }
+        new IExtendedList<PerkCondition> Conditions { get; }
         new APerkEffect.PRKEDataType PRKEDataTypeState { get; set; }
     }
 
     public partial interface IAPerkEffectGetter :
         ILoquiObject,
         ILoquiObject<IAPerkEffectGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -893,131 +752,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IAPerkEffect item,
-            XElement node,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IAPerkEffect item,
-            XElement node,
-            out APerkEffect.ErrorMask errorMask,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = APerkEffect.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IAPerkEffect item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((APerkEffectSetterCommon)((IAPerkEffectGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAPerkEffect item,
-            string path,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAPerkEffect item,
-            string path,
-            out APerkEffect.ErrorMask errorMask,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAPerkEffect item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IAPerkEffect item,
-            Stream stream,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAPerkEffect item,
-            Stream stream,
-            out APerkEffect.ErrorMask errorMask,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAPerkEffect item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1225,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case APerkEffect_FieldIndex.Priority:
                     return typeof(Byte);
                 case APerkEffect_FieldIndex.Conditions:
-                    return typeof(ExtendedList<PerkCondition>);
+                    return typeof(IExtendedList<PerkCondition>);
                 case APerkEffect_FieldIndex.PRKEDataTypeState:
                     return typeof(APerkEffect.PRKEDataType);
                 default:
@@ -1233,7 +967,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(APerkEffectXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.PRKE;
         public static readonly Type BinaryWriteTranslation = typeof(APerkEffectBinaryWriteTranslation);
         #region Interface
@@ -1282,34 +1015,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Conditions.Clear();
             item.PRKEDataTypeState = default;
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IAPerkEffect item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    APerkEffectXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1620,418 +1325,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class APerkEffectXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static APerkEffectXmlWriteTranslation Instance = new APerkEffectXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IAPerkEffectGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.Rank) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Rank),
-                    item: item.Rank,
-                    fieldIndex: (int)APerkEffect_FieldIndex.Rank,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.Priority) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Priority),
-                    item: item.Priority,
-                    fieldIndex: (int)APerkEffect_FieldIndex.Priority,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.Conditions) ?? true))
-            {
-                ListXmlTranslation<IPerkConditionGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Conditions),
-                    item: item.Conditions,
-                    fieldIndex: (int)APerkEffect_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)APerkEffect_FieldIndex.Conditions),
-                    transl: (XElement subNode, IPerkConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((PerkConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.PRKEDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<APerkEffect.PRKEDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.PRKEDataTypeState),
-                    item: item.PRKEDataTypeState,
-                    fieldIndex: (int)APerkEffect_FieldIndex.PRKEDataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public virtual void Write(
-            XElement node,
-            IAPerkEffectGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.APerkEffect");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.APerkEffect");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public virtual void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IAPerkEffectGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IAPerkEffectGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IAPerkEffectGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class APerkEffectXmlCreateTranslation
-    {
-        public readonly static APerkEffectXmlCreateTranslation Instance = new APerkEffectXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IAPerkEffect item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    APerkEffectXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IAPerkEffect item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Rank":
-                    errorMask?.PushIndex((int)APerkEffect_FieldIndex.Rank);
-                    try
-                    {
-                        item.Rank = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Priority":
-                    errorMask?.PushIndex((int)APerkEffect_FieldIndex.Priority);
-                    try
-                    {
-                        item.Priority = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conditions":
-                    errorMask?.PushIndex((int)APerkEffect_FieldIndex.Conditions);
-                    try
-                    {
-                        if (ListXmlTranslation<PerkCondition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<PerkCondition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PRKEDataTypeState":
-                    errorMask?.PushIndex((int)APerkEffect_FieldIndex.PRKEDataTypeState);
-                    try
-                    {
-                        item.PRKEDataTypeState = EnumXmlTranslation<APerkEffect.PRKEDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class APerkEffectXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IAPerkEffectGetter item,
-            XElement node,
-            out APerkEffect.ErrorMask errorMask,
-            APerkEffect.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((APerkEffectXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = APerkEffect.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IAPerkEffectGetter item,
-            string path,
-            out APerkEffect.ErrorMask errorMask,
-            APerkEffect.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IAPerkEffectGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IAPerkEffectGetter item,
-            Stream stream,
-            out APerkEffect.ErrorMask errorMask,
-            APerkEffect.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IAPerkEffectGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IAPerkEffectGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((APerkEffectXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IAPerkEffectGetter item,
-            XElement node,
-            string? name = null,
-            APerkEffect.TranslationMask? translationMask = null)
-        {
-            ((APerkEffectXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IAPerkEffectGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((APerkEffectXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IAPerkEffectGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((APerkEffectXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2093,10 +1386,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAPerkEffect item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2106,18 +1400,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.PRKE:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)APerkEffect_FieldIndex.Priority) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)APerkEffect_FieldIndex.Priority) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    return TryGet<int?>.Succeed((int)APerkEffect_FieldIndex.Priority);
+                    return (int)APerkEffect_FieldIndex.Priority;
                 }
-                case 0x464B5250: // PRKF: End Marker
+                case RecordTypeInts.PRKF: // End Marker
                 {
                     frame.ReadSubrecordFrame();
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2178,23 +1472,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEffectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEffectCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object XmlWriteTranslator => APerkEffectXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((APerkEffectXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => APerkEffectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -2227,12 +1504,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
 
-        public virtual TryGet<int?> FillRecordType(
+        public virtual ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2240,17 +1518,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.PRKE:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)APerkEffect_FieldIndex.Priority) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)APerkEffect_FieldIndex.Priority) return ParseResult.Stop;
                     _PRKELocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)APerkEffect_FieldIndex.Priority);
+                    return (int)APerkEffect_FieldIndex.Priority;
                 }
-                case 0x464B5250: // PRKF: End Marker
+                case RecordTypeInts.PRKF: // End Marker
                 {
-                    _package.MetaData.Constants.ReadSubrecordFrame(stream);
-                    return TryGet<int?>.Failure;
+                    stream.ReadSubrecordFrame();
+                    return ParseResult.Stop;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

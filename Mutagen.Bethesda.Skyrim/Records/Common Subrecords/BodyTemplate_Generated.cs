@@ -15,14 +15,8 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -46,9 +40,6 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region Versioning
-        public BodyTemplate.VersioningBreaks Versioning { get; set; } = default;
-        #endregion
         #region FirstPersonFlags
         public BipedObjectFlag FirstPersonFlags { get; set; } = default;
         #endregion
@@ -57,6 +48,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ArmorType
         public ArmorType ArmorType { get; set; } = default;
+        #endregion
+        #region ActsLike44
+        public Boolean ActsLike44 { get; set; } = default;
         #endregion
 
         #region To String
@@ -88,137 +82,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => BodyTemplateXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((BodyTemplateXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static BodyTemplate CreateFromXml(
-            XElement node,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static BodyTemplate CreateFromXml(
-            XElement node,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = BodyTemplate.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static BodyTemplate CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new BodyTemplate();
-            ((BodyTemplateSetterCommon)((IBodyTemplateGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static BodyTemplate CreateFromXml(
-            string path,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static BodyTemplate CreateFromXml(
-            string path,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static BodyTemplate CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static BodyTemplate CreateFromXml(
-            Stream stream,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static BodyTemplate CreateFromXml(
-            Stream stream,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static BodyTemplate CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public class Mask<TItem> :
             IMask<TItem>,
@@ -227,22 +90,22 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Versioning = initialValue;
                 this.FirstPersonFlags = initialValue;
                 this.Flags = initialValue;
                 this.ArmorType = initialValue;
+                this.ActsLike44 = initialValue;
             }
 
             public Mask(
-                TItem Versioning,
                 TItem FirstPersonFlags,
                 TItem Flags,
-                TItem ArmorType)
+                TItem ArmorType,
+                TItem ActsLike44)
             {
-                this.Versioning = Versioning;
                 this.FirstPersonFlags = FirstPersonFlags;
                 this.Flags = Flags;
                 this.ArmorType = ArmorType;
+                this.ActsLike44 = ActsLike44;
             }
 
             #pragma warning disable CS8618
@@ -254,10 +117,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Versioning;
             public TItem FirstPersonFlags;
             public TItem Flags;
             public TItem ArmorType;
+            public TItem ActsLike44;
             #endregion
 
             #region Equals
@@ -270,19 +133,19 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.FirstPersonFlags, rhs.FirstPersonFlags)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.ArmorType, rhs.ArmorType)) return false;
+                if (!object.Equals(this.ActsLike44, rhs.ActsLike44)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Versioning);
                 hash.Add(this.FirstPersonFlags);
                 hash.Add(this.Flags);
                 hash.Add(this.ArmorType);
+                hash.Add(this.ActsLike44);
                 return hash.ToHashCode();
             }
 
@@ -291,10 +154,10 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Versioning)) return false;
                 if (!eval(this.FirstPersonFlags)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.ArmorType)) return false;
+                if (!eval(this.ActsLike44)) return false;
                 return true;
             }
             #endregion
@@ -302,10 +165,10 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Versioning)) return true;
                 if (eval(this.FirstPersonFlags)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.ArmorType)) return true;
+                if (eval(this.ActsLike44)) return true;
                 return false;
             }
             #endregion
@@ -320,10 +183,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Versioning = eval(this.Versioning);
                 obj.FirstPersonFlags = eval(this.FirstPersonFlags);
                 obj.Flags = eval(this.Flags);
                 obj.ArmorType = eval(this.ArmorType);
+                obj.ActsLike44 = eval(this.ActsLike44);
             }
             #endregion
 
@@ -346,10 +209,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Versioning ?? true)
-                    {
-                        fg.AppendItem(Versioning, "Versioning");
-                    }
                     if (printMask?.FirstPersonFlags ?? true)
                     {
                         fg.AppendItem(FirstPersonFlags, "FirstPersonFlags");
@@ -361,6 +220,10 @@ namespace Mutagen.Bethesda.Skyrim
                     if (printMask?.ArmorType ?? true)
                     {
                         fg.AppendItem(ArmorType, "ArmorType");
+                    }
+                    if (printMask?.ActsLike44 ?? true)
+                    {
+                        fg.AppendItem(ActsLike44, "ActsLike44");
                     }
                 }
                 fg.AppendLine("]");
@@ -387,10 +250,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? Versioning;
             public Exception? FirstPersonFlags;
             public Exception? Flags;
             public Exception? ArmorType;
+            public Exception? ActsLike44;
             #endregion
 
             #region IErrorMask
@@ -399,14 +262,14 @@ namespace Mutagen.Bethesda.Skyrim
                 BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
                 switch (enu)
                 {
-                    case BodyTemplate_FieldIndex.Versioning:
-                        return Versioning;
                     case BodyTemplate_FieldIndex.FirstPersonFlags:
                         return FirstPersonFlags;
                     case BodyTemplate_FieldIndex.Flags:
                         return Flags;
                     case BodyTemplate_FieldIndex.ArmorType:
                         return ArmorType;
+                    case BodyTemplate_FieldIndex.ActsLike44:
+                        return ActsLike44;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -417,9 +280,6 @@ namespace Mutagen.Bethesda.Skyrim
                 BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
                 switch (enu)
                 {
-                    case BodyTemplate_FieldIndex.Versioning:
-                        this.Versioning = ex;
-                        break;
                     case BodyTemplate_FieldIndex.FirstPersonFlags:
                         this.FirstPersonFlags = ex;
                         break;
@@ -428,6 +288,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case BodyTemplate_FieldIndex.ArmorType:
                         this.ArmorType = ex;
+                        break;
+                    case BodyTemplate_FieldIndex.ActsLike44:
+                        this.ActsLike44 = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -439,9 +302,6 @@ namespace Mutagen.Bethesda.Skyrim
                 BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
                 switch (enu)
                 {
-                    case BodyTemplate_FieldIndex.Versioning:
-                        this.Versioning = (Exception?)obj;
-                        break;
                     case BodyTemplate_FieldIndex.FirstPersonFlags:
                         this.FirstPersonFlags = (Exception?)obj;
                         break;
@@ -451,6 +311,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case BodyTemplate_FieldIndex.ArmorType:
                         this.ArmorType = (Exception?)obj;
                         break;
+                    case BodyTemplate_FieldIndex.ActsLike44:
+                        this.ActsLike44 = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -459,10 +322,10 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Versioning != null) return true;
                 if (FirstPersonFlags != null) return true;
                 if (Flags != null) return true;
                 if (ArmorType != null) return true;
+                if (ActsLike44 != null) return true;
                 return false;
             }
             #endregion
@@ -497,10 +360,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(Versioning, "Versioning");
                 fg.AppendItem(FirstPersonFlags, "FirstPersonFlags");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(ArmorType, "ArmorType");
+                fg.AppendItem(ActsLike44, "ActsLike44");
             }
             #endregion
 
@@ -509,10 +372,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.FirstPersonFlags = this.FirstPersonFlags.Combine(rhs.FirstPersonFlags);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.ArmorType = this.ArmorType.Combine(rhs.ArmorType);
+                ret.ActsLike44 = this.ActsLike44.Combine(rhs.ActsLike44);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -534,19 +397,19 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool Versioning;
             public bool FirstPersonFlags;
             public bool Flags;
             public bool ArmorType;
+            public bool ActsLike44;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Versioning = defaultOn;
                 this.FirstPersonFlags = defaultOn;
                 this.Flags = defaultOn;
                 this.ArmorType = defaultOn;
+                this.ActsLike44 = defaultOn;
             }
 
             #endregion
@@ -562,20 +425,11 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Versioning, null));
                 ret.Add((FirstPersonFlags, null));
                 ret.Add((Flags, null));
                 ret.Add((ArmorType, null));
+                ret.Add((ActsLike44, null));
             }
-        }
-        #endregion
-
-        #region Mutagen
-        public new static readonly RecordType GrupRecordType = BodyTemplate_Registration.TriggeringRecordType;
-        [Flags]
-        public enum VersioningBreaks
-        {
-            Break0 = 1
         }
         #endregion
 
@@ -649,16 +503,15 @@ namespace Mutagen.Bethesda.Skyrim
         IBodyTemplateGetter,
         ILoquiObjectSetter<IBodyTemplate>
     {
-        new BodyTemplate.VersioningBreaks Versioning { get; set; }
         new BipedObjectFlag FirstPersonFlags { get; set; }
         new BodyTemplate.Flag Flags { get; set; }
         new ArmorType ArmorType { get; set; }
+        new Boolean ActsLike44 { get; set; }
     }
 
     public partial interface IBodyTemplateGetter :
         ILoquiObject,
         ILoquiObject<IBodyTemplateGetter>,
-        IXmlItem,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -668,10 +521,10 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => BodyTemplate_Registration.Instance;
-        BodyTemplate.VersioningBreaks Versioning { get; }
         BipedObjectFlag FirstPersonFlags { get; }
         BodyTemplate.Flag Flags { get; }
         ArmorType ArmorType { get; }
+        Boolean ActsLike44 { get; }
 
     }
 
@@ -829,131 +682,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IBodyTemplate item,
-            XElement node,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IBodyTemplate item,
-            XElement node,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = BodyTemplate.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IBodyTemplate item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((BodyTemplateSetterCommon)((IBodyTemplateGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IBodyTemplate item,
-            string path,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IBodyTemplate item,
-            string path,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IBodyTemplate item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IBodyTemplate item,
-            Stream stream,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IBodyTemplate item,
-            Stream stream,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IBodyTemplate item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -989,10 +717,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum BodyTemplate_FieldIndex
     {
-        Versioning = 0,
-        FirstPersonFlags = 1,
-        Flags = 2,
-        ArmorType = 3,
+        FirstPersonFlags = 0,
+        Flags = 1,
+        ArmorType = 2,
+        ActsLike44 = 3,
     }
     #endregion
 
@@ -1042,14 +770,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "VERSIONING":
-                    return (ushort)BodyTemplate_FieldIndex.Versioning;
                 case "FIRSTPERSONFLAGS":
                     return (ushort)BodyTemplate_FieldIndex.FirstPersonFlags;
                 case "FLAGS":
                     return (ushort)BodyTemplate_FieldIndex.Flags;
                 case "ARMORTYPE":
                     return (ushort)BodyTemplate_FieldIndex.ArmorType;
+                case "ACTSLIKE44":
+                    return (ushort)BodyTemplate_FieldIndex.ActsLike44;
                 default:
                     return null;
             }
@@ -1060,10 +788,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.Versioning:
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                 case BodyTemplate_FieldIndex.Flags:
                 case BodyTemplate_FieldIndex.ArmorType:
+                case BodyTemplate_FieldIndex.ActsLike44:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1075,10 +803,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.Versioning:
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                 case BodyTemplate_FieldIndex.Flags:
                 case BodyTemplate_FieldIndex.ArmorType:
+                case BodyTemplate_FieldIndex.ActsLike44:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1090,10 +818,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.Versioning:
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                 case BodyTemplate_FieldIndex.Flags:
                 case BodyTemplate_FieldIndex.ArmorType:
+                case BodyTemplate_FieldIndex.ActsLike44:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1105,14 +833,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.Versioning:
-                    return "Versioning";
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                     return "FirstPersonFlags";
                 case BodyTemplate_FieldIndex.Flags:
                     return "Flags";
                 case BodyTemplate_FieldIndex.ArmorType:
                     return "ArmorType";
+                case BodyTemplate_FieldIndex.ActsLike44:
+                    return "ActsLike44";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1123,10 +851,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.Versioning:
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                 case BodyTemplate_FieldIndex.Flags:
                 case BodyTemplate_FieldIndex.ArmorType:
+                case BodyTemplate_FieldIndex.ActsLike44:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1138,10 +866,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.Versioning:
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                 case BodyTemplate_FieldIndex.Flags:
                 case BodyTemplate_FieldIndex.ArmorType:
+                case BodyTemplate_FieldIndex.ActsLike44:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1153,21 +881,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.Versioning:
-                    return typeof(BodyTemplate.VersioningBreaks);
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                     return typeof(BipedObjectFlag);
                 case BodyTemplate_FieldIndex.Flags:
                     return typeof(BodyTemplate.Flag);
                 case BodyTemplate_FieldIndex.ArmorType:
                     return typeof(ArmorType);
+                case BodyTemplate_FieldIndex.ActsLike44:
+                    return typeof(Boolean);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(BodyTemplateXmlWriteTranslation);
-        public static readonly RecordType TriggeringRecordType = RecordTypes.BODT;
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        RecordTypes.BODT,
+                        RecordTypes.BOD2
+                    })
+            );
+        });
+        public static RecordTypeConverter Version44Converter = new RecordTypeConverter(
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("BODT"),
+                new RecordType("BOD2")));
+        public static RecordTypeConverter? Get(int? version)
+        {
+            if (version == null) return default(RecordTypeConverter);
+            if (version.Value >= 44)
+            {
+                return Version44Converter;
+            }
+            return default(RecordTypeConverter);
+        }
         public static readonly Type BinaryWriteTranslation = typeof(BodyTemplateBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1210,39 +961,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IBodyTemplate item)
         {
             ClearPartial();
-            item.Versioning = default;
             item.FirstPersonFlags = default;
             item.Flags = default;
             item.ArmorType = default;
+            item.ActsLike44 = default;
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IBodyTemplate item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    BodyTemplateXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1252,7 +975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(RecordTypes.BODT)));
+                recordTypeConverter.Combine(BodyTemplate_Registration.Get(frame.MetaData.FormVersion)).ConvertToCustom(RecordTypes.BODT)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1288,10 +1011,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.FirstPersonFlags = item.FirstPersonFlags == rhs.FirstPersonFlags;
             ret.Flags = item.Flags == rhs.Flags;
             ret.ArmorType = item.ArmorType == rhs.ArmorType;
+            ret.ActsLike44 = item.ActsLike44 == rhs.ActsLike44;
         }
         
         public string ToString(
@@ -1338,10 +1061,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             BodyTemplate.Mask<bool>? printMask = null)
         {
-            if (printMask?.Versioning ?? true)
-            {
-                fg.AppendItem(item.Versioning, "Versioning");
-            }
             if (printMask?.FirstPersonFlags ?? true)
             {
                 fg.AppendItem(item.FirstPersonFlags, "FirstPersonFlags");
@@ -1353,6 +1072,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (printMask?.ArmorType ?? true)
             {
                 fg.AppendItem(item.ArmorType, "ArmorType");
+            }
+            if (printMask?.ActsLike44 ?? true)
+            {
+                fg.AppendItem(item.ActsLike44, "ActsLike44");
             }
         }
         
@@ -1367,10 +1090,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyTemplateGetter item,
             BodyTemplate.Mask<bool> mask)
         {
-            mask.Versioning = true;
             mask.FirstPersonFlags = true;
             mask.Flags = true;
             mask.ArmorType = true;
+            mask.ActsLike44 = true;
         }
         
         #region Equals and Hash
@@ -1380,20 +1103,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
             if (lhs.FirstPersonFlags != rhs.FirstPersonFlags) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.ArmorType != rhs.ArmorType) return false;
+            if (lhs.ActsLike44 != rhs.ActsLike44) return false;
             return true;
         }
         
         public virtual int GetHashCode(IBodyTemplateGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Versioning);
             hash.Add(item.FirstPersonFlags);
             hash.Add(item.Flags);
             hash.Add(item.ArmorType);
+            hash.Add(item.ActsLike44);
             return hash.ToHashCode();
         }
         
@@ -1426,10 +1149,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.Versioning) ?? true))
-            {
-                item.Versioning = rhs.Versioning;
-            }
             if ((copyMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.FirstPersonFlags) ?? true))
             {
                 item.FirstPersonFlags = rhs.FirstPersonFlags;
@@ -1438,10 +1157,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Flags = rhs.Flags;
             }
-            if (rhs.Versioning.HasFlag(BodyTemplate.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.ArmorType) ?? true))
             {
                 item.ArmorType = rhs.ArmorType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.ActsLike44) ?? true))
+            {
+                item.ActsLike44 = rhs.ActsLike44;
             }
         }
         
@@ -1519,397 +1241,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class BodyTemplateXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static BodyTemplateXmlWriteTranslation Instance = new BodyTemplateXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IBodyTemplateGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.Versioning) ?? true))
-            {
-                EnumXmlTranslation<BodyTemplate.VersioningBreaks>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Versioning),
-                    item: item.Versioning,
-                    fieldIndex: (int)BodyTemplate_FieldIndex.Versioning,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.FirstPersonFlags) ?? true))
-            {
-                EnumXmlTranslation<BipedObjectFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.FirstPersonFlags),
-                    item: item.FirstPersonFlags,
-                    fieldIndex: (int)BodyTemplate_FieldIndex.FirstPersonFlags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<BodyTemplate.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)BodyTemplate_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.ArmorType) ?? true))
-            {
-                EnumXmlTranslation<ArmorType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ArmorType),
-                    item: item.ArmorType,
-                    fieldIndex: (int)BodyTemplate_FieldIndex.ArmorType,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IBodyTemplateGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.BodyTemplate");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.BodyTemplate");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IBodyTemplateGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IBodyTemplateGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IBodyTemplateGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class BodyTemplateXmlCreateTranslation
-    {
-        public readonly static BodyTemplateXmlCreateTranslation Instance = new BodyTemplateXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IBodyTemplate item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    BodyTemplateXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IBodyTemplate item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Versioning":
-                    errorMask?.PushIndex((int)BodyTemplate_FieldIndex.Versioning);
-                    try
-                    {
-                        item.Versioning = EnumXmlTranslation<BodyTemplate.VersioningBreaks>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FirstPersonFlags":
-                    errorMask?.PushIndex((int)BodyTemplate_FieldIndex.FirstPersonFlags);
-                    try
-                    {
-                        item.FirstPersonFlags = EnumXmlTranslation<BipedObjectFlag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)BodyTemplate_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<BodyTemplate.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ArmorType":
-                    errorMask?.PushIndex((int)BodyTemplate_FieldIndex.ArmorType);
-                    try
-                    {
-                        item.ArmorType = EnumXmlTranslation<ArmorType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class BodyTemplateXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IBodyTemplateGetter item,
-            XElement node,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((BodyTemplateXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = BodyTemplate.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IBodyTemplateGetter item,
-            string path,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IBodyTemplateGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IBodyTemplateGetter item,
-            Stream stream,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IBodyTemplateGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IBodyTemplateGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((BodyTemplateXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IBodyTemplateGetter item,
-            XElement node,
-            string? name = null,
-            BodyTemplate.TranslationMask? translationMask = null)
-        {
-            ((BodyTemplateXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IBodyTemplateGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((BodyTemplateXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IBodyTemplateGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((BodyTemplateXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -1925,11 +1256,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.FirstPersonFlags,
                 length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Write(
-                writer,
-                item.Flags,
-                length: 4);
-            if (!item.Versioning.HasFlag(BodyTemplate.VersioningBreaks.Break0))
+            if (writer.MetaData.FormVersion!.Value < 44)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+            }
+            if (writer.MetaData.FormVersion!.Value >= 22)
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<ArmorType>.Instance.Write(
                     writer,
@@ -1945,7 +1279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.BODT),
+                record: recordTypeConverter.Combine(BodyTemplate_Registration.Get(writer.MetaData.FormVersion)).ConvertToCustom(RecordTypes.BODT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(
@@ -1976,13 +1310,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Flags = EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            if (frame.Complete)
+            if (frame.MetaData.FormVersion!.Value < 44)
             {
-                item.Versioning |= BodyTemplate.VersioningBreaks.Break0;
-                return;
+                item.Flags = EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             }
-            item.ArmorType = EnumBinaryTranslation<ArmorType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            if (frame.MetaData.FormVersion!.Value >= 22)
+            {
+                item.ArmorType = EnumBinaryTranslation<ArmorType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            }
         }
 
     }
@@ -2036,23 +1371,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyTemplateGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => BodyTemplateXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((BodyTemplateXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BodyTemplateBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -2066,10 +1384,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public BodyTemplate.VersioningBreaks Versioning { get; private set; }
         public BipedObjectFlag FirstPersonFlags => (BipedObjectFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        #region Flags
         public BodyTemplate.Flag Flags => (BodyTemplate.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-        public ArmorType ArmorType => (ArmorType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
+        int FlagsVersioningOffset => _package.FormVersion!.FormVersion!.Value >= 44 ? -4 : 0;
+        #endregion
+        #region ArmorType
+        public ArmorType ArmorType => (ArmorType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(FlagsVersioningOffset + 0x8, 0x4));
+        int ArmorTypeVersioningOffset => FlagsVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 22 ? -4 : 0);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2094,12 +1417,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new BodyTemplateBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x8)
-            {
-                ret.Versioning |= BodyTemplate.VersioningBreaks.Break0;
-            }
+            stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

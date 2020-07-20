@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -51,8 +45,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region WalkForwardFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Footstep>> _WalkForwardFootsteps = new ExtendedList<IFormLink<Footstep>>();
-        public ExtendedList<IFormLink<Footstep>> WalkForwardFootsteps
+        private IExtendedList<IFormLink<Footstep>> _WalkForwardFootsteps = new ExtendedList<IFormLink<Footstep>>();
+        public IExtendedList<IFormLink<Footstep>> WalkForwardFootsteps
         {
             get => this._WalkForwardFootsteps;
             protected set => this._WalkForwardFootsteps = value;
@@ -65,8 +59,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RunForwardFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Footstep>> _RunForwardFootsteps = new ExtendedList<IFormLink<Footstep>>();
-        public ExtendedList<IFormLink<Footstep>> RunForwardFootsteps
+        private IExtendedList<IFormLink<Footstep>> _RunForwardFootsteps = new ExtendedList<IFormLink<Footstep>>();
+        public IExtendedList<IFormLink<Footstep>> RunForwardFootsteps
         {
             get => this._RunForwardFootsteps;
             protected set => this._RunForwardFootsteps = value;
@@ -79,8 +73,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region WalkForwardAlternateFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Footstep>> _WalkForwardAlternateFootsteps = new ExtendedList<IFormLink<Footstep>>();
-        public ExtendedList<IFormLink<Footstep>> WalkForwardAlternateFootsteps
+        private IExtendedList<IFormLink<Footstep>> _WalkForwardAlternateFootsteps = new ExtendedList<IFormLink<Footstep>>();
+        public IExtendedList<IFormLink<Footstep>> WalkForwardAlternateFootsteps
         {
             get => this._WalkForwardAlternateFootsteps;
             protected set => this._WalkForwardAlternateFootsteps = value;
@@ -93,8 +87,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RunForwardAlternateFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Footstep>> _RunForwardAlternateFootsteps = new ExtendedList<IFormLink<Footstep>>();
-        public ExtendedList<IFormLink<Footstep>> RunForwardAlternateFootsteps
+        private IExtendedList<IFormLink<Footstep>> _RunForwardAlternateFootsteps = new ExtendedList<IFormLink<Footstep>>();
+        public IExtendedList<IFormLink<Footstep>> RunForwardAlternateFootsteps
         {
             get => this._RunForwardAlternateFootsteps;
             protected set => this._RunForwardAlternateFootsteps = value;
@@ -107,8 +101,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region WalkForwardAlternateFootsteps2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Footstep>> _WalkForwardAlternateFootsteps2 = new ExtendedList<IFormLink<Footstep>>();
-        public ExtendedList<IFormLink<Footstep>> WalkForwardAlternateFootsteps2
+        private IExtendedList<IFormLink<Footstep>> _WalkForwardAlternateFootsteps2 = new ExtendedList<IFormLink<Footstep>>();
+        public IExtendedList<IFormLink<Footstep>> WalkForwardAlternateFootsteps2
         {
             get => this._WalkForwardAlternateFootsteps2;
             protected set => this._WalkForwardAlternateFootsteps2 = value;
@@ -149,135 +143,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => FootstepSetXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((FootstepSetXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new FootstepSet CreateFromXml(
-            XElement node,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static FootstepSet CreateFromXml(
-            XElement node,
-            out FootstepSet.ErrorMask errorMask,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = FootstepSet.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static FootstepSet CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new FootstepSet();
-            ((FootstepSetSetterCommon)((IFootstepSetGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static FootstepSet CreateFromXml(
-            string path,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static FootstepSet CreateFromXml(
-            string path,
-            out FootstepSet.ErrorMask errorMask,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static FootstepSet CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static FootstepSet CreateFromXml(
-            Stream stream,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static FootstepSet CreateFromXml(
-            Stream stream,
-            out FootstepSet.ErrorMask errorMask,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static FootstepSet CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -298,7 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -310,7 +175,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -1027,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = FootstepSet_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = FootstepSet_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FootstepSetCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1122,11 +987,11 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IFootstepSetInternal>
     {
-        new ExtendedList<IFormLink<Footstep>> WalkForwardFootsteps { get; }
-        new ExtendedList<IFormLink<Footstep>> RunForwardFootsteps { get; }
-        new ExtendedList<IFormLink<Footstep>> WalkForwardAlternateFootsteps { get; }
-        new ExtendedList<IFormLink<Footstep>> RunForwardAlternateFootsteps { get; }
-        new ExtendedList<IFormLink<Footstep>> WalkForwardAlternateFootsteps2 { get; }
+        new IExtendedList<IFormLink<Footstep>> WalkForwardFootsteps { get; }
+        new IExtendedList<IFormLink<Footstep>> RunForwardFootsteps { get; }
+        new IExtendedList<IFormLink<Footstep>> WalkForwardAlternateFootsteps { get; }
+        new IExtendedList<IFormLink<Footstep>> RunForwardAlternateFootsteps { get; }
+        new IExtendedList<IFormLink<Footstep>> WalkForwardAlternateFootsteps2 { get; }
     }
 
     public partial interface IFootstepSetInternal :
@@ -1139,11 +1004,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFootstepSetGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IFootstepSetGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => FootstepSet_Registration.Instance;
+        static new ILoquiRegistration Registration => FootstepSet_Registration.Instance;
         IReadOnlyList<IFormLink<IFootstepGetter>> WalkForwardFootsteps { get; }
         IReadOnlyList<IFormLink<IFootstepGetter>> RunForwardFootsteps { get; }
         IReadOnlyList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps { get; }
@@ -1283,131 +1147,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IFootstepSetInternal item,
-            XElement node,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IFootstepSetInternal item,
-            XElement node,
-            out FootstepSet.ErrorMask errorMask,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = FootstepSet.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IFootstepSetInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((FootstepSetSetterCommon)((IFootstepSetGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFootstepSetInternal item,
-            string path,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFootstepSetInternal item,
-            string path,
-            out FootstepSet.ErrorMask errorMask,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFootstepSetInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IFootstepSetInternal item,
-            Stream stream,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFootstepSetInternal item,
-            Stream stream,
-            out FootstepSet.ErrorMask errorMask,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IFootstepSetInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            FootstepSet.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1445,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1624,21 +1363,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case FootstepSet_FieldIndex.WalkForwardFootsteps:
-                    return typeof(ExtendedList<IFormLink<Footstep>>);
+                    return typeof(IExtendedList<IFormLink<Footstep>>);
                 case FootstepSet_FieldIndex.RunForwardFootsteps:
-                    return typeof(ExtendedList<IFormLink<Footstep>>);
+                    return typeof(IExtendedList<IFormLink<Footstep>>);
                 case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps:
-                    return typeof(ExtendedList<IFormLink<Footstep>>);
+                    return typeof(IExtendedList<IFormLink<Footstep>>);
                 case FootstepSet_FieldIndex.RunForwardAlternateFootsteps:
-                    return typeof(ExtendedList<IFormLink<Footstep>>);
+                    return typeof(IExtendedList<IFormLink<Footstep>>);
                 case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2:
-                    return typeof(ExtendedList<IFormLink<Footstep>>);
+                    return typeof(IExtendedList<IFormLink<Footstep>>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(FootstepSetXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.FSTS;
         public static readonly Type BinaryWriteTranslation = typeof(FootstepSetBinaryWriteTranslation);
         #region Interface
@@ -1699,86 +1437,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IFootstepSetInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IFootstepSetInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IFootstepSetInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    FootstepSetXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (FootstepSet)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (FootstepSet)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2038,7 +1696,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (FootstepSet_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (FootstepSet_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (FootstepSet_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (FootstepSet_FieldIndex)((int)index);
@@ -2059,7 +1717,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (FootstepSet_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (FootstepSet_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (FootstepSet_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (FootstepSet_FieldIndex)((int)index);
@@ -2423,440 +2081,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class FootstepSetXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static FootstepSetXmlWriteTranslation Instance = new FootstepSetXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IFootstepSetGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardFootsteps) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IFootstepGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.WalkForwardFootsteps),
-                    item: item.WalkForwardFootsteps,
-                    fieldIndex: (int)FootstepSet_FieldIndex.WalkForwardFootsteps,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FootstepSet_FieldIndex.WalkForwardFootsteps),
-                    transl: (XElement subNode, IFormLink<IFootstepGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardFootsteps) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IFootstepGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.RunForwardFootsteps),
-                    item: item.RunForwardFootsteps,
-                    fieldIndex: (int)FootstepSet_FieldIndex.RunForwardFootsteps,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FootstepSet_FieldIndex.RunForwardFootsteps),
-                    transl: (XElement subNode, IFormLink<IFootstepGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IFootstepGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.WalkForwardAlternateFootsteps),
-                    item: item.WalkForwardAlternateFootsteps,
-                    fieldIndex: (int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps),
-                    transl: (XElement subNode, IFormLink<IFootstepGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IFootstepGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.RunForwardAlternateFootsteps),
-                    item: item.RunForwardAlternateFootsteps,
-                    fieldIndex: (int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps),
-                    transl: (XElement subNode, IFormLink<IFootstepGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IFootstepGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.WalkForwardAlternateFootsteps2),
-                    item: item.WalkForwardAlternateFootsteps2,
-                    fieldIndex: (int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2),
-                    transl: (XElement subNode, IFormLink<IFootstepGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IFootstepSetGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.FootstepSet");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.FootstepSet");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IFootstepSetGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IFootstepSetGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IFootstepSetGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class FootstepSetXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static FootstepSetXmlCreateTranslation Instance = new FootstepSetXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IFootstepSetInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FootstepSetXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IFootstepSetInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "WalkForwardFootsteps":
-                    errorMask?.PushIndex((int)FootstepSet_FieldIndex.WalkForwardFootsteps);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Footstep>>.Instance.Parse(
-                            node: node,
-                            enumer: out var WalkForwardFootstepsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.WalkForwardFootsteps.SetTo(WalkForwardFootstepsItem);
-                        }
-                        else
-                        {
-                            item.WalkForwardFootsteps.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RunForwardFootsteps":
-                    errorMask?.PushIndex((int)FootstepSet_FieldIndex.RunForwardFootsteps);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Footstep>>.Instance.Parse(
-                            node: node,
-                            enumer: out var RunForwardFootstepsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.RunForwardFootsteps.SetTo(RunForwardFootstepsItem);
-                        }
-                        else
-                        {
-                            item.RunForwardFootsteps.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WalkForwardAlternateFootsteps":
-                    errorMask?.PushIndex((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Footstep>>.Instance.Parse(
-                            node: node,
-                            enumer: out var WalkForwardAlternateFootstepsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.WalkForwardAlternateFootsteps.SetTo(WalkForwardAlternateFootstepsItem);
-                        }
-                        else
-                        {
-                            item.WalkForwardAlternateFootsteps.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RunForwardAlternateFootsteps":
-                    errorMask?.PushIndex((int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Footstep>>.Instance.Parse(
-                            node: node,
-                            enumer: out var RunForwardAlternateFootstepsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.RunForwardAlternateFootsteps.SetTo(RunForwardAlternateFootstepsItem);
-                        }
-                        else
-                        {
-                            item.RunForwardAlternateFootsteps.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WalkForwardAlternateFootsteps2":
-                    errorMask?.PushIndex((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Footstep>>.Instance.Parse(
-                            node: node,
-                            enumer: out var WalkForwardAlternateFootsteps2Item,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.WalkForwardAlternateFootsteps2.SetTo(WalkForwardAlternateFootsteps2Item);
-                        }
-                        else
-                        {
-                            item.WalkForwardAlternateFootsteps2.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class FootstepSetXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IFootstepSetGetter item,
-            XElement node,
-            out FootstepSet.ErrorMask errorMask,
-            FootstepSet.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((FootstepSetXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = FootstepSet.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IFootstepSetGetter item,
-            string path,
-            out FootstepSet.ErrorMask errorMask,
-            FootstepSet.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IFootstepSetGetter item,
-            Stream stream,
-            out FootstepSet.ErrorMask errorMask,
-            FootstepSet.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2915,10 +2139,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -2971,9 +2197,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IFootstepSetInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2986,12 +2213,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     FootstepSetBinaryCreateTranslation.FillBinaryCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3042,21 +2270,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => FootstepSetXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((FootstepSetXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FootstepSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3098,8 +2311,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new FootstepSetBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3125,12 +2339,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3141,7 +2356,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     CountCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 default:
                     return base.FillRecordType(
@@ -3149,7 +2364,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

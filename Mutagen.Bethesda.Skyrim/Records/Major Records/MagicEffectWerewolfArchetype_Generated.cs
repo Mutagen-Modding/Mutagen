@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -67,135 +61,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((MagicEffectWerewolfArchetypeCommon)((IMagicEffectWerewolfArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => MagicEffectWerewolfArchetypeXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((MagicEffectWerewolfArchetypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new MagicEffectWerewolfArchetype CreateFromXml(
-            XElement node,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static MagicEffectWerewolfArchetype CreateFromXml(
-            XElement node,
-            out MagicEffectWerewolfArchetype.ErrorMask errorMask,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffectWerewolfArchetype.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static MagicEffectWerewolfArchetype CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new MagicEffectWerewolfArchetype();
-            ((MagicEffectWerewolfArchetypeSetterCommon)((IMagicEffectWerewolfArchetypeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static MagicEffectWerewolfArchetype CreateFromXml(
-            string path,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffectWerewolfArchetype CreateFromXml(
-            string path,
-            out MagicEffectWerewolfArchetype.ErrorMask errorMask,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffectWerewolfArchetype CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static MagicEffectWerewolfArchetype CreateFromXml(
-            Stream stream,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffectWerewolfArchetype CreateFromXml(
-            Stream stream,
-            out MagicEffectWerewolfArchetype.ErrorMask errorMask,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffectWerewolfArchetype CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -504,10 +369,9 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMagicEffectWerewolfArchetypeGetter :
         IMagicEffectArchetypeGetter,
         ILoquiObject<IMagicEffectWerewolfArchetypeGetter>,
-        IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => MagicEffectWerewolfArchetype_Registration.Instance;
+        static new ILoquiRegistration Registration => MagicEffectWerewolfArchetype_Registration.Instance;
 
     }
 
@@ -641,131 +505,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IMagicEffectWerewolfArchetypeInternal item,
-            XElement node,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IMagicEffectWerewolfArchetypeInternal item,
-            XElement node,
-            out MagicEffectWerewolfArchetype.ErrorMask errorMask,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffectWerewolfArchetype.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectWerewolfArchetypeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((MagicEffectWerewolfArchetypeSetterCommon)((IMagicEffectWerewolfArchetypeGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectWerewolfArchetypeInternal item,
-            string path,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectWerewolfArchetypeInternal item,
-            string path,
-            out MagicEffectWerewolfArchetype.ErrorMask errorMask,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectWerewolfArchetypeInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectWerewolfArchetypeInternal item,
-            Stream stream,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectWerewolfArchetypeInternal item,
-            Stream stream,
-            out MagicEffectWerewolfArchetype.ErrorMask errorMask,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectWerewolfArchetypeInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -929,7 +668,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(MagicEffectWerewolfArchetypeXmlWriteTranslation);
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectWerewolfArchetypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -979,47 +717,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IMagicEffectWerewolfArchetypeInternal)item);
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IMagicEffectWerewolfArchetypeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    MagicEffectWerewolfArchetypeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IMagicEffectArchetypeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (MagicEffectWerewolfArchetype)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1334,195 +1031,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class MagicEffectWerewolfArchetypeXmlWriteTranslation :
-        MagicEffectArchetypeXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static MagicEffectWerewolfArchetypeXmlWriteTranslation Instance = new MagicEffectWerewolfArchetypeXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IMagicEffectWerewolfArchetypeGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            MagicEffectArchetypeXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IMagicEffectWerewolfArchetypeGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.MagicEffectWerewolfArchetype");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.MagicEffectWerewolfArchetype");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IMagicEffectWerewolfArchetypeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMagicEffectArchetypeGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IMagicEffectWerewolfArchetypeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class MagicEffectWerewolfArchetypeXmlCreateTranslation : MagicEffectArchetypeXmlCreateTranslation
-    {
-        public new readonly static MagicEffectWerewolfArchetypeXmlCreateTranslation Instance = new MagicEffectWerewolfArchetypeXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IMagicEffectWerewolfArchetypeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    MagicEffectWerewolfArchetypeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IMagicEffectWerewolfArchetypeInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    MagicEffectArchetypeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class MagicEffectWerewolfArchetypeXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IMagicEffectWerewolfArchetypeGetter item,
-            XElement node,
-            out MagicEffectWerewolfArchetype.ErrorMask errorMask,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((MagicEffectWerewolfArchetypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffectWerewolfArchetype.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IMagicEffectWerewolfArchetypeGetter item,
-            string path,
-            out MagicEffectWerewolfArchetype.ErrorMask errorMask,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IMagicEffectWerewolfArchetypeGetter item,
-            Stream stream,
-            out MagicEffectWerewolfArchetype.ErrorMask errorMask,
-            MagicEffectWerewolfArchetype.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -1604,21 +1112,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectWerewolfArchetypeGetter)rhs, include);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => MagicEffectWerewolfArchetypeXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((MagicEffectWerewolfArchetypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectWerewolfArchetypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

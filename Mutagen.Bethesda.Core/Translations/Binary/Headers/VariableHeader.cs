@@ -1,3 +1,4 @@
+using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
@@ -9,12 +10,12 @@ namespace Mutagen.Bethesda.Binary
     /// A ref struct that overlays on top of bytes that is able to retrive basic header data on demand
     /// utilizing a given constants object to define the lengths
     /// </summary>
-    public ref struct VariableHeader
+    public struct VariableHeader
     {
         /// <summary>
         /// Bytes overlaid onto
         /// </summary>
-        public ReadOnlySpan<byte> Span { get; }
+        public ReadOnlyMemorySlice<byte> Span { get; }
         
         /// <summary>
         /// Record metadata to use as reference for alignment
@@ -26,7 +27,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="constants">Record constants to use as reference for alignment</param>
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        public VariableHeader(RecordHeaderConstants constants, ReadOnlySpan<byte> span)
+        public VariableHeader(RecordHeaderConstants constants, ReadOnlyMemorySlice<byte> span)
         {
             this.Constants = constants;
             this.Span = span.Slice(0, constants.HeaderLength);

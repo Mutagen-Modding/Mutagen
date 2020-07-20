@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -38,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ListGroup<T>>,
         IEquatable<ListGroup<T>>,
         IEqualsMask
-        where T : class, ICellBlock, IXmlItem, IBinaryItem
+        where T : class, ICellBlock, IBinaryItem
     {
         #region Ctor
         public ListGroup()
@@ -61,8 +55,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Records
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<T> _Records = new ExtendedList<T>();
-        public ExtendedList<T> Records
+        private IExtendedList<T> _Records = new ExtendedList<T>();
+        public IExtendedList<T> Records
         {
             get => this._Records;
             protected set => this._Records = value;
@@ -100,150 +94,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public override int GetHashCode() => ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => ListGroupXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ListGroupXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static ListGroup<T> CreateFromXml<T_TranslMask>(
-            XElement node,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
-            XElement node,
-            out ListGroup.ErrorMask<T_ErrMask> errorMask,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ListGroup.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static ListGroup<T> CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new ListGroup<T>();
-            ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static ListGroup<T> CreateFromXml<T_TranslMask>(
-            string path,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
-            string path,
-            out ListGroup.ErrorMask<T_ErrMask> errorMask,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static ListGroup<T> CreateFromXml<T_TranslMask>(
-            Stream stream,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
-            Stream stream,
-            out ListGroup.ErrorMask<T_ErrMask> errorMask,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ListGroup<T> CreateFromXml<T_ErrMask, T_TranslMask>(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -339,21 +189,20 @@ namespace Mutagen.Bethesda.Oblivion
         IListGroupGetter<T>,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IListGroup<T>>
-        where T : class, ICellBlock, IXmlItem, IBinaryItem
+        where T : class, ICellBlock, IBinaryItem
     {
         new GroupTypeEnum Type { get; set; }
         new Int32 LastModified { get; set; }
-        new ExtendedList<T> Records { get; }
+        new IExtendedList<T> Records { get; }
     }
 
     public partial interface IListGroupGetter<out T> :
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IListGroupGetter<T>>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
-        where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+        where T : class, ICellBlockGetter, IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -374,7 +223,7 @@ namespace Mutagen.Bethesda.Oblivion
     public static partial class ListGroupMixIn
     {
         public static void Clear<T>(this IListGroup<T> item)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem
         {
             ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)item).CommonSetterInstance()!).Clear(item: item);
         }
@@ -383,7 +232,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IListGroupGetter<T> item,
             IListGroupGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlockGetter, IBinaryItem
         {
             return ((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()!).GetEqualsMask(
                 item: item,
@@ -395,7 +244,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IListGroupGetter<T> item,
             string? name = null,
             ListGroup.Mask<bool>? printMask = null)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlockGetter, IBinaryItem
         {
             return ((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()!).ToString(
                 item: item,
@@ -408,7 +257,7 @@ namespace Mutagen.Bethesda.Oblivion
             FileGeneration fg,
             string? name = null,
             ListGroup.Mask<bool>? printMask = null)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlockGetter, IBinaryItem
         {
             ((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()!).ToString(
                 item: item,
@@ -420,7 +269,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool HasBeenSet<T>(
             this IListGroupGetter<T> item,
             ListGroup.Mask<bool?> checkMask)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlockGetter, IBinaryItem
         {
             return ((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()!).HasBeenSet(
                 item: item,
@@ -428,7 +277,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static ListGroup.Mask<bool> GetHasBeenSetMask<T>(this IListGroupGetter<T> item)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlockGetter, IBinaryItem
         {
             var ret = new ListGroup.Mask<bool>(false);
             ((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()!).FillHasBeenSetMask(
@@ -440,7 +289,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool Equals<T>(
             this IListGroupGetter<T> item,
             IListGroupGetter<T> rhs)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlockGetter, IBinaryItem
         {
             return ((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()!).Equals(
                 lhs: item,
@@ -450,8 +299,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn<T, TGetter>(
             this IListGroup<T> lhs,
             IListGroupGetter<TGetter> rhs)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IBinaryItem
         {
             ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
@@ -464,8 +313,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IListGroup<T> lhs,
             IListGroupGetter<TGetter> rhs,
             ListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
@@ -480,8 +329,8 @@ namespace Mutagen.Bethesda.Oblivion
             IListGroupGetter<TGetter> rhs,
             out ListGroup.ErrorMask<T_ErrMask> errorMask,
             ListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
@@ -499,8 +348,8 @@ namespace Mutagen.Bethesda.Oblivion
             IListGroupGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IBinaryItem
         {
             ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
                 item: lhs,
@@ -512,8 +361,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static ListGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
             this IListGroupGetter<TGetter> item,
             ListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             return ((ListGroupSetterTranslationCommon)((IListGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter, T_TranslMask>(
@@ -525,8 +374,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IListGroupGetter<TGetter> item,
             out ListGroup.ErrorMask<T_ErrMask> errorMask,
             ListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
@@ -540,8 +389,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IListGroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IBinaryItem
         {
             return ((ListGroupSetterTranslationCommon)((IListGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter>(
                 item: item,
@@ -549,164 +398,17 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml<T, T_TranslMask>(
-            this IListGroup<T> item,
-            XElement node,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : CellBlock, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
-            this IListGroup<T> item,
-            XElement node,
-            out ListGroup.ErrorMask<T_ErrMask> errorMask,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : CellBlock, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ListGroup.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml<T>(
-            this IListGroup<T> item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem
-        {
-            ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml<T, T_TranslMask>(
-            this IListGroup<T> item,
-            string path,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : CellBlock, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
-            this IListGroup<T> item,
-            string path,
-            out ListGroup.ErrorMask<T_ErrMask> errorMask,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : CellBlock, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
-            this IListGroup<T> item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : CellBlock, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml<T, T_TranslMask>(
-            this IListGroup<T> item,
-            Stream stream,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : CellBlock, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
-            this IListGroup<T> item,
-            Stream stream,
-            out ListGroup.ErrorMask<T_ErrMask> errorMask,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : CellBlock, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
-            this IListGroup<T> item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : CellBlock, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Mutagen
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords<T>(this IListGroupGetter<T> obj)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlockGetter, IBinaryItem
         {
             return ((ListGroupCommon<T>)((IListGroupGetter<T>)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IListGroupGetter<T> obj)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlockGetter, IBinaryItem
             where TMajor : class, IMajorRecordCommonGetter
         {
             return ((ListGroupCommon<T>)((IListGroupGetter<T>)obj).CommonInstance()!).EnumerateMajorRecords(
@@ -721,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IListGroupGetter<T> obj,
             Type type,
             bool throwIfUnknown = true)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlockGetter, IBinaryItem
         {
             return ((ListGroupCommon<T>)((IListGroupGetter<T>)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -732,14 +434,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords<T>(this IListGroup<T> obj)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem
         {
             return ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IListGroup<T> obj)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem
             where TMajor : class, IMajorRecordCommon
         {
             return ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance()!).EnumerateMajorRecords(
@@ -754,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IListGroup<T> obj,
             Type type,
             bool throwIfUnknown = true)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem
         {
             return ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -770,7 +472,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary<T>(
             this IListGroup<T> item,
             MutagenFrame frame)
-            where T : CellBlock, IXmlItem, IBinaryItem
+            where T : CellBlock, IBinaryItem
         {
             CopyInFromBinary(
                 item: item,
@@ -782,7 +484,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IListGroup<T> item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem
         {
             ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -955,7 +657,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index) => throw new ArgumentException("Cannot get nth type for a generic object here.  Use generic registration instead.");
 
-        public static readonly Type XmlWriteTranslation = typeof(ListGroupXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
         public static readonly Type BinaryWriteTranslation = typeof(ListGroupBinaryWriteTranslation);
         #region Interface
@@ -989,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
 
     public class ListGroup_Registration<T> : ListGroup_Registration
-        where T : CellBlock, IXmlItem, IBinaryItem
+        where T : CellBlock, IBinaryItem
     {
         public static readonly ListGroup_Registration<T> GenericInstance = new ListGroup_Registration<T>();
 
@@ -1003,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ListGroup_FieldIndex.LastModified:
                     return typeof(Int32);
                 case ListGroup_FieldIndex.Records:
-                    return typeof(ExtendedList<T>);
+                    return typeof(IExtendedList<T>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1014,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Common
     public partial class ListGroupSetterCommon<T>
-        where T : class, ICellBlock, IXmlItem, IBinaryItem
+        where T : class, ICellBlock, IBinaryItem
     {
         public static readonly ListGroupSetterCommon<T> Instance = new ListGroupSetterCommon<T>();
 
@@ -1027,34 +728,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LastModified = default;
             item.Records.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IListGroup<T> item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ListGroupXmlCreateTranslation<T>.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IListGroup<T> obj)
@@ -1096,7 +769,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
     }
     public partial class ListGroupCommon<T>
-        where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+        where T : class, ICellBlockGetter, IBinaryItem
     {
         public static readonly ListGroupCommon<T> Instance = new ListGroupCommon<T>();
 
@@ -1244,7 +917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
         public object GetNew<T_Setter>()
-            where T_Setter : class, ICellBlock, IXmlItem, IBinaryItem
+            where T_Setter : class, ICellBlock, IBinaryItem
         {
             return ListGroup<T_Setter>.GetNew();
         }
@@ -1386,8 +1059,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IListGroupGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IBinaryItem
         {
             if ((copyMask?.GetShouldTranslate((int)ListGroup_FieldIndex.Type) ?? true))
             {
@@ -1426,8 +1099,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ListGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
             IListGroupGetter<TGetter> item,
             ListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             ListGroup<T> ret = (ListGroup<T>)((ListGroupCommon<TGetter>)((IListGroupGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
@@ -1441,8 +1114,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IListGroupGetter<TGetter> item,
             out ListGroup.ErrorMask<T_ErrMask> errorMask,
             ListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
@@ -1458,8 +1131,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IListGroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
-            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IBinaryItem
         {
             ListGroup<T> ret = (ListGroup<T>)((ListGroupCommon<TGetter>)((IListGroupGetter<TGetter>)item).CommonInstance()!).GetNew<T>();
             ret.DeepCopyIn<T, TGetter>(
@@ -1504,409 +1177,6 @@ namespace Mutagen.Bethesda.Oblivion
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public partial class ListGroupXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static ListGroupXmlWriteTranslation Instance = new ListGroupXmlWriteTranslation();
-
-        public static void WriteToNodeXml<T>(
-            IListGroupGetter<T> item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-        {
-            if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.Type) ?? true))
-            {
-                EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)ListGroup_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.LastModified) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LastModified),
-                    item: item.LastModified,
-                    fieldIndex: (int)ListGroup_FieldIndex.LastModified,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ListGroup_FieldIndex.Records) ?? true))
-            {
-                ListXmlTranslation<T>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Records),
-                    item: item.Records,
-                    fieldIndex: (int)ListGroup_FieldIndex.Records,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ListGroup_FieldIndex.Records),
-                    transl: (XElement subNode, T subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((CellBlockXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write<T>(
-            XElement node,
-            IListGroupGetter<T> item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ListGroup");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ListGroup");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Write<T>(
-            XElement node,
-            IListGroupGetter<T> item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IListGroupGetter<T>)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class ListGroupXmlCreateTranslation<T>
-        where T : class, ICellBlock, IXmlItem, IBinaryItem
-    {
-        public readonly static ListGroupXmlCreateTranslation<T> Instance = new ListGroupXmlCreateTranslation<T>();
-
-        public static void FillPublicXml(
-            IListGroup<T> item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ListGroupXmlCreateTranslation<T>.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IListGroup<T> item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Type":
-                    errorMask?.PushIndex((int)ListGroup_FieldIndex.Type);
-                    try
-                    {
-                        item.Type = EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LastModified":
-                    errorMask?.PushIndex((int)ListGroup_FieldIndex.LastModified);
-                    try
-                    {
-                        item.LastModified = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Records":
-                    errorMask?.PushIndex((int)ListGroup_FieldIndex.Records);
-                    try
-                    {
-                        if (ListXmlTranslation<T>.Instance.Parse(
-                            node: node,
-                            enumer: out var RecordsItem,
-                            transl: LoquiXmlTranslation<T>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Records.SetTo(RecordsItem);
-                        }
-                        else
-                        {
-                            item.Records.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Oblivion
-{
-    #region Xml Write Mixins
-    public static class ListGroupXmlTranslationMixIn
-    {
-        public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IListGroupGetter<T> item,
-            XElement node,
-            out ListGroup.ErrorMask<T_ErrMask> errorMask,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null,
-            string? name = null)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ListGroup.ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IListGroupGetter<T> item,
-            string path,
-            out ListGroup.ErrorMask<T_ErrMask> errorMask,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null,
-            string? name = null)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml<T>(
-            this IListGroupGetter<T> item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-        {
-            var node = new XElement("topnode");
-            WriteToXml<T>(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IListGroupGetter<T> item,
-            Stream stream,
-            out ListGroup.ErrorMask<T_ErrMask> errorMask,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null,
-            string? name = null)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml<T>(
-            this IListGroupGetter<T> item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-        {
-            var node = new XElement("topnode");
-            WriteToXml<T>(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml<T>(
-            this IListGroupGetter<T> item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-        {
-            ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml<T, T_ErrMask, T_TranslMask>(
-            this IListGroupGetter<T> item,
-            XElement node,
-            string? name = null,
-            ListGroup.TranslationMask<T_TranslMask>? translationMask = null)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml<T, T_TranslMask>(
-            this IListGroupGetter<T> item,
-            string path,
-            string? name = null)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = new XElement("topnode");
-            ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml<T, T_TranslMask>(
-            this IListGroupGetter<T> item,
-            Stream stream,
-            string? name = null)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
-        {
-            var node = new XElement("topnode");
-            ((ListGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -1917,12 +1187,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void WriteBinaryContainedRecordTypeCustom<T>(
             MutagenWriter writer,
             IListGroupGetter<T> item)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem;
+            where T : class, ICellBlockGetter, IBinaryItem;
 
         public static void WriteBinaryContainedRecordType<T>(
             MutagenWriter writer,
             IListGroupGetter<T> item)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlockGetter, IBinaryItem
         {
             WriteBinaryContainedRecordTypeCustom(
                 writer: writer,
@@ -1932,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteEmbedded<T>(
             IListGroupGetter<T> item,
             MutagenWriter writer)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlockGetter, IBinaryItem
         {
             ListGroupBinaryWriteTranslation.WriteBinaryContainedRecordType(
                 writer: writer,
@@ -1948,7 +1218,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IListGroupGetter<T> item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlockGetter, IBinaryItem
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
@@ -1967,7 +1237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IListGroupGetter<T> item,
             RecordTypeConverter? recordTypeConverter = null)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlockGetter, IBinaryItem
         {
             using (HeaderExport.Header(
                 writer: writer,
@@ -1995,7 +1265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
 
     public partial class ListGroupBinaryCreateTranslation<T>
-        where T : class, ICellBlock, IXmlItem, IBinaryItem
+        where T : class, ICellBlock, IBinaryItem
     {
         public readonly static ListGroupBinaryCreateTranslation<T> Instance = new ListGroupBinaryCreateTranslation<T>();
 
@@ -2010,9 +1280,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LastModified = frame.ReadInt32();
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IListGroup<T> item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2030,10 +1301,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 thread: frame.MetaData.Parallel,
                                 recordTypeConverter: recordTypeConverter,
                                 transl: LoquiBinaryTranslation<T>.Instance.Parse));
-                        return TryGet<int?>.Failure;
+                        return ParseResult.Stop;
                     }
                     frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
 
@@ -2052,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary<T, T_ErrMask>(
             this IListGroupGetter<T> item,
             MutagenWriter writer)
-            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T : class, ICellBlockGetter, IBinaryItem
             where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
         {
             ((ListGroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
@@ -2071,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class ListGroupBinaryOverlay<T> :
         BinaryOverlay,
         IListGroupGetter<T>
-        where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+        where T : class, ICellBlockGetter, IBinaryItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2106,23 +1377,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => ListGroupXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ListGroupXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ListGroupBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2168,7 +1422,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new ListGroupBinaryOverlay<T>(
                 bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Group(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetGroup().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
@@ -2195,19 +1449,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 default:
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
         #region To String

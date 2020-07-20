@@ -15,14 +15,8 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -53,8 +47,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Int16> _Points = new ExtendedList<Int16>();
-        public ExtendedList<Int16> Points
+        private IExtendedList<Int16> _Points = new ExtendedList<Int16>();
+        public IExtendedList<Int16> Points
         {
             get => this._Points;
             protected set => this._Points = value;
@@ -92,137 +86,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public override int GetHashCode() => ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PointToReferenceMappingXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PointToReferenceMappingXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static PointToReferenceMapping CreateFromXml(
-            XElement node,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static PointToReferenceMapping CreateFromXml(
-            XElement node,
-            out PointToReferenceMapping.ErrorMask errorMask,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PointToReferenceMapping.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static PointToReferenceMapping CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new PointToReferenceMapping();
-            ((PointToReferenceMappingSetterCommon)((IPointToReferenceMappingGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static PointToReferenceMapping CreateFromXml(
-            string path,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PointToReferenceMapping CreateFromXml(
-            string path,
-            out PointToReferenceMapping.ErrorMask errorMask,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PointToReferenceMapping CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static PointToReferenceMapping CreateFromXml(
-            Stream stream,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PointToReferenceMapping CreateFromXml(
-            Stream stream,
-            out PointToReferenceMapping.ErrorMask errorMask,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PointToReferenceMapping CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -595,7 +458,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PointToReferenceMapping_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PointToReferenceMapping_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => PointToReferenceMappingCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -675,13 +538,12 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPointToReferenceMapping>
     {
         new FormLink<IPlaced> Reference { get; set; }
-        new ExtendedList<Int16> Points { get; }
+        new IExtendedList<Int16> Points { get; }
     }
 
     public partial interface IPointToReferenceMappingGetter :
         ILoquiObject,
         ILoquiObject<IPointToReferenceMappingGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -850,131 +712,6 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPointToReferenceMapping item,
-            XElement node,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPointToReferenceMapping item,
-            XElement node,
-            out PointToReferenceMapping.ErrorMask errorMask,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PointToReferenceMapping.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IPointToReferenceMapping item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((PointToReferenceMappingSetterCommon)((IPointToReferenceMappingGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPointToReferenceMapping item,
-            string path,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPointToReferenceMapping item,
-            string path,
-            out PointToReferenceMapping.ErrorMask errorMask,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPointToReferenceMapping item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IPointToReferenceMapping item,
-            Stream stream,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPointToReferenceMapping item,
-            Stream stream,
-            out PointToReferenceMapping.ErrorMask errorMask,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPointToReferenceMapping item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1159,13 +896,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PointToReferenceMapping_FieldIndex.Reference:
                     return typeof(FormLink<IPlaced>);
                 case PointToReferenceMapping_FieldIndex.Points:
-                    return typeof(ExtendedList<Int16>);
+                    return typeof(IExtendedList<Int16>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(PointToReferenceMappingXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.PGRL;
         public static readonly Type BinaryWriteTranslation = typeof(PointToReferenceMappingBinaryWriteTranslation);
         #region Interface
@@ -1212,34 +948,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Reference = FormLink<IPlaced>.Null;
             item.Points.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IPointToReferenceMapping item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PointToReferenceMappingXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1522,362 +1230,6 @@ namespace Mutagen.Bethesda.Oblivion
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public partial class PointToReferenceMappingXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static PointToReferenceMappingXmlWriteTranslation Instance = new PointToReferenceMappingXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IPointToReferenceMappingGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Reference) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Reference),
-                    item: item.Reference.FormKey,
-                    fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Points) ?? true))
-            {
-                ListXmlTranslation<Int16>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Points),
-                    item: item.Points,
-                    fieldIndex: (int)PointToReferenceMapping_FieldIndex.Points,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PointToReferenceMapping_FieldIndex.Points),
-                    transl: (XElement subNode, Int16 subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        Int16XmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IPointToReferenceMappingGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.PointToReferenceMapping");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PointToReferenceMapping");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPointToReferenceMappingGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IPointToReferenceMappingGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IPointToReferenceMappingGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class PointToReferenceMappingXmlCreateTranslation
-    {
-        public readonly static PointToReferenceMappingXmlCreateTranslation Instance = new PointToReferenceMappingXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IPointToReferenceMapping item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PointToReferenceMappingXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IPointToReferenceMapping item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Reference":
-                    errorMask?.PushIndex((int)PointToReferenceMapping_FieldIndex.Reference);
-                    try
-                    {
-                        item.Reference = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Points":
-                    errorMask?.PushIndex((int)PointToReferenceMapping_FieldIndex.Points);
-                    try
-                    {
-                        if (ListXmlTranslation<Int16>.Instance.Parse(
-                            node: node,
-                            enumer: out var PointsItem,
-                            transl: Int16XmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Points.SetTo(PointsItem);
-                        }
-                        else
-                        {
-                            item.Points.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Oblivion
-{
-    #region Xml Write Mixins
-    public static class PointToReferenceMappingXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
-            XElement node,
-            out PointToReferenceMapping.ErrorMask errorMask,
-            PointToReferenceMapping.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((PointToReferenceMappingXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PointToReferenceMapping.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
-            string path,
-            out PointToReferenceMapping.ErrorMask errorMask,
-            PointToReferenceMapping.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
-            Stream stream,
-            out PointToReferenceMapping.ErrorMask errorMask,
-            PointToReferenceMapping.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((PointToReferenceMappingXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
-            XElement node,
-            string? name = null,
-            PointToReferenceMapping.TranslationMask? translationMask = null)
-        {
-            ((PointToReferenceMappingXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PointToReferenceMappingXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPointToReferenceMappingGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PointToReferenceMappingXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -2001,23 +1353,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PointToReferenceMappingCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PointToReferenceMappingCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PointToReferenceMappingXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PointToReferenceMappingXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PointToReferenceMappingBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -2033,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public IFormLink<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         #region Points
-        public IReadOnlyList<Int16> Points => BinaryOverlayList<Int16>.FactoryByStartIndex(_data.Slice(0x4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
+        public IReadOnlyList<Int16> Points => BinaryOverlayList.FactoryByStartIndex<Int16>(_data.Slice(0x4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
         protected int PointsEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -2060,7 +1395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new PointToReferenceMappingBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.PointsEndingPos = ret._data.Length;
             ret.CustomFactoryEnd(

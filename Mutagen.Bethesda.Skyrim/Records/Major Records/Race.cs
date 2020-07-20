@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         internal static readonly RecordType NAM2 = new RecordType("NAM2");
         public bool ExportingExtraNam2 { get; set; }
-        
+
         [Flags]
         public enum MajorFlag
         {
@@ -143,6 +143,11 @@ namespace Mutagen.Bethesda.Skyrim
                 flags2 <<= 32;
                 item.Flags |= ((Race.Flag)flags2);
             }
+
+            static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IRaceInternal item)
+            {
+                item.BodyTemplate = BodyTemplateBinaryCreateTranslation.Parse(frame);
+            }
         }
 
         public partial class RaceBinaryOverlay
@@ -176,7 +181,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var loc = _bipedObjectNamesLoc.Value;
                     for (int i = 0; i < RaceBinaryCreateTranslation.NumBipedObjectNames; i++)
                     {
-                        var subHeader = _package.MetaData.Constants.SubrecordFrame(_data.Slice(loc).Span, RecordTypes.NAME);
+                        var subHeader = _package.MetaData.Constants.SubrecordFrame(_data.Slice(loc), RecordTypes.NAME);
                         BipedObject type = (BipedObject)i;
                         var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content);
                         if (!string.IsNullOrEmpty(val))
@@ -233,6 +238,15 @@ namespace Mutagen.Bethesda.Skyrim
                 flag |= ((Race.Flag)flags2);
                 return flag;
             }
+
+            private int? _BodyTemplateLocation;
+            public IBodyTemplateGetter? GetBodyTemplateCustom() => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.CustomFactory(new OverlayStream(_data.Slice(_BodyTemplateLocation!.Value), _package), _package) : default;
+            public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
+
+            partial void BodyTemplateCustomParse(OverlayStream stream, long finalPos, int offset)
+            {
+                _BodyTemplateLocation = (stream.Position - offset);
+            }
         }
 
         public partial class RaceBinaryWriteTranslation
@@ -277,6 +291,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ulong flags = (ulong)item.Flags;
                 flags >>= 32;
                 writer.Write((uint)flags);
+            }
+
+            static partial void WriteBinaryBodyTemplateCustom(MutagenWriter writer, IRaceGetter item)
+            {
+                if (item.BodyTemplate.TryGet(out var templ))
+                {
+                    BodyTemplateBinaryWriteTranslation.Write(writer, templ);
+                }
             }
         }
     }

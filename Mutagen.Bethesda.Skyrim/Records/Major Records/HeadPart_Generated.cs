@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -75,8 +69,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ExtraParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<HeadPart>> _ExtraParts = new ExtendedList<IFormLink<HeadPart>>();
-        public ExtendedList<IFormLink<HeadPart>> ExtraParts
+        private IExtendedList<IFormLink<HeadPart>> _ExtraParts = new ExtendedList<IFormLink<HeadPart>>();
+        public IExtendedList<IFormLink<HeadPart>> ExtraParts
         {
             get => this._ExtraParts;
             protected set => this._ExtraParts = value;
@@ -89,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Parts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Part> _Parts = new ExtendedList<Part>();
-        public ExtendedList<Part> Parts
+        private IExtendedList<Part> _Parts = new ExtendedList<Part>();
+        public IExtendedList<Part> Parts
         {
             get => this._Parts;
             protected set => this._Parts = value;
@@ -146,135 +140,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => HeadPartXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((HeadPartXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new HeadPart CreateFromXml(
-            XElement node,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static HeadPart CreateFromXml(
-            XElement node,
-            out HeadPart.ErrorMask errorMask,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = HeadPart.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static HeadPart CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new HeadPart();
-            ((HeadPartSetterCommon)((IHeadPartGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static HeadPart CreateFromXml(
-            string path,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static HeadPart CreateFromXml(
-            string path,
-            out HeadPart.ErrorMask errorMask,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static HeadPart CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static HeadPart CreateFromXml(
-            Stream stream,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static HeadPart CreateFromXml(
-            Stream stream,
-            out HeadPart.ErrorMask errorMask,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static HeadPart CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -299,7 +164,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -315,7 +180,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -928,7 +793,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = HeadPart_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = HeadPart_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1034,8 +899,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new HeadPart.Flag Flags { get; set; }
         new HeadPart.TypeEnum? Type { get; set; }
-        new ExtendedList<IFormLink<HeadPart>> ExtraParts { get; }
-        new ExtendedList<Part> Parts { get; }
+        new IExtendedList<IFormLink<HeadPart>> ExtraParts { get; }
+        new IExtendedList<Part> Parts { get; }
         new FormLinkNullable<TextureSet> TextureSet { get; set; }
         new FormLinkNullable<ColorRecord> Color { get; set; }
         new FormLinkNullable<FormList> ValidRaces { get; set; }
@@ -1057,11 +922,10 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IModeledGetter,
         ILoquiObject<IHeadPartGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => HeadPart_Registration.Instance;
+        static new ILoquiRegistration Registration => HeadPart_Registration.Instance;
         TranslatedString? Name { get; }
         IModelGetter? Model { get; }
         HeadPart.Flag Flags { get; }
@@ -1209,131 +1073,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IHeadPartInternal item,
-            XElement node,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IHeadPartInternal item,
-            XElement node,
-            out HeadPart.ErrorMask errorMask,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = HeadPart.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IHeadPartInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((HeadPartSetterCommon)((IHeadPartGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IHeadPartInternal item,
-            string path,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IHeadPartInternal item,
-            string path,
-            out HeadPart.ErrorMask errorMask,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IHeadPartInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IHeadPartInternal item,
-            Stream stream,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IHeadPartInternal item,
-            Stream stream,
-            out HeadPart.ErrorMask errorMask,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IHeadPartInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            HeadPart.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1371,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1600,9 +1339,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadPart_FieldIndex.Type:
                     return typeof(HeadPart.TypeEnum);
                 case HeadPart_FieldIndex.ExtraParts:
-                    return typeof(ExtendedList<IFormLink<HeadPart>>);
+                    return typeof(IExtendedList<IFormLink<HeadPart>>);
                 case HeadPart_FieldIndex.Parts:
-                    return typeof(ExtendedList<Part>);
+                    return typeof(IExtendedList<Part>);
                 case HeadPart_FieldIndex.TextureSet:
                     return typeof(FormLinkNullable<TextureSet>);
                 case HeadPart_FieldIndex.Color:
@@ -1614,7 +1353,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(HeadPartXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.HDPT;
         public static readonly Type BinaryWriteTranslation = typeof(HeadPartBinaryWriteTranslation);
         #region Interface
@@ -1679,86 +1417,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IHeadPartInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IHeadPartInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IHeadPartInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    HeadPartXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (HeadPart)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (HeadPart)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2010,7 +1668,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (HeadPart_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (HeadPart_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (HeadPart_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (HeadPart_FieldIndex)((int)index);
@@ -2031,7 +1689,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (HeadPart_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (HeadPart_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (HeadPart_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (HeadPart_FieldIndex)((int)index);
@@ -2422,504 +2080,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class HeadPartXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static HeadPartXmlWriteTranslation Instance = new HeadPartXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IHeadPartGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)HeadPart_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((item.Model != null)
-                && (translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Model) ?? true))
-            {
-                if (item.Model.TryGet(out var ModelItem))
-                {
-                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                        item: ModelItem,
-                        node: node,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)HeadPart_FieldIndex.Model,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)HeadPart_FieldIndex.Model));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<HeadPart.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)HeadPart_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((item.Type != null)
-                && (translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Type) ?? true))
-            {
-                EnumXmlTranslation<HeadPart.TypeEnum>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)HeadPart_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.ExtraParts) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IHeadPartGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ExtraParts),
-                    item: item.ExtraParts,
-                    fieldIndex: (int)HeadPart_FieldIndex.ExtraParts,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)HeadPart_FieldIndex.ExtraParts),
-                    transl: (XElement subNode, IFormLink<IHeadPartGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Parts) ?? true))
-            {
-                ListXmlTranslation<IPartGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Parts),
-                    item: item.Parts,
-                    fieldIndex: (int)HeadPart_FieldIndex.Parts,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)HeadPart_FieldIndex.Parts),
-                    transl: (XElement subNode, IPartGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((PartXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.TextureSet.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.TextureSet) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TextureSet),
-                    item: item.TextureSet.FormKey,
-                    fieldIndex: (int)HeadPart_FieldIndex.TextureSet,
-                    errorMask: errorMask);
-            }
-            if ((item.Color.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Color) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Color),
-                    item: item.Color.FormKey,
-                    fieldIndex: (int)HeadPart_FieldIndex.Color,
-                    errorMask: errorMask);
-            }
-            if ((item.ValidRaces.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.ValidRaces) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ValidRaces),
-                    item: item.ValidRaces.FormKey,
-                    fieldIndex: (int)HeadPart_FieldIndex.ValidRaces,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IHeadPartGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.HeadPart");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.HeadPart");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IHeadPartGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IHeadPartGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IHeadPartGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class HeadPartXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static HeadPartXmlCreateTranslation Instance = new HeadPartXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IHeadPartInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    HeadPartXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IHeadPartInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Name":
-                    errorMask?.PushIndex((int)HeadPart_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    errorMask?.PushIndex((int)HeadPart_FieldIndex.Model);
-                    try
-                    {
-                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)HeadPart_FieldIndex.Model));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)HeadPart_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<HeadPart.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Type":
-                    errorMask?.PushIndex((int)HeadPart_FieldIndex.Type);
-                    try
-                    {
-                        item.Type = EnumXmlTranslation<HeadPart.TypeEnum>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ExtraParts":
-                    errorMask?.PushIndex((int)HeadPart_FieldIndex.ExtraParts);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<HeadPart>>.Instance.Parse(
-                            node: node,
-                            enumer: out var ExtraPartsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.ExtraParts.SetTo(ExtraPartsItem);
-                        }
-                        else
-                        {
-                            item.ExtraParts.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Parts":
-                    errorMask?.PushIndex((int)HeadPart_FieldIndex.Parts);
-                    try
-                    {
-                        if (ListXmlTranslation<Part>.Instance.Parse(
-                            node: node,
-                            enumer: out var PartsItem,
-                            transl: LoquiXmlTranslation<Part>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Parts.SetTo(PartsItem);
-                        }
-                        else
-                        {
-                            item.Parts.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TextureSet":
-                    errorMask?.PushIndex((int)HeadPart_FieldIndex.TextureSet);
-                    try
-                    {
-                        item.TextureSet = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Color":
-                    errorMask?.PushIndex((int)HeadPart_FieldIndex.Color);
-                    try
-                    {
-                        item.Color = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ValidRaces":
-                    errorMask?.PushIndex((int)HeadPart_FieldIndex.ValidRaces);
-                    try
-                    {
-                        item.ValidRaces = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class HeadPartXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IHeadPartGetter item,
-            XElement node,
-            out HeadPart.ErrorMask errorMask,
-            HeadPart.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((HeadPartXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = HeadPart.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IHeadPartGetter item,
-            string path,
-            out HeadPart.ErrorMask errorMask,
-            HeadPart.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IHeadPartGetter item,
-            Stream stream,
-            out HeadPart.ErrorMask errorMask,
-            HeadPart.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3009,10 +2169,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -3065,9 +2227,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IHeadPartInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3082,26 +2245,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Name);
+                    return (int)HeadPart_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Model);
+                    return (int)HeadPart_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<HeadPart.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Flags);
+                    return (int)HeadPart_FieldIndex.Flags;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<HeadPart.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Type);
+                    return (int)HeadPart_FieldIndex.Type;
                 }
                 case RecordTypeInts.HNAM:
                 {
@@ -3110,7 +2273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ExtraParts);
+                    return (int)HeadPart_FieldIndex.ExtraParts;
                 }
                 case RecordTypeInts.NAM0:
                 case RecordTypeInts.NAM1:
@@ -3121,7 +2284,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: Part_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Part.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Parts);
+                    return (int)HeadPart_FieldIndex.Parts;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -3129,7 +2292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TextureSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.TextureSet);
+                    return (int)HeadPart_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -3137,7 +2300,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Color = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Color);
+                    return (int)HeadPart_FieldIndex.Color;
                 }
                 case RecordTypeInts.RNAM:
                 {
@@ -3145,12 +2308,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ValidRaces = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ValidRaces);
+                    return (int)HeadPart_FieldIndex.ValidRaces;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3197,21 +2361,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => HeadPartXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((HeadPartXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => HeadPartBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3231,28 +2380,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Model { get; private set; }
         #region Flags
         private int? _FlagsLocation;
-        public HeadPart.Flag Flags => _FlagsLocation.HasValue ? (HeadPart.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(HeadPart.Flag);
+        public HeadPart.Flag Flags => _FlagsLocation.HasValue ? (HeadPart.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(HeadPart.Flag);
         #endregion
         #region Type
         private int? _TypeLocation;
-        public HeadPart.TypeEnum? Type => _TypeLocation.HasValue ? (HeadPart.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(HeadPart.TypeEnum?);
+        public HeadPart.TypeEnum? Type => _TypeLocation.HasValue ? (HeadPart.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(HeadPart.TypeEnum?);
         #endregion
         public IReadOnlyList<IFormLink<IHeadPartGetter>> ExtraParts { get; private set; } = ListExt.Empty<IFormLink<IHeadPartGetter>>();
         public IReadOnlyList<IPartGetter> Parts { get; private set; } = ListExt.Empty<PartBinaryOverlay>();
         #region TextureSet
         private int? _TextureSetLocation;
         public bool TextureSet_IsSet => _TextureSetLocation.HasValue;
-        public IFormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region Color
         private int? _ColorLocation;
         public bool Color_IsSet => _ColorLocation.HasValue;
-        public IFormLinkNullable<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public IFormLinkNullable<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         #region ValidRaces
         private int? _ValidRacesLocation;
         public bool ValidRaces_IsSet => _ValidRacesLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> ValidRaces => _ValidRacesLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ValidRacesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullable<IFormListGetter> ValidRaces => _ValidRacesLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ValidRacesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3279,8 +2428,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new HeadPartBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3306,12 +2456,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3320,7 +2471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Name);
+                    return (int)HeadPart_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3328,21 +2479,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Model);
+                    return (int)HeadPart_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Flags);
+                    return (int)HeadPart_FieldIndex.Flags;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     _TypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Type);
+                    return (int)HeadPart_FieldIndex.Type;
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    this.ExtraParts = BinaryOverlayList<IFormLink<IHeadPartGetter>>.FactoryByArray(
+                    this.ExtraParts = BinaryOverlayList.FactoryByArray<IFormLink<IHeadPartGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IHeadPartGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -3352,7 +2503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ExtraParts);
+                    return (int)HeadPart_FieldIndex.ExtraParts;
                 }
                 case RecordTypeInts.NAM0:
                 case RecordTypeInts.NAM1:
@@ -3362,22 +2513,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: Part_Registration.TriggeringRecordTypes,
                         factory:  PartBinaryOverlay.PartFactory);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Parts);
+                    return (int)HeadPart_FieldIndex.Parts;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     _TextureSetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.TextureSet);
+                    return (int)HeadPart_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _ColorLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Color);
+                    return (int)HeadPart_FieldIndex.Color;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     _ValidRacesLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ValidRaces);
+                    return (int)HeadPart_FieldIndex.ValidRaces;
                 }
                 default:
                     return base.FillRecordType(
@@ -3385,7 +2536,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

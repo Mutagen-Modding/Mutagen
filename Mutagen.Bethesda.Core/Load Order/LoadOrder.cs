@@ -22,13 +22,13 @@ namespace Mutagen.Bethesda
         /// <param name="game">Game to locate for</param>
         /// <param name="path">Path to load order file if it was located</param>
         /// <returns>True if file located</returns>
-        public static bool TryGetPluginsFile(GameMode game, out FilePath path)
+        public static bool TryGetPluginsFile(GameRelease game, out FilePath path)
         {
             string pluginPath = game switch
             {
-                GameMode.Oblivion => "Oblivion/Plugins.txt",
-                GameMode.Skyrim => "Skyrim/Plugins.txt",
-                GameMode.SkyrimSpecialEdition => "Skyrim Special Edition/Plugins.txt",
+                GameRelease.Oblivion => "Oblivion/Plugins.txt",
+                GameRelease.SkyrimLE => "Skyrim/Plugins.txt",
+                GameRelease.SkyrimSE => "Skyrim Special Edition/Plugins.txt",
                 _ => throw new NotImplementedException()
             };
             path = new FilePath(
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda
         /// <returns>List of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
         /// <exception cref="FileNotFoundException">If plugin file not located, or if allowMissingMods false and file is missing</exception>
-        public static IExtendedList<ModKey> GetUsualLoadOrder(GameMode game, DirectoryPath dataPath, bool allowMissingMods)
+        public static IExtendedList<ModKey> GetUsualLoadOrder(GameRelease game, DirectoryPath dataPath, bool allowMissingMods)
         {
             if (!TryGetPluginsFile(game, out var path))
             {

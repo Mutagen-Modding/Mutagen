@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -129,8 +123,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Region>>? _Regions;
-        public ExtendedList<IFormLink<Region>>? Regions
+        private IExtendedList<IFormLink<Region>>? _Regions;
+        public IExtendedList<IFormLink<Region>>? Regions
         {
             get => this._Regions;
             set => this._Regions = value;
@@ -243,8 +237,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NavigationMeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ANavigationMesh> _NavigationMeshes = new ExtendedList<ANavigationMesh>();
-        public ExtendedList<ANavigationMesh> NavigationMeshes
+        private IExtendedList<ANavigationMesh> _NavigationMeshes = new ExtendedList<ANavigationMesh>();
+        public IExtendedList<ANavigationMesh> NavigationMeshes
         {
             get => this._NavigationMeshes;
             protected set => this._NavigationMeshes = value;
@@ -269,8 +263,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
-        public ExtendedList<IPlaced> Persistent
+        private IExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
+        public IExtendedList<IPlaced> Persistent
         {
             get => this._Persistent;
             protected set => this._Persistent = value;
@@ -289,8 +283,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Temporary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
-        public ExtendedList<IPlaced> Temporary
+        private IExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
+        public IExtendedList<IPlaced> Temporary
         {
             get => this._Temporary;
             protected set => this._Temporary = value;
@@ -328,135 +322,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((CellCommon)((ICellGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => CellXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((CellXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Cell CreateFromXml(
-            XElement node,
-            Cell.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Cell CreateFromXml(
-            XElement node,
-            out Cell.ErrorMask errorMask,
-            Cell.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Cell.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Cell CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Cell();
-            ((CellSetterCommon)((ICellGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Cell CreateFromXml(
-            string path,
-            Cell.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Cell CreateFromXml(
-            string path,
-            out Cell.ErrorMask errorMask,
-            Cell.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Cell CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Cell.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Cell CreateFromXml(
-            Stream stream,
-            Cell.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Cell CreateFromXml(
-            Stream stream,
-            out Cell.ErrorMask errorMask,
-            Cell.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Cell CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Cell.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -509,7 +374,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -550,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -1999,7 +1864,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2124,7 +1989,7 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? LNAM { get; set; }
         new Single? WaterHeight { get; set; }
         new String? WaterNoiseTexture { get; set; }
-        new ExtendedList<IFormLink<Region>>? Regions { get; set; }
+        new IExtendedList<IFormLink<Region>>? Regions { get; set; }
         new FormLinkNullable<Location> Location { get; set; }
         new MemorySlice<Byte>? XWCN { get; set; }
         new MemorySlice<Byte>? XWCS { get; set; }
@@ -2139,15 +2004,15 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<MusicType> Music { get; set; }
         new FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; }
         new Landscape? Landscape { get; set; }
-        new ExtendedList<ANavigationMesh> NavigationMeshes { get; }
+        new IExtendedList<ANavigationMesh> NavigationMeshes { get; }
         new Int32 Timestamp { get; set; }
         new Int32 UnknownGroupData { get; set; }
         new Int32 PersistentTimestamp { get; set; }
         new Int32 PersistentUnknownGroupData { get; set; }
-        new ExtendedList<IPlaced> Persistent { get; }
+        new IExtendedList<IPlaced> Persistent { get; }
         new Int32 TemporaryTimestamp { get; set; }
         new Int32 TemporaryUnknownGroupData { get; set; }
-        new ExtendedList<IPlaced> Temporary { get; }
+        new IExtendedList<IPlaced> Temporary { get; }
         #region Mutagen
         new Cell.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -2167,11 +2032,10 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ICellGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Cell_Registration.Instance;
+        static new ILoquiRegistration Registration => Cell_Registration.Instance;
         TranslatedString? Name { get; }
         Cell.Flag Flags { get; }
         ICellGridGetter? Grid { get; }
@@ -2344,131 +2208,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ICellInternal item,
-            XElement node,
-            Cell.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ICellInternal item,
-            XElement node,
-            out Cell.ErrorMask errorMask,
-            Cell.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Cell.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this ICellInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICellInternal item,
-            string path,
-            Cell.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICellInternal item,
-            string path,
-            out Cell.ErrorMask errorMask,
-            Cell.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICellInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Cell.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this ICellInternal item,
-            Stream stream,
-            Cell.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICellInternal item,
-            Stream stream,
-            out Cell.ErrorMask errorMask,
-            Cell.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICellInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Cell.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Mutagen
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this ICellGetter obj)
@@ -2569,7 +2308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -3060,7 +2799,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.WaterNoiseTexture:
                     return typeof(String);
                 case Cell_FieldIndex.Regions:
-                    return typeof(ExtendedList<IFormLink<Region>>);
+                    return typeof(IExtendedList<IFormLink<Region>>);
                 case Cell_FieldIndex.Location:
                     return typeof(FormLinkNullable<Location>);
                 case Cell_FieldIndex.XWCN:
@@ -3090,7 +2829,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.Landscape:
                     return typeof(Landscape);
                 case Cell_FieldIndex.NavigationMeshes:
-                    return typeof(ExtendedList<ANavigationMesh>);
+                    return typeof(IExtendedList<ANavigationMesh>);
                 case Cell_FieldIndex.Timestamp:
                     return typeof(Int32);
                 case Cell_FieldIndex.UnknownGroupData:
@@ -3100,19 +2839,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.PersistentUnknownGroupData:
                     return typeof(Int32);
                 case Cell_FieldIndex.Persistent:
-                    return typeof(ExtendedList<IPlaced>);
+                    return typeof(IExtendedList<IPlaced>);
                 case Cell_FieldIndex.TemporaryTimestamp:
                     return typeof(Int32);
                 case Cell_FieldIndex.TemporaryUnknownGroupData:
                     return typeof(Int32);
                 case Cell_FieldIndex.Temporary:
-                    return typeof(ExtendedList<IPlaced>);
+                    return typeof(IExtendedList<IPlaced>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(CellXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.CELL;
         public static readonly Type BinaryWriteTranslation = typeof(CellBinaryWriteTranslation);
         #region Interface
@@ -3202,86 +2940,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ICellInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            ICellInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            ICellInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    CellXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Cell)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Cell)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ICellInternal obj)
@@ -3802,7 +3460,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Cell_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Cell_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Cell_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Cell_FieldIndex)((int)index);
@@ -3823,7 +3481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Cell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Cell_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Cell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Cell_FieldIndex)((int)index);
@@ -4789,1258 +4447,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class CellXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static CellXmlWriteTranslation Instance = new CellXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            ICellGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Cell_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Cell.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Cell_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((item.Grid != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Grid) ?? true))
-            {
-                if (item.Grid.TryGet(out var GridItem))
-                {
-                    ((CellGridXmlWriteTranslation)((IXmlItem)GridItem).XmlWriteTranslator).Write(
-                        item: GridItem,
-                        node: node,
-                        name: nameof(item.Grid),
-                        fieldIndex: (int)Cell_FieldIndex.Grid,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Grid));
-                }
-            }
-            if ((item.Lighting != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Lighting) ?? true))
-            {
-                if (item.Lighting.TryGet(out var LightingItem))
-                {
-                    ((CellLightingXmlWriteTranslation)((IXmlItem)LightingItem).XmlWriteTranslator).Write(
-                        item: LightingItem,
-                        node: node,
-                        name: nameof(item.Lighting),
-                        fieldIndex: (int)Cell_FieldIndex.Lighting,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Lighting));
-                }
-            }
-            if ((item.OcclusionData != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.OcclusionData) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.OcclusionData),
-                    item: item.OcclusionData.Value,
-                    fieldIndex: (int)Cell_FieldIndex.OcclusionData,
-                    errorMask: errorMask);
-            }
-            if ((item.MaxHeightData != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.MaxHeightData) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaxHeightData),
-                    item: item.MaxHeightData.Value,
-                    fieldIndex: (int)Cell_FieldIndex.MaxHeightData,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.LightingTemplate) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LightingTemplate),
-                    item: item.LightingTemplate.FormKey,
-                    fieldIndex: (int)Cell_FieldIndex.LightingTemplate,
-                    errorMask: errorMask);
-            }
-            if ((item.LNAM != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.LNAM) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LNAM),
-                    item: item.LNAM.Value,
-                    fieldIndex: (int)Cell_FieldIndex.LNAM,
-                    errorMask: errorMask);
-            }
-            if ((item.WaterHeight != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterHeight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WaterHeight),
-                    item: item.WaterHeight.Value,
-                    fieldIndex: (int)Cell_FieldIndex.WaterHeight,
-                    errorMask: errorMask);
-            }
-            if ((item.WaterNoiseTexture != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterNoiseTexture) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WaterNoiseTexture),
-                    item: item.WaterNoiseTexture,
-                    fieldIndex: (int)Cell_FieldIndex.WaterNoiseTexture,
-                    errorMask: errorMask);
-            }
-            if ((item.Regions != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Regions) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IRegionGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Regions),
-                    item: item.Regions,
-                    fieldIndex: (int)Cell_FieldIndex.Regions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Regions),
-                    transl: (XElement subNode, IFormLink<IRegionGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.Location.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Location) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Location),
-                    item: item.Location.FormKey,
-                    fieldIndex: (int)Cell_FieldIndex.Location,
-                    errorMask: errorMask);
-            }
-            if ((item.XWCN != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.XWCN) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.XWCN),
-                    item: item.XWCN.Value,
-                    fieldIndex: (int)Cell_FieldIndex.XWCN,
-                    errorMask: errorMask);
-            }
-            if ((item.XWCS != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.XWCS) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.XWCS),
-                    item: item.XWCS.Value,
-                    fieldIndex: (int)Cell_FieldIndex.XWCS,
-                    errorMask: errorMask);
-            }
-            if ((item.WaterVelocity != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterVelocity) ?? true))
-            {
-                if (item.WaterVelocity.TryGet(out var WaterVelocityItem))
-                {
-                    ((CellWaterVelocityXmlWriteTranslation)((IXmlItem)WaterVelocityItem).XmlWriteTranslator).Write(
-                        item: WaterVelocityItem,
-                        node: node,
-                        name: nameof(item.WaterVelocity),
-                        fieldIndex: (int)Cell_FieldIndex.WaterVelocity,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.WaterVelocity));
-                }
-            }
-            if ((item.Water.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Water),
-                    item: item.Water.FormKey,
-                    fieldIndex: (int)Cell_FieldIndex.Water,
-                    errorMask: errorMask);
-            }
-            if ((item.Ownership != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Ownership) ?? true))
-            {
-                if (item.Ownership.TryGet(out var OwnershipItem))
-                {
-                    ((OwnershipXmlWriteTranslation)((IXmlItem)OwnershipItem).XmlWriteTranslator).Write(
-                        item: OwnershipItem,
-                        node: node,
-                        name: nameof(item.Ownership),
-                        fieldIndex: (int)Cell_FieldIndex.Ownership,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Ownership));
-                }
-            }
-            if ((item.LockList.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.LockList) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LockList),
-                    item: item.LockList.FormKey,
-                    fieldIndex: (int)Cell_FieldIndex.LockList,
-                    errorMask: errorMask);
-            }
-            if ((item.WaterEnvironmentMap != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterEnvironmentMap) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WaterEnvironmentMap),
-                    item: item.WaterEnvironmentMap,
-                    fieldIndex: (int)Cell_FieldIndex.WaterEnvironmentMap,
-                    errorMask: errorMask);
-            }
-            if ((item.SkyAndWeatherFromRegion.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.SkyAndWeatherFromRegion) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SkyAndWeatherFromRegion),
-                    item: item.SkyAndWeatherFromRegion.FormKey,
-                    fieldIndex: (int)Cell_FieldIndex.SkyAndWeatherFromRegion,
-                    errorMask: errorMask);
-            }
-            if ((item.AcousticSpace.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.AcousticSpace) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AcousticSpace),
-                    item: item.AcousticSpace.FormKey,
-                    fieldIndex: (int)Cell_FieldIndex.AcousticSpace,
-                    errorMask: errorMask);
-            }
-            if ((item.EncounterZone.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.EncounterZone) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EncounterZone),
-                    item: item.EncounterZone.FormKey,
-                    fieldIndex: (int)Cell_FieldIndex.EncounterZone,
-                    errorMask: errorMask);
-            }
-            if ((item.Music.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Music) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Music),
-                    item: item.Music.FormKey,
-                    fieldIndex: (int)Cell_FieldIndex.Music,
-                    errorMask: errorMask);
-            }
-            if ((item.ImageSpace.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.ImageSpace) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ImageSpace),
-                    item: item.ImageSpace.FormKey,
-                    fieldIndex: (int)Cell_FieldIndex.ImageSpace,
-                    errorMask: errorMask);
-            }
-            if ((item.Landscape != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
-            {
-                if (item.Landscape.TryGet(out var LandscapeItem))
-                {
-                    ((LandscapeXmlWriteTranslation)((IXmlItem)LandscapeItem).XmlWriteTranslator).Write(
-                        item: LandscapeItem,
-                        node: node,
-                        name: nameof(item.Landscape),
-                        fieldIndex: (int)Cell_FieldIndex.Landscape,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.NavigationMeshes) ?? true))
-            {
-                ListXmlTranslation<IANavigationMeshGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.NavigationMeshes),
-                    item: item.NavigationMeshes,
-                    fieldIndex: (int)Cell_FieldIndex.NavigationMeshes,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.NavigationMeshes),
-                    transl: (XElement subNode, IANavigationMeshGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ANavigationMeshXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Timestamp),
-                    item: item.Timestamp,
-                    fieldIndex: (int)Cell_FieldIndex.Timestamp,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.UnknownGroupData) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.UnknownGroupData),
-                    item: item.UnknownGroupData,
-                    fieldIndex: (int)Cell_FieldIndex.UnknownGroupData,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.PersistentTimestamp) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PersistentTimestamp),
-                    item: item.PersistentTimestamp,
-                    fieldIndex: (int)Cell_FieldIndex.PersistentTimestamp,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.PersistentUnknownGroupData) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PersistentUnknownGroupData),
-                    item: item.PersistentUnknownGroupData,
-                    fieldIndex: (int)Cell_FieldIndex.PersistentUnknownGroupData,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))
-            {
-                ListXmlTranslation<IPlacedGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Persistent),
-                    item: item.Persistent,
-                    fieldIndex: (int)Cell_FieldIndex.Persistent,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Persistent),
-                    transl: (XElement subNode, IPlacedGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((IXmlWriteTranslator)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryTimestamp) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TemporaryTimestamp),
-                    item: item.TemporaryTimestamp,
-                    fieldIndex: (int)Cell_FieldIndex.TemporaryTimestamp,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryUnknownGroupData) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TemporaryUnknownGroupData),
-                    item: item.TemporaryUnknownGroupData,
-                    fieldIndex: (int)Cell_FieldIndex.TemporaryUnknownGroupData,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
-            {
-                ListXmlTranslation<IPlacedGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Temporary),
-                    item: item.Temporary,
-                    fieldIndex: (int)Cell_FieldIndex.Temporary,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Temporary),
-                    transl: (XElement subNode, IPlacedGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((IXmlWriteTranslator)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            ICellGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Cell");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Cell");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ICellGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ICellGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ICellGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class CellXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static CellXmlCreateTranslation Instance = new CellXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            ICellInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    CellXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            ICellInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Name":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Cell.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Grid":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Grid);
-                    try
-                    {
-                        item.Grid = LoquiXmlTranslation<CellGrid>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Grid));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Lighting":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
-                    try
-                    {
-                        item.Lighting = LoquiXmlTranslation<CellLighting>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Lighting));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "OcclusionData":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.OcclusionData);
-                    try
-                    {
-                        item.OcclusionData = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaxHeightData":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.MaxHeightData);
-                    try
-                    {
-                        item.MaxHeightData = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LightingTemplate":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.LightingTemplate);
-                    try
-                    {
-                        item.LightingTemplate = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LNAM":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.LNAM);
-                    try
-                    {
-                        item.LNAM = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WaterHeight":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.WaterHeight);
-                    try
-                    {
-                        item.WaterHeight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WaterNoiseTexture":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.WaterNoiseTexture);
-                    try
-                    {
-                        item.WaterNoiseTexture = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Regions":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Regions);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Region>>.Instance.Parse(
-                            node: node,
-                            enumer: out var RegionsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Regions = RegionsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Regions = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Location":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Location);
-                    try
-                    {
-                        item.Location = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "XWCN":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.XWCN);
-                    try
-                    {
-                        item.XWCN = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "XWCS":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.XWCS);
-                    try
-                    {
-                        item.XWCS = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WaterVelocity":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.WaterVelocity);
-                    try
-                    {
-                        item.WaterVelocity = LoquiXmlTranslation<CellWaterVelocity>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.WaterVelocity));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Water":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Water);
-                    try
-                    {
-                        item.Water = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Ownership":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Ownership);
-                    try
-                    {
-                        item.Ownership = LoquiXmlTranslation<Ownership>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Ownership));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LockList":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.LockList);
-                    try
-                    {
-                        item.LockList = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WaterEnvironmentMap":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.WaterEnvironmentMap);
-                    try
-                    {
-                        item.WaterEnvironmentMap = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkyAndWeatherFromRegion":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.SkyAndWeatherFromRegion);
-                    try
-                    {
-                        item.SkyAndWeatherFromRegion = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AcousticSpace":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.AcousticSpace);
-                    try
-                    {
-                        item.AcousticSpace = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EncounterZone":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.EncounterZone);
-                    try
-                    {
-                        item.EncounterZone = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Music":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Music);
-                    try
-                    {
-                        item.Music = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ImageSpace":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.ImageSpace);
-                    try
-                    {
-                        item.ImageSpace = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Landscape":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Landscape);
-                    try
-                    {
-                        item.Landscape = LoquiXmlTranslation<Landscape>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NavigationMeshes":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.NavigationMeshes);
-                    try
-                    {
-                        if (ListXmlTranslation<ANavigationMesh>.Instance.Parse(
-                            node: node,
-                            enumer: out var NavigationMeshesItem,
-                            transl: LoquiXmlTranslation<ANavigationMesh>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.NavigationMeshes.SetTo(NavigationMeshesItem);
-                        }
-                        else
-                        {
-                            item.NavigationMeshes.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Timestamp":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Timestamp);
-                    try
-                    {
-                        item.Timestamp = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnknownGroupData":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.UnknownGroupData);
-                    try
-                    {
-                        item.UnknownGroupData = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PersistentTimestamp":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.PersistentTimestamp);
-                    try
-                    {
-                        item.PersistentTimestamp = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PersistentUnknownGroupData":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.PersistentUnknownGroupData);
-                    try
-                    {
-                        item.PersistentUnknownGroupData = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Persistent":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Persistent);
-                    try
-                    {
-                        if (ListXmlTranslation<IPlaced>.Instance.Parse(
-                            node: node,
-                            enumer: out var PersistentItem,
-                            transl: LoquiXmlTranslation<IPlaced>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Persistent.SetTo(PersistentItem);
-                        }
-                        else
-                        {
-                            item.Persistent.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TemporaryTimestamp":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.TemporaryTimestamp);
-                    try
-                    {
-                        item.TemporaryTimestamp = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TemporaryUnknownGroupData":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.TemporaryUnknownGroupData);
-                    try
-                    {
-                        item.TemporaryUnknownGroupData = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Temporary":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.Temporary);
-                    try
-                    {
-                        if (ListXmlTranslation<IPlaced>.Instance.Parse(
-                            node: node,
-                            enumer: out var TemporaryItem,
-                            transl: LoquiXmlTranslation<IPlaced>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Temporary.SetTo(TemporaryItem);
-                        }
-                        else
-                        {
-                            item.Temporary.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class CellXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this ICellGetter item,
-            XElement node,
-            out Cell.ErrorMask errorMask,
-            Cell.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((CellXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Cell.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this ICellGetter item,
-            string path,
-            out Cell.ErrorMask errorMask,
-            Cell.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ICellGetter item,
-            Stream stream,
-            out Cell.ErrorMask errorMask,
-            Cell.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -6213,10 +4619,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
             CustomBinaryEndExportInternal(
                 writer: writer,
@@ -6272,9 +4680,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ICellInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -6289,35 +4698,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Name);
+                    return (int)Cell_FieldIndex.Name;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Cell.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Flags);
+                    return (int)Cell_FieldIndex.Flags;
                 }
                 case RecordTypeInts.XCLC:
                 {
                     item.Grid = Mutagen.Bethesda.Skyrim.CellGrid.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Grid);
+                    return (int)Cell_FieldIndex.Grid;
                 }
                 case RecordTypeInts.XCLL:
                 {
                     item.Lighting = Mutagen.Bethesda.Skyrim.CellLighting.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Lighting);
+                    return (int)Cell_FieldIndex.Lighting;
                 }
                 case RecordTypeInts.TVDT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OcclusionData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.OcclusionData);
+                    return (int)Cell_FieldIndex.OcclusionData;
                 }
                 case RecordTypeInts.MHDT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaxHeightData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.MaxHeightData);
+                    return (int)Cell_FieldIndex.MaxHeightData;
                 }
                 case RecordTypeInts.LTMP:
                 {
@@ -6325,19 +4734,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LightingTemplate = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.LightingTemplate);
+                    return (int)Cell_FieldIndex.LightingTemplate;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.LNAM);
+                    return (int)Cell_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.XCLW:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.WaterHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterHeight);
+                    return (int)Cell_FieldIndex.WaterHeight;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -6345,7 +4754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.WaterNoiseTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterNoiseTexture);
+                    return (int)Cell_FieldIndex.WaterNoiseTexture;
                 }
                 case RecordTypeInts.XCLR:
                 {
@@ -6354,8 +4763,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Region>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Region>>();
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Regions);
+                        .CastExtendedList<IFormLink<Region>>();
+                    return (int)Cell_FieldIndex.Regions;
                 }
                 case RecordTypeInts.XLCN:
                 {
@@ -6363,24 +4772,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Location = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Location);
+                    return (int)Cell_FieldIndex.Location;
                 }
                 case RecordTypeInts.XWCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.XWCN = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.XWCN);
+                    return (int)Cell_FieldIndex.XWCN;
                 }
                 case RecordTypeInts.XWCS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.XWCS = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.XWCS);
+                    return (int)Cell_FieldIndex.XWCS;
                 }
                 case RecordTypeInts.XWCU:
                 {
                     item.WaterVelocity = Mutagen.Bethesda.Skyrim.CellWaterVelocity.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterVelocity);
+                    return (int)Cell_FieldIndex.WaterVelocity;
                 }
                 case RecordTypeInts.XCWT:
                 {
@@ -6388,7 +4797,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Water = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Water);
+                    return (int)Cell_FieldIndex.Water;
                 }
                 case RecordTypeInts.XOWN:
                 case RecordTypeInts.XRNK:
@@ -6396,7 +4805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Ownership = Mutagen.Bethesda.Skyrim.Ownership.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Ownership);
+                    return (int)Cell_FieldIndex.Ownership;
                 }
                 case RecordTypeInts.XILL:
                 {
@@ -6404,7 +4813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LockList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.LockList);
+                    return (int)Cell_FieldIndex.LockList;
                 }
                 case RecordTypeInts.XWEM:
                 {
@@ -6412,7 +4821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.WaterEnvironmentMap = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterEnvironmentMap);
+                    return (int)Cell_FieldIndex.WaterEnvironmentMap;
                 }
                 case RecordTypeInts.XCCM:
                 {
@@ -6420,7 +4829,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SkyAndWeatherFromRegion = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.SkyAndWeatherFromRegion);
+                    return (int)Cell_FieldIndex.SkyAndWeatherFromRegion;
                 }
                 case RecordTypeInts.XCAS:
                 {
@@ -6428,7 +4837,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AcousticSpace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.AcousticSpace);
+                    return (int)Cell_FieldIndex.AcousticSpace;
                 }
                 case RecordTypeInts.XEZN:
                 {
@@ -6436,7 +4845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EncounterZone = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.EncounterZone);
+                    return (int)Cell_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XCMO:
                 {
@@ -6444,7 +4853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Music = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Music);
+                    return (int)Cell_FieldIndex.Music;
                 }
                 case RecordTypeInts.XCIM:
                 {
@@ -6452,12 +4861,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImageSpace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.ImageSpace);
+                    return (int)Cell_FieldIndex.ImageSpace;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -6521,21 +4931,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => CellXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((CellXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -6580,7 +4975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region LightingTemplate
         private int? _LightingTemplateLocation;
         public bool LightingTemplate_IsSet => _LightingTemplateLocation.HasValue;
-        public IFormLink<ILightingTemplateGetter> LightingTemplate => _LightingTemplateLocation.HasValue ? new FormLink<ILightingTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LightingTemplateLocation.Value, _package.MetaData.Constants)))) : FormLink<ILightingTemplateGetter>.Null;
+        public IFormLink<ILightingTemplateGetter> LightingTemplate => _LightingTemplateLocation.HasValue ? new FormLink<ILightingTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LightingTemplateLocation.Value, _package.MetaData.Constants)))) : FormLink<ILightingTemplateGetter>.Null;
         #endregion
         #region LNAM
         private int? _LNAMLocation;
@@ -6588,7 +4983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region WaterHeight
         private int? _WaterHeightLocation;
-        public Single? WaterHeight => _WaterHeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterHeightLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? WaterHeight => _WaterHeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _WaterHeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region WaterNoiseTexture
         private int? _WaterNoiseTextureLocation;
@@ -6598,7 +4993,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Location
         private int? _LocationLocation;
         public bool Location_IsSet => _LocationLocation.HasValue;
-        public IFormLinkNullable<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullable<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
         #endregion
         #region XWCN
         private int? _XWCNLocation;
@@ -6616,13 +5011,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Water
         private int? _WaterLocation;
         public bool Water_IsSet => _WaterLocation.HasValue;
-        public IFormLinkNullable<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
+        public IFormLinkNullable<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
         #endregion
         public IOwnershipGetter? Ownership { get; private set; }
         #region LockList
         private int? _LockListLocation;
         public bool LockList_IsSet => _LockListLocation.HasValue;
-        public IFormLinkNullable<ILockListGetter> LockList => _LockListLocation.HasValue ? new FormLinkNullable<ILockListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LockListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILockListGetter>.Null;
+        public IFormLinkNullable<ILockListGetter> LockList => _LockListLocation.HasValue ? new FormLinkNullable<ILockListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LockListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILockListGetter>.Null;
         #endregion
         #region WaterEnvironmentMap
         private int? _WaterEnvironmentMapLocation;
@@ -6631,27 +5026,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region SkyAndWeatherFromRegion
         private int? _SkyAndWeatherFromRegionLocation;
         public bool SkyAndWeatherFromRegion_IsSet => _SkyAndWeatherFromRegionLocation.HasValue;
-        public IFormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion => _SkyAndWeatherFromRegionLocation.HasValue ? new FormLinkNullable<IRegionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SkyAndWeatherFromRegionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRegionGetter>.Null;
+        public IFormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion => _SkyAndWeatherFromRegionLocation.HasValue ? new FormLinkNullable<IRegionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SkyAndWeatherFromRegionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRegionGetter>.Null;
         #endregion
         #region AcousticSpace
         private int? _AcousticSpaceLocation;
         public bool AcousticSpace_IsSet => _AcousticSpaceLocation.HasValue;
-        public IFormLinkNullable<IAcousticSpaceGetter> AcousticSpace => _AcousticSpaceLocation.HasValue ? new FormLinkNullable<IAcousticSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AcousticSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAcousticSpaceGetter>.Null;
+        public IFormLinkNullable<IAcousticSpaceGetter> AcousticSpace => _AcousticSpaceLocation.HasValue ? new FormLinkNullable<IAcousticSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AcousticSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAcousticSpaceGetter>.Null;
         #endregion
         #region EncounterZone
         private int? _EncounterZoneLocation;
         public bool EncounterZone_IsSet => _EncounterZoneLocation.HasValue;
-        public IFormLinkNullable<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
+        public IFormLinkNullable<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
         #endregion
         #region Music
         private int? _MusicLocation;
         public bool Music_IsSet => _MusicLocation.HasValue;
-        public IFormLinkNullable<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
+        public IFormLinkNullable<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
         #endregion
         #region ImageSpace
         private int? _ImageSpaceLocation;
         public bool ImageSpace_IsSet => _ImageSpaceLocation.HasValue;
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -6683,8 +5078,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new CellBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -6714,12 +5110,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -6728,7 +5125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Name);
+                    return (int)Cell_FieldIndex.Name;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -6736,84 +5133,84 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Flags);
+                    return (int)Cell_FieldIndex.Flags;
                 }
                 case RecordTypeInts.XCLC:
                 {
                     _GridLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Grid);
+                    return (int)Cell_FieldIndex.Grid;
                 }
                 case RecordTypeInts.XCLL:
                 {
                     _LightingLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Lighting);
+                    return (int)Cell_FieldIndex.Lighting;
                 }
                 case RecordTypeInts.TVDT:
                 {
                     _OcclusionDataLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.OcclusionData);
+                    return (int)Cell_FieldIndex.OcclusionData;
                 }
                 case RecordTypeInts.MHDT:
                 {
                     _MaxHeightDataLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.MaxHeightData);
+                    return (int)Cell_FieldIndex.MaxHeightData;
                 }
                 case RecordTypeInts.LTMP:
                 {
                     _LightingTemplateLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.LightingTemplate);
+                    return (int)Cell_FieldIndex.LightingTemplate;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     _LNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.LNAM);
+                    return (int)Cell_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.XCLW:
                 {
                     _WaterHeightLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterHeight);
+                    return (int)Cell_FieldIndex.WaterHeight;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     _WaterNoiseTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterNoiseTexture);
+                    return (int)Cell_FieldIndex.WaterNoiseTexture;
                 }
                 case RecordTypeInts.XCLR:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Regions = BinaryOverlayList<IFormLink<IRegionGetter>>.FactoryByStartIndex(
+                    this.Regions = BinaryOverlayList.FactoryByStartIndex<IFormLink<IRegionGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IRegionGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Regions);
+                    return (int)Cell_FieldIndex.Regions;
                 }
                 case RecordTypeInts.XLCN:
                 {
                     _LocationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Location);
+                    return (int)Cell_FieldIndex.Location;
                 }
                 case RecordTypeInts.XWCN:
                 {
                     _XWCNLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.XWCN);
+                    return (int)Cell_FieldIndex.XWCN;
                 }
                 case RecordTypeInts.XWCS:
                 {
                     _XWCSLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.XWCS);
+                    return (int)Cell_FieldIndex.XWCS;
                 }
                 case RecordTypeInts.XWCU:
                 {
                     _WaterVelocityLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterVelocity);
+                    return (int)Cell_FieldIndex.WaterVelocity;
                 }
                 case RecordTypeInts.XCWT:
                 {
                     _WaterLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Water);
+                    return (int)Cell_FieldIndex.Water;
                 }
                 case RecordTypeInts.XOWN:
                 case RecordTypeInts.XRNK:
@@ -6822,42 +5219,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Ownership);
+                    return (int)Cell_FieldIndex.Ownership;
                 }
                 case RecordTypeInts.XILL:
                 {
                     _LockListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.LockList);
+                    return (int)Cell_FieldIndex.LockList;
                 }
                 case RecordTypeInts.XWEM:
                 {
                     _WaterEnvironmentMapLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterEnvironmentMap);
+                    return (int)Cell_FieldIndex.WaterEnvironmentMap;
                 }
                 case RecordTypeInts.XCCM:
                 {
                     _SkyAndWeatherFromRegionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.SkyAndWeatherFromRegion);
+                    return (int)Cell_FieldIndex.SkyAndWeatherFromRegion;
                 }
                 case RecordTypeInts.XCAS:
                 {
                     _AcousticSpaceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.AcousticSpace);
+                    return (int)Cell_FieldIndex.AcousticSpace;
                 }
                 case RecordTypeInts.XEZN:
                 {
                     _EncounterZoneLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.EncounterZone);
+                    return (int)Cell_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XCMO:
                 {
                     _MusicLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Music);
+                    return (int)Cell_FieldIndex.Music;
                 }
                 case RecordTypeInts.XCIM:
                 {
                     _ImageSpaceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.ImageSpace);
+                    return (int)Cell_FieldIndex.ImageSpace;
                 }
                 default:
                     return base.FillRecordType(
@@ -6865,7 +5262,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

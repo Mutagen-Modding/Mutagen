@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -61,8 +55,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Cells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Cell> _Cells = new ExtendedList<Cell>();
-        public ExtendedList<Cell> Cells
+        private IExtendedList<Cell> _Cells = new ExtendedList<Cell>();
+        public IExtendedList<Cell> Cells
         {
             get => this._Cells;
             protected set => this._Cells = value;
@@ -100,137 +94,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => CellSubBlockXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((CellSubBlockXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static CellSubBlock CreateFromXml(
-            XElement node,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static CellSubBlock CreateFromXml(
-            XElement node,
-            out CellSubBlock.ErrorMask errorMask,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CellSubBlock.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static CellSubBlock CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new CellSubBlock();
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static CellSubBlock CreateFromXml(
-            string path,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static CellSubBlock CreateFromXml(
-            string path,
-            out CellSubBlock.ErrorMask errorMask,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static CellSubBlock CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static CellSubBlock CreateFromXml(
-            Stream stream,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static CellSubBlock CreateFromXml(
-            Stream stream,
-            out CellSubBlock.ErrorMask errorMask,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static CellSubBlock CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -786,14 +649,13 @@ namespace Mutagen.Bethesda.Skyrim
         new GroupTypeEnum GroupType { get; set; }
         new Int32 LastModified { get; set; }
         new Int32 Unknown { get; set; }
-        new ExtendedList<Cell> Cells { get; }
+        new IExtendedList<Cell> Cells { get; }
     }
 
     public partial interface ICellSubBlockGetter :
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ICellSubBlockGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -965,131 +827,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ICellSubBlock item,
-            XElement node,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ICellSubBlock item,
-            XElement node,
-            out CellSubBlock.ErrorMask errorMask,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CellSubBlock.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this ICellSubBlock item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((CellSubBlockSetterCommon)((ICellSubBlockGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICellSubBlock item,
-            string path,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICellSubBlock item,
-            string path,
-            out CellSubBlock.ErrorMask errorMask,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICellSubBlock item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this ICellSubBlock item,
-            Stream stream,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICellSubBlock item,
-            Stream stream,
-            out CellSubBlock.ErrorMask errorMask,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICellSubBlock item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Mutagen
         [DebuggerStepThrough]
@@ -1374,13 +1111,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CellSubBlock_FieldIndex.Unknown:
                     return typeof(Int32);
                 case CellSubBlock_FieldIndex.Cells:
-                    return typeof(ExtendedList<Cell>);
+                    return typeof(IExtendedList<Cell>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(CellSubBlockXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.GRUP;
         public static readonly Type BinaryWriteTranslation = typeof(CellSubBlockBinaryWriteTranslation);
         #region Interface
@@ -1430,34 +1166,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = default;
             item.Cells.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            ICellSubBlock item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    CellSubBlockXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ICellSubBlock obj)
@@ -1945,445 +1653,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class CellSubBlockXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static CellSubBlockXmlWriteTranslation Instance = new CellSubBlockXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            ICellSubBlockGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.BlockNumber) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BlockNumber),
-                    item: item.BlockNumber,
-                    fieldIndex: (int)CellSubBlock_FieldIndex.BlockNumber,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.GroupType) ?? true))
-            {
-                EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
-                    node: node,
-                    name: nameof(item.GroupType),
-                    item: item.GroupType,
-                    fieldIndex: (int)CellSubBlock_FieldIndex.GroupType,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.LastModified) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LastModified),
-                    item: item.LastModified,
-                    fieldIndex: (int)CellSubBlock_FieldIndex.LastModified,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Unknown) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)CellSubBlock_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Cells) ?? true))
-            {
-                ListXmlTranslation<ICellGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Cells),
-                    item: item.Cells,
-                    fieldIndex: (int)CellSubBlock_FieldIndex.Cells,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)CellSubBlock_FieldIndex.Cells),
-                    transl: (XElement subNode, ICellGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((CellXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            ICellSubBlockGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.CellSubBlock");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.CellSubBlock");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ICellSubBlockGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            ICellSubBlockGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (ICellSubBlockGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class CellSubBlockXmlCreateTranslation
-    {
-        public readonly static CellSubBlockXmlCreateTranslation Instance = new CellSubBlockXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            ICellSubBlock item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    CellSubBlockXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            ICellSubBlock item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "BlockNumber":
-                    errorMask?.PushIndex((int)CellSubBlock_FieldIndex.BlockNumber);
-                    try
-                    {
-                        item.BlockNumber = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "GroupType":
-                    errorMask?.PushIndex((int)CellSubBlock_FieldIndex.GroupType);
-                    try
-                    {
-                        item.GroupType = EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LastModified":
-                    errorMask?.PushIndex((int)CellSubBlock_FieldIndex.LastModified);
-                    try
-                    {
-                        item.LastModified = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)CellSubBlock_FieldIndex.Unknown);
-                    try
-                    {
-                        item.Unknown = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Cells":
-                    errorMask?.PushIndex((int)CellSubBlock_FieldIndex.Cells);
-                    try
-                    {
-                        if (ListXmlTranslation<Cell>.Instance.Parse(
-                            node: node,
-                            enumer: out var CellsItem,
-                            transl: LoquiXmlTranslation<Cell>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Cells.SetTo(CellsItem);
-                        }
-                        else
-                        {
-                            item.Cells.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class CellSubBlockXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this ICellSubBlockGetter item,
-            XElement node,
-            out CellSubBlock.ErrorMask errorMask,
-            CellSubBlock.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((CellSubBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CellSubBlock.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this ICellSubBlockGetter item,
-            string path,
-            out CellSubBlock.ErrorMask errorMask,
-            CellSubBlock.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ICellSubBlockGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ICellSubBlockGetter item,
-            Stream stream,
-            out CellSubBlock.ErrorMask errorMask,
-            CellSubBlock.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this ICellSubBlockGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this ICellSubBlockGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((CellSubBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this ICellSubBlockGetter item,
-            XElement node,
-            string? name = null,
-            CellSubBlock.TranslationMask? translationMask = null)
-        {
-            ((CellSubBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this ICellSubBlockGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((CellSubBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ICellSubBlockGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((CellSubBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2469,9 +1738,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = frame.ReadInt32();
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ICellSubBlock item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2487,11 +1757,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.CELL,
                             recordTypeConverter: recordTypeConverter,
                             transl: Cell.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)CellSubBlock_FieldIndex.Cells);
+                    return (int)CellSubBlock_FieldIndex.Cells;
                 }
                 default:
                     frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
 
@@ -2558,23 +1828,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => CellSubBlockXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((CellSubBlockXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CellSubBlockBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -2624,7 +1877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new CellSubBlockBinaryOverlay(
                 bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Group(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetGroup().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
@@ -2651,12 +1904,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2670,10 +1924,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)CellSubBlock_FieldIndex.Cells);
+                    return (int)CellSubBlock_FieldIndex.Cells;
                 }
                 default:
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
         #region To String

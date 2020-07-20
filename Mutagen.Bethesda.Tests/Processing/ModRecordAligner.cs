@@ -191,9 +191,9 @@ namespace Mutagen.Bethesda.Tests
         public static void Align(
             FilePath inputPath,
             FilePath outputPath,
-            GameMode gameMode,
+            GameRelease gameMode,
             AlignmentRules alignmentRules,
-            TempFolder temp = null)
+            TempFolder temp)
         {
             var interest = new Mutagen.Bethesda.RecordInterest(alignmentRules.Alignments.Keys)
             {
@@ -203,88 +203,84 @@ namespace Mutagen.Bethesda.Tests
             interest.InterestingTypes.Add("CELL");
             interest.InterestingTypes.Add("WRLD");
             var fileLocs = RecordLocator.GetFileLocations(inputPath.Path, gameMode, interest);
-            temp ??= new TempFolder();
-            using (temp)
+            if (gameMode == GameRelease.Oblivion)
             {
-                if (gameMode == GameMode.Oblivion)
+                var alignedMajorRecordsFile = Path.Combine(temp.Dir.Path, "alignedRules");
+                using (var inputStream = new MutagenBinaryReadStream(inputPath.Path, gameMode))
                 {
-                    var alignedMajorRecordsFile = Path.Combine(temp.Dir.Path, "alignedRules");
-                    using (var inputStream = new MutagenBinaryReadStream(inputPath.Path, gameMode))
-                    {
-                        using var writer = new MutagenWriter(new FileStream(alignedMajorRecordsFile, FileMode.Create), gameMode);
-                        AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
-                    }
-
-                    var alignedGroupsFile = Path.Combine(temp.Dir.Path, "alignedGroups");
-                    using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile, gameMode))
-                    {
-                        using var writer = new MutagenWriter(new FileStream(alignedGroupsFile, FileMode.Create), gameMode);
-                        AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
-                    }
-
-                    fileLocs = RecordLocator.GetFileLocations(alignedGroupsFile, gameMode, interest);
-                    var alignedCellsFile = Path.Combine(temp.Dir.Path, "alignedCells");
-                    using (var mutaReader = new BinaryReadStream(alignedGroupsFile))
-                    {
-                        using var writer = new MutagenWriter(alignedCellsFile, gameMode);
-                        foreach (var grup in fileLocs.GrupLocations)
-                        {
-                            if (grup <= mutaReader.Position) continue;
-                            var noRecordLength = grup - mutaReader.Position;
-                            mutaReader.WriteTo(writer.BaseStream, (int)noRecordLength);
-
-                            // If complete overall, return
-                            if (mutaReader.Complete) break;
-
-                            mutaReader.WriteTo(writer.BaseStream, 12);
-                            var grupType = (GroupTypeEnum)mutaReader.ReadUInt32();
-                            writer.Write((int)grupType);
-                            switch (grupType)
-                            {
-                                case GroupTypeEnum.CellChildren:
-                                    AlignCellChildren(mutaReader, writer);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
-                    }
-
-                    fileLocs = RecordLocator.GetFileLocations(alignedCellsFile, gameMode, interest);
-                    using (var mutaReader = new MutagenBinaryReadStream(alignedCellsFile, gameMode))
-                    {
-                        using var writer = new MutagenWriter(outputPath.Path, gameMode);
-                        foreach (var grup in fileLocs.GrupLocations)
-                        {
-                            if (grup <= mutaReader.Position) continue;
-                            var noRecordLength = grup - mutaReader.Position;
-                            mutaReader.WriteTo(writer.BaseStream, (int)noRecordLength);
-
-                            // If complete overall, return
-                            if (mutaReader.Complete) break;
-
-                            mutaReader.WriteTo(writer.BaseStream, 12);
-                            var grupType = (GroupTypeEnum)mutaReader.ReadUInt32();
-                            writer.Write((int)grupType);
-                            switch (grupType)
-                            {
-                                case GroupTypeEnum.WorldChildren:
-                                    AlignWorldChildren(mutaReader, writer);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
-                    }
-                }
-                else
-                {
-                    using var inputStream = new MutagenBinaryReadStream(inputPath.Path, gameMode);
-                    using var writer = new MutagenWriter(outputPath.Path, gameMode);
+                    using var writer = new MutagenWriter(new FileStream(alignedMajorRecordsFile, FileMode.Create), gameMode);
                     AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
                 }
+
+                var alignedGroupsFile = Path.Combine(temp.Dir.Path, "alignedGroups");
+                using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile, gameMode))
+                {
+                    using var writer = new MutagenWriter(new FileStream(alignedGroupsFile, FileMode.Create), gameMode);
+                    AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
+                }
+
+                fileLocs = RecordLocator.GetFileLocations(alignedGroupsFile, gameMode, interest);
+                var alignedCellsFile = Path.Combine(temp.Dir.Path, "alignedCells");
+                using (var mutaReader = new BinaryReadStream(alignedGroupsFile))
+                {
+                    using var writer = new MutagenWriter(alignedCellsFile, gameMode);
+                    foreach (var grup in fileLocs.GrupLocations)
+                    {
+                        if (grup <= mutaReader.Position) continue;
+                        var noRecordLength = grup - mutaReader.Position;
+                        mutaReader.WriteTo(writer.BaseStream, (int)noRecordLength);
+
+                        // If complete overall, return
+                        if (mutaReader.Complete) break;
+
+                        mutaReader.WriteTo(writer.BaseStream, 12);
+                        var grupType = (GroupTypeEnum)mutaReader.ReadUInt32();
+                        writer.Write((int)grupType);
+                        switch (grupType)
+                        {
+                            case GroupTypeEnum.CellChildren:
+                                AlignCellChildren(mutaReader, writer);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
+                }
+
+                fileLocs = RecordLocator.GetFileLocations(alignedCellsFile, gameMode, interest);
+                using (var mutaReader = new MutagenBinaryReadStream(alignedCellsFile, gameMode))
+                {
+                    using var writer = new MutagenWriter(outputPath.Path, gameMode);
+                    foreach (var grup in fileLocs.GrupLocations)
+                    {
+                        if (grup <= mutaReader.Position) continue;
+                        var noRecordLength = grup - mutaReader.Position;
+                        mutaReader.WriteTo(writer.BaseStream, (int)noRecordLength);
+
+                        // If complete overall, return
+                        if (mutaReader.Complete) break;
+
+                        mutaReader.WriteTo(writer.BaseStream, 12);
+                        var grupType = (GroupTypeEnum)mutaReader.ReadUInt32();
+                        writer.Write((int)grupType);
+                        switch (grupType)
+                        {
+                            case GroupTypeEnum.WorldChildren:
+                                AlignWorldChildren(mutaReader, writer);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
+                }
+            }
+            else
+            {
+                using var inputStream = new MutagenBinaryReadStream(inputPath.Path, gameMode);
+                using var writer = new MutagenWriter(outputPath.Path, gameMode);
+                AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
             }
         }
 
@@ -509,9 +505,8 @@ namespace Mutagen.Bethesda.Tests
                         var startPos = reader.Position;
                         reader.Position += cellMajorMeta.HeaderLength;
                         var grupPos = reader.Position;
-                        var cellSubGroupMeta = reader.GetGroup();
                         long cellGroupLen = 0;
-                        if (cellSubGroupMeta.IsGroup
+                        if (reader.TryGetGroup(out var cellSubGroupMeta)
                             && cellSubGroupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
                         {
                             cellGroupLen = cellSubGroupMeta.TotalLength;

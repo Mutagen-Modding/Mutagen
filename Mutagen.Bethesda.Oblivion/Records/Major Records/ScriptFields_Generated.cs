@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -61,8 +55,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LocalVariables
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocalVariable> _LocalVariables = new ExtendedList<LocalVariable>();
-        public ExtendedList<LocalVariable> LocalVariables
+        private IExtendedList<LocalVariable> _LocalVariables = new ExtendedList<LocalVariable>();
+        public IExtendedList<LocalVariable> LocalVariables
         {
             get => this._LocalVariables;
             protected set => this._LocalVariables = value;
@@ -75,8 +69,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region References
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AScriptReference> _References = new ExtendedList<AScriptReference>();
-        public ExtendedList<AScriptReference> References
+        private IExtendedList<AScriptReference> _References = new ExtendedList<AScriptReference>();
+        public IExtendedList<AScriptReference> References
         {
             get => this._References;
             protected set => this._References = value;
@@ -114,137 +108,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public override int GetHashCode() => ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => ScriptFieldsXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ScriptFieldsXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static ScriptFields CreateFromXml(
-            XElement node,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static ScriptFields CreateFromXml(
-            XElement node,
-            out ScriptFields.ErrorMask errorMask,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptFields.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static ScriptFields CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new ScriptFields();
-            ((ScriptFieldsSetterCommon)((IScriptFieldsGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static ScriptFields CreateFromXml(
-            string path,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ScriptFields CreateFromXml(
-            string path,
-            out ScriptFields.ErrorMask errorMask,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ScriptFields CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static ScriptFields CreateFromXml(
-            Stream stream,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ScriptFields CreateFromXml(
-            Stream stream,
-            out ScriptFields.ErrorMask errorMask,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ScriptFields CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -869,14 +732,13 @@ namespace Mutagen.Bethesda.Oblivion
         new ScriptMetaSummary MetadataSummary { get; }
         new MemorySlice<Byte>? CompiledScript { get; set; }
         new String? SourceCode { get; set; }
-        new ExtendedList<LocalVariable> LocalVariables { get; }
-        new ExtendedList<AScriptReference> References { get; }
+        new IExtendedList<LocalVariable> LocalVariables { get; }
+        new IExtendedList<AScriptReference> References { get; }
     }
 
     public partial interface IScriptFieldsGetter :
         ILoquiObject,
         ILoquiObject<IScriptFieldsGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -1048,131 +910,6 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IScriptFields item,
-            XElement node,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IScriptFields item,
-            XElement node,
-            out ScriptFields.ErrorMask errorMask,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptFields.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptFields item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ScriptFieldsSetterCommon)((IScriptFieldsGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptFields item,
-            string path,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptFields item,
-            string path,
-            out ScriptFields.ErrorMask errorMask,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptFields item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IScriptFields item,
-            Stream stream,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptFields item,
-            Stream stream,
-            out ScriptFields.ErrorMask errorMask,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IScriptFields item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1394,15 +1131,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptFields_FieldIndex.SourceCode:
                     return typeof(String);
                 case ScriptFields_FieldIndex.LocalVariables:
-                    return typeof(ExtendedList<LocalVariable>);
+                    return typeof(IExtendedList<LocalVariable>);
                 case ScriptFields_FieldIndex.References:
-                    return typeof(ExtendedList<AScriptReference>);
+                    return typeof(IExtendedList<AScriptReference>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ScriptFieldsXmlWriteTranslation);
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1462,73 +1198,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LocalVariables.Clear();
             item.References.Clear();
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IScriptFields item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "MetadataSummary":
-                    errorMask?.PushIndex((int)ScriptFields_FieldIndex.MetadataSummary);
-                    try
-                    {
-                        item.MetadataSummary.CopyInFromXml(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IScriptFields item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    ScriptFieldsXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1928,452 +1597,6 @@ namespace Mutagen.Bethesda.Oblivion
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public partial class ScriptFieldsXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static ScriptFieldsXmlWriteTranslation Instance = new ScriptFieldsXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IScriptFieldsGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.MetadataSummary) ?? true))
-            {
-                var MetadataSummaryItem = item.MetadataSummary;
-                ((ScriptMetaSummaryXmlWriteTranslation)((IXmlItem)MetadataSummaryItem).XmlWriteTranslator).Write(
-                    item: MetadataSummaryItem,
-                    node: node,
-                    name: nameof(item.MetadataSummary),
-                    fieldIndex: (int)ScriptFields_FieldIndex.MetadataSummary,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ScriptFields_FieldIndex.MetadataSummary));
-            }
-            if ((item.CompiledScript != null)
-                && (translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.CompiledScript) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CompiledScript),
-                    item: item.CompiledScript.Value,
-                    fieldIndex: (int)ScriptFields_FieldIndex.CompiledScript,
-                    errorMask: errorMask);
-            }
-            if ((item.SourceCode != null)
-                && (translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.SourceCode) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SourceCode),
-                    item: item.SourceCode,
-                    fieldIndex: (int)ScriptFields_FieldIndex.SourceCode,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.LocalVariables) ?? true))
-            {
-                ListXmlTranslation<ILocalVariableGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.LocalVariables),
-                    item: item.LocalVariables,
-                    fieldIndex: (int)ScriptFields_FieldIndex.LocalVariables,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ScriptFields_FieldIndex.LocalVariables),
-                    transl: (XElement subNode, ILocalVariableGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LocalVariableXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.References) ?? true))
-            {
-                ListXmlTranslation<IAScriptReferenceGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.References),
-                    item: item.References,
-                    fieldIndex: (int)ScriptFields_FieldIndex.References,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ScriptFields_FieldIndex.References),
-                    transl: (XElement subNode, IAScriptReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((AScriptReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IScriptFieldsGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.ScriptFields");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.ScriptFields");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IScriptFieldsGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IScriptFieldsGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IScriptFieldsGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class ScriptFieldsXmlCreateTranslation
-    {
-        public readonly static ScriptFieldsXmlCreateTranslation Instance = new ScriptFieldsXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IScriptFields item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ScriptFieldsXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IScriptFields item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "CompiledScript":
-                    errorMask?.PushIndex((int)ScriptFields_FieldIndex.CompiledScript);
-                    try
-                    {
-                        item.CompiledScript = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SourceCode":
-                    errorMask?.PushIndex((int)ScriptFields_FieldIndex.SourceCode);
-                    try
-                    {
-                        item.SourceCode = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LocalVariables":
-                    errorMask?.PushIndex((int)ScriptFields_FieldIndex.LocalVariables);
-                    try
-                    {
-                        if (ListXmlTranslation<LocalVariable>.Instance.Parse(
-                            node: node,
-                            enumer: out var LocalVariablesItem,
-                            transl: LoquiXmlTranslation<LocalVariable>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.LocalVariables.SetTo(LocalVariablesItem);
-                        }
-                        else
-                        {
-                            item.LocalVariables.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "References":
-                    errorMask?.PushIndex((int)ScriptFields_FieldIndex.References);
-                    try
-                    {
-                        if (ListXmlTranslation<AScriptReference>.Instance.Parse(
-                            node: node,
-                            enumer: out var ReferencesItem,
-                            transl: LoquiXmlTranslation<AScriptReference>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.References.SetTo(ReferencesItem);
-                        }
-                        else
-                        {
-                            item.References.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Oblivion
-{
-    #region Xml Write Mixins
-    public static class ScriptFieldsXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IScriptFieldsGetter item,
-            XElement node,
-            out ScriptFields.ErrorMask errorMask,
-            ScriptFields.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ScriptFieldsXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptFields.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IScriptFieldsGetter item,
-            string path,
-            out ScriptFields.ErrorMask errorMask,
-            ScriptFields.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IScriptFieldsGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IScriptFieldsGetter item,
-            Stream stream,
-            out ScriptFields.ErrorMask errorMask,
-            ScriptFields.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IScriptFieldsGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IScriptFieldsGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((ScriptFieldsXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IScriptFieldsGetter item,
-            XElement node,
-            string? name = null,
-            ScriptFields.TranslationMask? translationMask = null)
-        {
-            ((ScriptFieldsXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IScriptFieldsGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((ScriptFieldsXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IScriptFieldsGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((ScriptFieldsXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -2474,10 +1697,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IScriptFields item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2487,25 +1711,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.SCHD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
                     ScriptFieldsBinaryCreateTranslation.FillBinaryMetadataSummaryOldCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
                     item.MetadataSummary.CopyInFromBinary(
                         frame: frame,
                         recordTypeConverter: null);
-                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
+                    return (int)ScriptFields_FieldIndex.MetadataSummary;
                 }
                 case RecordTypeInts.SCDA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CompiledScript = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
+                    return (int)ScriptFields_FieldIndex.CompiledScript;
                 }
                 case RecordTypeInts.SCTX:
                 {
@@ -2513,7 +1737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.SourceCode = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.Plain);
-                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.SourceCode);
+                    return (int)ScriptFields_FieldIndex.SourceCode;
                 }
                 case RecordTypeInts.SLSD:
                 case RecordTypeInts.SCVR:
@@ -2524,7 +1748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: LocalVariable_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: LocalVariable.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
+                    return (int)ScriptFields_FieldIndex.LocalVariables;
                 }
                 case RecordTypeInts.SCRV:
                 case RecordTypeInts.SCRO:
@@ -2554,10 +1778,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         throw new NotImplementedException();
                                 }
                             }));
-                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.References);
+                    return (int)ScriptFields_FieldIndex.References;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2621,23 +1845,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ScriptFieldsCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptFieldsCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptFieldsCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => ScriptFieldsXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ScriptFieldsXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScriptFieldsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2717,12 +1924,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2730,27 +1938,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.SCHD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
                     MetadataSummaryOldCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return ParseResult.Stop;
                     _MetadataSummaryLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
+                    return (int)ScriptFields_FieldIndex.MetadataSummary;
                 }
                 case RecordTypeInts.SCDA:
                 {
                     _CompiledScriptLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
+                    return (int)ScriptFields_FieldIndex.CompiledScript;
                 }
                 case RecordTypeInts.SCTX:
                 {
                     _SourceCodeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.SourceCode);
+                    return (int)ScriptFields_FieldIndex.SourceCode;
                 }
                 case RecordTypeInts.SLSD:
                 case RecordTypeInts.SCVR:
@@ -2760,7 +1968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: LocalVariable_Registration.TriggeringRecordTypes,
                         factory:  LocalVariableBinaryOverlay.LocalVariableFactory);
-                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
+                    return (int)ScriptFields_FieldIndex.LocalVariables;
                 }
                 case RecordTypeInts.SCRV:
                 case RecordTypeInts.SCRO:
@@ -2781,10 +1989,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     throw new NotImplementedException();
                             }
                         });
-                    return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.References);
+                    return (int)ScriptFields_FieldIndex.References;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

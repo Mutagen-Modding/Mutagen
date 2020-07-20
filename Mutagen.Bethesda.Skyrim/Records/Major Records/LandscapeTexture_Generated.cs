@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -70,8 +64,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Grass>> _Grasses = new ExtendedList<IFormLink<Grass>>();
-        public ExtendedList<IFormLink<Grass>> Grasses
+        private IExtendedList<IFormLink<Grass>> _Grasses = new ExtendedList<IFormLink<Grass>>();
+        public IExtendedList<IFormLink<Grass>> Grasses
         {
             get => this._Grasses;
             protected set => this._Grasses = value;
@@ -81,6 +75,11 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IGrassGetter>> ILandscapeTextureGetter.Grasses => _Grasses;
         #endregion
 
+        #endregion
+        #region Flags
+        public LandscapeTexture.Flag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        LandscapeTexture.Flag? ILandscapeTextureGetter.Flags => this.Flags;
         #endregion
         #region HNAMDataTypeState
         public LandscapeTexture.HNAMDataType HNAMDataTypeState { get; set; } = default;
@@ -115,135 +114,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => LandscapeTextureXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((LandscapeTextureXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new LandscapeTexture CreateFromXml(
-            XElement node,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static LandscapeTexture CreateFromXml(
-            XElement node,
-            out LandscapeTexture.ErrorMask errorMask,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LandscapeTexture.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static LandscapeTexture CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new LandscapeTexture();
-            ((LandscapeTextureSetterCommon)((ILandscapeTextureGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static LandscapeTexture CreateFromXml(
-            string path,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static LandscapeTexture CreateFromXml(
-            string path,
-            out LandscapeTexture.ErrorMask errorMask,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static LandscapeTexture CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static LandscapeTexture CreateFromXml(
-            Stream stream,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static LandscapeTexture CreateFromXml(
-            Stream stream,
-            out LandscapeTexture.ErrorMask errorMask,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static LandscapeTexture CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -260,13 +130,14 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HavokRestitution = initialValue;
                 this.TextureSpecularExponent = initialValue;
                 this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Flags = initialValue;
                 this.HNAMDataTypeState = initialValue;
             }
 
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -276,11 +147,12 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem HavokRestitution,
                 TItem TextureSpecularExponent,
                 TItem Grasses,
+                TItem Flags,
                 TItem HNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -291,6 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HavokRestitution = HavokRestitution;
                 this.TextureSpecularExponent = TextureSpecularExponent;
                 this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Grasses, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Flags = Flags;
                 this.HNAMDataTypeState = HNAMDataTypeState;
             }
 
@@ -309,6 +182,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem HavokRestitution;
             public TItem TextureSpecularExponent;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Grasses;
+            public TItem Flags;
             public TItem HNAMDataTypeState;
             #endregion
 
@@ -329,6 +203,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.HavokRestitution, rhs.HavokRestitution)) return false;
                 if (!object.Equals(this.TextureSpecularExponent, rhs.TextureSpecularExponent)) return false;
                 if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.HNAMDataTypeState, rhs.HNAMDataTypeState)) return false;
                 return true;
             }
@@ -341,6 +216,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.HavokRestitution);
                 hash.Add(this.TextureSpecularExponent);
                 hash.Add(this.Grasses);
+                hash.Add(this.Flags);
                 hash.Add(this.HNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -368,6 +244,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (!eval(this.Flags)) return false;
                 if (!eval(this.HNAMDataTypeState)) return false;
                 return true;
             }
@@ -393,6 +270,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (eval(this.Flags)) return true;
                 if (eval(this.HNAMDataTypeState)) return true;
                 return false;
             }
@@ -428,6 +306,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                obj.Flags = eval(this.Flags);
                 obj.HNAMDataTypeState = eval(this.HNAMDataTypeState);
             }
             #endregion
@@ -494,6 +373,10 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
                     if (printMask?.HNAMDataTypeState ?? true)
                     {
                         fg.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
@@ -516,6 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? HavokRestitution;
             public Exception? TextureSpecularExponent;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Grasses;
+            public Exception? Flags;
             public Exception? HNAMDataTypeState;
             #endregion
 
@@ -537,6 +421,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return TextureSpecularExponent;
                     case LandscapeTexture_FieldIndex.Grasses:
                         return Grasses;
+                    case LandscapeTexture_FieldIndex.Flags:
+                        return Flags;
                     case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                         return HNAMDataTypeState;
                     default:
@@ -566,6 +452,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case LandscapeTexture_FieldIndex.Grasses:
                         this.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case LandscapeTexture_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
                     case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                         this.HNAMDataTypeState = ex;
@@ -599,6 +488,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case LandscapeTexture_FieldIndex.Grasses:
                         this.Grasses = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
+                    case LandscapeTexture_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
                     case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                         this.HNAMDataTypeState = (Exception?)obj;
                         break;
@@ -617,6 +509,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (HavokRestitution != null) return true;
                 if (TextureSpecularExponent != null) return true;
                 if (Grasses != null) return true;
+                if (Flags != null) return true;
                 if (HNAMDataTypeState != null) return true;
                 return false;
             }
@@ -680,6 +573,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
+                fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
             }
             #endregion
@@ -695,6 +589,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.HavokRestitution = this.HavokRestitution.Combine(rhs.HavokRestitution);
                 ret.TextureSpecularExponent = this.TextureSpecularExponent.Combine(rhs.TextureSpecularExponent);
                 ret.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.HNAMDataTypeState = this.HNAMDataTypeState.Combine(rhs.HNAMDataTypeState);
                 return ret;
             }
@@ -724,6 +619,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool HavokRestitution;
             public bool TextureSpecularExponent;
             public bool Grasses;
+            public bool Flags;
             public bool HNAMDataTypeState;
             #endregion
 
@@ -737,6 +633,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HavokRestitution = defaultOn;
                 this.TextureSpecularExponent = defaultOn;
                 this.Grasses = defaultOn;
+                this.Flags = defaultOn;
                 this.HNAMDataTypeState = defaultOn;
             }
 
@@ -751,13 +648,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((HavokRestitution, null));
                 ret.Add((TextureSpecularExponent, null));
                 ret.Add((Grasses, null));
+                ret.Add((Flags, null));
                 ret.Add((HNAMDataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = LandscapeTexture_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = LandscapeTexture_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LandscapeTextureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -862,7 +760,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte HavokFriction { get; set; }
         new Byte HavokRestitution { get; set; }
         new Byte TextureSpecularExponent { get; set; }
-        new ExtendedList<IFormLink<Grass>> Grasses { get; }
+        new IExtendedList<IFormLink<Grass>> Grasses { get; }
+        new LandscapeTexture.Flag? Flags { get; set; }
         new LandscapeTexture.HNAMDataType HNAMDataTypeState { get; set; }
     }
 
@@ -877,17 +776,17 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IRegionTargetGetter,
         ILoquiObject<ILandscapeTextureGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => LandscapeTexture_Registration.Instance;
+        static new ILoquiRegistration Registration => LandscapeTexture_Registration.Instance;
         IFormLinkNullable<ITextureSetGetter> TextureSet { get; }
         IFormLink<IMaterialTypeGetter> MaterialType { get; }
         Byte HavokFriction { get; }
         Byte HavokRestitution { get; }
         Byte TextureSpecularExponent { get; }
         IReadOnlyList<IFormLink<IGrassGetter>> Grasses { get; }
+        LandscapeTexture.Flag? Flags { get; }
         LandscapeTexture.HNAMDataType HNAMDataTypeState { get; }
 
     }
@@ -1023,131 +922,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ILandscapeTextureInternal item,
-            XElement node,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ILandscapeTextureInternal item,
-            XElement node,
-            out LandscapeTexture.ErrorMask errorMask,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LandscapeTexture.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this ILandscapeTextureInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((LandscapeTextureSetterCommon)((ILandscapeTextureGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILandscapeTextureInternal item,
-            string path,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILandscapeTextureInternal item,
-            string path,
-            out LandscapeTexture.ErrorMask errorMask,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILandscapeTextureInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this ILandscapeTextureInternal item,
-            Stream stream,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILandscapeTextureInternal item,
-            Stream stream,
-            out LandscapeTexture.ErrorMask errorMask,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILandscapeTextureInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            LandscapeTexture.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1185,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1195,7 +969,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         HavokRestitution = 9,
         TextureSpecularExponent = 10,
         Grasses = 11,
-        HNAMDataTypeState = 12,
+        Flags = 12,
+        HNAMDataTypeState = 13,
     }
     #endregion
 
@@ -1213,9 +988,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "f6e8d6f6-773c-4c3b-b09b-d892c0114ed7";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(LandscapeTexture.Mask<>);
 
@@ -1257,6 +1032,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)LandscapeTexture_FieldIndex.TextureSpecularExponent;
                 case "GRASSES":
                     return (ushort)LandscapeTexture_FieldIndex.Grasses;
+                case "FLAGS":
+                    return (ushort)LandscapeTexture_FieldIndex.Flags;
                 case "HNAMDATATYPESTATE":
                     return (ushort)LandscapeTexture_FieldIndex.HNAMDataTypeState;
                 default:
@@ -1276,6 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LandscapeTexture_FieldIndex.HavokFriction:
                 case LandscapeTexture_FieldIndex.HavokRestitution:
                 case LandscapeTexture_FieldIndex.TextureSpecularExponent:
+                case LandscapeTexture_FieldIndex.Flags:
                 case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                     return false;
                 default:
@@ -1294,6 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LandscapeTexture_FieldIndex.HavokRestitution:
                 case LandscapeTexture_FieldIndex.TextureSpecularExponent:
                 case LandscapeTexture_FieldIndex.Grasses:
+                case LandscapeTexture_FieldIndex.Flags:
                 case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                     return false;
                 default:
@@ -1312,6 +1091,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LandscapeTexture_FieldIndex.HavokRestitution:
                 case LandscapeTexture_FieldIndex.TextureSpecularExponent:
                 case LandscapeTexture_FieldIndex.Grasses:
+                case LandscapeTexture_FieldIndex.Flags:
                 case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                     return false;
                 default:
@@ -1336,6 +1116,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "TextureSpecularExponent";
                 case LandscapeTexture_FieldIndex.Grasses:
                     return "Grasses";
+                case LandscapeTexture_FieldIndex.Flags:
+                    return "Flags";
                 case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                     return "HNAMDataTypeState";
                 default:
@@ -1354,6 +1136,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LandscapeTexture_FieldIndex.HavokRestitution:
                 case LandscapeTexture_FieldIndex.TextureSpecularExponent:
                 case LandscapeTexture_FieldIndex.Grasses:
+                case LandscapeTexture_FieldIndex.Flags:
                 case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                     return false;
                 default:
@@ -1372,6 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LandscapeTexture_FieldIndex.HavokRestitution:
                 case LandscapeTexture_FieldIndex.TextureSpecularExponent:
                 case LandscapeTexture_FieldIndex.Grasses:
+                case LandscapeTexture_FieldIndex.Flags:
                 case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                     return false;
                 default:
@@ -1395,7 +1179,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LandscapeTexture_FieldIndex.TextureSpecularExponent:
                     return typeof(Byte);
                 case LandscapeTexture_FieldIndex.Grasses:
-                    return typeof(ExtendedList<IFormLink<Grass>>);
+                    return typeof(IExtendedList<IFormLink<Grass>>);
+                case LandscapeTexture_FieldIndex.Flags:
+                    return typeof(LandscapeTexture.Flag);
                 case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                     return typeof(LandscapeTexture.HNAMDataType);
                 default:
@@ -1403,7 +1189,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(LandscapeTextureXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.LTEX;
         public static readonly Type BinaryWriteTranslation = typeof(LandscapeTextureBinaryWriteTranslation);
         #region Interface
@@ -1453,6 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.HavokRestitution = default;
             item.TextureSpecularExponent = default;
             item.Grasses.Clear();
+            item.Flags = default;
             item.HNAMDataTypeState = default;
             base.Clear(item);
         }
@@ -1466,86 +1252,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ILandscapeTextureInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            ILandscapeTextureInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            ILandscapeTextureInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    LandscapeTextureXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (LandscapeTexture)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (LandscapeTexture)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1620,6 +1326,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Grasses,
                 (l, r) => object.Equals(l, r),
                 include);
+            ret.Flags = item.Flags == rhs.Flags;
             ret.HNAMDataTypeState = item.HNAMDataTypeState == rhs.HNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1711,6 +1418,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
+            if ((printMask?.Flags ?? true)
+                && item.Flags.TryGet(out var FlagsItem))
+            {
+                fg.AppendItem(FlagsItem, "Flags");
+            }
             if (printMask?.HNAMDataTypeState ?? true)
             {
                 fg.AppendItem(item.HNAMDataTypeState, "HNAMDataTypeState");
@@ -1722,6 +1434,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LandscapeTexture.Mask<bool?> checkMask)
         {
             if (checkMask.TextureSet.HasValue && checkMask.TextureSet.Value != (item.TextureSet.FormKey != null)) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1737,6 +1450,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.HavokRestitution = true;
             mask.TextureSpecularExponent = true;
             mask.Grasses = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
+            mask.Flags = (item.Flags != null);
             mask.HNAMDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -1751,7 +1465,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (LandscapeTexture_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (LandscapeTexture_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (LandscapeTexture_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (LandscapeTexture_FieldIndex)((int)index);
@@ -1772,7 +1486,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (LandscapeTexture_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (LandscapeTexture_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (LandscapeTexture_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (LandscapeTexture_FieldIndex)((int)index);
@@ -1795,6 +1509,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.HavokRestitution != rhs.HavokRestitution) return false;
             if (lhs.TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
             if (!lhs.Grasses.SequenceEqual(rhs.Grasses)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
             if (lhs.HNAMDataTypeState != rhs.HNAMDataTypeState) return false;
             return true;
         }
@@ -1829,6 +1544,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.HavokRestitution);
             hash.Add(item.TextureSpecularExponent);
             hash.Add(item.Grasses);
+            if (item.Flags.TryGet(out var Flagsitem))
+            {
+                hash.Add(Flagsitem);
+            }
             hash.Add(item.HNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1953,6 +1672,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HNAMDataTypeState) ?? true))
             {
@@ -2080,419 +1803,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class LandscapeTextureXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static LandscapeTextureXmlWriteTranslation Instance = new LandscapeTextureXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            ILandscapeTextureGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.TextureSet.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSet) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TextureSet),
-                    item: item.TextureSet.FormKey,
-                    fieldIndex: (int)LandscapeTexture_FieldIndex.TextureSet,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.MaterialType) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaterialType),
-                    item: item.MaterialType.FormKey,
-                    fieldIndex: (int)LandscapeTexture_FieldIndex.MaterialType,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokFriction) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HavokFriction),
-                    item: item.HavokFriction,
-                    fieldIndex: (int)LandscapeTexture_FieldIndex.HavokFriction,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokRestitution) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HavokRestitution),
-                    item: item.HavokRestitution,
-                    fieldIndex: (int)LandscapeTexture_FieldIndex.HavokRestitution,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSpecularExponent) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TextureSpecularExponent),
-                    item: item.TextureSpecularExponent,
-                    fieldIndex: (int)LandscapeTexture_FieldIndex.TextureSpecularExponent,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Grasses) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IGrassGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Grasses),
-                    item: item.Grasses,
-                    fieldIndex: (int)LandscapeTexture_FieldIndex.Grasses,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)LandscapeTexture_FieldIndex.Grasses),
-                    transl: (XElement subNode, IFormLink<IGrassGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HNAMDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<LandscapeTexture.HNAMDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HNAMDataTypeState),
-                    item: item.HNAMDataTypeState,
-                    fieldIndex: (int)LandscapeTexture_FieldIndex.HNAMDataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            ILandscapeTextureGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.LandscapeTexture");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.LandscapeTexture");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILandscapeTextureGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILandscapeTextureGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILandscapeTextureGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class LandscapeTextureXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static LandscapeTextureXmlCreateTranslation Instance = new LandscapeTextureXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            ILandscapeTextureInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    LandscapeTextureXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            ILandscapeTextureInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "TextureSet":
-                    errorMask?.PushIndex((int)LandscapeTexture_FieldIndex.TextureSet);
-                    try
-                    {
-                        item.TextureSet = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaterialType":
-                    errorMask?.PushIndex((int)LandscapeTexture_FieldIndex.MaterialType);
-                    try
-                    {
-                        item.MaterialType = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HavokFriction":
-                    errorMask?.PushIndex((int)LandscapeTexture_FieldIndex.HavokFriction);
-                    try
-                    {
-                        item.HavokFriction = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HavokRestitution":
-                    errorMask?.PushIndex((int)LandscapeTexture_FieldIndex.HavokRestitution);
-                    try
-                    {
-                        item.HavokRestitution = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TextureSpecularExponent":
-                    errorMask?.PushIndex((int)LandscapeTexture_FieldIndex.TextureSpecularExponent);
-                    try
-                    {
-                        item.TextureSpecularExponent = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Grasses":
-                    errorMask?.PushIndex((int)LandscapeTexture_FieldIndex.Grasses);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Grass>>.Instance.Parse(
-                            node: node,
-                            enumer: out var GrassesItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Grasses.SetTo(GrassesItem);
-                        }
-                        else
-                        {
-                            item.Grasses.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HNAMDataTypeState":
-                    errorMask?.PushIndex((int)LandscapeTexture_FieldIndex.HNAMDataTypeState);
-                    try
-                    {
-                        item.HNAMDataTypeState = EnumXmlTranslation<LandscapeTexture.HNAMDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class LandscapeTextureXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this ILandscapeTextureGetter item,
-            XElement node,
-            out LandscapeTexture.ErrorMask errorMask,
-            LandscapeTexture.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((LandscapeTextureXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LandscapeTexture.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this ILandscapeTextureGetter item,
-            string path,
-            out LandscapeTexture.ErrorMask errorMask,
-            LandscapeTexture.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ILandscapeTextureGetter item,
-            Stream stream,
-            out LandscapeTexture.ErrorMask errorMask,
-            LandscapeTexture.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2547,6 +1857,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
                 });
+            if (writer.MetaData.FormVersion!.Value >= 43)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<LandscapeTexture.Flag>.Instance.WriteNullable(
+                    writer,
+                    item.Flags,
+                    length: 4,
+                    header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
+            }
         }
 
         public void Write(
@@ -2562,10 +1880,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -2618,9 +1938,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILandscapeTextureInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2634,7 +1955,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TextureSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.TextureSet);
+                    return (int)LandscapeTexture_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -2642,7 +1963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MaterialType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.MaterialType);
+                    return (int)LandscapeTexture_FieldIndex.MaterialType;
                 }
                 case RecordTypeInts.HNAM:
                 {
@@ -2650,13 +1971,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.HavokFriction = dataFrame.ReadUInt8();
                     item.HavokRestitution = dataFrame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.HavokRestitution);
+                    return (int)LandscapeTexture_FieldIndex.HavokRestitution;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureSpecularExponent = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.TextureSpecularExponent);
+                    return (int)LandscapeTexture_FieldIndex.TextureSpecularExponent;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -2665,12 +1986,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.Grasses);
+                    return (int)LandscapeTexture_FieldIndex.Grasses;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    if (frame.MetaData.FormVersion!.Value >= 43)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.Flags = EnumBinaryTranslation<LandscapeTexture.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    }
+                    return (int)LandscapeTexture_FieldIndex.Flags;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -2717,21 +2048,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeTextureCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeTextureCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => LandscapeTextureXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((LandscapeTextureXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LandscapeTextureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2746,12 +2062,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region TextureSet
         private int? _TextureSetLocation;
         public bool TextureSet_IsSet => _TextureSetLocation.HasValue;
-        public IFormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region MaterialType
         private int? _MaterialTypeLocation;
         public bool MaterialType_IsSet => _MaterialTypeLocation.HasValue;
-        public IFormLink<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLink<IMaterialTypeGetter>.Null;
+        public IFormLink<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLink<IMaterialTypeGetter>.Null;
         #endregion
         private int? _HNAMLocation;
         public LandscapeTexture.HNAMDataType HNAMDataTypeState { get; private set; }
@@ -2767,9 +2083,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region TextureSpecularExponent
         private int? _TextureSpecularExponentLocation;
-        public Byte TextureSpecularExponent => _TextureSpecularExponentLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _TextureSpecularExponentLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        public Byte TextureSpecularExponent => _TextureSpecularExponentLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSpecularExponentLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
         #endregion
         public IReadOnlyList<IFormLink<IGrassGetter>> Grasses { get; private set; } = ListExt.Empty<IFormLink<IGrassGetter>>();
+        #region Flags
+        private int? _FlagsLocation;
+        public LandscapeTexture.Flag? Flags => _FlagsLocation.HasValue ? (LandscapeTexture.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(LandscapeTexture.Flag?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2795,8 +2115,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new LandscapeTextureBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2822,12 +2143,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2836,26 +2158,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TNAM:
                 {
                     _TextureSetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.TextureSet);
+                    return (int)LandscapeTexture_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _MaterialTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.MaterialType);
+                    return (int)LandscapeTexture_FieldIndex.MaterialType;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     _HNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.HavokRestitution);
+                    return (int)LandscapeTexture_FieldIndex.HavokRestitution;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _TextureSpecularExponentLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.TextureSpecularExponent);
+                    return (int)LandscapeTexture_FieldIndex.TextureSpecularExponent;
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    this.Grasses = BinaryOverlayList<IFormLink<IGrassGetter>>.FactoryByArray(
+                    this.Grasses = BinaryOverlayList.FactoryByArray<IFormLink<IGrassGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IGrassGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -2865,7 +2187,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.Grasses);
+                    return (int)LandscapeTexture_FieldIndex.Grasses;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)LandscapeTexture_FieldIndex.Flags;
                 }
                 default:
                     return base.FillRecordType(
@@ -2873,7 +2200,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

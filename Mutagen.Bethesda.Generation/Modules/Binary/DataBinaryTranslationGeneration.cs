@@ -93,6 +93,7 @@ namespace Mutagen.Bethesda.Generation
                     dataType.SubFields,
                     forOverlay: true)
                 .ToListAsync();
+            TypeGeneration lastVersionedField = null;
             foreach (var field in dataType.IterateFieldsWithMeta())
             {
                 if (!field.Field.Enabled) continue;
@@ -103,6 +104,7 @@ namespace Mutagen.Bethesda.Generation
                     SkipIfOnlyOneLine = true
                 })
                 {
+                    var fieldData = field.Field.GetFieldData();
                     var length = lengths.FirstOrDefault(l => l.Field == field.Field);
                     if (length.Field == null)
                     {
@@ -114,7 +116,8 @@ namespace Mutagen.Bethesda.Generation
                     {
                         passIn = $"_{dataType.GetFieldData().RecordType}Location!.Value";
                     } 
-                    else if (passIn?.StartsWith("0x") ?? true)
+                    else if (passIn == null 
+                        || length.PassedType == BinaryTranslationModule.PassedType.Direct)
                     {
                         passIn = $"_{dataType.GetFieldData().RecordType}Location!.Value + {passIn}";
                     }
@@ -127,9 +130,13 @@ namespace Mutagen.Bethesda.Generation
                         length.PassedLength,
                         passIn,
                         data: dataType);
+                    if (fieldData.HasVersioning)
+                    {
+                        VersioningModule.AddVersionOffset(fg, field.Field, length.FieldLength.Value, lastVersionedField, $"_package.FormVersion!.FormVersion!.Value");
+                        lastVersionedField = field.Field;
+                    }
                     if (length.CurLength == null)
                     {
-                        var fieldData = field.Field.GetFieldData();
                         fg.AppendLine($"protected int {length.Field.Name}EndingPos;");
                         if (fieldData.BinaryOverlayFallback == BinaryGenerationType.Custom)
                         {
@@ -225,6 +232,7 @@ namespace Mutagen.Bethesda.Generation
 
         public static void GenerateWrapperExtraMembers(FileGeneration fg, DataType dataType, ObjectGeneration objGen, TypeGeneration typeGen, string posAccessor)
         {
+            var fieldData = typeGen.GetFieldData();
             var dataMeta = dataType.IterateFieldsWithMeta().First(item => item.Field == typeGen);
             StringBuilder extraChecks = new StringBuilder();
             if (dataMeta.EncounteredBreaks.Any())
@@ -235,6 +243,10 @@ namespace Mutagen.Bethesda.Generation
             if (dataMeta.RangeIndex != -1)
             {
                 extraChecks.Append($"{dataType.StateName}.HasFlag({objGen.Name}.{dataType.EnumName}.Range{dataMeta.RangeIndex})");
+            }
+            if (fieldData.HasVersioning)
+            {
+                extraChecks.Append(VersioningModule.GetVersionIfCheck(fieldData, "_package.FormVersion!.FormVersion!.Value"));
             }
             fg.AppendLine($"private int _{typeGen.Name}Location => {posAccessor};");
             switch (typeGen.GetFieldData().BinaryOverlayFallback)

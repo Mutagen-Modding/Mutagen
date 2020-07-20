@@ -21,15 +21,15 @@ namespace Mutagen.Bethesda.Preprocessing
         /// </summary>
         /// <param name="streamCreator">A func to create an input stream</param>
         /// <param name="outputStream">Stream to write output to</param>
-        /// <param name="gameMode">Type of game the mod stream is reading</param>
+        /// <param name="release">Type of game the mod stream is reading</param>
         /// <param name="interest">Optional specification of which record types to process</param>
         public static void Decompress(
             Func<Stream> streamCreator,
             Stream outputStream,
-            GameMode gameMode,
+            GameRelease release,
             RecordInterest? interest = null)
         {
-            var meta = new ParsingBundle(GameConstants.Get(gameMode));
+            var meta = new ParsingBundle(GameConstants.Get(release));
             using var inputStream = new MutagenBinaryReadStream(streamCreator(), meta);
             using var inputStreamJumpback = new MutagenBinaryReadStream(streamCreator(), meta);
             using var writer = new System.IO.BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Preprocessing
 
                 // If complete overall, return
                 if (inputStream.Complete) break;
-                var majorMeta = inputStream.ReadMajorRecord();
+                var majorMeta = inputStream.ReadMajorRecord(readSafe: true);
                 var len = majorMeta.ContentLength;
                 using (var frame = MutagenFrame.ByLength(
                     reader: inputStream,
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Preprocessing
                     var decompressed = frame.Decompress();
                     var decompressedLen = decompressed.TotalLength;
                     var lengthDiff = decompressedLen - len;
-                    var majorMetaSpan = majorMeta.Span.ToArray();
+                    var majorMetaSpan = majorMeta.HeaderData.ToArray();
 
                     // Write major Meta
                     var writableMajorMeta = meta.Constants.MajorRecordWritable(majorMetaSpan.AsSpan());

@@ -15,14 +15,8 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -54,8 +48,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Triangles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<P3Int16> _Triangles = new ExtendedList<P3Int16>();
-        public ExtendedList<P3Int16> Triangles
+        private IExtendedList<P3Int16> _Triangles = new ExtendedList<P3Int16>();
+        public IExtendedList<P3Int16> Triangles
         {
             get => this._Triangles;
             protected set => this._Triangles = value;
@@ -68,8 +62,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Vertices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<P3Float> _Vertices = new ExtendedList<P3Float>();
-        public ExtendedList<P3Float> Vertices
+        private IExtendedList<P3Float> _Vertices = new ExtendedList<P3Float>();
+        public IExtendedList<P3Float> Vertices
         {
             get => this._Vertices;
             protected set => this._Vertices = value;
@@ -107,137 +101,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((IslandDataCommon)((IIslandDataGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => IslandDataXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((IslandDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static IslandData CreateFromXml(
-            XElement node,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static IslandData CreateFromXml(
-            XElement node,
-            out IslandData.ErrorMask errorMask,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = IslandData.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static IslandData CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new IslandData();
-            ((IslandDataSetterCommon)((IIslandDataGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static IslandData CreateFromXml(
-            string path,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static IslandData CreateFromXml(
-            string path,
-            out IslandData.ErrorMask errorMask,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static IslandData CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static IslandData CreateFromXml(
-            Stream stream,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static IslandData CreateFromXml(
-            Stream stream,
-            out IslandData.ErrorMask errorMask,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static IslandData CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -810,14 +673,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new P3Float Min { get; set; }
         new P3Float Max { get; set; }
-        new ExtendedList<P3Int16> Triangles { get; }
-        new ExtendedList<P3Float> Vertices { get; }
+        new IExtendedList<P3Int16> Triangles { get; }
+        new IExtendedList<P3Float> Vertices { get; }
     }
 
     public partial interface IIslandDataGetter :
         ILoquiObject,
         ILoquiObject<IIslandDataGetter>,
-        IXmlItem,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -987,131 +849,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IIslandData item,
-            XElement node,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IIslandData item,
-            XElement node,
-            out IslandData.ErrorMask errorMask,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = IslandData.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IIslandData item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((IslandDataSetterCommon)((IIslandDataGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IIslandData item,
-            string path,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IIslandData item,
-            string path,
-            out IslandData.ErrorMask errorMask,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IIslandData item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IIslandData item,
-            Stream stream,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IIslandData item,
-            Stream stream,
-            out IslandData.ErrorMask errorMask,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IIslandData item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1318,15 +1055,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case IslandData_FieldIndex.Max:
                     return typeof(P3Float);
                 case IslandData_FieldIndex.Triangles:
-                    return typeof(ExtendedList<P3Int16>);
+                    return typeof(IExtendedList<P3Int16>);
                 case IslandData_FieldIndex.Vertices:
-                    return typeof(ExtendedList<P3Float>);
+                    return typeof(IExtendedList<P3Float>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(IslandDataXmlWriteTranslation);
         public static readonly Type BinaryWriteTranslation = typeof(IslandDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1374,34 +1110,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Triangles.Clear();
             item.Vertices.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IIslandData item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    IslandDataXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1734,435 +1442,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class IslandDataXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static IslandDataXmlWriteTranslation Instance = new IslandDataXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IIslandDataGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)IslandData_FieldIndex.Min) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Min),
-                    item: item.Min,
-                    fieldIndex: (int)IslandData_FieldIndex.Min,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)IslandData_FieldIndex.Max) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Max),
-                    item: item.Max,
-                    fieldIndex: (int)IslandData_FieldIndex.Max,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)IslandData_FieldIndex.Triangles) ?? true))
-            {
-                ListXmlTranslation<P3Int16>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Triangles),
-                    item: item.Triangles,
-                    fieldIndex: (int)IslandData_FieldIndex.Triangles,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)IslandData_FieldIndex.Triangles),
-                    transl: (XElement subNode, P3Int16 subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        P3Int16XmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)IslandData_FieldIndex.Vertices) ?? true))
-            {
-                ListXmlTranslation<P3Float>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Vertices),
-                    item: item.Vertices,
-                    fieldIndex: (int)IslandData_FieldIndex.Vertices,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)IslandData_FieldIndex.Vertices),
-                    transl: (XElement subNode, P3Float subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        P3FloatXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IIslandDataGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.IslandData");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.IslandData");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IIslandDataGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IIslandDataGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IIslandDataGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class IslandDataXmlCreateTranslation
-    {
-        public readonly static IslandDataXmlCreateTranslation Instance = new IslandDataXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IIslandData item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    IslandDataXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IIslandData item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Min":
-                    errorMask?.PushIndex((int)IslandData_FieldIndex.Min);
-                    try
-                    {
-                        item.Min = P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Max":
-                    errorMask?.PushIndex((int)IslandData_FieldIndex.Max);
-                    try
-                    {
-                        item.Max = P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Triangles":
-                    errorMask?.PushIndex((int)IslandData_FieldIndex.Triangles);
-                    try
-                    {
-                        if (ListXmlTranslation<P3Int16>.Instance.Parse(
-                            node: node,
-                            enumer: out var TrianglesItem,
-                            transl: P3Int16XmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Triangles.SetTo(TrianglesItem);
-                        }
-                        else
-                        {
-                            item.Triangles.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Vertices":
-                    errorMask?.PushIndex((int)IslandData_FieldIndex.Vertices);
-                    try
-                    {
-                        if (ListXmlTranslation<P3Float>.Instance.Parse(
-                            node: node,
-                            enumer: out var VerticesItem,
-                            transl: P3FloatXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Vertices.SetTo(VerticesItem);
-                        }
-                        else
-                        {
-                            item.Vertices.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class IslandDataXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IIslandDataGetter item,
-            XElement node,
-            out IslandData.ErrorMask errorMask,
-            IslandData.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((IslandDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = IslandData.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IIslandDataGetter item,
-            string path,
-            out IslandData.ErrorMask errorMask,
-            IslandData.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IIslandDataGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IIslandDataGetter item,
-            Stream stream,
-            out IslandData.ErrorMask errorMask,
-            IslandData.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IIslandDataGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IIslandDataGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((IslandDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IIslandDataGetter item,
-            XElement node,
-            string? name = null,
-            IslandData.TranslationMask? translationMask = null)
-        {
-            ((IslandDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IIslandDataGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((IslandDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IIslandDataGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((IslandDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2288,23 +1567,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIslandDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => IslandDataXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((IslandDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => IslandDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -2321,11 +1583,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P3Float Min => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
         public P3Float Max => P3FloatBinaryTranslation.Read(_data.Slice(0xC, 0xC));
         #region Triangles
-        public IReadOnlyList<P3Int16> Triangles => BinaryOverlayList<P3Int16>.FactoryByCountLength(_data.Slice(0x18), _package, 6, countLength: 4, (s, p) => P3Int16BinaryTranslation.Read(s));
+        public IReadOnlyList<P3Int16> Triangles => BinaryOverlayList.FactoryByCountLength<P3Int16>(_data.Slice(0x18), _package, 6, countLength: 4, (s, p) => P3Int16BinaryTranslation.Read(s));
         protected int TrianglesEndingPos;
         #endregion
         #region Vertices
-        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList<P3Float>.FactoryByCountLength(_data.Slice(TrianglesEndingPos), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation.Read(s));
+        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList.FactoryByCountLength<P3Float>(_data.Slice(TrianglesEndingPos), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation.Read(s));
         protected int VerticesEndingPos;
         #endregion
         partial void CustomFactoryEnd(

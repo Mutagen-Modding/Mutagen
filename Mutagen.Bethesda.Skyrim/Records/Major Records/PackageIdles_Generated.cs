@@ -15,14 +15,8 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -54,8 +48,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IdleAnimation>> _Animations = new ExtendedList<IFormLink<IdleAnimation>>();
-        public ExtendedList<IFormLink<IdleAnimation>> Animations
+        private IExtendedList<IFormLink<IdleAnimation>> _Animations = new ExtendedList<IFormLink<IdleAnimation>>();
+        public IExtendedList<IFormLink<IdleAnimation>> Animations
         {
             get => this._Animations;
             protected set => this._Animations = value;
@@ -93,137 +87,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PackageIdlesXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PackageIdlesXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static PackageIdles CreateFromXml(
-            XElement node,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static PackageIdles CreateFromXml(
-            XElement node,
-            out PackageIdles.ErrorMask errorMask,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PackageIdles.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static PackageIdles CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new PackageIdles();
-            ((PackageIdlesSetterCommon)((IPackageIdlesGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static PackageIdles CreateFromXml(
-            string path,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PackageIdles CreateFromXml(
-            string path,
-            out PackageIdles.ErrorMask errorMask,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PackageIdles CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static PackageIdles CreateFromXml(
-            Stream stream,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PackageIdles CreateFromXml(
-            Stream stream,
-            out PackageIdles.ErrorMask errorMask,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PackageIdles CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -624,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PackageIdles_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PackageIdles_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => PackageIdlesCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -705,13 +568,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new PackageIdles.Types Type { get; set; }
         new Single TimerSetting { get; set; }
-        new ExtendedList<IFormLink<IdleAnimation>> Animations { get; }
+        new IExtendedList<IFormLink<IdleAnimation>> Animations { get; }
     }
 
     public partial interface IPackageIdlesGetter :
         ILoquiObject,
         ILoquiObject<IPackageIdlesGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -881,131 +743,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPackageIdles item,
-            XElement node,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPackageIdles item,
-            XElement node,
-            out PackageIdles.ErrorMask errorMask,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PackageIdles.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageIdles item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((PackageIdlesSetterCommon)((IPackageIdlesGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageIdles item,
-            string path,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageIdles item,
-            string path,
-            out PackageIdles.ErrorMask errorMask,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageIdles item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IPackageIdles item,
-            Stream stream,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageIdles item,
-            Stream stream,
-            out PackageIdles.ErrorMask errorMask,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPackageIdles item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1202,13 +939,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PackageIdles_FieldIndex.TimerSetting:
                     return typeof(Single);
                 case PackageIdles_FieldIndex.Animations:
-                    return typeof(ExtendedList<IFormLink<IdleAnimation>>);
+                    return typeof(IExtendedList<IFormLink<IdleAnimation>>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(PackageIdlesXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.IDLF;
         public static readonly Type BinaryWriteTranslation = typeof(PackageIdlesBinaryWriteTranslation);
         #region Interface
@@ -1256,34 +992,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TimerSetting = default;
             item.Animations.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IPackageIdles item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PackageIdlesXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1581,389 +1289,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class PackageIdlesXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static PackageIdlesXmlWriteTranslation Instance = new PackageIdlesXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IPackageIdlesGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)PackageIdles_FieldIndex.Type) ?? true))
-            {
-                EnumXmlTranslation<PackageIdles.Types>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)PackageIdles_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PackageIdles_FieldIndex.TimerSetting) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TimerSetting),
-                    item: item.TimerSetting,
-                    fieldIndex: (int)PackageIdles_FieldIndex.TimerSetting,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PackageIdles_FieldIndex.Animations) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IIdleAnimationGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Animations),
-                    item: item.Animations,
-                    fieldIndex: (int)PackageIdles_FieldIndex.Animations,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PackageIdles_FieldIndex.Animations),
-                    transl: (XElement subNode, IFormLink<IIdleAnimationGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IPackageIdlesGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.PackageIdles");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.PackageIdles");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPackageIdlesGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IPackageIdlesGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IPackageIdlesGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class PackageIdlesXmlCreateTranslation
-    {
-        public readonly static PackageIdlesXmlCreateTranslation Instance = new PackageIdlesXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IPackageIdles item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PackageIdlesXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IPackageIdles item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Type":
-                    errorMask?.PushIndex((int)PackageIdles_FieldIndex.Type);
-                    try
-                    {
-                        item.Type = EnumXmlTranslation<PackageIdles.Types>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TimerSetting":
-                    errorMask?.PushIndex((int)PackageIdles_FieldIndex.TimerSetting);
-                    try
-                    {
-                        item.TimerSetting = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Animations":
-                    errorMask?.PushIndex((int)PackageIdles_FieldIndex.Animations);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<IdleAnimation>>.Instance.Parse(
-                            node: node,
-                            enumer: out var AnimationsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Animations.SetTo(AnimationsItem);
-                        }
-                        else
-                        {
-                            item.Animations.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class PackageIdlesXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IPackageIdlesGetter item,
-            XElement node,
-            out PackageIdles.ErrorMask errorMask,
-            PackageIdles.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((PackageIdlesXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PackageIdles.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IPackageIdlesGetter item,
-            string path,
-            out PackageIdles.ErrorMask errorMask,
-            PackageIdles.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPackageIdlesGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPackageIdlesGetter item,
-            Stream stream,
-            out PackageIdles.ErrorMask errorMask,
-            PackageIdles.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPackageIdlesGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IPackageIdlesGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((PackageIdlesXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IPackageIdlesGetter item,
-            XElement node,
-            string? name = null,
-            PackageIdles.TranslationMask? translationMask = null)
-        {
-            ((PackageIdlesXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IPackageIdlesGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PackageIdlesXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPackageIdlesGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((PackageIdlesXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -2049,10 +1374,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPackageIdles item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2062,17 +1388,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.IDLF:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageIdles_FieldIndex.Type) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageIdles_FieldIndex.Type) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<PackageIdles.Types>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.Type);
+                    return (int)PackageIdles_FieldIndex.Type;
                 }
                 case RecordTypeInts.IDLT:
                 {
                     PackageIdlesBinaryCreateTranslation.FillBinaryTimerSettingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.TimerSetting);
+                    return (int)PackageIdles_FieldIndex.TimerSetting;
                 }
                 case RecordTypeInts.IDLA:
                 case RecordTypeInts.IDLC:
@@ -2080,10 +1406,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     PackageIdlesBinaryCreateTranslation.FillBinaryAnimationsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.Animations);
+                    return (int)PackageIdles_FieldIndex.Animations;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2152,23 +1478,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageIdlesCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageIdlesCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => PackageIdlesXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PackageIdlesXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PackageIdlesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -2184,7 +1493,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Type
         private int? _TypeLocation;
-        public PackageIdles.Types Type => _TypeLocation.HasValue ? (PackageIdles.Types)HeaderTranslation.ExtractSubrecordSpan(_data, _TypeLocation!.Value, _package.MetaData.Constants)[0] : default(PackageIdles.Types);
+        public PackageIdles.Types Type => _TypeLocation.HasValue ? (PackageIdles.Types)HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)[0] : default(PackageIdles.Types);
         #endregion
         #region TimerSetting
         partial void TimerSettingCustomParse(
@@ -2246,12 +1555,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2259,9 +1569,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.IDLF:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageIdles_FieldIndex.Type) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageIdles_FieldIndex.Type) return ParseResult.Stop;
                     _TypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.Type);
+                    return (int)PackageIdles_FieldIndex.Type;
                 }
                 case RecordTypeInts.IDLT:
                 {
@@ -2269,7 +1579,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.TimerSetting);
+                    return (int)PackageIdles_FieldIndex.TimerSetting;
                 }
                 case RecordTypeInts.IDLA:
                 case RecordTypeInts.IDLC:
@@ -2280,10 +1590,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.Animations);
+                    return (int)PackageIdles_FieldIndex.Animations;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

@@ -53,7 +53,7 @@
   </Object>
   <Object name="RegionMap" objType="Subrecord" baseClass="RegionData" GUID="1c00a511-3a77-4aa9-990a-02cbb48c3478" ID="264">
     <Fields>
-      <String name="Name" recordType="RDMP" />
+      <String name="Name" recordType="RDMP" translated="Normal" />
     </Fields>
   </Object>
   <Object name="RegionObjects" objType="Subrecord" baseClass="RegionData" GUID="95aee256-1c1e-4ede-bb5a-af5c28507e23" ID="265">

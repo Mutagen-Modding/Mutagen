@@ -19,14 +19,8 @@ using System.Drawing;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -677,135 +671,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => EffectShaderXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((EffectShaderXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new EffectShader CreateFromXml(
-            XElement node,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static EffectShader CreateFromXml(
-            XElement node,
-            out EffectShader.ErrorMask errorMask,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = EffectShader.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static EffectShader CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new EffectShader();
-            ((EffectShaderSetterCommon)((IEffectShaderGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static EffectShader CreateFromXml(
-            string path,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static EffectShader CreateFromXml(
-            string path,
-            out EffectShader.ErrorMask errorMask,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static EffectShader CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static EffectShader CreateFromXml(
-            Stream stream,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static EffectShader CreateFromXml(
-            Stream stream,
-            out EffectShader.ErrorMask errorMask,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static EffectShader CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -927,7 +792,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -1040,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -4018,7 +3883,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = EffectShader_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = EffectShader_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => EffectShaderCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4239,11 +4104,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEffectShaderGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IEffectShaderGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => EffectShader_Registration.Instance;
+        static new ILoquiRegistration Registration => EffectShader_Registration.Instance;
         String? FillTexture { get; }
         String? ParticleShaderTexture { get; }
         String? HolesTexture { get; }
@@ -4484,131 +4348,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IEffectShaderInternal item,
-            XElement node,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IEffectShaderInternal item,
-            XElement node,
-            out EffectShader.ErrorMask errorMask,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = EffectShader.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IEffectShaderInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IEffectShaderInternal item,
-            string path,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IEffectShaderInternal item,
-            string path,
-            out EffectShader.ErrorMask errorMask,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IEffectShaderInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IEffectShaderInternal item,
-            Stream stream,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IEffectShaderInternal item,
-            Stream stream,
-            out EffectShader.ErrorMask errorMask,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IEffectShaderInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            EffectShader.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -4646,7 +4385,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -6051,7 +5790,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(EffectShaderXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.EFSH;
         public static readonly Type BinaryWriteTranslation = typeof(EffectShaderBinaryWriteTranslation);
         #region Interface
@@ -6213,90 +5951,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IEffectShaderInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IEffectShaderInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IEffectShaderInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                item.DATADataTypeState |= EffectShader.DATADataType.Break0;
-                item.DATADataTypeState |= EffectShader.DATADataType.Break1;
-                item.DATADataTypeState |= EffectShader.DATADataType.Break2;
-                item.DATADataTypeState |= EffectShader.DATADataType.Break3;
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    EffectShaderXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (EffectShader)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (EffectShader)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -7087,7 +6741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (EffectShader_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (EffectShader_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (EffectShader_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (EffectShader_FieldIndex)((int)index);
@@ -7108,7 +6762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (EffectShader_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (EffectShader_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (EffectShader_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (EffectShader_FieldIndex)((int)index);
@@ -8000,3097 +7654,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class EffectShaderXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static EffectShaderXmlWriteTranslation Instance = new EffectShaderXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IEffectShaderGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.FillTexture != null)
-                && (translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FillTexture),
-                    item: item.FillTexture,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillTexture,
-                    errorMask: errorMask);
-            }
-            if ((item.ParticleShaderTexture != null)
-                && (translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleShaderTexture),
-                    item: item.ParticleShaderTexture,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleShaderTexture,
-                    errorMask: errorMask);
-            }
-            if ((item.HolesTexture != null)
-                && (translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesTexture) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HolesTexture),
-                    item: item.HolesTexture,
-                    fieldIndex: (int)EffectShader_FieldIndex.HolesTexture,
-                    errorMask: errorMask);
-            }
-            if ((item.MembranePaletteTexture != null)
-                && (translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembranePaletteTexture) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MembranePaletteTexture),
-                    item: item.MembranePaletteTexture,
-                    fieldIndex: (int)EffectShader_FieldIndex.MembranePaletteTexture,
-                    errorMask: errorMask);
-            }
-            if ((item.ParticlePaletteTexture != null)
-                && (translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticlePaletteTexture) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticlePaletteTexture),
-                    item: item.ParticlePaletteTexture,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticlePaletteTexture,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)EffectShader_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneSourceBlendMode) ?? true))
-            {
-                EnumXmlTranslation<EffectShader.BlendMode>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MembraneSourceBlendMode),
-                    item: item.MembraneSourceBlendMode,
-                    fieldIndex: (int)EffectShader_FieldIndex.MembraneSourceBlendMode,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneBlendOperation) ?? true))
-            {
-                EnumXmlTranslation<EffectShader.BlendOperation>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MembraneBlendOperation),
-                    item: item.MembraneBlendOperation,
-                    fieldIndex: (int)EffectShader_FieldIndex.MembraneBlendOperation,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneZTest) ?? true))
-            {
-                EnumXmlTranslation<EffectShader.ZTest>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MembraneZTest),
-                    item: item.MembraneZTest,
-                    fieldIndex: (int)EffectShader_FieldIndex.MembraneZTest,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FillColorKey1),
-                    item: item.FillColorKey1,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillColorKey1,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaFadeInTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FillAlphaFadeInTime),
-                    item: item.FillAlphaFadeInTime,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillAlphaFadeInTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFullAlphaTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FillFullAlphaTime),
-                    item: item.FillFullAlphaTime,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillFullAlphaTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFadeOutTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FillFadeOutTime),
-                    item: item.FillFadeOutTime,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillFadeOutTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillPersistentAlphaRatio) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FillPersistentAlphaRatio),
-                    item: item.FillPersistentAlphaRatio,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillPersistentAlphaRatio,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaPulseAmplitude) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FillAlphaPulseAmplitude),
-                    item: item.FillAlphaPulseAmplitude,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillAlphaPulseAmplitude,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaPulseFrequency) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FillAlphaPulseFrequency),
-                    item: item.FillAlphaPulseFrequency,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillAlphaPulseFrequency,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureAnimationSpeedU) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FillTextureAnimationSpeedU),
-                    item: item.FillTextureAnimationSpeedU,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillTextureAnimationSpeedU,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureAnimationSpeedV) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FillTextureAnimationSpeedV),
-                    item: item.FillTextureAnimationSpeedV,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillTextureAnimationSpeedV,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFallOff) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EdgeEffectFallOff),
-                    item: item.EdgeEffectFallOff,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFallOff,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectColor) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EdgeEffectColor),
-                    item: item.EdgeEffectColor,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectColor,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EdgeEffectAlphaFadeInTime),
-                    item: item.EdgeEffectAlphaFadeInTime,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EdgeEffectFullAlphaTime),
-                    item: item.EdgeEffectFullAlphaTime,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EdgeEffectAlphaFadeOutTime),
-                    item: item.EdgeEffectAlphaFadeOutTime,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EdgeEffectPersistentAlphaRatio),
-                    item: item.EdgeEffectPersistentAlphaRatio,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EdgeEffectAlphaPulseAmplitude),
-                    item: item.EdgeEffectAlphaPulseAmplitude,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EdgeEffectAlphaPulseFrequency),
-                    item: item.EdgeEffectAlphaPulseFrequency,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFullAlphaRatio) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FillFullAlphaRatio),
-                    item: item.FillFullAlphaRatio,
-                    fieldIndex: (int)EffectShader_FieldIndex.FillFullAlphaRatio,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EdgeEffectFullAlphaRatio),
-                    item: item.EdgeEffectFullAlphaRatio,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneDestBlendMode) ?? true))
-            {
-                EnumXmlTranslation<EffectShader.BlendMode>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MembraneDestBlendMode),
-                    item: item.MembraneDestBlendMode,
-                    fieldIndex: (int)EffectShader_FieldIndex.MembraneDestBlendMode,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleSourceBlendMode) ?? true))
-            {
-                EnumXmlTranslation<EffectShader.BlendMode>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleSourceBlendMode),
-                    item: item.ParticleSourceBlendMode,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleSourceBlendMode,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleBlendOperation) ?? true))
-            {
-                EnumXmlTranslation<EffectShader.BlendOperation>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleBlendOperation),
-                    item: item.ParticleBlendOperation,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleBlendOperation,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleZTest) ?? true))
-            {
-                EnumXmlTranslation<EffectShader.ZTest>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleZTest),
-                    item: item.ParticleZTest,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleZTest,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleDestBlendMode) ?? true))
-            {
-                EnumXmlTranslation<EffectShader.BlendMode>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleDestBlendMode),
-                    item: item.ParticleDestBlendMode,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleDestBlendMode,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleBirthRampUpTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleBirthRampUpTime),
-                    item: item.ParticleBirthRampUpTime,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleBirthRampUpTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleFullBirthTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleFullBirthTime),
-                    item: item.ParticleFullBirthTime,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleFullBirthTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleBirthRampDownTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleBirthRampDownTime),
-                    item: item.ParticleBirthRampDownTime,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleBirthRampDownTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleFullBirthRatio) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleFullBirthRatio),
-                    item: item.ParticleFullBirthRatio,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleFullBirthRatio,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticlePeristentCount) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticlePeristentCount),
-                    item: item.ParticlePeristentCount,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticlePeristentCount,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleLifetime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleLifetime),
-                    item: item.ParticleLifetime,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleLifetime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleLifetimePlusMinus) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleLifetimePlusMinus),
-                    item: item.ParticleLifetimePlusMinus,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleLifetimePlusMinus,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialSpeedAlongNormal) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleInitialSpeedAlongNormal),
-                    item: item.ParticleInitialSpeedAlongNormal,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleInitialSpeedAlongNormal,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAccelerationAlongNormal) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleAccelerationAlongNormal),
-                    item: item.ParticleAccelerationAlongNormal,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleAccelerationAlongNormal,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialVelocity1) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleInitialVelocity1),
-                    item: item.ParticleInitialVelocity1,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleInitialVelocity1,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialVelocity2) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleInitialVelocity2),
-                    item: item.ParticleInitialVelocity2,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleInitialVelocity2,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialVelocity3) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleInitialVelocity3),
-                    item: item.ParticleInitialVelocity3,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleInitialVelocity3,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAcceleration1) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleAcceleration1),
-                    item: item.ParticleAcceleration1,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleAcceleration1,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAcceleration2) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleAcceleration2),
-                    item: item.ParticleAcceleration2,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleAcceleration2,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAcceleration3) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleAcceleration3),
-                    item: item.ParticleAcceleration3,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleAcceleration3,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey1) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleScaleKey1),
-                    item: item.ParticleScaleKey1,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleScaleKey1,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey2) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleScaleKey2),
-                    item: item.ParticleScaleKey2,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleScaleKey2,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey1Time) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleScaleKey1Time),
-                    item: item.ParticleScaleKey1Time,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleScaleKey1Time,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey2Time) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleScaleKey2Time),
-                    item: item.ParticleScaleKey2Time,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleScaleKey2Time,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ColorKey1),
-                    item: item.ColorKey1,
-                    fieldIndex: (int)EffectShader_FieldIndex.ColorKey1,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ColorKey2),
-                    item: item.ColorKey2,
-                    fieldIndex: (int)EffectShader_FieldIndex.ColorKey2,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ColorKey3),
-                    item: item.ColorKey3,
-                    fieldIndex: (int)EffectShader_FieldIndex.ColorKey3,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1Alpha) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ColorKey1Alpha),
-                    item: item.ColorKey1Alpha,
-                    fieldIndex: (int)EffectShader_FieldIndex.ColorKey1Alpha,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2Alpha) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ColorKey2Alpha),
-                    item: item.ColorKey2Alpha,
-                    fieldIndex: (int)EffectShader_FieldIndex.ColorKey2Alpha,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3Alpha) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ColorKey3Alpha),
-                    item: item.ColorKey3Alpha,
-                    fieldIndex: (int)EffectShader_FieldIndex.ColorKey3Alpha,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1Time) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ColorKey1Time),
-                    item: item.ColorKey1Time,
-                    fieldIndex: (int)EffectShader_FieldIndex.ColorKey1Time,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2Time) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ColorKey2Time),
-                    item: item.ColorKey2Time,
-                    fieldIndex: (int)EffectShader_FieldIndex.ColorKey2Time,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3Time) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ColorKey3Time),
-                    item: item.ColorKey3Time,
-                    fieldIndex: (int)EffectShader_FieldIndex.ColorKey3Time,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialSpeedAlongNormalPlusMinus) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleInitialSpeedAlongNormalPlusMinus),
-                    item: item.ParticleInitialSpeedAlongNormalPlusMinus,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleInitialSpeedAlongNormalPlusMinus,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialRotationDegree) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleInitialRotationDegree),
-                    item: item.ParticleInitialRotationDegree,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleInitialRotationDegree,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialRotationDegreePlusMinus) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleInitialRotationDegreePlusMinus),
-                    item: item.ParticleInitialRotationDegreePlusMinus,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleInitialRotationDegreePlusMinus,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleRotationSpeedDegreePerSec) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleRotationSpeedDegreePerSec),
-                    item: item.ParticleRotationSpeedDegreePerSec,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleRotationSpeedDegreePerSec,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleRotationSpeedDegreePerSecPlusMinus) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParticleRotationSpeedDegreePerSecPlusMinus),
-                    item: item.ParticleRotationSpeedDegreePerSecPlusMinus,
-                    fieldIndex: (int)EffectShader_FieldIndex.ParticleRotationSpeedDegreePerSecPlusMinus,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModels) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AddonModels),
-                    item: item.AddonModels.FormKey,
-                    fieldIndex: (int)EffectShader_FieldIndex.AddonModels,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesStartTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HolesStartTime),
-                    item: item.HolesStartTime,
-                    fieldIndex: (int)EffectShader_FieldIndex.HolesStartTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesEndTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HolesEndTime),
-                    item: item.HolesEndTime,
-                    fieldIndex: (int)EffectShader_FieldIndex.HolesEndTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesStartValue) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HolesStartValue),
-                    item: item.HolesStartValue,
-                    fieldIndex: (int)EffectShader_FieldIndex.HolesStartValue,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesEndValue) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HolesEndValue),
-                    item: item.HolesEndValue,
-                    fieldIndex: (int)EffectShader_FieldIndex.HolesEndValue,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeWidth) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EdgeWidth),
-                    item: item.EdgeWidth,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeWidth,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeColor) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EdgeColor),
-                    item: item.EdgeColor,
-                    fieldIndex: (int)EffectShader_FieldIndex.EdgeColor,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ExplosionWindSpeed) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ExplosionWindSpeed),
-                    item: item.ExplosionWindSpeed,
-                    fieldIndex: (int)EffectShader_FieldIndex.ExplosionWindSpeed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.TextureCountU) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TextureCountU),
-                    item: item.TextureCountU,
-                    fieldIndex: (int)EffectShader_FieldIndex.TextureCountU,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.TextureCountV) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TextureCountV),
-                    item: item.TextureCountV,
-                    fieldIndex: (int)EffectShader_FieldIndex.TextureCountV,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsFadeInTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AddonModelsFadeInTime),
-                    item: item.AddonModelsFadeInTime,
-                    fieldIndex: (int)EffectShader_FieldIndex.AddonModelsFadeInTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsFadeOutTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AddonModelsFadeOutTime),
-                    item: item.AddonModelsFadeOutTime,
-                    fieldIndex: (int)EffectShader_FieldIndex.AddonModelsFadeOutTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleStart) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AddonModelsScaleStart),
-                    item: item.AddonModelsScaleStart,
-                    fieldIndex: (int)EffectShader_FieldIndex.AddonModelsScaleStart,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleEnd) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AddonModelsScaleEnd),
-                    item: item.AddonModelsScaleEnd,
-                    fieldIndex: (int)EffectShader_FieldIndex.AddonModelsScaleEnd,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleInTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AddonModelsScaleInTime),
-                    item: item.AddonModelsScaleInTime,
-                    fieldIndex: (int)EffectShader_FieldIndex.AddonModelsScaleInTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleOutTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AddonModelsScaleOutTime),
-                    item: item.AddonModelsScaleOutTime,
-                    fieldIndex: (int)EffectShader_FieldIndex.AddonModelsScaleOutTime,
-                    errorMask: errorMask);
-            }
-            if (!item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0))
-            {
-                if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AmbientSound) ?? true))
-                {
-                    FormKeyXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.AmbientSound),
-                        item: item.AmbientSound.FormKey,
-                        fieldIndex: (int)EffectShader_FieldIndex.AmbientSound,
-                        errorMask: errorMask);
-                }
-                if (!item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2) ?? true))
-                    {
-                        ColorXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.FillColorKey2),
-                            item: item.FillColorKey2,
-                            fieldIndex: (int)EffectShader_FieldIndex.FillColorKey2,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3) ?? true))
-                    {
-                        ColorXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.FillColorKey3),
-                            item: item.FillColorKey3,
-                            fieldIndex: (int)EffectShader_FieldIndex.FillColorKey3,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1Scale) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.FillColorKey1Scale),
-                            item: item.FillColorKey1Scale,
-                            fieldIndex: (int)EffectShader_FieldIndex.FillColorKey1Scale,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2Scale) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.FillColorKey2Scale),
-                            item: item.FillColorKey2Scale,
-                            fieldIndex: (int)EffectShader_FieldIndex.FillColorKey2Scale,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3Scale) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.FillColorKey3Scale),
-                            item: item.FillColorKey3Scale,
-                            fieldIndex: (int)EffectShader_FieldIndex.FillColorKey3Scale,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1Time) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.FillColorKey1Time),
-                            item: item.FillColorKey1Time,
-                            fieldIndex: (int)EffectShader_FieldIndex.FillColorKey1Time,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2Time) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.FillColorKey2Time),
-                            item: item.FillColorKey2Time,
-                            fieldIndex: (int)EffectShader_FieldIndex.FillColorKey2Time,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3Time) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.FillColorKey3Time),
-                            item: item.FillColorKey3Time,
-                            fieldIndex: (int)EffectShader_FieldIndex.FillColorKey3Time,
-                            errorMask: errorMask);
-                    }
-                    if (!item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2))
-                    {
-                        if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorScale) ?? true))
-                        {
-                            FloatXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.ColorScale),
-                                item: item.ColorScale,
-                                fieldIndex: (int)EffectShader_FieldIndex.ColorScale,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.BirthPositionOffset) ?? true))
-                        {
-                            FloatXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.BirthPositionOffset),
-                                item: item.BirthPositionOffset,
-                                fieldIndex: (int)EffectShader_FieldIndex.BirthPositionOffset,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.BirthPositionOffsetRangePlusMinus) ?? true))
-                        {
-                            FloatXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.BirthPositionOffsetRangePlusMinus),
-                                item: item.BirthPositionOffsetRangePlusMinus,
-                                fieldIndex: (int)EffectShader_FieldIndex.BirthPositionOffsetRangePlusMinus,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedStartFrame) ?? true))
-                        {
-                            UInt32XmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.ParticleAnimatedStartFrame),
-                                item: item.ParticleAnimatedStartFrame,
-                                fieldIndex: (int)EffectShader_FieldIndex.ParticleAnimatedStartFrame,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedStartFrameVariation) ?? true))
-                        {
-                            UInt32XmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.ParticleAnimatedStartFrameVariation),
-                                item: item.ParticleAnimatedStartFrameVariation,
-                                fieldIndex: (int)EffectShader_FieldIndex.ParticleAnimatedStartFrameVariation,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedEndFrame) ?? true))
-                        {
-                            UInt32XmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.ParticleAnimatedEndFrame),
-                                item: item.ParticleAnimatedEndFrame,
-                                fieldIndex: (int)EffectShader_FieldIndex.ParticleAnimatedEndFrame,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedLoopStartFrame) ?? true))
-                        {
-                            UInt32XmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.ParticleAnimatedLoopStartFrame),
-                                item: item.ParticleAnimatedLoopStartFrame,
-                                fieldIndex: (int)EffectShader_FieldIndex.ParticleAnimatedLoopStartFrame,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedLoopStartVariation) ?? true))
-                        {
-                            UInt32XmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.ParticleAnimatedLoopStartVariation),
-                                item: item.ParticleAnimatedLoopStartVariation,
-                                fieldIndex: (int)EffectShader_FieldIndex.ParticleAnimatedLoopStartVariation,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedFrameCount) ?? true))
-                        {
-                            UInt32XmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.ParticleAnimatedFrameCount),
-                                item: item.ParticleAnimatedFrameCount,
-                                fieldIndex: (int)EffectShader_FieldIndex.ParticleAnimatedFrameCount,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedFrameCountVariation) ?? true))
-                        {
-                            UInt32XmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.ParticleAnimatedFrameCountVariation),
-                                item: item.ParticleAnimatedFrameCountVariation,
-                                fieldIndex: (int)EffectShader_FieldIndex.ParticleAnimatedFrameCountVariation,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Flags) ?? true))
-                        {
-                            EnumXmlTranslation<EffectShader.Flag>.Instance.Write(
-                                node: node,
-                                name: nameof(item.Flags),
-                                item: item.Flags,
-                                fieldIndex: (int)EffectShader_FieldIndex.Flags,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureScaleU) ?? true))
-                        {
-                            FloatXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.FillTextureScaleU),
-                                item: item.FillTextureScaleU,
-                                fieldIndex: (int)EffectShader_FieldIndex.FillTextureScaleU,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureScaleV) ?? true))
-                        {
-                            FloatXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.FillTextureScaleV),
-                                item: item.FillTextureScaleV,
-                                fieldIndex: (int)EffectShader_FieldIndex.FillTextureScaleV,
-                                errorMask: errorMask);
-                        }
-                        if (!item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Break3))
-                        {
-                            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.SceneGraphEmitDepthLimit) ?? true))
-                            {
-                                UInt32XmlTranslation.Instance.Write(
-                                    node: node,
-                                    name: nameof(item.SceneGraphEmitDepthLimit),
-                                    item: item.SceneGraphEmitDepthLimit,
-                                    fieldIndex: (int)EffectShader_FieldIndex.SceneGraphEmitDepthLimit,
-                                    errorMask: errorMask);
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                node.Add(new XElement("HasDATADataType"));
-            }
-            if ((translationMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<EffectShader.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)EffectShader_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IEffectShaderGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.EffectShader");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.EffectShader");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IEffectShaderGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IEffectShaderGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IEffectShaderGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class EffectShaderXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static EffectShaderXmlCreateTranslation Instance = new EffectShaderXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IEffectShaderInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    EffectShaderXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IEffectShaderInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "FillTexture":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTexture);
-                    try
-                    {
-                        item.FillTexture = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleShaderTexture":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderTexture);
-                    try
-                    {
-                        item.ParticleShaderTexture = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HolesTexture":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.HolesTexture);
-                    try
-                    {
-                        item.HolesTexture = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MembranePaletteTexture":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.MembranePaletteTexture);
-                    try
-                    {
-                        item.MembranePaletteTexture = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticlePaletteTexture":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticlePaletteTexture);
-                    try
-                    {
-                        item.ParticlePaletteTexture = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.Unknown);
-                    try
-                    {
-                        item.Unknown = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MembraneSourceBlendMode":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneSourceBlendMode);
-                    try
-                    {
-                        item.MembraneSourceBlendMode = EnumXmlTranslation<EffectShader.BlendMode>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MembraneBlendOperation":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneBlendOperation);
-                    try
-                    {
-                        item.MembraneBlendOperation = EnumXmlTranslation<EffectShader.BlendOperation>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MembraneZTest":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneZTest);
-                    try
-                    {
-                        item.MembraneZTest = EnumXmlTranslation<EffectShader.ZTest>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillColorKey1":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillColorKey1);
-                    try
-                    {
-                        item.FillColorKey1 = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillAlphaFadeInTime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillAlphaFadeInTime);
-                    try
-                    {
-                        item.FillAlphaFadeInTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillFullAlphaTime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillFullAlphaTime);
-                    try
-                    {
-                        item.FillFullAlphaTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillFadeOutTime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillFadeOutTime);
-                    try
-                    {
-                        item.FillFadeOutTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillPersistentAlphaRatio":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillPersistentAlphaRatio);
-                    try
-                    {
-                        item.FillPersistentAlphaRatio = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillAlphaPulseAmplitude":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillAlphaPulseAmplitude);
-                    try
-                    {
-                        item.FillAlphaPulseAmplitude = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillAlphaPulseFrequency":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillAlphaPulseFrequency);
-                    try
-                    {
-                        item.FillAlphaPulseFrequency = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillTextureAnimationSpeedU":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureAnimationSpeedU);
-                    try
-                    {
-                        item.FillTextureAnimationSpeedU = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillTextureAnimationSpeedV":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureAnimationSpeedV);
-                    try
-                    {
-                        item.FillTextureAnimationSpeedV = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EdgeEffectFallOff":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectFallOff);
-                    try
-                    {
-                        item.EdgeEffectFallOff = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EdgeEffectColor":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectColor);
-                    try
-                    {
-                        item.EdgeEffectColor = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EdgeEffectAlphaFadeInTime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime);
-                    try
-                    {
-                        item.EdgeEffectAlphaFadeInTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EdgeEffectFullAlphaTime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime);
-                    try
-                    {
-                        item.EdgeEffectFullAlphaTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EdgeEffectAlphaFadeOutTime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime);
-                    try
-                    {
-                        item.EdgeEffectAlphaFadeOutTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EdgeEffectPersistentAlphaRatio":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio);
-                    try
-                    {
-                        item.EdgeEffectPersistentAlphaRatio = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EdgeEffectAlphaPulseAmplitude":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude);
-                    try
-                    {
-                        item.EdgeEffectAlphaPulseAmplitude = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EdgeEffectAlphaPulseFrequency":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency);
-                    try
-                    {
-                        item.EdgeEffectAlphaPulseFrequency = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillFullAlphaRatio":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillFullAlphaRatio);
-                    try
-                    {
-                        item.FillFullAlphaRatio = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EdgeEffectFullAlphaRatio":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio);
-                    try
-                    {
-                        item.EdgeEffectFullAlphaRatio = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MembraneDestBlendMode":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.MembraneDestBlendMode);
-                    try
-                    {
-                        item.MembraneDestBlendMode = EnumXmlTranslation<EffectShader.BlendMode>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleSourceBlendMode":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleSourceBlendMode);
-                    try
-                    {
-                        item.ParticleSourceBlendMode = EnumXmlTranslation<EffectShader.BlendMode>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleBlendOperation":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleBlendOperation);
-                    try
-                    {
-                        item.ParticleBlendOperation = EnumXmlTranslation<EffectShader.BlendOperation>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleZTest":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleZTest);
-                    try
-                    {
-                        item.ParticleZTest = EnumXmlTranslation<EffectShader.ZTest>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleDestBlendMode":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleDestBlendMode);
-                    try
-                    {
-                        item.ParticleDestBlendMode = EnumXmlTranslation<EffectShader.BlendMode>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleBirthRampUpTime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleBirthRampUpTime);
-                    try
-                    {
-                        item.ParticleBirthRampUpTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleFullBirthTime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleFullBirthTime);
-                    try
-                    {
-                        item.ParticleFullBirthTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleBirthRampDownTime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleBirthRampDownTime);
-                    try
-                    {
-                        item.ParticleBirthRampDownTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleFullBirthRatio":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleFullBirthRatio);
-                    try
-                    {
-                        item.ParticleFullBirthRatio = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticlePeristentCount":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticlePeristentCount);
-                    try
-                    {
-                        item.ParticlePeristentCount = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleLifetime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleLifetime);
-                    try
-                    {
-                        item.ParticleLifetime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleLifetimePlusMinus":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleLifetimePlusMinus);
-                    try
-                    {
-                        item.ParticleLifetimePlusMinus = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleInitialSpeedAlongNormal":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleInitialSpeedAlongNormal);
-                    try
-                    {
-                        item.ParticleInitialSpeedAlongNormal = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleAccelerationAlongNormal":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleAccelerationAlongNormal);
-                    try
-                    {
-                        item.ParticleAccelerationAlongNormal = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleInitialVelocity1":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleInitialVelocity1);
-                    try
-                    {
-                        item.ParticleInitialVelocity1 = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleInitialVelocity2":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleInitialVelocity2);
-                    try
-                    {
-                        item.ParticleInitialVelocity2 = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleInitialVelocity3":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleInitialVelocity3);
-                    try
-                    {
-                        item.ParticleInitialVelocity3 = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleAcceleration1":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleAcceleration1);
-                    try
-                    {
-                        item.ParticleAcceleration1 = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleAcceleration2":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleAcceleration2);
-                    try
-                    {
-                        item.ParticleAcceleration2 = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleAcceleration3":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleAcceleration3);
-                    try
-                    {
-                        item.ParticleAcceleration3 = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleScaleKey1":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleScaleKey1);
-                    try
-                    {
-                        item.ParticleScaleKey1 = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleScaleKey2":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleScaleKey2);
-                    try
-                    {
-                        item.ParticleScaleKey2 = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleScaleKey1Time":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleScaleKey1Time);
-                    try
-                    {
-                        item.ParticleScaleKey1Time = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleScaleKey2Time":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleScaleKey2Time);
-                    try
-                    {
-                        item.ParticleScaleKey2Time = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ColorKey1":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey1);
-                    try
-                    {
-                        item.ColorKey1 = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ColorKey2":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey2);
-                    try
-                    {
-                        item.ColorKey2 = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ColorKey3":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey3);
-                    try
-                    {
-                        item.ColorKey3 = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ColorKey1Alpha":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey1Alpha);
-                    try
-                    {
-                        item.ColorKey1Alpha = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ColorKey2Alpha":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey2Alpha);
-                    try
-                    {
-                        item.ColorKey2Alpha = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ColorKey3Alpha":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey3Alpha);
-                    try
-                    {
-                        item.ColorKey3Alpha = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ColorKey1Time":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey1Time);
-                    try
-                    {
-                        item.ColorKey1Time = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ColorKey2Time":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey2Time);
-                    try
-                    {
-                        item.ColorKey2Time = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ColorKey3Time":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorKey3Time);
-                    try
-                    {
-                        item.ColorKey3Time = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleInitialSpeedAlongNormalPlusMinus":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleInitialSpeedAlongNormalPlusMinus);
-                    try
-                    {
-                        item.ParticleInitialSpeedAlongNormalPlusMinus = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleInitialRotationDegree":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleInitialRotationDegree);
-                    try
-                    {
-                        item.ParticleInitialRotationDegree = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleInitialRotationDegreePlusMinus":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleInitialRotationDegreePlusMinus);
-                    try
-                    {
-                        item.ParticleInitialRotationDegreePlusMinus = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleRotationSpeedDegreePerSec":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleRotationSpeedDegreePerSec);
-                    try
-                    {
-                        item.ParticleRotationSpeedDegreePerSec = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleRotationSpeedDegreePerSecPlusMinus":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleRotationSpeedDegreePerSecPlusMinus);
-                    try
-                    {
-                        item.ParticleRotationSpeedDegreePerSecPlusMinus = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AddonModels":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.AddonModels);
-                    try
-                    {
-                        item.AddonModels = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HolesStartTime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.HolesStartTime);
-                    try
-                    {
-                        item.HolesStartTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HolesEndTime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.HolesEndTime);
-                    try
-                    {
-                        item.HolesEndTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HolesStartValue":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.HolesStartValue);
-                    try
-                    {
-                        item.HolesStartValue = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HolesEndValue":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.HolesEndValue);
-                    try
-                    {
-                        item.HolesEndValue = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EdgeWidth":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeWidth);
-                    try
-                    {
-                        item.EdgeWidth = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EdgeColor":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.EdgeColor);
-                    try
-                    {
-                        item.EdgeColor = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ExplosionWindSpeed":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ExplosionWindSpeed);
-                    try
-                    {
-                        item.ExplosionWindSpeed = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TextureCountU":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.TextureCountU);
-                    try
-                    {
-                        item.TextureCountU = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TextureCountV":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.TextureCountV);
-                    try
-                    {
-                        item.TextureCountV = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AddonModelsFadeInTime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.AddonModelsFadeInTime);
-                    try
-                    {
-                        item.AddonModelsFadeInTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AddonModelsFadeOutTime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.AddonModelsFadeOutTime);
-                    try
-                    {
-                        item.AddonModelsFadeOutTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AddonModelsScaleStart":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.AddonModelsScaleStart);
-                    try
-                    {
-                        item.AddonModelsScaleStart = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AddonModelsScaleEnd":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.AddonModelsScaleEnd);
-                    try
-                    {
-                        item.AddonModelsScaleEnd = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AddonModelsScaleInTime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.AddonModelsScaleInTime);
-                    try
-                    {
-                        item.AddonModelsScaleInTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AddonModelsScaleOutTime":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.AddonModelsScaleOutTime);
-                    try
-                    {
-                        item.AddonModelsScaleOutTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AmbientSound":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.AmbientSound);
-                    try
-                    {
-                        item.AmbientSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~EffectShader.DATADataType.Break0;
-                    break;
-                case "FillColorKey2":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillColorKey2);
-                    try
-                    {
-                        item.FillColorKey2 = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~EffectShader.DATADataType.Break1;
-                    break;
-                case "FillColorKey3":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillColorKey3);
-                    try
-                    {
-                        item.FillColorKey3 = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillColorKey1Scale":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillColorKey1Scale);
-                    try
-                    {
-                        item.FillColorKey1Scale = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillColorKey2Scale":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillColorKey2Scale);
-                    try
-                    {
-                        item.FillColorKey2Scale = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillColorKey3Scale":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillColorKey3Scale);
-                    try
-                    {
-                        item.FillColorKey3Scale = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillColorKey1Time":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillColorKey1Time);
-                    try
-                    {
-                        item.FillColorKey1Time = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillColorKey2Time":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillColorKey2Time);
-                    try
-                    {
-                        item.FillColorKey2Time = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillColorKey3Time":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillColorKey3Time);
-                    try
-                    {
-                        item.FillColorKey3Time = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ColorScale":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ColorScale);
-                    try
-                    {
-                        item.ColorScale = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~EffectShader.DATADataType.Break2;
-                    break;
-                case "BirthPositionOffset":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.BirthPositionOffset);
-                    try
-                    {
-                        item.BirthPositionOffset = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BirthPositionOffsetRangePlusMinus":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.BirthPositionOffsetRangePlusMinus);
-                    try
-                    {
-                        item.BirthPositionOffsetRangePlusMinus = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleAnimatedStartFrame":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleAnimatedStartFrame);
-                    try
-                    {
-                        item.ParticleAnimatedStartFrame = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleAnimatedStartFrameVariation":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleAnimatedStartFrameVariation);
-                    try
-                    {
-                        item.ParticleAnimatedStartFrameVariation = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleAnimatedEndFrame":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleAnimatedEndFrame);
-                    try
-                    {
-                        item.ParticleAnimatedEndFrame = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleAnimatedLoopStartFrame":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleAnimatedLoopStartFrame);
-                    try
-                    {
-                        item.ParticleAnimatedLoopStartFrame = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleAnimatedLoopStartVariation":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleAnimatedLoopStartVariation);
-                    try
-                    {
-                        item.ParticleAnimatedLoopStartVariation = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleAnimatedFrameCount":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleAnimatedFrameCount);
-                    try
-                    {
-                        item.ParticleAnimatedFrameCount = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParticleAnimatedFrameCountVariation":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleAnimatedFrameCountVariation);
-                    try
-                    {
-                        item.ParticleAnimatedFrameCountVariation = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<EffectShader.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillTextureScaleU":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureScaleU);
-                    try
-                    {
-                        item.FillTextureScaleU = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FillTextureScaleV":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTextureScaleV);
-                    try
-                    {
-                        item.FillTextureScaleV = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SceneGraphEmitDepthLimit":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.SceneGraphEmitDepthLimit);
-                    try
-                    {
-                        item.SceneGraphEmitDepthLimit = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~EffectShader.DATADataType.Break3;
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)EffectShader_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<EffectShader.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class EffectShaderXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IEffectShaderGetter item,
-            XElement node,
-            out EffectShader.ErrorMask errorMask,
-            EffectShader.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((EffectShaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = EffectShader.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IEffectShaderGetter item,
-            string path,
-            out EffectShader.ErrorMask errorMask,
-            EffectShader.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IEffectShaderGetter item,
-            Stream stream,
-            out EffectShader.ErrorMask errorMask,
-            EffectShader.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -11460,10 +8023,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -11516,9 +8081,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IEffectShaderInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -11532,7 +8098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FillTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillTexture);
+                    return (int)EffectShader_FieldIndex.FillTexture;
                 }
                 case RecordTypeInts.ICO2:
                 {
@@ -11540,7 +8106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ParticleShaderTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticleShaderTexture);
+                    return (int)EffectShader_FieldIndex.ParticleShaderTexture;
                 }
                 case RecordTypeInts.NAM7:
                 {
@@ -11548,7 +8114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.HolesTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.HolesTexture);
+                    return (int)EffectShader_FieldIndex.HolesTexture;
                 }
                 case RecordTypeInts.NAM8:
                 {
@@ -11556,7 +8122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MembranePaletteTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.MembranePaletteTexture);
+                    return (int)EffectShader_FieldIndex.MembranePaletteTexture;
                 }
                 case RecordTypeInts.NAM9:
                 {
@@ -11564,7 +8130,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ParticlePaletteTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticlePaletteTexture);
+                    return (int)EffectShader_FieldIndex.ParticlePaletteTexture;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -11652,7 +8218,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.AddonModelsScaleOutTime);
+                        return (int)EffectShader_FieldIndex.AddonModelsScaleOutTime;
                     }
                     item.AmbientSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
@@ -11660,7 +8226,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break1;
-                        return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.AmbientSound);
+                        return (int)EffectShader_FieldIndex.AmbientSound;
                     }
                     item.FillColorKey2 = dataFrame.ReadColor(ColorBinaryType.Alpha);
                     item.FillColorKey3 = dataFrame.ReadColor(ColorBinaryType.Alpha);
@@ -11673,7 +8239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break2;
-                        return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillColorKey3Time);
+                        return (int)EffectShader_FieldIndex.FillColorKey3Time;
                     }
                     item.ColorScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.BirthPositionOffset = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
@@ -11691,15 +8257,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break3;
-                        return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillTextureScaleV);
+                        return (int)EffectShader_FieldIndex.FillTextureScaleV;
                     }
                     item.SceneGraphEmitDepthLimit = dataFrame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.SceneGraphEmitDepthLimit);
+                    return (int)EffectShader_FieldIndex.SceneGraphEmitDepthLimit;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -11745,21 +8312,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EffectShaderCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectShaderCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectShaderCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => EffectShaderXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((EffectShaderXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EffectShaderBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -11822,47 +8374,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FillAlphaFadeInTime
         private int _FillAlphaFadeInTimeLocation => _DATALocation!.Value + 0x14;
         private bool _FillAlphaFadeInTime_IsSet => _DATALocation.HasValue;
-        public Single FillAlphaFadeInTime => _FillAlphaFadeInTime_IsSet ? SpanExt.GetFloat(_data.Slice(_FillAlphaFadeInTimeLocation, 4)) : default;
+        public Single FillAlphaFadeInTime => _FillAlphaFadeInTime_IsSet ? _data.Slice(_FillAlphaFadeInTimeLocation, 4).Float() : default;
         #endregion
         #region FillFullAlphaTime
         private int _FillFullAlphaTimeLocation => _DATALocation!.Value + 0x18;
         private bool _FillFullAlphaTime_IsSet => _DATALocation.HasValue;
-        public Single FillFullAlphaTime => _FillFullAlphaTime_IsSet ? SpanExt.GetFloat(_data.Slice(_FillFullAlphaTimeLocation, 4)) : default;
+        public Single FillFullAlphaTime => _FillFullAlphaTime_IsSet ? _data.Slice(_FillFullAlphaTimeLocation, 4).Float() : default;
         #endregion
         #region FillFadeOutTime
         private int _FillFadeOutTimeLocation => _DATALocation!.Value + 0x1C;
         private bool _FillFadeOutTime_IsSet => _DATALocation.HasValue;
-        public Single FillFadeOutTime => _FillFadeOutTime_IsSet ? SpanExt.GetFloat(_data.Slice(_FillFadeOutTimeLocation, 4)) : default;
+        public Single FillFadeOutTime => _FillFadeOutTime_IsSet ? _data.Slice(_FillFadeOutTimeLocation, 4).Float() : default;
         #endregion
         #region FillPersistentAlphaRatio
         private int _FillPersistentAlphaRatioLocation => _DATALocation!.Value + 0x20;
         private bool _FillPersistentAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single FillPersistentAlphaRatio => _FillPersistentAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_FillPersistentAlphaRatioLocation, 4)) : default;
+        public Single FillPersistentAlphaRatio => _FillPersistentAlphaRatio_IsSet ? _data.Slice(_FillPersistentAlphaRatioLocation, 4).Float() : default;
         #endregion
         #region FillAlphaPulseAmplitude
         private int _FillAlphaPulseAmplitudeLocation => _DATALocation!.Value + 0x24;
         private bool _FillAlphaPulseAmplitude_IsSet => _DATALocation.HasValue;
-        public Single FillAlphaPulseAmplitude => _FillAlphaPulseAmplitude_IsSet ? SpanExt.GetFloat(_data.Slice(_FillAlphaPulseAmplitudeLocation, 4)) : default;
+        public Single FillAlphaPulseAmplitude => _FillAlphaPulseAmplitude_IsSet ? _data.Slice(_FillAlphaPulseAmplitudeLocation, 4).Float() : default;
         #endregion
         #region FillAlphaPulseFrequency
         private int _FillAlphaPulseFrequencyLocation => _DATALocation!.Value + 0x28;
         private bool _FillAlphaPulseFrequency_IsSet => _DATALocation.HasValue;
-        public Single FillAlphaPulseFrequency => _FillAlphaPulseFrequency_IsSet ? SpanExt.GetFloat(_data.Slice(_FillAlphaPulseFrequencyLocation, 4)) : default;
+        public Single FillAlphaPulseFrequency => _FillAlphaPulseFrequency_IsSet ? _data.Slice(_FillAlphaPulseFrequencyLocation, 4).Float() : default;
         #endregion
         #region FillTextureAnimationSpeedU
         private int _FillTextureAnimationSpeedULocation => _DATALocation!.Value + 0x2C;
         private bool _FillTextureAnimationSpeedU_IsSet => _DATALocation.HasValue;
-        public Single FillTextureAnimationSpeedU => _FillTextureAnimationSpeedU_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureAnimationSpeedULocation, 4)) : default;
+        public Single FillTextureAnimationSpeedU => _FillTextureAnimationSpeedU_IsSet ? _data.Slice(_FillTextureAnimationSpeedULocation, 4).Float() : default;
         #endregion
         #region FillTextureAnimationSpeedV
         private int _FillTextureAnimationSpeedVLocation => _DATALocation!.Value + 0x30;
         private bool _FillTextureAnimationSpeedV_IsSet => _DATALocation.HasValue;
-        public Single FillTextureAnimationSpeedV => _FillTextureAnimationSpeedV_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureAnimationSpeedVLocation, 4)) : default;
+        public Single FillTextureAnimationSpeedV => _FillTextureAnimationSpeedV_IsSet ? _data.Slice(_FillTextureAnimationSpeedVLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectFallOff
         private int _EdgeEffectFallOffLocation => _DATALocation!.Value + 0x34;
         private bool _EdgeEffectFallOff_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectFallOff => _EdgeEffectFallOff_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectFallOffLocation, 4)) : default;
+        public Single EdgeEffectFallOff => _EdgeEffectFallOff_IsSet ? _data.Slice(_EdgeEffectFallOffLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectColor
         private int _EdgeEffectColorLocation => _DATALocation!.Value + 0x38;
@@ -11872,42 +8424,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region EdgeEffectAlphaFadeInTime
         private int _EdgeEffectAlphaFadeInTimeLocation => _DATALocation!.Value + 0x3C;
         private bool _EdgeEffectAlphaFadeInTime_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaFadeInTime => _EdgeEffectAlphaFadeInTime_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectAlphaFadeInTimeLocation, 4)) : default;
+        public Single EdgeEffectAlphaFadeInTime => _EdgeEffectAlphaFadeInTime_IsSet ? _data.Slice(_EdgeEffectAlphaFadeInTimeLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectFullAlphaTime
         private int _EdgeEffectFullAlphaTimeLocation => _DATALocation!.Value + 0x40;
         private bool _EdgeEffectFullAlphaTime_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectFullAlphaTime => _EdgeEffectFullAlphaTime_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectFullAlphaTimeLocation, 4)) : default;
+        public Single EdgeEffectFullAlphaTime => _EdgeEffectFullAlphaTime_IsSet ? _data.Slice(_EdgeEffectFullAlphaTimeLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectAlphaFadeOutTime
         private int _EdgeEffectAlphaFadeOutTimeLocation => _DATALocation!.Value + 0x44;
         private bool _EdgeEffectAlphaFadeOutTime_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaFadeOutTime => _EdgeEffectAlphaFadeOutTime_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectAlphaFadeOutTimeLocation, 4)) : default;
+        public Single EdgeEffectAlphaFadeOutTime => _EdgeEffectAlphaFadeOutTime_IsSet ? _data.Slice(_EdgeEffectAlphaFadeOutTimeLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectPersistentAlphaRatio
         private int _EdgeEffectPersistentAlphaRatioLocation => _DATALocation!.Value + 0x48;
         private bool _EdgeEffectPersistentAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectPersistentAlphaRatio => _EdgeEffectPersistentAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectPersistentAlphaRatioLocation, 4)) : default;
+        public Single EdgeEffectPersistentAlphaRatio => _EdgeEffectPersistentAlphaRatio_IsSet ? _data.Slice(_EdgeEffectPersistentAlphaRatioLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectAlphaPulseAmplitude
         private int _EdgeEffectAlphaPulseAmplitudeLocation => _DATALocation!.Value + 0x4C;
         private bool _EdgeEffectAlphaPulseAmplitude_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaPulseAmplitude => _EdgeEffectAlphaPulseAmplitude_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectAlphaPulseAmplitudeLocation, 4)) : default;
+        public Single EdgeEffectAlphaPulseAmplitude => _EdgeEffectAlphaPulseAmplitude_IsSet ? _data.Slice(_EdgeEffectAlphaPulseAmplitudeLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectAlphaPulseFrequency
         private int _EdgeEffectAlphaPulseFrequencyLocation => _DATALocation!.Value + 0x50;
         private bool _EdgeEffectAlphaPulseFrequency_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaPulseFrequency => _EdgeEffectAlphaPulseFrequency_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectAlphaPulseFrequencyLocation, 4)) : default;
+        public Single EdgeEffectAlphaPulseFrequency => _EdgeEffectAlphaPulseFrequency_IsSet ? _data.Slice(_EdgeEffectAlphaPulseFrequencyLocation, 4).Float() : default;
         #endregion
         #region FillFullAlphaRatio
         private int _FillFullAlphaRatioLocation => _DATALocation!.Value + 0x54;
         private bool _FillFullAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single FillFullAlphaRatio => _FillFullAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_FillFullAlphaRatioLocation, 4)) : default;
+        public Single FillFullAlphaRatio => _FillFullAlphaRatio_IsSet ? _data.Slice(_FillFullAlphaRatioLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectFullAlphaRatio
         private int _EdgeEffectFullAlphaRatioLocation => _DATALocation!.Value + 0x58;
         private bool _EdgeEffectFullAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectFullAlphaRatio => _EdgeEffectFullAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectFullAlphaRatioLocation, 4)) : default;
+        public Single EdgeEffectFullAlphaRatio => _EdgeEffectFullAlphaRatio_IsSet ? _data.Slice(_EdgeEffectFullAlphaRatioLocation, 4).Float() : default;
         #endregion
         #region MembraneDestBlendMode
         private int _MembraneDestBlendModeLocation => _DATALocation!.Value + 0x5C;
@@ -11937,97 +8489,97 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ParticleBirthRampUpTime
         private int _ParticleBirthRampUpTimeLocation => _DATALocation!.Value + 0x70;
         private bool _ParticleBirthRampUpTime_IsSet => _DATALocation.HasValue;
-        public Single ParticleBirthRampUpTime => _ParticleBirthRampUpTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleBirthRampUpTimeLocation, 4)) : default;
+        public Single ParticleBirthRampUpTime => _ParticleBirthRampUpTime_IsSet ? _data.Slice(_ParticleBirthRampUpTimeLocation, 4).Float() : default;
         #endregion
         #region ParticleFullBirthTime
         private int _ParticleFullBirthTimeLocation => _DATALocation!.Value + 0x74;
         private bool _ParticleFullBirthTime_IsSet => _DATALocation.HasValue;
-        public Single ParticleFullBirthTime => _ParticleFullBirthTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleFullBirthTimeLocation, 4)) : default;
+        public Single ParticleFullBirthTime => _ParticleFullBirthTime_IsSet ? _data.Slice(_ParticleFullBirthTimeLocation, 4).Float() : default;
         #endregion
         #region ParticleBirthRampDownTime
         private int _ParticleBirthRampDownTimeLocation => _DATALocation!.Value + 0x78;
         private bool _ParticleBirthRampDownTime_IsSet => _DATALocation.HasValue;
-        public Single ParticleBirthRampDownTime => _ParticleBirthRampDownTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleBirthRampDownTimeLocation, 4)) : default;
+        public Single ParticleBirthRampDownTime => _ParticleBirthRampDownTime_IsSet ? _data.Slice(_ParticleBirthRampDownTimeLocation, 4).Float() : default;
         #endregion
         #region ParticleFullBirthRatio
         private int _ParticleFullBirthRatioLocation => _DATALocation!.Value + 0x7C;
         private bool _ParticleFullBirthRatio_IsSet => _DATALocation.HasValue;
-        public Single ParticleFullBirthRatio => _ParticleFullBirthRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleFullBirthRatioLocation, 4)) : default;
+        public Single ParticleFullBirthRatio => _ParticleFullBirthRatio_IsSet ? _data.Slice(_ParticleFullBirthRatioLocation, 4).Float() : default;
         #endregion
         #region ParticlePeristentCount
         private int _ParticlePeristentCountLocation => _DATALocation!.Value + 0x80;
         private bool _ParticlePeristentCount_IsSet => _DATALocation.HasValue;
-        public Single ParticlePeristentCount => _ParticlePeristentCount_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticlePeristentCountLocation, 4)) : default;
+        public Single ParticlePeristentCount => _ParticlePeristentCount_IsSet ? _data.Slice(_ParticlePeristentCountLocation, 4).Float() : default;
         #endregion
         #region ParticleLifetime
         private int _ParticleLifetimeLocation => _DATALocation!.Value + 0x84;
         private bool _ParticleLifetime_IsSet => _DATALocation.HasValue;
-        public Single ParticleLifetime => _ParticleLifetime_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleLifetimeLocation, 4)) : default;
+        public Single ParticleLifetime => _ParticleLifetime_IsSet ? _data.Slice(_ParticleLifetimeLocation, 4).Float() : default;
         #endregion
         #region ParticleLifetimePlusMinus
         private int _ParticleLifetimePlusMinusLocation => _DATALocation!.Value + 0x88;
         private bool _ParticleLifetimePlusMinus_IsSet => _DATALocation.HasValue;
-        public Single ParticleLifetimePlusMinus => _ParticleLifetimePlusMinus_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleLifetimePlusMinusLocation, 4)) : default;
+        public Single ParticleLifetimePlusMinus => _ParticleLifetimePlusMinus_IsSet ? _data.Slice(_ParticleLifetimePlusMinusLocation, 4).Float() : default;
         #endregion
         #region ParticleInitialSpeedAlongNormal
         private int _ParticleInitialSpeedAlongNormalLocation => _DATALocation!.Value + 0x8C;
         private bool _ParticleInitialSpeedAlongNormal_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialSpeedAlongNormal => _ParticleInitialSpeedAlongNormal_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleInitialSpeedAlongNormalLocation, 4)) : default;
+        public Single ParticleInitialSpeedAlongNormal => _ParticleInitialSpeedAlongNormal_IsSet ? _data.Slice(_ParticleInitialSpeedAlongNormalLocation, 4).Float() : default;
         #endregion
         #region ParticleAccelerationAlongNormal
         private int _ParticleAccelerationAlongNormalLocation => _DATALocation!.Value + 0x90;
         private bool _ParticleAccelerationAlongNormal_IsSet => _DATALocation.HasValue;
-        public Single ParticleAccelerationAlongNormal => _ParticleAccelerationAlongNormal_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleAccelerationAlongNormalLocation, 4)) : default;
+        public Single ParticleAccelerationAlongNormal => _ParticleAccelerationAlongNormal_IsSet ? _data.Slice(_ParticleAccelerationAlongNormalLocation, 4).Float() : default;
         #endregion
         #region ParticleInitialVelocity1
         private int _ParticleInitialVelocity1Location => _DATALocation!.Value + 0x94;
         private bool _ParticleInitialVelocity1_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialVelocity1 => _ParticleInitialVelocity1_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleInitialVelocity1Location, 4)) : default;
+        public Single ParticleInitialVelocity1 => _ParticleInitialVelocity1_IsSet ? _data.Slice(_ParticleInitialVelocity1Location, 4).Float() : default;
         #endregion
         #region ParticleInitialVelocity2
         private int _ParticleInitialVelocity2Location => _DATALocation!.Value + 0x98;
         private bool _ParticleInitialVelocity2_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialVelocity2 => _ParticleInitialVelocity2_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleInitialVelocity2Location, 4)) : default;
+        public Single ParticleInitialVelocity2 => _ParticleInitialVelocity2_IsSet ? _data.Slice(_ParticleInitialVelocity2Location, 4).Float() : default;
         #endregion
         #region ParticleInitialVelocity3
         private int _ParticleInitialVelocity3Location => _DATALocation!.Value + 0x9C;
         private bool _ParticleInitialVelocity3_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialVelocity3 => _ParticleInitialVelocity3_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleInitialVelocity3Location, 4)) : default;
+        public Single ParticleInitialVelocity3 => _ParticleInitialVelocity3_IsSet ? _data.Slice(_ParticleInitialVelocity3Location, 4).Float() : default;
         #endregion
         #region ParticleAcceleration1
         private int _ParticleAcceleration1Location => _DATALocation!.Value + 0xA0;
         private bool _ParticleAcceleration1_IsSet => _DATALocation.HasValue;
-        public Single ParticleAcceleration1 => _ParticleAcceleration1_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleAcceleration1Location, 4)) : default;
+        public Single ParticleAcceleration1 => _ParticleAcceleration1_IsSet ? _data.Slice(_ParticleAcceleration1Location, 4).Float() : default;
         #endregion
         #region ParticleAcceleration2
         private int _ParticleAcceleration2Location => _DATALocation!.Value + 0xA4;
         private bool _ParticleAcceleration2_IsSet => _DATALocation.HasValue;
-        public Single ParticleAcceleration2 => _ParticleAcceleration2_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleAcceleration2Location, 4)) : default;
+        public Single ParticleAcceleration2 => _ParticleAcceleration2_IsSet ? _data.Slice(_ParticleAcceleration2Location, 4).Float() : default;
         #endregion
         #region ParticleAcceleration3
         private int _ParticleAcceleration3Location => _DATALocation!.Value + 0xA8;
         private bool _ParticleAcceleration3_IsSet => _DATALocation.HasValue;
-        public Single ParticleAcceleration3 => _ParticleAcceleration3_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleAcceleration3Location, 4)) : default;
+        public Single ParticleAcceleration3 => _ParticleAcceleration3_IsSet ? _data.Slice(_ParticleAcceleration3Location, 4).Float() : default;
         #endregion
         #region ParticleScaleKey1
         private int _ParticleScaleKey1Location => _DATALocation!.Value + 0xAC;
         private bool _ParticleScaleKey1_IsSet => _DATALocation.HasValue;
-        public Single ParticleScaleKey1 => _ParticleScaleKey1_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleScaleKey1Location, 4)) : default;
+        public Single ParticleScaleKey1 => _ParticleScaleKey1_IsSet ? _data.Slice(_ParticleScaleKey1Location, 4).Float() : default;
         #endregion
         #region ParticleScaleKey2
         private int _ParticleScaleKey2Location => _DATALocation!.Value + 0xB0;
         private bool _ParticleScaleKey2_IsSet => _DATALocation.HasValue;
-        public Single ParticleScaleKey2 => _ParticleScaleKey2_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleScaleKey2Location, 4)) : default;
+        public Single ParticleScaleKey2 => _ParticleScaleKey2_IsSet ? _data.Slice(_ParticleScaleKey2Location, 4).Float() : default;
         #endregion
         #region ParticleScaleKey1Time
         private int _ParticleScaleKey1TimeLocation => _DATALocation!.Value + 0xB4;
         private bool _ParticleScaleKey1Time_IsSet => _DATALocation.HasValue;
-        public Single ParticleScaleKey1Time => _ParticleScaleKey1Time_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleScaleKey1TimeLocation, 4)) : default;
+        public Single ParticleScaleKey1Time => _ParticleScaleKey1Time_IsSet ? _data.Slice(_ParticleScaleKey1TimeLocation, 4).Float() : default;
         #endregion
         #region ParticleScaleKey2Time
         private int _ParticleScaleKey2TimeLocation => _DATALocation!.Value + 0xB8;
         private bool _ParticleScaleKey2Time_IsSet => _DATALocation.HasValue;
-        public Single ParticleScaleKey2Time => _ParticleScaleKey2Time_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleScaleKey2TimeLocation, 4)) : default;
+        public Single ParticleScaleKey2Time => _ParticleScaleKey2Time_IsSet ? _data.Slice(_ParticleScaleKey2TimeLocation, 4).Float() : default;
         #endregion
         #region ColorKey1
         private int _ColorKey1Location => _DATALocation!.Value + 0xBC;
@@ -12047,57 +8599,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ColorKey1Alpha
         private int _ColorKey1AlphaLocation => _DATALocation!.Value + 0xC8;
         private bool _ColorKey1Alpha_IsSet => _DATALocation.HasValue;
-        public Single ColorKey1Alpha => _ColorKey1Alpha_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey1AlphaLocation, 4)) : default;
+        public Single ColorKey1Alpha => _ColorKey1Alpha_IsSet ? _data.Slice(_ColorKey1AlphaLocation, 4).Float() : default;
         #endregion
         #region ColorKey2Alpha
         private int _ColorKey2AlphaLocation => _DATALocation!.Value + 0xCC;
         private bool _ColorKey2Alpha_IsSet => _DATALocation.HasValue;
-        public Single ColorKey2Alpha => _ColorKey2Alpha_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey2AlphaLocation, 4)) : default;
+        public Single ColorKey2Alpha => _ColorKey2Alpha_IsSet ? _data.Slice(_ColorKey2AlphaLocation, 4).Float() : default;
         #endregion
         #region ColorKey3Alpha
         private int _ColorKey3AlphaLocation => _DATALocation!.Value + 0xD0;
         private bool _ColorKey3Alpha_IsSet => _DATALocation.HasValue;
-        public Single ColorKey3Alpha => _ColorKey3Alpha_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey3AlphaLocation, 4)) : default;
+        public Single ColorKey3Alpha => _ColorKey3Alpha_IsSet ? _data.Slice(_ColorKey3AlphaLocation, 4).Float() : default;
         #endregion
         #region ColorKey1Time
         private int _ColorKey1TimeLocation => _DATALocation!.Value + 0xD4;
         private bool _ColorKey1Time_IsSet => _DATALocation.HasValue;
-        public Single ColorKey1Time => _ColorKey1Time_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey1TimeLocation, 4)) : default;
+        public Single ColorKey1Time => _ColorKey1Time_IsSet ? _data.Slice(_ColorKey1TimeLocation, 4).Float() : default;
         #endregion
         #region ColorKey2Time
         private int _ColorKey2TimeLocation => _DATALocation!.Value + 0xD8;
         private bool _ColorKey2Time_IsSet => _DATALocation.HasValue;
-        public Single ColorKey2Time => _ColorKey2Time_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey2TimeLocation, 4)) : default;
+        public Single ColorKey2Time => _ColorKey2Time_IsSet ? _data.Slice(_ColorKey2TimeLocation, 4).Float() : default;
         #endregion
         #region ColorKey3Time
         private int _ColorKey3TimeLocation => _DATALocation!.Value + 0xDC;
         private bool _ColorKey3Time_IsSet => _DATALocation.HasValue;
-        public Single ColorKey3Time => _ColorKey3Time_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey3TimeLocation, 4)) : default;
+        public Single ColorKey3Time => _ColorKey3Time_IsSet ? _data.Slice(_ColorKey3TimeLocation, 4).Float() : default;
         #endregion
         #region ParticleInitialSpeedAlongNormalPlusMinus
         private int _ParticleInitialSpeedAlongNormalPlusMinusLocation => _DATALocation!.Value + 0xE0;
         private bool _ParticleInitialSpeedAlongNormalPlusMinus_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialSpeedAlongNormalPlusMinus => _ParticleInitialSpeedAlongNormalPlusMinus_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleInitialSpeedAlongNormalPlusMinusLocation, 4)) : default;
+        public Single ParticleInitialSpeedAlongNormalPlusMinus => _ParticleInitialSpeedAlongNormalPlusMinus_IsSet ? _data.Slice(_ParticleInitialSpeedAlongNormalPlusMinusLocation, 4).Float() : default;
         #endregion
         #region ParticleInitialRotationDegree
         private int _ParticleInitialRotationDegreeLocation => _DATALocation!.Value + 0xE4;
         private bool _ParticleInitialRotationDegree_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialRotationDegree => _ParticleInitialRotationDegree_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleInitialRotationDegreeLocation, 4)) : default;
+        public Single ParticleInitialRotationDegree => _ParticleInitialRotationDegree_IsSet ? _data.Slice(_ParticleInitialRotationDegreeLocation, 4).Float() : default;
         #endregion
         #region ParticleInitialRotationDegreePlusMinus
         private int _ParticleInitialRotationDegreePlusMinusLocation => _DATALocation!.Value + 0xE8;
         private bool _ParticleInitialRotationDegreePlusMinus_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialRotationDegreePlusMinus => _ParticleInitialRotationDegreePlusMinus_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleInitialRotationDegreePlusMinusLocation, 4)) : default;
+        public Single ParticleInitialRotationDegreePlusMinus => _ParticleInitialRotationDegreePlusMinus_IsSet ? _data.Slice(_ParticleInitialRotationDegreePlusMinusLocation, 4).Float() : default;
         #endregion
         #region ParticleRotationSpeedDegreePerSec
         private int _ParticleRotationSpeedDegreePerSecLocation => _DATALocation!.Value + 0xEC;
         private bool _ParticleRotationSpeedDegreePerSec_IsSet => _DATALocation.HasValue;
-        public Single ParticleRotationSpeedDegreePerSec => _ParticleRotationSpeedDegreePerSec_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleRotationSpeedDegreePerSecLocation, 4)) : default;
+        public Single ParticleRotationSpeedDegreePerSec => _ParticleRotationSpeedDegreePerSec_IsSet ? _data.Slice(_ParticleRotationSpeedDegreePerSecLocation, 4).Float() : default;
         #endregion
         #region ParticleRotationSpeedDegreePerSecPlusMinus
         private int _ParticleRotationSpeedDegreePerSecPlusMinusLocation => _DATALocation!.Value + 0xF0;
         private bool _ParticleRotationSpeedDegreePerSecPlusMinus_IsSet => _DATALocation.HasValue;
-        public Single ParticleRotationSpeedDegreePerSecPlusMinus => _ParticleRotationSpeedDegreePerSecPlusMinus_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleRotationSpeedDegreePerSecPlusMinusLocation, 4)) : default;
+        public Single ParticleRotationSpeedDegreePerSecPlusMinus => _ParticleRotationSpeedDegreePerSecPlusMinus_IsSet ? _data.Slice(_ParticleRotationSpeedDegreePerSecPlusMinusLocation, 4).Float() : default;
         #endregion
         #region AddonModels
         private int _AddonModelsLocation => _DATALocation!.Value + 0xF4;
@@ -12107,27 +8659,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region HolesStartTime
         private int _HolesStartTimeLocation => _DATALocation!.Value + 0xF8;
         private bool _HolesStartTime_IsSet => _DATALocation.HasValue;
-        public Single HolesStartTime => _HolesStartTime_IsSet ? SpanExt.GetFloat(_data.Slice(_HolesStartTimeLocation, 4)) : default;
+        public Single HolesStartTime => _HolesStartTime_IsSet ? _data.Slice(_HolesStartTimeLocation, 4).Float() : default;
         #endregion
         #region HolesEndTime
         private int _HolesEndTimeLocation => _DATALocation!.Value + 0xFC;
         private bool _HolesEndTime_IsSet => _DATALocation.HasValue;
-        public Single HolesEndTime => _HolesEndTime_IsSet ? SpanExt.GetFloat(_data.Slice(_HolesEndTimeLocation, 4)) : default;
+        public Single HolesEndTime => _HolesEndTime_IsSet ? _data.Slice(_HolesEndTimeLocation, 4).Float() : default;
         #endregion
         #region HolesStartValue
         private int _HolesStartValueLocation => _DATALocation!.Value + 0x100;
         private bool _HolesStartValue_IsSet => _DATALocation.HasValue;
-        public Single HolesStartValue => _HolesStartValue_IsSet ? SpanExt.GetFloat(_data.Slice(_HolesStartValueLocation, 4)) : default;
+        public Single HolesStartValue => _HolesStartValue_IsSet ? _data.Slice(_HolesStartValueLocation, 4).Float() : default;
         #endregion
         #region HolesEndValue
         private int _HolesEndValueLocation => _DATALocation!.Value + 0x104;
         private bool _HolesEndValue_IsSet => _DATALocation.HasValue;
-        public Single HolesEndValue => _HolesEndValue_IsSet ? SpanExt.GetFloat(_data.Slice(_HolesEndValueLocation, 4)) : default;
+        public Single HolesEndValue => _HolesEndValue_IsSet ? _data.Slice(_HolesEndValueLocation, 4).Float() : default;
         #endregion
         #region EdgeWidth
         private int _EdgeWidthLocation => _DATALocation!.Value + 0x108;
         private bool _EdgeWidth_IsSet => _DATALocation.HasValue;
-        public Single EdgeWidth => _EdgeWidth_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeWidthLocation, 4)) : default;
+        public Single EdgeWidth => _EdgeWidth_IsSet ? _data.Slice(_EdgeWidthLocation, 4).Float() : default;
         #endregion
         #region EdgeColor
         private int _EdgeColorLocation => _DATALocation!.Value + 0x10C;
@@ -12137,7 +8689,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ExplosionWindSpeed
         private int _ExplosionWindSpeedLocation => _DATALocation!.Value + 0x110;
         private bool _ExplosionWindSpeed_IsSet => _DATALocation.HasValue;
-        public Single ExplosionWindSpeed => _ExplosionWindSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_ExplosionWindSpeedLocation, 4)) : default;
+        public Single ExplosionWindSpeed => _ExplosionWindSpeed_IsSet ? _data.Slice(_ExplosionWindSpeedLocation, 4).Float() : default;
         #endregion
         #region TextureCountU
         private int _TextureCountULocation => _DATALocation!.Value + 0x114;
@@ -12152,32 +8704,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AddonModelsFadeInTime
         private int _AddonModelsFadeInTimeLocation => _DATALocation!.Value + 0x11C;
         private bool _AddonModelsFadeInTime_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsFadeInTime => _AddonModelsFadeInTime_IsSet ? SpanExt.GetFloat(_data.Slice(_AddonModelsFadeInTimeLocation, 4)) : default;
+        public Single AddonModelsFadeInTime => _AddonModelsFadeInTime_IsSet ? _data.Slice(_AddonModelsFadeInTimeLocation, 4).Float() : default;
         #endregion
         #region AddonModelsFadeOutTime
         private int _AddonModelsFadeOutTimeLocation => _DATALocation!.Value + 0x120;
         private bool _AddonModelsFadeOutTime_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsFadeOutTime => _AddonModelsFadeOutTime_IsSet ? SpanExt.GetFloat(_data.Slice(_AddonModelsFadeOutTimeLocation, 4)) : default;
+        public Single AddonModelsFadeOutTime => _AddonModelsFadeOutTime_IsSet ? _data.Slice(_AddonModelsFadeOutTimeLocation, 4).Float() : default;
         #endregion
         #region AddonModelsScaleStart
         private int _AddonModelsScaleStartLocation => _DATALocation!.Value + 0x124;
         private bool _AddonModelsScaleStart_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsScaleStart => _AddonModelsScaleStart_IsSet ? SpanExt.GetFloat(_data.Slice(_AddonModelsScaleStartLocation, 4)) : default;
+        public Single AddonModelsScaleStart => _AddonModelsScaleStart_IsSet ? _data.Slice(_AddonModelsScaleStartLocation, 4).Float() : default;
         #endregion
         #region AddonModelsScaleEnd
         private int _AddonModelsScaleEndLocation => _DATALocation!.Value + 0x128;
         private bool _AddonModelsScaleEnd_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsScaleEnd => _AddonModelsScaleEnd_IsSet ? SpanExt.GetFloat(_data.Slice(_AddonModelsScaleEndLocation, 4)) : default;
+        public Single AddonModelsScaleEnd => _AddonModelsScaleEnd_IsSet ? _data.Slice(_AddonModelsScaleEndLocation, 4).Float() : default;
         #endregion
         #region AddonModelsScaleInTime
         private int _AddonModelsScaleInTimeLocation => _DATALocation!.Value + 0x12C;
         private bool _AddonModelsScaleInTime_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsScaleInTime => _AddonModelsScaleInTime_IsSet ? SpanExt.GetFloat(_data.Slice(_AddonModelsScaleInTimeLocation, 4)) : default;
+        public Single AddonModelsScaleInTime => _AddonModelsScaleInTime_IsSet ? _data.Slice(_AddonModelsScaleInTimeLocation, 4).Float() : default;
         #endregion
         #region AddonModelsScaleOutTime
         private int _AddonModelsScaleOutTimeLocation => _DATALocation!.Value + 0x130;
         private bool _AddonModelsScaleOutTime_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsScaleOutTime => _AddonModelsScaleOutTime_IsSet ? SpanExt.GetFloat(_data.Slice(_AddonModelsScaleOutTimeLocation, 4)) : default;
+        public Single AddonModelsScaleOutTime => _AddonModelsScaleOutTime_IsSet ? _data.Slice(_AddonModelsScaleOutTimeLocation, 4).Float() : default;
         #endregion
         #region AmbientSound
         private int _AmbientSoundLocation => _DATALocation!.Value + 0x134;
@@ -12197,47 +8749,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FillColorKey1Scale
         private int _FillColorKey1ScaleLocation => _DATALocation!.Value + 0x140;
         private bool _FillColorKey1Scale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey1Scale => _FillColorKey1Scale_IsSet ? SpanExt.GetFloat(_data.Slice(_FillColorKey1ScaleLocation, 4)) : default;
+        public Single FillColorKey1Scale => _FillColorKey1Scale_IsSet ? _data.Slice(_FillColorKey1ScaleLocation, 4).Float() : default;
         #endregion
         #region FillColorKey2Scale
         private int _FillColorKey2ScaleLocation => _DATALocation!.Value + 0x144;
         private bool _FillColorKey2Scale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey2Scale => _FillColorKey2Scale_IsSet ? SpanExt.GetFloat(_data.Slice(_FillColorKey2ScaleLocation, 4)) : default;
+        public Single FillColorKey2Scale => _FillColorKey2Scale_IsSet ? _data.Slice(_FillColorKey2ScaleLocation, 4).Float() : default;
         #endregion
         #region FillColorKey3Scale
         private int _FillColorKey3ScaleLocation => _DATALocation!.Value + 0x148;
         private bool _FillColorKey3Scale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey3Scale => _FillColorKey3Scale_IsSet ? SpanExt.GetFloat(_data.Slice(_FillColorKey3ScaleLocation, 4)) : default;
+        public Single FillColorKey3Scale => _FillColorKey3Scale_IsSet ? _data.Slice(_FillColorKey3ScaleLocation, 4).Float() : default;
         #endregion
         #region FillColorKey1Time
         private int _FillColorKey1TimeLocation => _DATALocation!.Value + 0x14C;
         private bool _FillColorKey1Time_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey1Time => _FillColorKey1Time_IsSet ? SpanExt.GetFloat(_data.Slice(_FillColorKey1TimeLocation, 4)) : default;
+        public Single FillColorKey1Time => _FillColorKey1Time_IsSet ? _data.Slice(_FillColorKey1TimeLocation, 4).Float() : default;
         #endregion
         #region FillColorKey2Time
         private int _FillColorKey2TimeLocation => _DATALocation!.Value + 0x150;
         private bool _FillColorKey2Time_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey2Time => _FillColorKey2Time_IsSet ? SpanExt.GetFloat(_data.Slice(_FillColorKey2TimeLocation, 4)) : default;
+        public Single FillColorKey2Time => _FillColorKey2Time_IsSet ? _data.Slice(_FillColorKey2TimeLocation, 4).Float() : default;
         #endregion
         #region FillColorKey3Time
         private int _FillColorKey3TimeLocation => _DATALocation!.Value + 0x154;
         private bool _FillColorKey3Time_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey3Time => _FillColorKey3Time_IsSet ? SpanExt.GetFloat(_data.Slice(_FillColorKey3TimeLocation, 4)) : default;
+        public Single FillColorKey3Time => _FillColorKey3Time_IsSet ? _data.Slice(_FillColorKey3TimeLocation, 4).Float() : default;
         #endregion
         #region ColorScale
         private int _ColorScaleLocation => _DATALocation!.Value + 0x158;
         private bool _ColorScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public Single ColorScale => _ColorScale_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorScaleLocation, 4)) : default;
+        public Single ColorScale => _ColorScale_IsSet ? _data.Slice(_ColorScaleLocation, 4).Float() : default;
         #endregion
         #region BirthPositionOffset
         private int _BirthPositionOffsetLocation => _DATALocation!.Value + 0x15C;
         private bool _BirthPositionOffset_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public Single BirthPositionOffset => _BirthPositionOffset_IsSet ? SpanExt.GetFloat(_data.Slice(_BirthPositionOffsetLocation, 4)) : default;
+        public Single BirthPositionOffset => _BirthPositionOffset_IsSet ? _data.Slice(_BirthPositionOffsetLocation, 4).Float() : default;
         #endregion
         #region BirthPositionOffsetRangePlusMinus
         private int _BirthPositionOffsetRangePlusMinusLocation => _DATALocation!.Value + 0x160;
         private bool _BirthPositionOffsetRangePlusMinus_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public Single BirthPositionOffsetRangePlusMinus => _BirthPositionOffsetRangePlusMinus_IsSet ? SpanExt.GetFloat(_data.Slice(_BirthPositionOffsetRangePlusMinusLocation, 4)) : default;
+        public Single BirthPositionOffsetRangePlusMinus => _BirthPositionOffsetRangePlusMinus_IsSet ? _data.Slice(_BirthPositionOffsetRangePlusMinusLocation, 4).Float() : default;
         #endregion
         #region ParticleAnimatedStartFrame
         private int _ParticleAnimatedStartFrameLocation => _DATALocation!.Value + 0x164;
@@ -12282,12 +8834,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FillTextureScaleU
         private int _FillTextureScaleULocation => _DATALocation!.Value + 0x184;
         private bool _FillTextureScaleU_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public Single FillTextureScaleU => _FillTextureScaleU_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureScaleULocation, 4)) : default;
+        public Single FillTextureScaleU => _FillTextureScaleU_IsSet ? _data.Slice(_FillTextureScaleULocation, 4).Float() : default;
         #endregion
         #region FillTextureScaleV
         private int _FillTextureScaleVLocation => _DATALocation!.Value + 0x188;
         private bool _FillTextureScaleV_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public Single FillTextureScaleV => _FillTextureScaleV_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureScaleVLocation, 4)) : default;
+        public Single FillTextureScaleV => _FillTextureScaleV_IsSet ? _data.Slice(_FillTextureScaleVLocation, 4).Float() : default;
         #endregion
         #region SceneGraphEmitDepthLimit
         private int _SceneGraphEmitDepthLimitLocation => _DATALocation!.Value + 0x18C;
@@ -12319,8 +8871,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new EffectShaderBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -12346,12 +8899,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -12360,27 +8914,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ICON:
                 {
                     _FillTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillTexture);
+                    return (int)EffectShader_FieldIndex.FillTexture;
                 }
                 case RecordTypeInts.ICO2:
                 {
                     _ParticleShaderTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticleShaderTexture);
+                    return (int)EffectShader_FieldIndex.ParticleShaderTexture;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     _HolesTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.HolesTexture);
+                    return (int)EffectShader_FieldIndex.HolesTexture;
                 }
                 case RecordTypeInts.NAM8:
                 {
                     _MembranePaletteTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.MembranePaletteTexture);
+                    return (int)EffectShader_FieldIndex.MembranePaletteTexture;
                 }
                 case RecordTypeInts.NAM9:
                 {
                     _ParticlePaletteTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticlePaletteTexture);
+                    return (int)EffectShader_FieldIndex.ParticlePaletteTexture;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -12402,7 +8956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.DATADataTypeState |= EffectShader.DATADataType.Break3;
                     }
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.SceneGraphEmitDepthLimit);
+                    return (int)EffectShader_FieldIndex.SceneGraphEmitDepthLimit;
                 }
                 default:
                     return base.FillRecordType(
@@ -12410,7 +8964,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

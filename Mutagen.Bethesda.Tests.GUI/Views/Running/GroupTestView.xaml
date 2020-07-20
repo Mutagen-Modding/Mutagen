@@ -1,0 +1,39 @@
+﻿<local:GroupTestViewBase
+    x:Class="Mutagen.Bethesda.Tests.GUI.Views.GroupTestView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:local="clr-namespace:Mutagen.Bethesda.Tests.GUI.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Mutagen.Bethesda.Tests.GUI"
+    d:DataContext="{d:DesignInstance vm:GroupTestVM}"
+    d:DesignHeight="60"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid Margin="0,0,0,10" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0"
+            x:Name="TopGrid"
+            Background="Transparent">
+            <Border Grid.Column="0" Grid.ColumnSpan="4"
+                Margin="5,0,-5,0"
+                CornerRadius="4"
+                Style="{StaticResource StateBorderStyle}" />
+            <TextBlock
+                x:Name="Name"
+                Margin="15,3,45,3"
+                FontSize="15" />
+        </Grid>
+        <ItemsControl x:Name="PassthroughsControl" Grid.Row="1">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <local:PassthroughTestView ViewModel="{Binding}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</local:GroupTestViewBase>

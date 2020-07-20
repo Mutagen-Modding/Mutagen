@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -109,8 +103,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -134,6 +128,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Value
         public UInt32 Value { get; set; } = default;
+        #endregion
+        #region Weight
+        public Single Weight { get; set; } = default;
         #endregion
         #region ShortName
         public String? ShortName { get; set; }
@@ -173,135 +170,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => AmmunitionXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((AmmunitionXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Ammunition CreateFromXml(
-            XElement node,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Ammunition CreateFromXml(
-            XElement node,
-            out Ammunition.ErrorMask errorMask,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Ammunition.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Ammunition CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Ammunition();
-            ((AmmunitionSetterCommon)((IAmmunitionGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Ammunition CreateFromXml(
-            string path,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Ammunition CreateFromXml(
-            string path,
-            out Ammunition.ErrorMask errorMask,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Ammunition CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Ammunition CreateFromXml(
-            Stream stream,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Ammunition CreateFromXml(
-            Stream stream,
-            out Ammunition.ErrorMask errorMask,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Ammunition CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -325,6 +193,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Flags = initialValue;
                 this.Damage = initialValue;
                 this.Value = initialValue;
+                this.Weight = initialValue;
                 this.ShortName = initialValue;
                 this.DATADataTypeState = initialValue;
             }
@@ -332,7 +201,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -349,12 +218,13 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Flags,
                 TItem Damage,
                 TItem Value,
+                TItem Weight,
                 TItem ShortName,
                 TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -372,6 +242,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Flags = Flags;
                 this.Damage = Damage;
                 this.Value = Value;
+                this.Weight = Weight;
                 this.ShortName = ShortName;
                 this.DATADataTypeState = DATADataTypeState;
             }
@@ -398,6 +269,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Flags;
             public TItem Damage;
             public TItem Value;
+            public TItem Weight;
             public TItem ShortName;
             public TItem DATADataTypeState;
             #endregion
@@ -426,6 +298,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Damage, rhs.Damage)) return false;
                 if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.ShortName, rhs.ShortName)) return false;
                 if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
@@ -446,6 +319,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Flags);
                 hash.Add(this.Damage);
                 hash.Add(this.Value);
+                hash.Add(this.Weight);
                 hash.Add(this.ShortName);
                 hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
@@ -497,6 +371,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.Damage)) return false;
                 if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
                 if (!eval(this.ShortName)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
@@ -546,6 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Flags)) return true;
                 if (eval(this.Damage)) return true;
                 if (eval(this.Value)) return true;
+                if (eval(this.Weight)) return true;
                 if (eval(this.ShortName)) return true;
                 if (eval(this.DATADataTypeState)) return true;
                 return false;
@@ -589,6 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Flags = eval(this.Flags);
                 obj.Damage = eval(this.Damage);
                 obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
                 obj.ShortName = eval(this.ShortName);
                 obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
@@ -684,6 +561,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Value, "Value");
                     }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendItem(Weight, "Weight");
+                    }
                     if (printMask?.ShortName ?? true)
                     {
                         fg.AppendItem(ShortName, "ShortName");
@@ -717,6 +598,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Flags;
             public Exception? Damage;
             public Exception? Value;
+            public Exception? Weight;
             public Exception? ShortName;
             public Exception? DATADataTypeState;
             #endregion
@@ -753,6 +635,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Damage;
                     case Ammunition_FieldIndex.Value:
                         return Value;
+                    case Ammunition_FieldIndex.Weight:
+                        return Weight;
                     case Ammunition_FieldIndex.ShortName:
                         return ShortName;
                     case Ammunition_FieldIndex.DATADataTypeState:
@@ -805,6 +689,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Ammunition_FieldIndex.Value:
                         this.Value = ex;
+                        break;
+                    case Ammunition_FieldIndex.Weight:
+                        this.Weight = ex;
                         break;
                     case Ammunition_FieldIndex.ShortName:
                         this.ShortName = ex;
@@ -862,6 +749,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case Ammunition_FieldIndex.Value:
                         this.Value = (Exception?)obj;
                         break;
+                    case Ammunition_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
+                        break;
                     case Ammunition_FieldIndex.ShortName:
                         this.ShortName = (Exception?)obj;
                         break;
@@ -890,6 +780,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Flags != null) return true;
                 if (Damage != null) return true;
                 if (Value != null) return true;
+                if (Weight != null) return true;
                 if (ShortName != null) return true;
                 if (DATADataTypeState != null) return true;
                 return false;
@@ -961,6 +852,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(Damage, "Damage");
                 fg.AppendItem(Value, "Value");
+                fg.AppendItem(Weight, "Weight");
                 fg.AppendItem(ShortName, "ShortName");
                 fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
@@ -984,6 +876,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Damage = this.Damage.Combine(rhs.Damage);
                 ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.ShortName = this.ShortName.Combine(rhs.ShortName);
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
@@ -1021,6 +914,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Flags;
             public bool Damage;
             public bool Value;
+            public bool Weight;
             public bool ShortName;
             public bool DATADataTypeState;
             #endregion
@@ -1042,6 +936,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Flags = defaultOn;
                 this.Damage = defaultOn;
                 this.Value = defaultOn;
+                this.Weight = defaultOn;
                 this.ShortName = defaultOn;
                 this.DATADataTypeState = defaultOn;
             }
@@ -1064,6 +959,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Flags, null));
                 ret.Add((Damage, null));
                 ret.Add((Value, null));
+                ret.Add((Weight, null));
                 ret.Add((ShortName, null));
                 ret.Add((DATADataTypeState, null));
             }
@@ -1071,7 +967,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Ammunition_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Ammunition_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AmmunitionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1190,11 +1086,12 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
         new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
         new TranslatedString? Description { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new FormLink<Projectile> Projectile { get; set; }
         new Ammunition.Flag Flags { get; set; }
         new Single Damage { get; set; }
         new UInt32 Value { get; set; }
+        new Single Weight { get; set; }
         new String? ShortName { get; set; }
         new Ammunition.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
@@ -1220,11 +1117,10 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIconsGetter,
         IWeightValueGetter,
         ILoquiObject<IAmmunitionGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Ammunition_Registration.Instance;
+        static new ILoquiRegistration Registration => Ammunition_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         TranslatedString? Name { get; }
         IModelGetter? Model { get; }
@@ -1238,6 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim
         Ammunition.Flag Flags { get; }
         Single Damage { get; }
         UInt32 Value { get; }
+        Single Weight { get; }
         String? ShortName { get; }
         Ammunition.DATADataType DATADataTypeState { get; }
 
@@ -1378,131 +1275,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IAmmunitionInternal item,
-            XElement node,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IAmmunitionInternal item,
-            XElement node,
-            out Ammunition.ErrorMask errorMask,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Ammunition.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IAmmunitionInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((AmmunitionSetterCommon)((IAmmunitionGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAmmunitionInternal item,
-            string path,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAmmunitionInternal item,
-            string path,
-            out Ammunition.ErrorMask errorMask,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAmmunitionInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IAmmunitionInternal item,
-            Stream stream,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAmmunitionInternal item,
-            Stream stream,
-            out Ammunition.ErrorMask errorMask,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IAmmunitionInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Ammunition.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1540,7 +1312,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1557,8 +1329,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Flags = 16,
         Damage = 17,
         Value = 18,
-        ShortName = 19,
-        DATADataTypeState = 20,
+        Weight = 19,
+        ShortName = 20,
+        DATADataTypeState = 21,
     }
     #endregion
 
@@ -1576,9 +1349,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "14e93a4b-95d0-42a5-8ccf-bad4555e8184";
 
-        public const ushort AdditionalFieldCount = 15;
+        public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(Ammunition.Mask<>);
 
@@ -1634,6 +1407,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Ammunition_FieldIndex.Damage;
                 case "VALUE":
                     return (ushort)Ammunition_FieldIndex.Value;
+                case "WEIGHT":
+                    return (ushort)Ammunition_FieldIndex.Weight;
                 case "SHORTNAME":
                     return (ushort)Ammunition_FieldIndex.ShortName;
                 case "DATADATATYPESTATE":
@@ -1662,6 +1437,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.Flags:
                 case Ammunition_FieldIndex.Damage:
                 case Ammunition_FieldIndex.Value:
+                case Ammunition_FieldIndex.Weight:
                 case Ammunition_FieldIndex.ShortName:
                 case Ammunition_FieldIndex.DATADataTypeState:
                     return false;
@@ -1689,6 +1465,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.Flags:
                 case Ammunition_FieldIndex.Damage:
                 case Ammunition_FieldIndex.Value:
+                case Ammunition_FieldIndex.Weight:
                 case Ammunition_FieldIndex.ShortName:
                 case Ammunition_FieldIndex.DATADataTypeState:
                     return false;
@@ -1715,6 +1492,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.Flags:
                 case Ammunition_FieldIndex.Damage:
                 case Ammunition_FieldIndex.Value:
+                case Ammunition_FieldIndex.Weight:
                 case Ammunition_FieldIndex.ShortName:
                 case Ammunition_FieldIndex.DATADataTypeState:
                     return false;
@@ -1754,6 +1532,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Damage";
                 case Ammunition_FieldIndex.Value:
                     return "Value";
+                case Ammunition_FieldIndex.Weight:
+                    return "Weight";
                 case Ammunition_FieldIndex.ShortName:
                     return "ShortName";
                 case Ammunition_FieldIndex.DATADataTypeState:
@@ -1781,6 +1561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.Flags:
                 case Ammunition_FieldIndex.Damage:
                 case Ammunition_FieldIndex.Value:
+                case Ammunition_FieldIndex.Weight:
                 case Ammunition_FieldIndex.ShortName:
                 case Ammunition_FieldIndex.DATADataTypeState:
                     return false;
@@ -1807,6 +1588,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.Flags:
                 case Ammunition_FieldIndex.Damage:
                 case Ammunition_FieldIndex.Value:
+                case Ammunition_FieldIndex.Weight:
                 case Ammunition_FieldIndex.ShortName:
                 case Ammunition_FieldIndex.DATADataTypeState:
                     return false;
@@ -1837,7 +1619,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.Description:
                     return typeof(TranslatedString);
                 case Ammunition_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Ammunition_FieldIndex.Projectile:
                     return typeof(FormLink<Projectile>);
                 case Ammunition_FieldIndex.Flags:
@@ -1846,6 +1628,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Single);
                 case Ammunition_FieldIndex.Value:
                     return typeof(UInt32);
+                case Ammunition_FieldIndex.Weight:
+                    return typeof(Single);
                 case Ammunition_FieldIndex.ShortName:
                     return typeof(String);
                 case Ammunition_FieldIndex.DATADataTypeState:
@@ -1855,7 +1639,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(AmmunitionXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.AMMO;
         public static readonly Type BinaryWriteTranslation = typeof(AmmunitionBinaryWriteTranslation);
         #region Interface
@@ -1912,6 +1695,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Flags = default;
             item.Damage = default;
             item.Value = default;
+            item.Weight = default;
             item.ShortName = default;
             item.DATADataTypeState = default;
             base.Clear(item);
@@ -1926,86 +1710,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IAmmunitionInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IAmmunitionInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IAmmunitionInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    AmmunitionXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Ammunition)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Ammunition)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2099,6 +1803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Flags = item.Flags == rhs.Flags;
             ret.Damage = item.Damage.EqualsWithin(rhs.Damage);
             ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.ShortName = string.Equals(item.ShortName, rhs.ShortName);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -2226,6 +1931,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Value, "Value");
             }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendItem(item.Weight, "Weight");
+            }
             if ((printMask?.ShortName ?? true)
                 && item.ShortName.TryGet(out var ShortNameItem))
             {
@@ -2278,6 +1987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Flags = true;
             mask.Damage = true;
             mask.Value = true;
+            mask.Weight = true;
             mask.ShortName = (item.ShortName != null);
             mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
@@ -2293,7 +2003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Ammunition_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Ammunition_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Ammunition_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Ammunition_FieldIndex)((int)index);
@@ -2314,7 +2024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Ammunition_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Ammunition_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Ammunition_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Ammunition_FieldIndex)((int)index);
@@ -2344,6 +2054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.Damage.EqualsWithin(rhs.Damage)) return false;
             if (lhs.Value != rhs.Value) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             if (!string.Equals(lhs.ShortName, rhs.ShortName)) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
@@ -2404,6 +2115,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Flags);
             hash.Add(item.Damage);
             hash.Add(item.Value);
+            hash.Add(item.Weight);
             if (item.ShortName.TryGet(out var ShortNameitem))
             {
                 hash.Add(ShortNameitem);
@@ -2674,6 +2386,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Value = rhs.Value;
             }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Weight) ?? true))
+            {
+                item.Weight = rhs.Weight;
+            }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ShortName) ?? true))
             {
                 item.ShortName = rhs.ShortName;
@@ -2804,663 +2520,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class AmmunitionXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static AmmunitionXmlWriteTranslation Instance = new AmmunitionXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IAmmunitionGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ObjectBounds) ?? true))
-            {
-                var ObjectBoundsItem = item.ObjectBounds;
-                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    node: node,
-                    name: nameof(item.ObjectBounds),
-                    fieldIndex: (int)Ammunition_FieldIndex.ObjectBounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Ammunition_FieldIndex.ObjectBounds));
-            }
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Ammunition_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((item.Model != null)
-                && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Model) ?? true))
-            {
-                if (item.Model.TryGet(out var ModelItem))
-                {
-                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                        item: ModelItem,
-                        node: node,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)Ammunition_FieldIndex.Model,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Ammunition_FieldIndex.Model));
-                }
-            }
-            if ((item.Icons != null)
-                && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Icons) ?? true))
-            {
-                if (item.Icons.TryGet(out var IconsItem))
-                {
-                    ((IconsXmlWriteTranslation)((IXmlItem)IconsItem).XmlWriteTranslator).Write(
-                        item: IconsItem,
-                        node: node,
-                        name: nameof(item.Icons),
-                        fieldIndex: (int)Ammunition_FieldIndex.Icons,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Ammunition_FieldIndex.Icons));
-                }
-            }
-            if ((item.Destructible != null)
-                && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Destructible) ?? true))
-            {
-                if (item.Destructible.TryGet(out var DestructibleItem))
-                {
-                    ((DestructibleXmlWriteTranslation)((IXmlItem)DestructibleItem).XmlWriteTranslator).Write(
-                        item: DestructibleItem,
-                        node: node,
-                        name: nameof(item.Destructible),
-                        fieldIndex: (int)Ammunition_FieldIndex.Destructible,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Ammunition_FieldIndex.Destructible));
-                }
-            }
-            if ((item.PickUpSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.PickUpSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PickUpSound),
-                    item: item.PickUpSound.FormKey,
-                    fieldIndex: (int)Ammunition_FieldIndex.PickUpSound,
-                    errorMask: errorMask);
-            }
-            if ((item.PutDownSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.PutDownSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PutDownSound),
-                    item: item.PutDownSound.FormKey,
-                    fieldIndex: (int)Ammunition_FieldIndex.PutDownSound,
-                    errorMask: errorMask);
-            }
-            if ((item.Description != null)
-                && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Description) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Description),
-                    item: item.Description,
-                    fieldIndex: (int)Ammunition_FieldIndex.Description,
-                    errorMask: errorMask);
-            }
-            if ((item.Keywords != null)
-                && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Keywords) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IKeywordGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Keywords),
-                    item: item.Keywords,
-                    fieldIndex: (int)Ammunition_FieldIndex.Keywords,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Ammunition_FieldIndex.Keywords),
-                    transl: (XElement subNode, IFormLink<IKeywordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Projectile) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Projectile),
-                    item: item.Projectile.FormKey,
-                    fieldIndex: (int)Ammunition_FieldIndex.Projectile,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Ammunition.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Ammunition_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Damage) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Damage),
-                    item: item.Damage,
-                    fieldIndex: (int)Ammunition_FieldIndex.Damage,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Value) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Value),
-                    item: item.Value,
-                    fieldIndex: (int)Ammunition_FieldIndex.Value,
-                    errorMask: errorMask);
-            }
-            if ((item.ShortName != null)
-                && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ShortName) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ShortName),
-                    item: item.ShortName,
-                    fieldIndex: (int)Ammunition_FieldIndex.ShortName,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Ammunition.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Ammunition_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IAmmunitionGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Ammunition");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Ammunition");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IAmmunitionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IAmmunitionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IAmmunitionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class AmmunitionXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static AmmunitionXmlCreateTranslation Instance = new AmmunitionXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IAmmunitionInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    AmmunitionXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IAmmunitionInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "ObjectBounds":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.ObjectBounds);
-                    try
-                    {
-                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Ammunition_FieldIndex.ObjectBounds));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Name":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Model);
-                    try
-                    {
-                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Ammunition_FieldIndex.Model));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Icons":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Icons);
-                    try
-                    {
-                        item.Icons = LoquiXmlTranslation<Icons>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Ammunition_FieldIndex.Icons));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Destructible":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Destructible);
-                    try
-                    {
-                        item.Destructible = LoquiXmlTranslation<Destructible>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Ammunition_FieldIndex.Destructible));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PickUpSound":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.PickUpSound);
-                    try
-                    {
-                        item.PickUpSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PutDownSound":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.PutDownSound);
-                    try
-                    {
-                        item.PutDownSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Description":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Description);
-                    try
-                    {
-                        item.Description = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Keywords":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Keywords);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
-                            node: node,
-                            enumer: out var KeywordsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Keywords = KeywordsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Keywords = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Projectile":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Projectile);
-                    try
-                    {
-                        item.Projectile = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Ammunition.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Damage":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Damage);
-                    try
-                    {
-                        item.Damage = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Value":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Value);
-                    try
-                    {
-                        item.Value = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weight":
-                    break;
-                case "ShortName":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.ShortName);
-                    try
-                    {
-                        item.ShortName = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Ammunition.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class AmmunitionXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IAmmunitionGetter item,
-            XElement node,
-            out Ammunition.ErrorMask errorMask,
-            Ammunition.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((AmmunitionXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Ammunition.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IAmmunitionGetter item,
-            string path,
-            out Ammunition.ErrorMask errorMask,
-            Ammunition.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IAmmunitionGetter item,
-            Stream stream,
-            out Ammunition.ErrorMask errorMask,
-            Ammunition.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3559,6 +2618,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.Damage);
                 writer.Write(item.Value);
+                if (writer.MetaData.FormVersion!.Value >= 44)
+                {
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Weight);
+                }
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3580,10 +2645,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -3636,9 +2703,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAmmunitionInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3649,7 +2717,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.ObjectBounds);
+                    return (int)Ammunition_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -3658,21 +2726,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Name);
+                    return (int)Ammunition_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Model);
+                    return (int)Ammunition_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Icons);
+                    return (int)Ammunition_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -3681,7 +2749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Destructible);
+                    return (int)Ammunition_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.YNAM:
                 {
@@ -3689,7 +2757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PickUpSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.PickUpSound);
+                    return (int)Ammunition_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
@@ -3697,7 +2765,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PutDownSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.PutDownSound);
+                    return (int)Ammunition_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -3706,7 +2774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Description);
+                    return (int)Ammunition_FieldIndex.Description;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -3718,8 +2786,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Keywords);
+                        .CastExtendedList<IFormLink<Keyword>>();
+                    return (int)Ammunition_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3731,7 +2799,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Flags = EnumBinaryTranslation<Ammunition.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.Damage = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.Value = dataFrame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Value);
+                    if (frame.MetaData.FormVersion!.Value >= 44)
+                    {
+                        item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    }
+                    return (int)Ammunition_FieldIndex.Weight;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -3739,12 +2811,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ShortName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.ShortName);
+                    return (int)Ammunition_FieldIndex.ShortName;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3791,21 +2864,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AmmunitionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AmmunitionCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => AmmunitionXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((AmmunitionXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AmmunitionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3833,12 +2891,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region PickUpSound
         private int? _PickUpSoundLocation;
         public bool PickUpSound_IsSet => _PickUpSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
         public bool PutDownSound_IsSet => _PutDownSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region Description
         private int? _DescriptionLocation;
@@ -3860,12 +2918,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Damage
         private int _DamageLocation => _DATALocation!.Value + 0x8;
         private bool _Damage_IsSet => _DATALocation.HasValue;
-        public Single Damage => _Damage_IsSet ? SpanExt.GetFloat(_data.Slice(_DamageLocation, 4)) : default;
+        public Single Damage => _Damage_IsSet ? _data.Slice(_DamageLocation, 4).Float() : default;
         #endregion
         #region Value
         private int _ValueLocation => _DATALocation!.Value + 0xC;
         private bool _Value_IsSet => _DATALocation.HasValue;
         public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
+        #endregion
+        #region Weight
+        private int _WeightLocation => _DATALocation!.Value + 0x10;
+        private bool _Weight_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 44;
+        public Single Weight => _Weight_IsSet ? _data.Slice(_WeightLocation, 4).Float() : default;
+        int WeightVersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0;
         #endregion
         #region ShortName
         private int? _ShortNameLocation;
@@ -3896,8 +2960,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new AmmunitionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3923,12 +2988,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3937,12 +3003,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.ObjectBounds);
+                    return (int)Ammunition_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Name);
+                    return (int)Ammunition_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3950,7 +3016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Model);
+                    return (int)Ammunition_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -3958,7 +3024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Icons);
+                    return (int)Ammunition_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -3968,27 +3034,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Destructible);
+                    return (int)Ammunition_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     _PickUpSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.PickUpSound);
+                    return (int)Ammunition_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     _PutDownSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.PutDownSound);
+                    return (int)Ammunition_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Description);
+                    return (int)Ammunition_FieldIndex.Description;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -3996,17 +3062,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Keywords);
+                    return (int)Ammunition_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Value);
+                    return (int)Ammunition_FieldIndex.Weight;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     _ShortNameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.ShortName);
+                    return (int)Ammunition_FieldIndex.ShortName;
                 }
                 default:
                     return base.FillRecordType(
@@ -4014,7 +3080,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

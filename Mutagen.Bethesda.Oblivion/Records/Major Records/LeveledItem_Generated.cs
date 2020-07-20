@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -61,8 +55,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LeveledEntry<AItem>> _Entries = new ExtendedList<LeveledEntry<AItem>>();
-        public ExtendedList<LeveledEntry<AItem>> Entries
+        private IExtendedList<LeveledEntry<AItem>> _Entries = new ExtendedList<LeveledEntry<AItem>>();
+        public IExtendedList<LeveledEntry<AItem>> Entries
         {
             get => this._Entries;
             protected set => this._Entries = value;
@@ -103,135 +97,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => LeveledItemXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((LeveledItemXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new LeveledItem CreateFromXml(
-            XElement node,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static LeveledItem CreateFromXml(
-            XElement node,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LeveledItem.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static LeveledItem CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new LeveledItem();
-            ((LeveledItemSetterCommon)((ILeveledItemGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static LeveledItem CreateFromXml(
-            string path,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static LeveledItem CreateFromXml(
-            string path,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static LeveledItem CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static LeveledItem CreateFromXml(
-            Stream stream,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static LeveledItem CreateFromXml(
-            Stream stream,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static LeveledItem CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             AItem.Mask<TItem>,
@@ -250,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem OblivionMajorRecordFlags,
                 TItem ChanceNone,
@@ -259,7 +124,7 @@ namespace Mutagen.Bethesda.Oblivion
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
@@ -634,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = LeveledItem_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = LeveledItem_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -731,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
-        new ExtendedList<LeveledEntry<AItem>> Entries { get; }
+        new IExtendedList<LeveledEntry<AItem>> Entries { get; }
     }
 
     public partial interface ILeveledItemInternal :
@@ -744,11 +609,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledItemGetter :
         IAItemGetter,
         ILoquiObject<ILeveledItemGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => LeveledItem_Registration.Instance;
+        static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;
         Byte? ChanceNone { get; }
         LeveledFlag? Flags { get; }
         IReadOnlyList<ILeveledEntryGetter<IAItemGetter>> Entries { get; }
@@ -886,131 +750,6 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ILeveledItemInternal item,
-            XElement node,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ILeveledItemInternal item,
-            XElement node,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LeveledItem.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this ILeveledItemInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((LeveledItemSetterCommon)((ILeveledItemGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILeveledItemInternal item,
-            string path,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILeveledItemInternal item,
-            string path,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILeveledItemInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this ILeveledItemInternal item,
-            Stream stream,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILeveledItemInternal item,
-            Stream stream,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILeveledItemInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1048,7 +787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         OblivionMajorRecordFlags = 4,
         ChanceNone = 5,
@@ -1212,13 +951,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledItem_FieldIndex.Flags:
                     return typeof(LeveledFlag);
                 case LeveledItem_FieldIndex.Entries:
-                    return typeof(ExtendedList<LeveledEntry<AItem>>);
+                    return typeof(IExtendedList<LeveledEntry<AItem>>);
                 default:
                     return AItem_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(LeveledItemXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.LVLI;
         public static readonly Type BinaryWriteTranslation = typeof(LeveledItemBinaryWriteTranslation);
         #region Interface
@@ -1282,99 +1020,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ILeveledItemInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            ILeveledItemInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    AItemSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            ILeveledItemInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    LeveledItemXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IAItemInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (LeveledItem)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IOblivionMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (LeveledItem)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (LeveledItem)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1570,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (LeveledItem_FieldIndex)((int)index);
                 case AItem_FieldIndex.FormKey:
                     return (LeveledItem_FieldIndex)((int)index);
-                case AItem_FieldIndex.Version:
+                case AItem_FieldIndex.VersionControl:
                     return (LeveledItem_FieldIndex)((int)index);
                 case AItem_FieldIndex.EditorID:
                     return (LeveledItem_FieldIndex)((int)index);
@@ -1589,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (LeveledItem_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (LeveledItem_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
+                case OblivionMajorRecord_FieldIndex.VersionControl:
                     return (LeveledItem_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (LeveledItem_FieldIndex)((int)index);
@@ -1608,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (LeveledItem_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (LeveledItem_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (LeveledItem_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (LeveledItem_FieldIndex)((int)index);
@@ -1935,329 +1580,6 @@ namespace Mutagen.Bethesda.Oblivion
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public partial class LeveledItemXmlWriteTranslation :
-        AItemXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static LeveledItemXmlWriteTranslation Instance = new LeveledItemXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            ILeveledItemGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            AItemXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.ChanceNone != null)
-                && (translationMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ChanceNone) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ChanceNone),
-                    item: item.ChanceNone.Value,
-                    fieldIndex: (int)LeveledItem_FieldIndex.ChanceNone,
-                    errorMask: errorMask);
-            }
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<LeveledFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)LeveledItem_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
-            {
-                ListXmlTranslation<ILeveledEntryGetter<IAItemGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Entries),
-                    item: item.Entries,
-                    fieldIndex: (int)LeveledItem_FieldIndex.Entries,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)LeveledItem_FieldIndex.Entries),
-                    transl: (XElement subNode, ILeveledEntryGetter<IAItemGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LeveledEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write<IAItemGetter>(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            ILeveledItemGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LeveledItem");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LeveledItem");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILeveledItemGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IAItemGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILeveledItemGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILeveledItemGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILeveledItemGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class LeveledItemXmlCreateTranslation : AItemXmlCreateTranslation
-    {
-        public new readonly static LeveledItemXmlCreateTranslation Instance = new LeveledItemXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            ILeveledItemInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    LeveledItemXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            ILeveledItemInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "ChanceNone":
-                    errorMask?.PushIndex((int)LeveledItem_FieldIndex.ChanceNone);
-                    try
-                    {
-                        item.ChanceNone = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)LeveledItem_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<LeveledFlag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Entries":
-                    errorMask?.PushIndex((int)LeveledItem_FieldIndex.Entries);
-                    try
-                    {
-                        if (ListXmlTranslation<LeveledEntry<AItem>>.Instance.Parse(
-                            node: node,
-                            enumer: out var EntriesItem,
-                            transl: LoquiXmlTranslation<LeveledEntry<AItem>>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Entries.SetTo(EntriesItem);
-                        }
-                        else
-                        {
-                            item.Entries.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    AItemXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Oblivion
-{
-    #region Xml Write Mixins
-    public static class LeveledItemXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this ILeveledItemGetter item,
-            XElement node,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((LeveledItemXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = LeveledItem.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this ILeveledItemGetter item,
-            string path,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ILeveledItemGetter item,
-            Stream stream,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -2327,10 +1649,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -2394,9 +1718,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILeveledItemInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2408,13 +1733,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ChanceNone = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
+                    return (int)LeveledItem_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<LeveledFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Flags);
+                    return (int)LeveledItem_FieldIndex.Flags;
                 }
                 case RecordTypeInts.LVLO:
                 {
@@ -2424,19 +1749,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: RecordTypes.LVLO,
                             recordTypeConverter: recordTypeConverter,
                             transl: LeveledEntry<AItem>.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);
+                    return (int)LeveledItem_FieldIndex.Entries;
                 }
                 case RecordTypeInts.DATA:
                 {
                     LeveledItemBinaryCreateTranslation.FillBinaryVestigialCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 default:
                     return AItemBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -2487,21 +1813,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => LeveledItemXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((LeveledItemXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2515,7 +1826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region ChanceNone
         private int? _ChanceNoneLocation;
-        public Byte? ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _ChanceNoneLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        public Byte? ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ChanceNoneLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
         #region Flags
         partial void FlagsCustomParse(
@@ -2555,8 +1866,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new LeveledItemBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2582,12 +1894,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2596,7 +1909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.LVLD:
                 {
                     _ChanceNoneLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
+                    return (int)LeveledItem_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLF:
                 {
@@ -2604,11 +1917,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Flags);
+                    return (int)LeveledItem_FieldIndex.Flags;
                 }
                 case RecordTypeInts.LVLO:
                 {
-                    this.Entries = BinaryOverlayList<LeveledEntryBinaryOverlay<IAItemGetter>>.FactoryByArray(
+                    this.Entries = BinaryOverlayList.FactoryByArray<LeveledEntryBinaryOverlay<IAItemGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -2618,14 +1931,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);
+                    return (int)LeveledItem_FieldIndex.Entries;
                 }
                 case RecordTypeInts.DATA:
                 {
                     VestigialCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 default:
                     return base.FillRecordType(
@@ -2633,7 +1946,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

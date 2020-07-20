@@ -11,7 +11,7 @@
       </List>
       <FormLink name="MenuDisplayObject" refName="Static" recordType="MDOB" />
       <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
-      <String name="Description" recordType="DESC" hasBeenSet="False" />
+      <String name="Description" recordType="DESC" hasBeenSet="False" translated="DL" />
       <Data recordType="SPIT">
         <Fields>
           <UInt32 name="BaseCost" />

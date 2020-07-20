@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public (bool, long) MajorRecordHeaderSpan()
         {
-            var meta = constants.MajorRecord(frame.RemainingSpan);
+            var meta = constants.MajorRecord(frame.RemainingMemory);
             if (meta.RecordType != type) return (false, -1);
             return (true, meta.ContentLength);
         }
@@ -50,14 +50,14 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public ReadOnlySpan<byte> MajorRecordFrame()
         {
-            var meta = constants.MajorRecordFrame(frame.RemainingSpan);
+            var meta = constants.MajorRecordFrame(frame.RemainingMemory);
             return meta.Content;
         }
 
         [Benchmark]
         public ReadOnlyMemorySlice<byte> MajorRecordMemoryFrame()
         {
-            var meta = constants.MajorRecordMemoryFrame(frame.RemainingMemory);
+            var meta = constants.MajorRecordFrame(frame.RemainingMemory);
             return meta.Content;
         }
     }

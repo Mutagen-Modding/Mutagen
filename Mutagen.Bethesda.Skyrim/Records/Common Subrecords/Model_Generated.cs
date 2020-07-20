@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -50,8 +44,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region AlternateTextures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AlternateTexture>? _AlternateTextures;
-        public ExtendedList<AlternateTexture>? AlternateTextures
+        private IExtendedList<AlternateTexture>? _AlternateTextures;
+        public IExtendedList<AlternateTexture>? AlternateTextures
         {
             get => this._AlternateTextures;
             set => this._AlternateTextures = value;
@@ -89,135 +83,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((ModelCommon)((IModelGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ModelXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ModelXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Model CreateFromXml(
-            XElement node,
-            Model.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Model CreateFromXml(
-            XElement node,
-            out Model.ErrorMask errorMask,
-            Model.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Model.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Model CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Model();
-            ((ModelSetterCommon)((IModelGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Model CreateFromXml(
-            string path,
-            Model.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Model CreateFromXml(
-            string path,
-            out Model.ErrorMask errorMask,
-            Model.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Model CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Model.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Model CreateFromXml(
-            Stream stream,
-            Model.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Model CreateFromXml(
-            Stream stream,
-            out Model.ErrorMask errorMask,
-            Model.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Model CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Model.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -639,17 +504,16 @@ namespace Mutagen.Bethesda.Skyrim
         ISimpleModel,
         ILoquiObjectSetter<IModel>
     {
-        new ExtendedList<AlternateTexture>? AlternateTextures { get; set; }
+        new IExtendedList<AlternateTexture>? AlternateTextures { get; set; }
     }
 
     public partial interface IModelGetter :
         ISimpleModelGetter,
         ILoquiObject<IModelGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Model_Registration.Instance;
+        static new ILoquiRegistration Registration => Model_Registration.Instance;
         IReadOnlyList<IAlternateTextureGetter>? AlternateTextures { get; }
 
     }
@@ -784,131 +648,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IModel item,
-            XElement node,
-            Model.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IModel item,
-            XElement node,
-            out Model.ErrorMask errorMask,
-            Model.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Model.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IModel item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ModelSetterCommon)((IModelGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IModel item,
-            string path,
-            Model.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IModel item,
-            string path,
-            out Model.ErrorMask errorMask,
-            Model.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IModel item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Model.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IModel item,
-            Stream stream,
-            Model.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IModel item,
-            Stream stream,
-            out Model.ErrorMask errorMask,
-            Model.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IModel item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Model.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1082,13 +821,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Model_FieldIndex.AlternateTextures:
-                    return typeof(ExtendedList<AlternateTexture>);
+                    return typeof(IExtendedList<AlternateTexture>);
                 default:
                     return SimpleModel_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ModelXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.MODL;
         public static readonly Type BinaryWriteTranslation = typeof(ModelBinaryWriteTranslation);
         #region Interface
@@ -1140,47 +878,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IModel)item);
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IModel item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ModelXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISimpleModel item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Model)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1542,244 +1239,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class ModelXmlWriteTranslation :
-        SimpleModelXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static ModelXmlWriteTranslation Instance = new ModelXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IModelGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SimpleModelXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.AlternateTextures != null)
-                && (translationMask?.GetShouldTranslate((int)Model_FieldIndex.AlternateTextures) ?? true))
-            {
-                ListXmlTranslation<IAlternateTextureGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.AlternateTextures),
-                    item: item.AlternateTextures,
-                    fieldIndex: (int)Model_FieldIndex.AlternateTextures,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Model_FieldIndex.AlternateTextures),
-                    transl: (XElement subNode, IAlternateTextureGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((AlternateTextureXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IModelGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Model");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Model");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IModelGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISimpleModelGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IModelGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class ModelXmlCreateTranslation : SimpleModelXmlCreateTranslation
-    {
-        public new readonly static ModelXmlCreateTranslation Instance = new ModelXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IModel item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ModelXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IModel item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "AlternateTextures":
-                    errorMask?.PushIndex((int)Model_FieldIndex.AlternateTextures);
-                    try
-                    {
-                        if (ListXmlTranslation<AlternateTexture>.Instance.Parse(
-                            node: node,
-                            enumer: out var AlternateTexturesItem,
-                            transl: LoquiXmlTranslation<AlternateTexture>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.AlternateTextures = AlternateTexturesItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.AlternateTextures = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SimpleModelXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class ModelXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IModelGetter item,
-            XElement node,
-            out Model.ErrorMask errorMask,
-            Model.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Model.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IModelGetter item,
-            string path,
-            out Model.ErrorMask errorMask,
-            Model.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IModelGetter item,
-            Stream stream,
-            out Model.ErrorMask errorMask,
-            Model.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -1852,10 +1311,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ModelBinaryCreateTranslation Instance = new ModelBinaryCreateTranslation();
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IModel item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1871,14 +1331,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             amount: frame.ReadInt32(),
                             frame: frame,
                             transl: AlternateTexture.TryCreateFromBinary)
-                        .ToExtendedList<AlternateTexture>();
-                    return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
+                        .CastExtendedList<AlternateTexture>();
+                    return (int)Model_FieldIndex.AlternateTextures;
                 }
                 default:
                     return SimpleModelBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -1924,21 +1385,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ModelCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ModelCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ModelCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ModelXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ModelXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1997,12 +1443,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2012,12 +1459,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
                     var count = stream.ReadUInt32();
-                    this.AlternateTextures = BinaryOverlayList<AlternateTextureBinaryOverlay>.FactoryByCount(
+                    this.AlternateTextures = BinaryOverlayList.FactoryByCount<AlternateTextureBinaryOverlay>(
                         stream: stream,
                         package: _package,
                         count: count,
                         getter: (s, p) => AlternateTextureBinaryOverlay.AlternateTextureFactory(s, p));
-                    return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
+                    return (int)Model_FieldIndex.AlternateTextures;
                 }
                 default:
                     return base.FillRecordType(
@@ -2025,7 +1472,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

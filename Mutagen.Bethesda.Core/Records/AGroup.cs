@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda
     /// An abstract base class for Groups to inherit from for some common functionality
     /// </summary>
     public abstract class AGroup<T> : IEnumerable<T>, IGroupCommon<T>
-        where T : IMajorRecordInternal, IXmlItem, IBinaryItem
+        where T : IMajorRecordInternal, IBinaryItem
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected abstract ICache<T, FormKey> ProtectedCache { get; }
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Constructor with parent Mod to be associated with
         /// </summary>
-        /// <returns>String in format: "Group<T>(_record_count_)"</returns>
+        /// <returns>String in format: "Group(_record_count_)"</returns>
         public override string ToString()
         {
             return $"Group<{typeof(T).Name}>({this.InternalCache.Count})";
@@ -165,14 +165,14 @@ namespace Mutagen.Bethesda
                 Dictionary<FormKey, int> locationDict = new Dictionary<FormKey, int>();
 
                 stream.Position -= package.MetaData.Constants.GroupConstants.HeaderLength;
-                var groupMeta = package.MetaData.Constants.GetGroup(stream);
+                var groupMeta = stream.GetGroup(package.MetaData);
                 var finalPos = stream.Position + groupMeta.TotalLength;
                 stream.Position += package.MetaData.Constants.GroupConstants.HeaderLength;
                 // Parse MajorRecord locations
                 ObjectType? lastParsed = default;
                 while (stream.Position < finalPos)
                 {
-                    VariableHeader varMeta = package.MetaData.Constants.NextRecordVariableMeta(stream.RemainingSpan);
+                    VariableHeader varMeta = package.MetaData.Constants.NextRecordVariableMeta(stream.RemainingMemory);
                     if (varMeta.IsGroup)
                     {
                         if (lastParsed != ObjectType.Record)
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda
                     }
                     else
                     {
-                        MajorRecordHeader majorMeta = package.MetaData.Constants.MajorRecord(stream.RemainingSpan);
+                        MajorRecordHeader majorMeta = package.MetaData.Constants.MajorRecord(stream.RemainingMemory);
                         if (majorMeta.RecordType != GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE)
                         {
                             throw new DataMisalignedException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);

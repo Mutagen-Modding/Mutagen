@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -165,135 +159,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => PlacedNpcXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PlacedNpcXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new PlacedNpc CreateFromXml(
-            XElement node,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static PlacedNpc CreateFromXml(
-            XElement node,
-            out PlacedNpc.ErrorMask errorMask,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PlacedNpc.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static PlacedNpc CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new PlacedNpc();
-            ((PlacedNpcSetterCommon)((IPlacedNpcGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static PlacedNpc CreateFromXml(
-            string path,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PlacedNpc CreateFromXml(
-            string path,
-            out PlacedNpc.ErrorMask errorMask,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PlacedNpc CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static PlacedNpc CreateFromXml(
-            Stream stream,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static PlacedNpc CreateFromXml(
-            Stream stream,
-            out PlacedNpc.ErrorMask errorMask,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static PlacedNpc CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
@@ -319,7 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem OblivionMajorRecordFlags,
                 TItem Base,
@@ -335,7 +200,7 @@ namespace Mutagen.Bethesda.Oblivion
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
@@ -840,7 +705,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PlacedNpc_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PlacedNpc_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -959,11 +824,10 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IPlacedGetter,
         ILoquiObject<IPlacedNpcGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PlacedNpc_Registration.Instance;
+        static new ILoquiRegistration Registration => PlacedNpc_Registration.Instance;
         IFormLinkNullable<INpcGetter> Base { get; }
         ReadOnlyMemorySlice<Byte>? XPCIFluff { get; }
         ReadOnlyMemorySlice<Byte>? FULLFluff { get; }
@@ -1108,131 +972,6 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPlacedNpcInternal item,
-            XElement node,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IPlacedNpcInternal item,
-            XElement node,
-            out PlacedNpc.ErrorMask errorMask,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PlacedNpc.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IPlacedNpcInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((PlacedNpcSetterCommon)((IPlacedNpcGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPlacedNpcInternal item,
-            string path,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPlacedNpcInternal item,
-            string path,
-            out PlacedNpc.ErrorMask errorMask,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPlacedNpcInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IPlacedNpcInternal item,
-            Stream stream,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPlacedNpcInternal item,
-            Stream stream,
-            out PlacedNpc.ErrorMask errorMask,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IPlacedNpcInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            PlacedNpc.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1270,7 +1009,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         OblivionMajorRecordFlags = 4,
         Base = 5,
@@ -1523,7 +1262,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(PlacedNpcXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.ACHR;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedNpcBinaryWriteTranslation);
         #region Interface
@@ -1589,86 +1327,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IPlacedNpcInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IPlacedNpcInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IPlacedNpcInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    PlacedNpcXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IOblivionMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (PlacedNpc)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (PlacedNpc)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1911,7 +1569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (PlacedNpc_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (PlacedNpc_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
+                case OblivionMajorRecord_FieldIndex.VersionControl:
                     return (PlacedNpc_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (PlacedNpc_FieldIndex)((int)index);
@@ -1930,7 +1588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (PlacedNpc_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (PlacedNpc_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (PlacedNpc_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (PlacedNpc_FieldIndex)((int)index);
@@ -2365,505 +2023,6 @@ namespace Mutagen.Bethesda.Oblivion
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public partial class PlacedNpcXmlWriteTranslation :
-        OblivionMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static PlacedNpcXmlWriteTranslation Instance = new PlacedNpcXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IPlacedNpcGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Base.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Base) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Base),
-                    item: item.Base.FormKey,
-                    fieldIndex: (int)PlacedNpc_FieldIndex.Base,
-                    errorMask: errorMask);
-            }
-            if ((item.XPCIFluff != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.XPCIFluff) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.XPCIFluff),
-                    item: item.XPCIFluff.Value,
-                    fieldIndex: (int)PlacedNpc_FieldIndex.XPCIFluff,
-                    errorMask: errorMask);
-            }
-            if ((item.FULLFluff != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.FULLFluff) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FULLFluff),
-                    item: item.FULLFluff.Value,
-                    fieldIndex: (int)PlacedNpc_FieldIndex.FULLFluff,
-                    errorMask: errorMask);
-            }
-            if ((item.DistantLODData != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.DistantLODData) ?? true))
-            {
-                if (item.DistantLODData.TryGet(out var DistantLODDataItem))
-                {
-                    ((DistantLODDataXmlWriteTranslation)((IXmlItem)DistantLODDataItem).XmlWriteTranslator).Write(
-                        item: DistantLODDataItem,
-                        node: node,
-                        name: nameof(item.DistantLODData),
-                        fieldIndex: (int)PlacedNpc_FieldIndex.DistantLODData,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.DistantLODData));
-                }
-            }
-            if ((item.EnableParent != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.EnableParent) ?? true))
-            {
-                if (item.EnableParent.TryGet(out var EnableParentItem))
-                {
-                    ((EnableParentXmlWriteTranslation)((IXmlItem)EnableParentItem).XmlWriteTranslator).Write(
-                        item: EnableParentItem,
-                        node: node,
-                        name: nameof(item.EnableParent),
-                        fieldIndex: (int)PlacedNpc_FieldIndex.EnableParent,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.EnableParent));
-                }
-            }
-            if ((item.MerchantContainer.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MerchantContainer) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MerchantContainer),
-                    item: item.MerchantContainer.FormKey,
-                    fieldIndex: (int)PlacedNpc_FieldIndex.MerchantContainer,
-                    errorMask: errorMask);
-            }
-            if ((item.Horse.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Horse) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Horse),
-                    item: item.Horse.FormKey,
-                    fieldIndex: (int)PlacedNpc_FieldIndex.Horse,
-                    errorMask: errorMask);
-            }
-            if ((item.RagdollData != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.RagdollData),
-                    item: item.RagdollData.Value,
-                    fieldIndex: (int)PlacedNpc_FieldIndex.RagdollData,
-                    errorMask: errorMask);
-            }
-            if ((item.Scale != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Scale) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Scale),
-                    item: item.Scale.Value,
-                    fieldIndex: (int)PlacedNpc_FieldIndex.Scale,
-                    errorMask: errorMask);
-            }
-            if ((item.Location != null)
-                && (translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Location) ?? true))
-            {
-                if (item.Location.TryGet(out var LocationItem))
-                {
-                    ((LocationXmlWriteTranslation)((IXmlItem)LocationItem).XmlWriteTranslator).Write(
-                        item: LocationItem,
-                        node: node,
-                        name: nameof(item.Location),
-                        fieldIndex: (int)PlacedNpc_FieldIndex.Location,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.Location));
-                }
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IPlacedNpcGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.PlacedNpc");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.PlacedNpc");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPlacedNpcGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPlacedNpcGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IPlacedNpcGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class PlacedNpcXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
-    {
-        public new readonly static PlacedNpcXmlCreateTranslation Instance = new PlacedNpcXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IPlacedNpcInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    PlacedNpcXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IPlacedNpcInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Base":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Base);
-                    try
-                    {
-                        item.Base = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "XPCIFluff":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.XPCIFluff);
-                    try
-                    {
-                        item.XPCIFluff = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FULLFluff":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.FULLFluff);
-                    try
-                    {
-                        item.FULLFluff = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DistantLODData":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.DistantLODData);
-                    try
-                    {
-                        item.DistantLODData = LoquiXmlTranslation<DistantLODData>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.DistantLODData));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EnableParent":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.EnableParent);
-                    try
-                    {
-                        item.EnableParent = LoquiXmlTranslation<EnableParent>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.EnableParent));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MerchantContainer":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.MerchantContainer);
-                    try
-                    {
-                        item.MerchantContainer = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Horse":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Horse);
-                    try
-                    {
-                        item.Horse = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RagdollData":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.RagdollData);
-                    try
-                    {
-                        item.RagdollData = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Scale":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Scale);
-                    try
-                    {
-                        item.Scale = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Location":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Location);
-                    try
-                    {
-                        item.Location = LoquiXmlTranslation<Location>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.Location));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    OblivionMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Oblivion
-{
-    #region Xml Write Mixins
-    public static class PlacedNpcXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IPlacedNpcGetter item,
-            XElement node,
-            out PlacedNpc.ErrorMask errorMask,
-            PlacedNpc.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((PlacedNpcXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = PlacedNpc.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IPlacedNpcGetter item,
-            string path,
-            out PlacedNpc.ErrorMask errorMask,
-            PlacedNpc.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IPlacedNpcGetter item,
-            Stream stream,
-            out PlacedNpc.ErrorMask errorMask,
-            PlacedNpc.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -2949,10 +2108,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -3005,9 +2166,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPlacedNpcInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3021,29 +2183,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Base = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Base);
+                    return (int)PlacedNpc_FieldIndex.Base;
                 }
                 case RecordTypeInts.XPCI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.XPCIFluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.XPCIFluff);
+                    return (int)PlacedNpc_FieldIndex.XPCIFluff;
                 }
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FULLFluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.FULLFluff);
+                    return (int)PlacedNpc_FieldIndex.FULLFluff;
                 }
                 case RecordTypeInts.XLOD:
                 {
                     item.DistantLODData = Mutagen.Bethesda.Oblivion.DistantLODData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.DistantLODData);
+                    return (int)PlacedNpc_FieldIndex.DistantLODData;
                 }
                 case RecordTypeInts.XESP:
                 {
                     item.EnableParent = Mutagen.Bethesda.Oblivion.EnableParent.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.EnableParent);
+                    return (int)PlacedNpc_FieldIndex.EnableParent;
                 }
                 case RecordTypeInts.XMRC:
                 {
@@ -3051,7 +2213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.MerchantContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.MerchantContainer);
+                    return (int)PlacedNpc_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.XHRS:
                 {
@@ -3059,30 +2221,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Horse = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Horse);
+                    return (int)PlacedNpc_FieldIndex.Horse;
                 }
                 case RecordTypeInts.XRGD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RagdollData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.RagdollData);
+                    return (int)PlacedNpc_FieldIndex.RagdollData;
                 }
                 case RecordTypeInts.XSCL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Scale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Scale);
+                    return (int)PlacedNpc_FieldIndex.Scale;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.Location = Mutagen.Bethesda.Oblivion.Location.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Location);
+                    return (int)PlacedNpc_FieldIndex.Location;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3129,21 +2292,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => PlacedNpcXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((PlacedNpcXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3158,7 +2306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Base
         private int? _BaseLocation;
         public bool Base_IsSet => _BaseLocation.HasValue;
-        public IFormLinkNullable<INpcGetter> Base => _BaseLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        public IFormLinkNullable<INpcGetter> Base => _BaseLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
         #endregion
         #region XPCIFluff
         private int? _XPCIFluffLocation;
@@ -3181,12 +2329,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region MerchantContainer
         private int? _MerchantContainerLocation;
         public bool MerchantContainer_IsSet => _MerchantContainerLocation.HasValue;
-        public IFormLinkNullable<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MerchantContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullable<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MerchantContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region Horse
         private int? _HorseLocation;
         public bool Horse_IsSet => _HorseLocation.HasValue;
-        public IFormLinkNullable<IPlacedCreatureGetter> Horse => _HorseLocation.HasValue ? new FormLinkNullable<IPlacedCreatureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HorseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedCreatureGetter>.Null;
+        public IFormLinkNullable<IPlacedCreatureGetter> Horse => _HorseLocation.HasValue ? new FormLinkNullable<IPlacedCreatureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HorseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedCreatureGetter>.Null;
         #endregion
         #region RagdollData
         private int? _RagdollDataLocation;
@@ -3194,7 +2342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Scale
         private int? _ScaleLocation;
-        public Single? Scale => _ScaleLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _ScaleLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? Scale => _ScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public ILocationGetter? Location { get; private set; }
         partial void CustomFactoryEnd(
@@ -3222,8 +2370,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new PlacedNpcBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3249,12 +2398,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3263,47 +2413,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.NAME:
                 {
                     _BaseLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Base);
+                    return (int)PlacedNpc_FieldIndex.Base;
                 }
                 case RecordTypeInts.XPCI:
                 {
                     _XPCIFluffLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.XPCIFluff);
+                    return (int)PlacedNpc_FieldIndex.XPCIFluff;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _FULLFluffLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.FULLFluff);
+                    return (int)PlacedNpc_FieldIndex.FULLFluff;
                 }
                 case RecordTypeInts.XLOD:
                 {
                     _DistantLODDataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.DistantLODData);
+                    return (int)PlacedNpc_FieldIndex.DistantLODData;
                 }
                 case RecordTypeInts.XESP:
                 {
                     _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.EnableParent);
+                    return (int)PlacedNpc_FieldIndex.EnableParent;
                 }
                 case RecordTypeInts.XMRC:
                 {
                     _MerchantContainerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.MerchantContainer);
+                    return (int)PlacedNpc_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.XHRS:
                 {
                     _HorseLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Horse);
+                    return (int)PlacedNpc_FieldIndex.Horse;
                 }
                 case RecordTypeInts.XRGD:
                 {
                     _RagdollDataLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.RagdollData);
+                    return (int)PlacedNpc_FieldIndex.RagdollData;
                 }
                 case RecordTypeInts.XSCL:
                 {
                     _ScaleLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Scale);
+                    return (int)PlacedNpc_FieldIndex.Scale;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3312,7 +2462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Location);
+                    return (int)PlacedNpc_FieldIndex.Location;
                 }
                 default:
                     return base.FillRecordType(
@@ -3320,7 +2470,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

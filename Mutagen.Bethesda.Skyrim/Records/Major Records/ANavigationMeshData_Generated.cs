@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -57,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Vertices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<P3Float> _Vertices = new ExtendedList<P3Float>();
-        public ExtendedList<P3Float> Vertices
+        private IExtendedList<P3Float> _Vertices = new ExtendedList<P3Float>();
+        public IExtendedList<P3Float> Vertices
         {
             get => this._Vertices;
             protected set => this._Vertices = value;
@@ -71,8 +65,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Triangles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NavmeshTriangle> _Triangles = new ExtendedList<NavmeshTriangle>();
-        public ExtendedList<NavmeshTriangle> Triangles
+        private IExtendedList<NavmeshTriangle> _Triangles = new ExtendedList<NavmeshTriangle>();
+        public IExtendedList<NavmeshTriangle> Triangles
         {
             get => this._Triangles;
             protected set => this._Triangles = value;
@@ -85,8 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region EdgeLinks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<EdgeLink> _EdgeLinks = new ExtendedList<EdgeLink>();
-        public ExtendedList<EdgeLink> EdgeLinks
+        private IExtendedList<EdgeLink> _EdgeLinks = new ExtendedList<EdgeLink>();
+        public IExtendedList<EdgeLink> EdgeLinks
         {
             get => this._EdgeLinks;
             protected set => this._EdgeLinks = value;
@@ -99,8 +93,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DoorTriangles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<DoorTriangle> _DoorTriangles = new ExtendedList<DoorTriangle>();
-        public ExtendedList<DoorTriangle> DoorTriangles
+        private IExtendedList<DoorTriangle> _DoorTriangles = new ExtendedList<DoorTriangle>();
+        public IExtendedList<DoorTriangle> DoorTriangles
         {
             get => this._DoorTriangles;
             protected set => this._DoorTriangles = value;
@@ -164,140 +158,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((ANavigationMeshDataCommon)((IANavigationMeshDataGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object XmlWriteTranslator => ANavigationMeshDataXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ANavigationMeshDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static ANavigationMeshData CreateFromXml(
-            XElement node,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static ANavigationMeshData CreateFromXml(
-            XElement node,
-            out ANavigationMeshData.ErrorMask errorMask,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ANavigationMeshData.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static ANavigationMeshData CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if (!LoquiXmlTranslation.Instance.TryCreate<ANavigationMeshData>(node, out var ret, errorMask, translationMask))
-            {
-                throw new ArgumentException($"Unknown ANavigationMeshData subclass: {node.Name.LocalName}");
-            }
-            ((ANavigationMeshDataSetterCommon)((IANavigationMeshDataGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static ANavigationMeshData CreateFromXml(
-            string path,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ANavigationMeshData CreateFromXml(
-            string path,
-            out ANavigationMeshData.ErrorMask errorMask,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ANavigationMeshData CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static ANavigationMeshData CreateFromXml(
-            Stream stream,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static ANavigationMeshData CreateFromXml(
-            Stream stream,
-            out ANavigationMeshData.ErrorMask errorMask,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static ANavigationMeshData CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -1226,10 +1086,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new UInt32 NavmeshVersion { get; set; }
         new UInt32 Magic { get; set; }
-        new ExtendedList<P3Float> Vertices { get; }
-        new ExtendedList<NavmeshTriangle> Triangles { get; }
-        new ExtendedList<EdgeLink> EdgeLinks { get; }
-        new ExtendedList<DoorTriangle> DoorTriangles { get; }
+        new IExtendedList<P3Float> Vertices { get; }
+        new IExtendedList<NavmeshTriangle> Triangles { get; }
+        new IExtendedList<EdgeLink> EdgeLinks { get; }
+        new IExtendedList<DoorTriangle> DoorTriangles { get; }
         new UInt32 NavmeshGridDivisor { get; set; }
         new Single MaxDistanceX { get; set; }
         new Single MaxDistanceY { get; set; }
@@ -1241,7 +1101,6 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IANavigationMeshDataGetter :
         ILoquiObject,
         ILoquiObject<IANavigationMeshDataGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -1420,131 +1279,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IANavigationMeshData item,
-            XElement node,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IANavigationMeshData item,
-            XElement node,
-            out ANavigationMeshData.ErrorMask errorMask,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ANavigationMeshData.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IANavigationMeshData item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ANavigationMeshDataSetterCommon)((IANavigationMeshDataGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IANavigationMeshData item,
-            string path,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IANavigationMeshData item,
-            string path,
-            out ANavigationMeshData.ErrorMask errorMask,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IANavigationMeshData item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IANavigationMeshData item,
-            Stream stream,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IANavigationMeshData item,
-            Stream stream,
-            out ANavigationMeshData.ErrorMask errorMask,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IANavigationMeshData item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1832,13 +1566,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ANavigationMeshData_FieldIndex.Magic:
                     return typeof(UInt32);
                 case ANavigationMeshData_FieldIndex.Vertices:
-                    return typeof(ExtendedList<P3Float>);
+                    return typeof(IExtendedList<P3Float>);
                 case ANavigationMeshData_FieldIndex.Triangles:
-                    return typeof(ExtendedList<NavmeshTriangle>);
+                    return typeof(IExtendedList<NavmeshTriangle>);
                 case ANavigationMeshData_FieldIndex.EdgeLinks:
-                    return typeof(ExtendedList<EdgeLink>);
+                    return typeof(IExtendedList<EdgeLink>);
                 case ANavigationMeshData_FieldIndex.DoorTriangles:
-                    return typeof(ExtendedList<DoorTriangle>);
+                    return typeof(IExtendedList<DoorTriangle>);
                 case ANavigationMeshData_FieldIndex.NavmeshGridDivisor:
                     return typeof(UInt32);
                 case ANavigationMeshData_FieldIndex.MaxDistanceX:
@@ -1856,7 +1590,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ANavigationMeshDataXmlWriteTranslation);
         public static readonly Type BinaryWriteTranslation = typeof(ANavigationMeshDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1912,34 +1645,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Max = default;
             item.NavmeshGrid = new byte[0];
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IANavigationMeshData item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ANavigationMeshDataXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2455,696 +2160,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class ANavigationMeshDataXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static ANavigationMeshDataXmlWriteTranslation Instance = new ANavigationMeshDataXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IANavigationMeshDataGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.NavmeshVersion) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NavmeshVersion),
-                    item: item.NavmeshVersion,
-                    fieldIndex: (int)ANavigationMeshData_FieldIndex.NavmeshVersion,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.Magic) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Magic),
-                    item: item.Magic,
-                    fieldIndex: (int)ANavigationMeshData_FieldIndex.Magic,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.Vertices) ?? true))
-            {
-                ListXmlTranslation<P3Float>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Vertices),
-                    item: item.Vertices,
-                    fieldIndex: (int)ANavigationMeshData_FieldIndex.Vertices,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ANavigationMeshData_FieldIndex.Vertices),
-                    transl: (XElement subNode, P3Float subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        P3FloatXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.Triangles) ?? true))
-            {
-                ListXmlTranslation<INavmeshTriangleGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Triangles),
-                    item: item.Triangles,
-                    fieldIndex: (int)ANavigationMeshData_FieldIndex.Triangles,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ANavigationMeshData_FieldIndex.Triangles),
-                    transl: (XElement subNode, INavmeshTriangleGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((NavmeshTriangleXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.EdgeLinks) ?? true))
-            {
-                ListXmlTranslation<IEdgeLinkGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.EdgeLinks),
-                    item: item.EdgeLinks,
-                    fieldIndex: (int)ANavigationMeshData_FieldIndex.EdgeLinks,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ANavigationMeshData_FieldIndex.EdgeLinks),
-                    transl: (XElement subNode, IEdgeLinkGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((EdgeLinkXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.DoorTriangles) ?? true))
-            {
-                ListXmlTranslation<IDoorTriangleGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DoorTriangles),
-                    item: item.DoorTriangles,
-                    fieldIndex: (int)ANavigationMeshData_FieldIndex.DoorTriangles,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ANavigationMeshData_FieldIndex.DoorTriangles),
-                    transl: (XElement subNode, IDoorTriangleGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((DoorTriangleXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.NavmeshGridDivisor) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NavmeshGridDivisor),
-                    item: item.NavmeshGridDivisor,
-                    fieldIndex: (int)ANavigationMeshData_FieldIndex.NavmeshGridDivisor,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.MaxDistanceX) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaxDistanceX),
-                    item: item.MaxDistanceX,
-                    fieldIndex: (int)ANavigationMeshData_FieldIndex.MaxDistanceX,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.MaxDistanceY) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MaxDistanceY),
-                    item: item.MaxDistanceY,
-                    fieldIndex: (int)ANavigationMeshData_FieldIndex.MaxDistanceY,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.Min) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Min),
-                    item: item.Min,
-                    fieldIndex: (int)ANavigationMeshData_FieldIndex.Min,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.Max) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Max),
-                    item: item.Max,
-                    fieldIndex: (int)ANavigationMeshData_FieldIndex.Max,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ANavigationMeshData_FieldIndex.NavmeshGrid) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NavmeshGrid),
-                    item: item.NavmeshGrid,
-                    fieldIndex: (int)ANavigationMeshData_FieldIndex.NavmeshGrid,
-                    errorMask: errorMask);
-            }
-        }
-
-        public virtual void Write(
-            XElement node,
-            IANavigationMeshDataGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ANavigationMeshData");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ANavigationMeshData");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public virtual void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IANavigationMeshDataGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IANavigationMeshDataGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IANavigationMeshDataGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class ANavigationMeshDataXmlCreateTranslation
-    {
-        public readonly static ANavigationMeshDataXmlCreateTranslation Instance = new ANavigationMeshDataXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IANavigationMeshData item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ANavigationMeshDataXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IANavigationMeshData item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "NavmeshVersion":
-                    errorMask?.PushIndex((int)ANavigationMeshData_FieldIndex.NavmeshVersion);
-                    try
-                    {
-                        item.NavmeshVersion = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Magic":
-                    errorMask?.PushIndex((int)ANavigationMeshData_FieldIndex.Magic);
-                    try
-                    {
-                        item.Magic = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Vertices":
-                    errorMask?.PushIndex((int)ANavigationMeshData_FieldIndex.Vertices);
-                    try
-                    {
-                        if (ListXmlTranslation<P3Float>.Instance.Parse(
-                            node: node,
-                            enumer: out var VerticesItem,
-                            transl: P3FloatXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Vertices.SetTo(VerticesItem);
-                        }
-                        else
-                        {
-                            item.Vertices.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Triangles":
-                    errorMask?.PushIndex((int)ANavigationMeshData_FieldIndex.Triangles);
-                    try
-                    {
-                        if (ListXmlTranslation<NavmeshTriangle>.Instance.Parse(
-                            node: node,
-                            enumer: out var TrianglesItem,
-                            transl: LoquiXmlTranslation<NavmeshTriangle>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Triangles.SetTo(TrianglesItem);
-                        }
-                        else
-                        {
-                            item.Triangles.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EdgeLinks":
-                    errorMask?.PushIndex((int)ANavigationMeshData_FieldIndex.EdgeLinks);
-                    try
-                    {
-                        if (ListXmlTranslation<EdgeLink>.Instance.Parse(
-                            node: node,
-                            enumer: out var EdgeLinksItem,
-                            transl: LoquiXmlTranslation<EdgeLink>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.EdgeLinks.SetTo(EdgeLinksItem);
-                        }
-                        else
-                        {
-                            item.EdgeLinks.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DoorTriangles":
-                    errorMask?.PushIndex((int)ANavigationMeshData_FieldIndex.DoorTriangles);
-                    try
-                    {
-                        if (ListXmlTranslation<DoorTriangle>.Instance.Parse(
-                            node: node,
-                            enumer: out var DoorTrianglesItem,
-                            transl: LoquiXmlTranslation<DoorTriangle>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.DoorTriangles.SetTo(DoorTrianglesItem);
-                        }
-                        else
-                        {
-                            item.DoorTriangles.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NavmeshGridDivisor":
-                    errorMask?.PushIndex((int)ANavigationMeshData_FieldIndex.NavmeshGridDivisor);
-                    try
-                    {
-                        item.NavmeshGridDivisor = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaxDistanceX":
-                    errorMask?.PushIndex((int)ANavigationMeshData_FieldIndex.MaxDistanceX);
-                    try
-                    {
-                        item.MaxDistanceX = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaxDistanceY":
-                    errorMask?.PushIndex((int)ANavigationMeshData_FieldIndex.MaxDistanceY);
-                    try
-                    {
-                        item.MaxDistanceY = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Min":
-                    errorMask?.PushIndex((int)ANavigationMeshData_FieldIndex.Min);
-                    try
-                    {
-                        item.Min = P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Max":
-                    errorMask?.PushIndex((int)ANavigationMeshData_FieldIndex.Max);
-                    try
-                    {
-                        item.Max = P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NavmeshGrid":
-                    errorMask?.PushIndex((int)ANavigationMeshData_FieldIndex.NavmeshGrid);
-                    try
-                    {
-                        item.NavmeshGrid = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            fallbackLength: 0,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class ANavigationMeshDataXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IANavigationMeshDataGetter item,
-            XElement node,
-            out ANavigationMeshData.ErrorMask errorMask,
-            ANavigationMeshData.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ANavigationMeshDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = ANavigationMeshData.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IANavigationMeshDataGetter item,
-            string path,
-            out ANavigationMeshData.ErrorMask errorMask,
-            ANavigationMeshData.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IANavigationMeshDataGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IANavigationMeshDataGetter item,
-            Stream stream,
-            out ANavigationMeshData.ErrorMask errorMask,
-            ANavigationMeshData.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IANavigationMeshDataGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IANavigationMeshDataGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((ANavigationMeshDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IANavigationMeshDataGetter item,
-            XElement node,
-            string? name = null,
-            ANavigationMeshData.TranslationMask? translationMask = null)
-        {
-            ((ANavigationMeshDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IANavigationMeshDataGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((ANavigationMeshDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IANavigationMeshDataGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((ANavigationMeshDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3400,23 +2415,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object XmlWriteTranslator => ANavigationMeshDataXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ANavigationMeshDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ANavigationMeshDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -3438,7 +2436,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         #endregion
         #region Vertices
-        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList<P3Float>.FactoryByCountLength(_data.Slice(0x10), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation.Read(s));
+        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList.FactoryByCountLength<P3Float>(_data.Slice(0x10), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation.Read(s));
         protected int VerticesEndingPos;
         #endregion
         #region Triangles
@@ -3446,11 +2444,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         partial void CustomTrianglesEndPos();
         #endregion
         #region EdgeLinks
-        public IReadOnlyList<IEdgeLinkGetter> EdgeLinks => BinaryOverlayList<IEdgeLinkGetter>.FactoryByCountLength(_data.Slice(TrianglesEndingPos), _package, 10, countLength: 4, (s, p) => EdgeLinkBinaryOverlay.EdgeLinkFactory(s, p));
+        public IReadOnlyList<IEdgeLinkGetter> EdgeLinks => BinaryOverlayList.FactoryByCountLength<EdgeLinkBinaryOverlay>(_data.Slice(TrianglesEndingPos), _package, 10, countLength: 4, (s, p) => EdgeLinkBinaryOverlay.EdgeLinkFactory(s, p));
         protected int EdgeLinksEndingPos;
         #endregion
         #region DoorTriangles
-        public IReadOnlyList<IDoorTriangleGetter> DoorTriangles => BinaryOverlayList<IDoorTriangleGetter>.FactoryByCountLength(_data.Slice(EdgeLinksEndingPos), _package, 10, countLength: 4, (s, p) => DoorTriangleBinaryOverlay.DoorTriangleFactory(s, p));
+        public IReadOnlyList<IDoorTriangleGetter> DoorTriangles => BinaryOverlayList.FactoryByCountLength<DoorTriangleBinaryOverlay>(_data.Slice(EdgeLinksEndingPos), _package, 10, countLength: 4, (s, p) => DoorTriangleBinaryOverlay.DoorTriangleFactory(s, p));
         protected int DoorTrianglesEndingPos;
         #endregion
         #region CoverTrianglesLogic

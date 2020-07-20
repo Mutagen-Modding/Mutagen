@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -49,6 +43,70 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Intensity
+        public Single? Intensity { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IVolumetricLightingGetter.Intensity => this.Intensity;
+        #endregion
+        #region CustomColorContribution
+        public Single? CustomColorContribution { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IVolumetricLightingGetter.CustomColorContribution => this.CustomColorContribution;
+        #endregion
+        #region ColorR
+        public Single? ColorR { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IVolumetricLightingGetter.ColorR => this.ColorR;
+        public static RangeFloat ColorR_Range = new RangeFloat(0f, 255f);
+        #endregion
+        #region ColorG
+        public Single? ColorG { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IVolumetricLightingGetter.ColorG => this.ColorG;
+        public static RangeFloat ColorG_Range = new RangeFloat(0f, 255f);
+        #endregion
+        #region ColorB
+        public Single? ColorB { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IVolumetricLightingGetter.ColorB => this.ColorB;
+        public static RangeFloat ColorB_Range = new RangeFloat(0f, 255f);
+        #endregion
+        #region DensityContribution
+        public Single? DensityContribution { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IVolumetricLightingGetter.DensityContribution => this.DensityContribution;
+        #endregion
+        #region DensitySize
+        public Single? DensitySize { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IVolumetricLightingGetter.DensitySize => this.DensitySize;
+        #endregion
+        #region DensityWindSpeed
+        public Single? DensityWindSpeed { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IVolumetricLightingGetter.DensityWindSpeed => this.DensityWindSpeed;
+        #endregion
+        #region DensityFallingSpeed
+        public Single? DensityFallingSpeed { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IVolumetricLightingGetter.DensityFallingSpeed => this.DensityFallingSpeed;
+        #endregion
+        #region PhaseFunctionContribution
+        public Single? PhaseFunctionContribution { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IVolumetricLightingGetter.PhaseFunctionContribution => this.PhaseFunctionContribution;
+        #endregion
+        #region PhaseFunctionScattering
+        public Single? PhaseFunctionScattering { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IVolumetricLightingGetter.PhaseFunctionScattering => this.PhaseFunctionScattering;
+        #endregion
+        #region SamplingRepartitionRangeFactor
+        public Single? SamplingRepartitionRangeFactor { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IVolumetricLightingGetter.SamplingRepartitionRangeFactor => this.SamplingRepartitionRangeFactor;
+        public static RangeFloat SamplingRepartitionRangeFactor_Range = new RangeFloat(0f, 1f);
+        #endregion
 
         #region To String
 
@@ -79,135 +137,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => VolumetricLightingXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((VolumetricLightingXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new VolumetricLighting CreateFromXml(
-            XElement node,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static VolumetricLighting CreateFromXml(
-            XElement node,
-            out VolumetricLighting.ErrorMask errorMask,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = VolumetricLighting.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static VolumetricLighting CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new VolumetricLighting();
-            ((VolumetricLightingSetterCommon)((IVolumetricLightingGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static VolumetricLighting CreateFromXml(
-            string path,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static VolumetricLighting CreateFromXml(
-            string path,
-            out VolumetricLighting.ErrorMask errorMask,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static VolumetricLighting CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static VolumetricLighting CreateFromXml(
-            Stream stream,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static VolumetricLighting CreateFromXml(
-            Stream stream,
-            out VolumetricLighting.ErrorMask errorMask,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static VolumetricLighting CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -218,23 +147,59 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Intensity = initialValue;
+                this.CustomColorContribution = initialValue;
+                this.ColorR = initialValue;
+                this.ColorG = initialValue;
+                this.ColorB = initialValue;
+                this.DensityContribution = initialValue;
+                this.DensitySize = initialValue;
+                this.DensityWindSpeed = initialValue;
+                this.DensityFallingSpeed = initialValue;
+                this.PhaseFunctionContribution = initialValue;
+                this.PhaseFunctionScattering = initialValue;
+                this.SamplingRepartitionRangeFactor = initialValue;
             }
 
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Intensity,
+                TItem CustomColorContribution,
+                TItem ColorR,
+                TItem ColorG,
+                TItem ColorB,
+                TItem DensityContribution,
+                TItem DensitySize,
+                TItem DensityWindSpeed,
+                TItem DensityFallingSpeed,
+                TItem PhaseFunctionContribution,
+                TItem PhaseFunctionScattering,
+                TItem SamplingRepartitionRangeFactor)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Intensity = Intensity;
+                this.CustomColorContribution = CustomColorContribution;
+                this.ColorR = ColorR;
+                this.ColorG = ColorG;
+                this.ColorB = ColorB;
+                this.DensityContribution = DensityContribution;
+                this.DensitySize = DensitySize;
+                this.DensityWindSpeed = DensityWindSpeed;
+                this.DensityFallingSpeed = DensityFallingSpeed;
+                this.PhaseFunctionContribution = PhaseFunctionContribution;
+                this.PhaseFunctionScattering = PhaseFunctionScattering;
+                this.SamplingRepartitionRangeFactor = SamplingRepartitionRangeFactor;
             }
 
             #pragma warning disable CS8618
@@ -243,6 +208,21 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Intensity;
+            public TItem CustomColorContribution;
+            public TItem ColorR;
+            public TItem ColorG;
+            public TItem ColorB;
+            public TItem DensityContribution;
+            public TItem DensitySize;
+            public TItem DensityWindSpeed;
+            public TItem DensityFallingSpeed;
+            public TItem PhaseFunctionContribution;
+            public TItem PhaseFunctionScattering;
+            public TItem SamplingRepartitionRangeFactor;
             #endregion
 
             #region Equals
@@ -256,11 +236,35 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Intensity, rhs.Intensity)) return false;
+                if (!object.Equals(this.CustomColorContribution, rhs.CustomColorContribution)) return false;
+                if (!object.Equals(this.ColorR, rhs.ColorR)) return false;
+                if (!object.Equals(this.ColorG, rhs.ColorG)) return false;
+                if (!object.Equals(this.ColorB, rhs.ColorB)) return false;
+                if (!object.Equals(this.DensityContribution, rhs.DensityContribution)) return false;
+                if (!object.Equals(this.DensitySize, rhs.DensitySize)) return false;
+                if (!object.Equals(this.DensityWindSpeed, rhs.DensityWindSpeed)) return false;
+                if (!object.Equals(this.DensityFallingSpeed, rhs.DensityFallingSpeed)) return false;
+                if (!object.Equals(this.PhaseFunctionContribution, rhs.PhaseFunctionContribution)) return false;
+                if (!object.Equals(this.PhaseFunctionScattering, rhs.PhaseFunctionScattering)) return false;
+                if (!object.Equals(this.SamplingRepartitionRangeFactor, rhs.SamplingRepartitionRangeFactor)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Intensity);
+                hash.Add(this.CustomColorContribution);
+                hash.Add(this.ColorR);
+                hash.Add(this.ColorG);
+                hash.Add(this.ColorB);
+                hash.Add(this.DensityContribution);
+                hash.Add(this.DensitySize);
+                hash.Add(this.DensityWindSpeed);
+                hash.Add(this.DensityFallingSpeed);
+                hash.Add(this.PhaseFunctionContribution);
+                hash.Add(this.PhaseFunctionScattering);
+                hash.Add(this.SamplingRepartitionRangeFactor);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +275,18 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Intensity)) return false;
+                if (!eval(this.CustomColorContribution)) return false;
+                if (!eval(this.ColorR)) return false;
+                if (!eval(this.ColorG)) return false;
+                if (!eval(this.ColorB)) return false;
+                if (!eval(this.DensityContribution)) return false;
+                if (!eval(this.DensitySize)) return false;
+                if (!eval(this.DensityWindSpeed)) return false;
+                if (!eval(this.DensityFallingSpeed)) return false;
+                if (!eval(this.PhaseFunctionContribution)) return false;
+                if (!eval(this.PhaseFunctionScattering)) return false;
+                if (!eval(this.SamplingRepartitionRangeFactor)) return false;
                 return true;
             }
             #endregion
@@ -279,6 +295,18 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Intensity)) return true;
+                if (eval(this.CustomColorContribution)) return true;
+                if (eval(this.ColorR)) return true;
+                if (eval(this.ColorG)) return true;
+                if (eval(this.ColorB)) return true;
+                if (eval(this.DensityContribution)) return true;
+                if (eval(this.DensitySize)) return true;
+                if (eval(this.DensityWindSpeed)) return true;
+                if (eval(this.DensityFallingSpeed)) return true;
+                if (eval(this.PhaseFunctionContribution)) return true;
+                if (eval(this.PhaseFunctionScattering)) return true;
+                if (eval(this.SamplingRepartitionRangeFactor)) return true;
                 return false;
             }
             #endregion
@@ -294,6 +322,18 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Intensity = eval(this.Intensity);
+                obj.CustomColorContribution = eval(this.CustomColorContribution);
+                obj.ColorR = eval(this.ColorR);
+                obj.ColorG = eval(this.ColorG);
+                obj.ColorB = eval(this.ColorB);
+                obj.DensityContribution = eval(this.DensityContribution);
+                obj.DensitySize = eval(this.DensitySize);
+                obj.DensityWindSpeed = eval(this.DensityWindSpeed);
+                obj.DensityFallingSpeed = eval(this.DensityFallingSpeed);
+                obj.PhaseFunctionContribution = eval(this.PhaseFunctionContribution);
+                obj.PhaseFunctionScattering = eval(this.PhaseFunctionScattering);
+                obj.SamplingRepartitionRangeFactor = eval(this.SamplingRepartitionRangeFactor);
             }
             #endregion
 
@@ -316,6 +356,54 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Intensity ?? true)
+                    {
+                        fg.AppendItem(Intensity, "Intensity");
+                    }
+                    if (printMask?.CustomColorContribution ?? true)
+                    {
+                        fg.AppendItem(CustomColorContribution, "CustomColorContribution");
+                    }
+                    if (printMask?.ColorR ?? true)
+                    {
+                        fg.AppendItem(ColorR, "ColorR");
+                    }
+                    if (printMask?.ColorG ?? true)
+                    {
+                        fg.AppendItem(ColorG, "ColorG");
+                    }
+                    if (printMask?.ColorB ?? true)
+                    {
+                        fg.AppendItem(ColorB, "ColorB");
+                    }
+                    if (printMask?.DensityContribution ?? true)
+                    {
+                        fg.AppendItem(DensityContribution, "DensityContribution");
+                    }
+                    if (printMask?.DensitySize ?? true)
+                    {
+                        fg.AppendItem(DensitySize, "DensitySize");
+                    }
+                    if (printMask?.DensityWindSpeed ?? true)
+                    {
+                        fg.AppendItem(DensityWindSpeed, "DensityWindSpeed");
+                    }
+                    if (printMask?.DensityFallingSpeed ?? true)
+                    {
+                        fg.AppendItem(DensityFallingSpeed, "DensityFallingSpeed");
+                    }
+                    if (printMask?.PhaseFunctionContribution ?? true)
+                    {
+                        fg.AppendItem(PhaseFunctionContribution, "PhaseFunctionContribution");
+                    }
+                    if (printMask?.PhaseFunctionScattering ?? true)
+                    {
+                        fg.AppendItem(PhaseFunctionScattering, "PhaseFunctionScattering");
+                    }
+                    if (printMask?.SamplingRepartitionRangeFactor ?? true)
+                    {
+                        fg.AppendItem(SamplingRepartitionRangeFactor, "SamplingRepartitionRangeFactor");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +415,51 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Intensity;
+            public Exception? CustomColorContribution;
+            public Exception? ColorR;
+            public Exception? ColorG;
+            public Exception? ColorB;
+            public Exception? DensityContribution;
+            public Exception? DensitySize;
+            public Exception? DensityWindSpeed;
+            public Exception? DensityFallingSpeed;
+            public Exception? PhaseFunctionContribution;
+            public Exception? PhaseFunctionScattering;
+            public Exception? SamplingRepartitionRangeFactor;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 VolumetricLighting_FieldIndex enu = (VolumetricLighting_FieldIndex)index;
                 switch (enu)
                 {
+                    case VolumetricLighting_FieldIndex.Intensity:
+                        return Intensity;
+                    case VolumetricLighting_FieldIndex.CustomColorContribution:
+                        return CustomColorContribution;
+                    case VolumetricLighting_FieldIndex.ColorR:
+                        return ColorR;
+                    case VolumetricLighting_FieldIndex.ColorG:
+                        return ColorG;
+                    case VolumetricLighting_FieldIndex.ColorB:
+                        return ColorB;
+                    case VolumetricLighting_FieldIndex.DensityContribution:
+                        return DensityContribution;
+                    case VolumetricLighting_FieldIndex.DensitySize:
+                        return DensitySize;
+                    case VolumetricLighting_FieldIndex.DensityWindSpeed:
+                        return DensityWindSpeed;
+                    case VolumetricLighting_FieldIndex.DensityFallingSpeed:
+                        return DensityFallingSpeed;
+                    case VolumetricLighting_FieldIndex.PhaseFunctionContribution:
+                        return PhaseFunctionContribution;
+                    case VolumetricLighting_FieldIndex.PhaseFunctionScattering:
+                        return PhaseFunctionScattering;
+                    case VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor:
+                        return SamplingRepartitionRangeFactor;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +470,42 @@ namespace Mutagen.Bethesda.Skyrim
                 VolumetricLighting_FieldIndex enu = (VolumetricLighting_FieldIndex)index;
                 switch (enu)
                 {
+                    case VolumetricLighting_FieldIndex.Intensity:
+                        this.Intensity = ex;
+                        break;
+                    case VolumetricLighting_FieldIndex.CustomColorContribution:
+                        this.CustomColorContribution = ex;
+                        break;
+                    case VolumetricLighting_FieldIndex.ColorR:
+                        this.ColorR = ex;
+                        break;
+                    case VolumetricLighting_FieldIndex.ColorG:
+                        this.ColorG = ex;
+                        break;
+                    case VolumetricLighting_FieldIndex.ColorB:
+                        this.ColorB = ex;
+                        break;
+                    case VolumetricLighting_FieldIndex.DensityContribution:
+                        this.DensityContribution = ex;
+                        break;
+                    case VolumetricLighting_FieldIndex.DensitySize:
+                        this.DensitySize = ex;
+                        break;
+                    case VolumetricLighting_FieldIndex.DensityWindSpeed:
+                        this.DensityWindSpeed = ex;
+                        break;
+                    case VolumetricLighting_FieldIndex.DensityFallingSpeed:
+                        this.DensityFallingSpeed = ex;
+                        break;
+                    case VolumetricLighting_FieldIndex.PhaseFunctionContribution:
+                        this.PhaseFunctionContribution = ex;
+                        break;
+                    case VolumetricLighting_FieldIndex.PhaseFunctionScattering:
+                        this.PhaseFunctionScattering = ex;
+                        break;
+                    case VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor:
+                        this.SamplingRepartitionRangeFactor = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +517,42 @@ namespace Mutagen.Bethesda.Skyrim
                 VolumetricLighting_FieldIndex enu = (VolumetricLighting_FieldIndex)index;
                 switch (enu)
                 {
+                    case VolumetricLighting_FieldIndex.Intensity:
+                        this.Intensity = (Exception?)obj;
+                        break;
+                    case VolumetricLighting_FieldIndex.CustomColorContribution:
+                        this.CustomColorContribution = (Exception?)obj;
+                        break;
+                    case VolumetricLighting_FieldIndex.ColorR:
+                        this.ColorR = (Exception?)obj;
+                        break;
+                    case VolumetricLighting_FieldIndex.ColorG:
+                        this.ColorG = (Exception?)obj;
+                        break;
+                    case VolumetricLighting_FieldIndex.ColorB:
+                        this.ColorB = (Exception?)obj;
+                        break;
+                    case VolumetricLighting_FieldIndex.DensityContribution:
+                        this.DensityContribution = (Exception?)obj;
+                        break;
+                    case VolumetricLighting_FieldIndex.DensitySize:
+                        this.DensitySize = (Exception?)obj;
+                        break;
+                    case VolumetricLighting_FieldIndex.DensityWindSpeed:
+                        this.DensityWindSpeed = (Exception?)obj;
+                        break;
+                    case VolumetricLighting_FieldIndex.DensityFallingSpeed:
+                        this.DensityFallingSpeed = (Exception?)obj;
+                        break;
+                    case VolumetricLighting_FieldIndex.PhaseFunctionContribution:
+                        this.PhaseFunctionContribution = (Exception?)obj;
+                        break;
+                    case VolumetricLighting_FieldIndex.PhaseFunctionScattering:
+                        this.PhaseFunctionScattering = (Exception?)obj;
+                        break;
+                    case VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor:
+                        this.SamplingRepartitionRangeFactor = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +562,18 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Intensity != null) return true;
+                if (CustomColorContribution != null) return true;
+                if (ColorR != null) return true;
+                if (ColorG != null) return true;
+                if (ColorB != null) return true;
+                if (DensityContribution != null) return true;
+                if (DensitySize != null) return true;
+                if (DensityWindSpeed != null) return true;
+                if (DensityFallingSpeed != null) return true;
+                if (PhaseFunctionContribution != null) return true;
+                if (PhaseFunctionScattering != null) return true;
+                if (SamplingRepartitionRangeFactor != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +609,18 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(Intensity, "Intensity");
+                fg.AppendItem(CustomColorContribution, "CustomColorContribution");
+                fg.AppendItem(ColorR, "ColorR");
+                fg.AppendItem(ColorG, "ColorG");
+                fg.AppendItem(ColorB, "ColorB");
+                fg.AppendItem(DensityContribution, "DensityContribution");
+                fg.AppendItem(DensitySize, "DensitySize");
+                fg.AppendItem(DensityWindSpeed, "DensityWindSpeed");
+                fg.AppendItem(DensityFallingSpeed, "DensityFallingSpeed");
+                fg.AppendItem(PhaseFunctionContribution, "PhaseFunctionContribution");
+                fg.AppendItem(PhaseFunctionScattering, "PhaseFunctionScattering");
+                fg.AppendItem(SamplingRepartitionRangeFactor, "SamplingRepartitionRangeFactor");
             }
             #endregion
 
@@ -406,6 +629,18 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Intensity = this.Intensity.Combine(rhs.Intensity);
+                ret.CustomColorContribution = this.CustomColorContribution.Combine(rhs.CustomColorContribution);
+                ret.ColorR = this.ColorR.Combine(rhs.ColorR);
+                ret.ColorG = this.ColorG.Combine(rhs.ColorG);
+                ret.ColorB = this.ColorB.Combine(rhs.ColorB);
+                ret.DensityContribution = this.DensityContribution.Combine(rhs.DensityContribution);
+                ret.DensitySize = this.DensitySize.Combine(rhs.DensitySize);
+                ret.DensityWindSpeed = this.DensityWindSpeed.Combine(rhs.DensityWindSpeed);
+                ret.DensityFallingSpeed = this.DensityFallingSpeed.Combine(rhs.DensityFallingSpeed);
+                ret.PhaseFunctionContribution = this.PhaseFunctionContribution.Combine(rhs.PhaseFunctionContribution);
+                ret.PhaseFunctionScattering = this.PhaseFunctionScattering.Combine(rhs.PhaseFunctionScattering);
+                ret.SamplingRepartitionRangeFactor = this.SamplingRepartitionRangeFactor.Combine(rhs.SamplingRepartitionRangeFactor);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +662,62 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Intensity;
+            public bool CustomColorContribution;
+            public bool ColorR;
+            public bool ColorG;
+            public bool ColorB;
+            public bool DensityContribution;
+            public bool DensitySize;
+            public bool DensityWindSpeed;
+            public bool DensityFallingSpeed;
+            public bool PhaseFunctionContribution;
+            public bool PhaseFunctionScattering;
+            public bool SamplingRepartitionRangeFactor;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Intensity = defaultOn;
+                this.CustomColorContribution = defaultOn;
+                this.ColorR = defaultOn;
+                this.ColorG = defaultOn;
+                this.ColorB = defaultOn;
+                this.DensityContribution = defaultOn;
+                this.DensitySize = defaultOn;
+                this.DensityWindSpeed = defaultOn;
+                this.DensityFallingSpeed = defaultOn;
+                this.PhaseFunctionContribution = defaultOn;
+                this.PhaseFunctionScattering = defaultOn;
+                this.SamplingRepartitionRangeFactor = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Intensity, null));
+                ret.Add((CustomColorContribution, null));
+                ret.Add((ColorR, null));
+                ret.Add((ColorG, null));
+                ret.Add((ColorB, null));
+                ret.Add((DensityContribution, null));
+                ret.Add((DensitySize, null));
+                ret.Add((DensityWindSpeed, null));
+                ret.Add((DensityFallingSpeed, null));
+                ret.Add((PhaseFunctionContribution, null));
+                ret.Add((PhaseFunctionScattering, null));
+                ret.Add((SamplingRepartitionRangeFactor, null));
+            }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = VolumetricLighting_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = VolumetricLighting_Registration.TriggeringRecordType;
         public VolumetricLighting(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -528,6 +806,18 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IVolumetricLightingInternal>
     {
+        new Single? Intensity { get; set; }
+        new Single? CustomColorContribution { get; set; }
+        new Single? ColorR { get; set; }
+        new Single? ColorG { get; set; }
+        new Single? ColorB { get; set; }
+        new Single? DensityContribution { get; set; }
+        new Single? DensitySize { get; set; }
+        new Single? DensityWindSpeed { get; set; }
+        new Single? DensityFallingSpeed { get; set; }
+        new Single? PhaseFunctionContribution { get; set; }
+        new Single? PhaseFunctionScattering { get; set; }
+        new Single? SamplingRepartitionRangeFactor { get; set; }
     }
 
     public partial interface IVolumetricLightingInternal :
@@ -540,10 +830,21 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IVolumetricLightingGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IVolumetricLightingGetter>,
-        IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => VolumetricLighting_Registration.Instance;
+        static new ILoquiRegistration Registration => VolumetricLighting_Registration.Instance;
+        Single? Intensity { get; }
+        Single? CustomColorContribution { get; }
+        Single? ColorR { get; }
+        Single? ColorG { get; }
+        Single? ColorB { get; }
+        Single? DensityContribution { get; }
+        Single? DensitySize { get; }
+        Single? DensityWindSpeed { get; }
+        Single? DensityFallingSpeed { get; }
+        Single? PhaseFunctionContribution { get; }
+        Single? PhaseFunctionScattering { get; }
+        Single? SamplingRepartitionRangeFactor { get; }
 
     }
 
@@ -678,131 +979,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IVolumetricLightingInternal item,
-            XElement node,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IVolumetricLightingInternal item,
-            XElement node,
-            out VolumetricLighting.ErrorMask errorMask,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = VolumetricLighting.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IVolumetricLightingInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((VolumetricLightingSetterCommon)((IVolumetricLightingGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IVolumetricLightingInternal item,
-            string path,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IVolumetricLightingInternal item,
-            string path,
-            out VolumetricLighting.ErrorMask errorMask,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IVolumetricLightingInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IVolumetricLightingInternal item,
-            Stream stream,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IVolumetricLightingInternal item,
-            Stream stream,
-            out VolumetricLighting.ErrorMask errorMask,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IVolumetricLightingInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            VolumetricLighting.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -840,10 +1016,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Intensity = 6,
+        CustomColorContribution = 7,
+        ColorR = 8,
+        ColorG = 9,
+        ColorB = 10,
+        DensityContribution = 11,
+        DensitySize = 12,
+        DensityWindSpeed = 13,
+        DensityFallingSpeed = 14,
+        PhaseFunctionContribution = 15,
+        PhaseFunctionScattering = 16,
+        SamplingRepartitionRangeFactor = 17,
     }
     #endregion
 
@@ -861,9 +1049,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "825a2586-76f0-41c3-9ba3-138c04e53e06";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(VolumetricLighting.Mask<>);
 
@@ -893,6 +1081,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "INTENSITY":
+                    return (ushort)VolumetricLighting_FieldIndex.Intensity;
+                case "CUSTOMCOLORCONTRIBUTION":
+                    return (ushort)VolumetricLighting_FieldIndex.CustomColorContribution;
+                case "COLORR":
+                    return (ushort)VolumetricLighting_FieldIndex.ColorR;
+                case "COLORG":
+                    return (ushort)VolumetricLighting_FieldIndex.ColorG;
+                case "COLORB":
+                    return (ushort)VolumetricLighting_FieldIndex.ColorB;
+                case "DENSITYCONTRIBUTION":
+                    return (ushort)VolumetricLighting_FieldIndex.DensityContribution;
+                case "DENSITYSIZE":
+                    return (ushort)VolumetricLighting_FieldIndex.DensitySize;
+                case "DENSITYWINDSPEED":
+                    return (ushort)VolumetricLighting_FieldIndex.DensityWindSpeed;
+                case "DENSITYFALLINGSPEED":
+                    return (ushort)VolumetricLighting_FieldIndex.DensityFallingSpeed;
+                case "PHASEFUNCTIONCONTRIBUTION":
+                    return (ushort)VolumetricLighting_FieldIndex.PhaseFunctionContribution;
+                case "PHASEFUNCTIONSCATTERING":
+                    return (ushort)VolumetricLighting_FieldIndex.PhaseFunctionScattering;
+                case "SAMPLINGREPARTITIONRANGEFACTOR":
+                    return (ushort)VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor;
                 default:
                     return null;
             }
@@ -903,6 +1115,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VolumetricLighting_FieldIndex enu = (VolumetricLighting_FieldIndex)index;
             switch (enu)
             {
+                case VolumetricLighting_FieldIndex.Intensity:
+                case VolumetricLighting_FieldIndex.CustomColorContribution:
+                case VolumetricLighting_FieldIndex.ColorR:
+                case VolumetricLighting_FieldIndex.ColorG:
+                case VolumetricLighting_FieldIndex.ColorB:
+                case VolumetricLighting_FieldIndex.DensityContribution:
+                case VolumetricLighting_FieldIndex.DensitySize:
+                case VolumetricLighting_FieldIndex.DensityWindSpeed:
+                case VolumetricLighting_FieldIndex.DensityFallingSpeed:
+                case VolumetricLighting_FieldIndex.PhaseFunctionContribution:
+                case VolumetricLighting_FieldIndex.PhaseFunctionScattering:
+                case VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -913,6 +1138,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VolumetricLighting_FieldIndex enu = (VolumetricLighting_FieldIndex)index;
             switch (enu)
             {
+                case VolumetricLighting_FieldIndex.Intensity:
+                case VolumetricLighting_FieldIndex.CustomColorContribution:
+                case VolumetricLighting_FieldIndex.ColorR:
+                case VolumetricLighting_FieldIndex.ColorG:
+                case VolumetricLighting_FieldIndex.ColorB:
+                case VolumetricLighting_FieldIndex.DensityContribution:
+                case VolumetricLighting_FieldIndex.DensitySize:
+                case VolumetricLighting_FieldIndex.DensityWindSpeed:
+                case VolumetricLighting_FieldIndex.DensityFallingSpeed:
+                case VolumetricLighting_FieldIndex.PhaseFunctionContribution:
+                case VolumetricLighting_FieldIndex.PhaseFunctionScattering:
+                case VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -923,6 +1161,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VolumetricLighting_FieldIndex enu = (VolumetricLighting_FieldIndex)index;
             switch (enu)
             {
+                case VolumetricLighting_FieldIndex.Intensity:
+                case VolumetricLighting_FieldIndex.CustomColorContribution:
+                case VolumetricLighting_FieldIndex.ColorR:
+                case VolumetricLighting_FieldIndex.ColorG:
+                case VolumetricLighting_FieldIndex.ColorB:
+                case VolumetricLighting_FieldIndex.DensityContribution:
+                case VolumetricLighting_FieldIndex.DensitySize:
+                case VolumetricLighting_FieldIndex.DensityWindSpeed:
+                case VolumetricLighting_FieldIndex.DensityFallingSpeed:
+                case VolumetricLighting_FieldIndex.PhaseFunctionContribution:
+                case VolumetricLighting_FieldIndex.PhaseFunctionScattering:
+                case VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -933,6 +1184,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VolumetricLighting_FieldIndex enu = (VolumetricLighting_FieldIndex)index;
             switch (enu)
             {
+                case VolumetricLighting_FieldIndex.Intensity:
+                    return "Intensity";
+                case VolumetricLighting_FieldIndex.CustomColorContribution:
+                    return "CustomColorContribution";
+                case VolumetricLighting_FieldIndex.ColorR:
+                    return "ColorR";
+                case VolumetricLighting_FieldIndex.ColorG:
+                    return "ColorG";
+                case VolumetricLighting_FieldIndex.ColorB:
+                    return "ColorB";
+                case VolumetricLighting_FieldIndex.DensityContribution:
+                    return "DensityContribution";
+                case VolumetricLighting_FieldIndex.DensitySize:
+                    return "DensitySize";
+                case VolumetricLighting_FieldIndex.DensityWindSpeed:
+                    return "DensityWindSpeed";
+                case VolumetricLighting_FieldIndex.DensityFallingSpeed:
+                    return "DensityFallingSpeed";
+                case VolumetricLighting_FieldIndex.PhaseFunctionContribution:
+                    return "PhaseFunctionContribution";
+                case VolumetricLighting_FieldIndex.PhaseFunctionScattering:
+                    return "PhaseFunctionScattering";
+                case VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor:
+                    return "SamplingRepartitionRangeFactor";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -943,6 +1218,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VolumetricLighting_FieldIndex enu = (VolumetricLighting_FieldIndex)index;
             switch (enu)
             {
+                case VolumetricLighting_FieldIndex.Intensity:
+                case VolumetricLighting_FieldIndex.CustomColorContribution:
+                case VolumetricLighting_FieldIndex.ColorR:
+                case VolumetricLighting_FieldIndex.ColorG:
+                case VolumetricLighting_FieldIndex.ColorB:
+                case VolumetricLighting_FieldIndex.DensityContribution:
+                case VolumetricLighting_FieldIndex.DensitySize:
+                case VolumetricLighting_FieldIndex.DensityWindSpeed:
+                case VolumetricLighting_FieldIndex.DensityFallingSpeed:
+                case VolumetricLighting_FieldIndex.PhaseFunctionContribution:
+                case VolumetricLighting_FieldIndex.PhaseFunctionScattering:
+                case VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -953,6 +1241,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VolumetricLighting_FieldIndex enu = (VolumetricLighting_FieldIndex)index;
             switch (enu)
             {
+                case VolumetricLighting_FieldIndex.Intensity:
+                case VolumetricLighting_FieldIndex.CustomColorContribution:
+                case VolumetricLighting_FieldIndex.ColorR:
+                case VolumetricLighting_FieldIndex.ColorG:
+                case VolumetricLighting_FieldIndex.ColorB:
+                case VolumetricLighting_FieldIndex.DensityContribution:
+                case VolumetricLighting_FieldIndex.DensitySize:
+                case VolumetricLighting_FieldIndex.DensityWindSpeed:
+                case VolumetricLighting_FieldIndex.DensityFallingSpeed:
+                case VolumetricLighting_FieldIndex.PhaseFunctionContribution:
+                case VolumetricLighting_FieldIndex.PhaseFunctionScattering:
+                case VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -963,12 +1264,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VolumetricLighting_FieldIndex enu = (VolumetricLighting_FieldIndex)index;
             switch (enu)
             {
+                case VolumetricLighting_FieldIndex.Intensity:
+                    return typeof(Single);
+                case VolumetricLighting_FieldIndex.CustomColorContribution:
+                    return typeof(Single);
+                case VolumetricLighting_FieldIndex.ColorR:
+                    return typeof(Single);
+                case VolumetricLighting_FieldIndex.ColorG:
+                    return typeof(Single);
+                case VolumetricLighting_FieldIndex.ColorB:
+                    return typeof(Single);
+                case VolumetricLighting_FieldIndex.DensityContribution:
+                    return typeof(Single);
+                case VolumetricLighting_FieldIndex.DensitySize:
+                    return typeof(Single);
+                case VolumetricLighting_FieldIndex.DensityWindSpeed:
+                    return typeof(Single);
+                case VolumetricLighting_FieldIndex.DensityFallingSpeed:
+                    return typeof(Single);
+                case VolumetricLighting_FieldIndex.PhaseFunctionContribution:
+                    return typeof(Single);
+                case VolumetricLighting_FieldIndex.PhaseFunctionScattering:
+                    return typeof(Single);
+                case VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor:
+                    return typeof(Single);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(VolumetricLightingXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.VOLI;
         public static readonly Type BinaryWriteTranslation = typeof(VolumetricLightingBinaryWriteTranslation);
         #region Interface
@@ -1012,6 +1336,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IVolumetricLightingInternal item)
         {
             ClearPartial();
+            item.Intensity = default;
+            item.CustomColorContribution = default;
+            item.ColorR = default;
+            item.ColorG = default;
+            item.ColorB = default;
+            item.DensityContribution = default;
+            item.DensitySize = default;
+            item.DensityWindSpeed = default;
+            item.DensityFallingSpeed = default;
+            item.PhaseFunctionContribution = default;
+            item.PhaseFunctionScattering = default;
+            item.SamplingRepartitionRangeFactor = default;
             base.Clear(item);
         }
         
@@ -1024,86 +1360,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IVolumetricLightingInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IVolumetricLightingInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IVolumetricLightingInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    VolumetricLightingXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (VolumetricLighting)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (VolumetricLighting)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1169,6 +1425,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Intensity = item.Intensity.EqualsWithin(rhs.Intensity);
+            ret.CustomColorContribution = item.CustomColorContribution.EqualsWithin(rhs.CustomColorContribution);
+            ret.ColorR = item.ColorR.EqualsWithin(rhs.ColorR);
+            ret.ColorG = item.ColorG.EqualsWithin(rhs.ColorG);
+            ret.ColorB = item.ColorB.EqualsWithin(rhs.ColorB);
+            ret.DensityContribution = item.DensityContribution.EqualsWithin(rhs.DensityContribution);
+            ret.DensitySize = item.DensitySize.EqualsWithin(rhs.DensitySize);
+            ret.DensityWindSpeed = item.DensityWindSpeed.EqualsWithin(rhs.DensityWindSpeed);
+            ret.DensityFallingSpeed = item.DensityFallingSpeed.EqualsWithin(rhs.DensityFallingSpeed);
+            ret.PhaseFunctionContribution = item.PhaseFunctionContribution.EqualsWithin(rhs.PhaseFunctionContribution);
+            ret.PhaseFunctionScattering = item.PhaseFunctionScattering.EqualsWithin(rhs.PhaseFunctionScattering);
+            ret.SamplingRepartitionRangeFactor = item.SamplingRepartitionRangeFactor.EqualsWithin(rhs.SamplingRepartitionRangeFactor);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1220,12 +1488,84 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.Intensity ?? true)
+                && item.Intensity.TryGet(out var IntensityItem))
+            {
+                fg.AppendItem(IntensityItem, "Intensity");
+            }
+            if ((printMask?.CustomColorContribution ?? true)
+                && item.CustomColorContribution.TryGet(out var CustomColorContributionItem))
+            {
+                fg.AppendItem(CustomColorContributionItem, "CustomColorContribution");
+            }
+            if ((printMask?.ColorR ?? true)
+                && item.ColorR.TryGet(out var ColorRItem))
+            {
+                fg.AppendItem(ColorRItem, "ColorR");
+            }
+            if ((printMask?.ColorG ?? true)
+                && item.ColorG.TryGet(out var ColorGItem))
+            {
+                fg.AppendItem(ColorGItem, "ColorG");
+            }
+            if ((printMask?.ColorB ?? true)
+                && item.ColorB.TryGet(out var ColorBItem))
+            {
+                fg.AppendItem(ColorBItem, "ColorB");
+            }
+            if ((printMask?.DensityContribution ?? true)
+                && item.DensityContribution.TryGet(out var DensityContributionItem))
+            {
+                fg.AppendItem(DensityContributionItem, "DensityContribution");
+            }
+            if ((printMask?.DensitySize ?? true)
+                && item.DensitySize.TryGet(out var DensitySizeItem))
+            {
+                fg.AppendItem(DensitySizeItem, "DensitySize");
+            }
+            if ((printMask?.DensityWindSpeed ?? true)
+                && item.DensityWindSpeed.TryGet(out var DensityWindSpeedItem))
+            {
+                fg.AppendItem(DensityWindSpeedItem, "DensityWindSpeed");
+            }
+            if ((printMask?.DensityFallingSpeed ?? true)
+                && item.DensityFallingSpeed.TryGet(out var DensityFallingSpeedItem))
+            {
+                fg.AppendItem(DensityFallingSpeedItem, "DensityFallingSpeed");
+            }
+            if ((printMask?.PhaseFunctionContribution ?? true)
+                && item.PhaseFunctionContribution.TryGet(out var PhaseFunctionContributionItem))
+            {
+                fg.AppendItem(PhaseFunctionContributionItem, "PhaseFunctionContribution");
+            }
+            if ((printMask?.PhaseFunctionScattering ?? true)
+                && item.PhaseFunctionScattering.TryGet(out var PhaseFunctionScatteringItem))
+            {
+                fg.AppendItem(PhaseFunctionScatteringItem, "PhaseFunctionScattering");
+            }
+            if ((printMask?.SamplingRepartitionRangeFactor ?? true)
+                && item.SamplingRepartitionRangeFactor.TryGet(out var SamplingRepartitionRangeFactorItem))
+            {
+                fg.AppendItem(SamplingRepartitionRangeFactorItem, "SamplingRepartitionRangeFactor");
+            }
         }
         
         public bool HasBeenSet(
             IVolumetricLightingGetter item,
             VolumetricLighting.Mask<bool?> checkMask)
         {
+            if (checkMask.Intensity.HasValue && checkMask.Intensity.Value != (item.Intensity != null)) return false;
+            if (checkMask.CustomColorContribution.HasValue && checkMask.CustomColorContribution.Value != (item.CustomColorContribution != null)) return false;
+            if (checkMask.ColorR.HasValue && checkMask.ColorR.Value != (item.ColorR != null)) return false;
+            if (checkMask.ColorG.HasValue && checkMask.ColorG.Value != (item.ColorG != null)) return false;
+            if (checkMask.ColorB.HasValue && checkMask.ColorB.Value != (item.ColorB != null)) return false;
+            if (checkMask.DensityContribution.HasValue && checkMask.DensityContribution.Value != (item.DensityContribution != null)) return false;
+            if (checkMask.DensitySize.HasValue && checkMask.DensitySize.Value != (item.DensitySize != null)) return false;
+            if (checkMask.DensityWindSpeed.HasValue && checkMask.DensityWindSpeed.Value != (item.DensityWindSpeed != null)) return false;
+            if (checkMask.DensityFallingSpeed.HasValue && checkMask.DensityFallingSpeed.Value != (item.DensityFallingSpeed != null)) return false;
+            if (checkMask.PhaseFunctionContribution.HasValue && checkMask.PhaseFunctionContribution.Value != (item.PhaseFunctionContribution != null)) return false;
+            if (checkMask.PhaseFunctionScattering.HasValue && checkMask.PhaseFunctionScattering.Value != (item.PhaseFunctionScattering != null)) return false;
+            if (checkMask.SamplingRepartitionRangeFactor.HasValue && checkMask.SamplingRepartitionRangeFactor.Value != (item.SamplingRepartitionRangeFactor != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1235,6 +1575,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IVolumetricLightingGetter item,
             VolumetricLighting.Mask<bool> mask)
         {
+            mask.Intensity = (item.Intensity != null);
+            mask.CustomColorContribution = (item.CustomColorContribution != null);
+            mask.ColorR = (item.ColorR != null);
+            mask.ColorG = (item.ColorG != null);
+            mask.ColorB = (item.ColorB != null);
+            mask.DensityContribution = (item.DensityContribution != null);
+            mask.DensitySize = (item.DensitySize != null);
+            mask.DensityWindSpeed = (item.DensityWindSpeed != null);
+            mask.DensityFallingSpeed = (item.DensityFallingSpeed != null);
+            mask.PhaseFunctionContribution = (item.PhaseFunctionContribution != null);
+            mask.PhaseFunctionScattering = (item.PhaseFunctionScattering != null);
+            mask.SamplingRepartitionRangeFactor = (item.SamplingRepartitionRangeFactor != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1248,7 +1600,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (VolumetricLighting_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (VolumetricLighting_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (VolumetricLighting_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (VolumetricLighting_FieldIndex)((int)index);
@@ -1269,7 +1621,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (VolumetricLighting_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (VolumetricLighting_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (VolumetricLighting_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (VolumetricLighting_FieldIndex)((int)index);
@@ -1286,6 +1638,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!lhs.Intensity.EqualsWithin(rhs.Intensity)) return false;
+            if (!lhs.CustomColorContribution.EqualsWithin(rhs.CustomColorContribution)) return false;
+            if (!lhs.ColorR.EqualsWithin(rhs.ColorR)) return false;
+            if (!lhs.ColorG.EqualsWithin(rhs.ColorG)) return false;
+            if (!lhs.ColorB.EqualsWithin(rhs.ColorB)) return false;
+            if (!lhs.DensityContribution.EqualsWithin(rhs.DensityContribution)) return false;
+            if (!lhs.DensitySize.EqualsWithin(rhs.DensitySize)) return false;
+            if (!lhs.DensityWindSpeed.EqualsWithin(rhs.DensityWindSpeed)) return false;
+            if (!lhs.DensityFallingSpeed.EqualsWithin(rhs.DensityFallingSpeed)) return false;
+            if (!lhs.PhaseFunctionContribution.EqualsWithin(rhs.PhaseFunctionContribution)) return false;
+            if (!lhs.PhaseFunctionScattering.EqualsWithin(rhs.PhaseFunctionScattering)) return false;
+            if (!lhs.SamplingRepartitionRangeFactor.EqualsWithin(rhs.SamplingRepartitionRangeFactor)) return false;
             return true;
         }
         
@@ -1310,6 +1674,54 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IVolumetricLightingGetter item)
         {
             var hash = new HashCode();
+            if (item.Intensity.TryGet(out var Intensityitem))
+            {
+                hash.Add(Intensityitem);
+            }
+            if (item.CustomColorContribution.TryGet(out var CustomColorContributionitem))
+            {
+                hash.Add(CustomColorContributionitem);
+            }
+            if (item.ColorR.TryGet(out var ColorRitem))
+            {
+                hash.Add(ColorRitem);
+            }
+            if (item.ColorG.TryGet(out var ColorGitem))
+            {
+                hash.Add(ColorGitem);
+            }
+            if (item.ColorB.TryGet(out var ColorBitem))
+            {
+                hash.Add(ColorBitem);
+            }
+            if (item.DensityContribution.TryGet(out var DensityContributionitem))
+            {
+                hash.Add(DensityContributionitem);
+            }
+            if (item.DensitySize.TryGet(out var DensitySizeitem))
+            {
+                hash.Add(DensitySizeitem);
+            }
+            if (item.DensityWindSpeed.TryGet(out var DensityWindSpeeditem))
+            {
+                hash.Add(DensityWindSpeeditem);
+            }
+            if (item.DensityFallingSpeed.TryGet(out var DensityFallingSpeeditem))
+            {
+                hash.Add(DensityFallingSpeeditem);
+            }
+            if (item.PhaseFunctionContribution.TryGet(out var PhaseFunctionContributionitem))
+            {
+                hash.Add(PhaseFunctionContributionitem);
+            }
+            if (item.PhaseFunctionScattering.TryGet(out var PhaseFunctionScatteringitem))
+            {
+                hash.Add(PhaseFunctionScatteringitem);
+            }
+            if (item.SamplingRepartitionRangeFactor.TryGet(out var SamplingRepartitionRangeFactoritem))
+            {
+                hash.Add(SamplingRepartitionRangeFactoritem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1386,6 +1798,54 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.Intensity) ?? true))
+            {
+                item.Intensity = rhs.Intensity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.CustomColorContribution) ?? true))
+            {
+                item.CustomColorContribution = rhs.CustomColorContribution;
+            }
+            if ((copyMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.ColorR) ?? true))
+            {
+                item.ColorR = rhs.ColorR;
+            }
+            if ((copyMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.ColorG) ?? true))
+            {
+                item.ColorG = rhs.ColorG;
+            }
+            if ((copyMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.ColorB) ?? true))
+            {
+                item.ColorB = rhs.ColorB;
+            }
+            if ((copyMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.DensityContribution) ?? true))
+            {
+                item.DensityContribution = rhs.DensityContribution;
+            }
+            if ((copyMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.DensitySize) ?? true))
+            {
+                item.DensitySize = rhs.DensitySize;
+            }
+            if ((copyMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.DensityWindSpeed) ?? true))
+            {
+                item.DensityWindSpeed = rhs.DensityWindSpeed;
+            }
+            if ((copyMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.DensityFallingSpeed) ?? true))
+            {
+                item.DensityFallingSpeed = rhs.DensityFallingSpeed;
+            }
+            if ((copyMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.PhaseFunctionContribution) ?? true))
+            {
+                item.PhaseFunctionContribution = rhs.PhaseFunctionContribution;
+            }
+            if ((copyMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.PhaseFunctionScattering) ?? true))
+            {
+                item.PhaseFunctionScattering = rhs.PhaseFunctionScattering;
+            }
+            if ((copyMask?.GetShouldTranslate((int)VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor) ?? true))
+            {
+                item.SamplingRepartitionRangeFactor = rhs.SamplingRepartitionRangeFactor;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1508,210 +1968,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class VolumetricLightingXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static VolumetricLightingXmlWriteTranslation Instance = new VolumetricLightingXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IVolumetricLightingGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IVolumetricLightingGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.VolumetricLighting");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.VolumetricLighting");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IVolumetricLightingGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IVolumetricLightingGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IVolumetricLightingGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class VolumetricLightingXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static VolumetricLightingXmlCreateTranslation Instance = new VolumetricLightingXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IVolumetricLightingInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    VolumetricLightingXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IVolumetricLightingInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class VolumetricLightingXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IVolumetricLightingGetter item,
-            XElement node,
-            out VolumetricLighting.ErrorMask errorMask,
-            VolumetricLighting.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((VolumetricLightingXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = VolumetricLighting.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IVolumetricLightingGetter item,
-            string path,
-            out VolumetricLighting.ErrorMask errorMask,
-            VolumetricLighting.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IVolumetricLightingGetter item,
-            Stream stream,
-            out VolumetricLighting.ErrorMask errorMask,
-            VolumetricLighting.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -1720,6 +1976,65 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IBinaryWriteTranslator
     {
         public new readonly static VolumetricLightingBinaryWriteTranslation Instance = new VolumetricLightingBinaryWriteTranslation();
+
+        public static void WriteRecordTypes(
+            IVolumetricLightingGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Intensity,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CustomColorContribution,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ColorR,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ColorG,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ColorB,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DensityContribution,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DensitySize,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DensityWindSpeed,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.JNAM));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DensityFallingSpeed,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.KNAM));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PhaseFunctionContribution,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.LNAM));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PhaseFunctionScattering,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SamplingRepartitionRangeFactor,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM));
+        }
 
         public void Write(
             MutagenWriter writer,
@@ -1734,10 +2049,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                writer.MetaData.FormVersion = item.FormVersion;
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -1790,6 +2107,99 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IVolumetricLightingInternal item,
+            MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Intensity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)VolumetricLighting_FieldIndex.Intensity;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CustomColorContribution = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)VolumetricLighting_FieldIndex.CustomColorContribution;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ColorR = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)VolumetricLighting_FieldIndex.ColorR;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ColorG = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)VolumetricLighting_FieldIndex.ColorG;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ColorB = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)VolumetricLighting_FieldIndex.ColorB;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DensityContribution = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)VolumetricLighting_FieldIndex.DensityContribution;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DensitySize = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)VolumetricLighting_FieldIndex.DensitySize;
+                }
+                case RecordTypeInts.JNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DensityWindSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)VolumetricLighting_FieldIndex.DensityWindSpeed;
+                }
+                case RecordTypeInts.KNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DensityFallingSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)VolumetricLighting_FieldIndex.DensityFallingSpeed;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PhaseFunctionContribution = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)VolumetricLighting_FieldIndex.PhaseFunctionContribution;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PhaseFunctionScattering = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)VolumetricLighting_FieldIndex.PhaseFunctionScattering;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SamplingRepartitionRangeFactor = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor;
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1825,21 +2235,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IVolumetricLightingGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => VolumetricLightingXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((VolumetricLightingXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => VolumetricLightingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -1851,6 +2246,54 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Intensity
+        private int? _IntensityLocation;
+        public Single? Intensity => _IntensityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IntensityLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region CustomColorContribution
+        private int? _CustomColorContributionLocation;
+        public Single? CustomColorContribution => _CustomColorContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CustomColorContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ColorR
+        private int? _ColorRLocation;
+        public Single? ColorR => _ColorRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorRLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ColorG
+        private int? _ColorGLocation;
+        public Single? ColorG => _ColorGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorGLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ColorB
+        private int? _ColorBLocation;
+        public Single? ColorB => _ColorBLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorBLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region DensityContribution
+        private int? _DensityContributionLocation;
+        public Single? DensityContribution => _DensityContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensityContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region DensitySize
+        private int? _DensitySizeLocation;
+        public Single? DensitySize => _DensitySizeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensitySizeLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region DensityWindSpeed
+        private int? _DensityWindSpeedLocation;
+        public Single? DensityWindSpeed => _DensityWindSpeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensityWindSpeedLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region DensityFallingSpeed
+        private int? _DensityFallingSpeedLocation;
+        public Single? DensityFallingSpeed => _DensityFallingSpeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensityFallingSpeedLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region PhaseFunctionContribution
+        private int? _PhaseFunctionContributionLocation;
+        public Single? PhaseFunctionContribution => _PhaseFunctionContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PhaseFunctionContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region PhaseFunctionScattering
+        private int? _PhaseFunctionScatteringLocation;
+        public Single? PhaseFunctionScattering => _PhaseFunctionScatteringLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PhaseFunctionScatteringLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region SamplingRepartitionRangeFactor
+        private int? _SamplingRepartitionRangeFactorLocation;
+        public Single? SamplingRepartitionRangeFactor => _SamplingRepartitionRangeFactorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SamplingRepartitionRangeFactorLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1876,8 +2319,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new VolumetricLightingBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1903,6 +2347,88 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.CNAM:
+                {
+                    _IntensityLocation = (stream.Position - offset);
+                    return (int)VolumetricLighting_FieldIndex.Intensity;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _CustomColorContributionLocation = (stream.Position - offset);
+                    return (int)VolumetricLighting_FieldIndex.CustomColorContribution;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    _ColorRLocation = (stream.Position - offset);
+                    return (int)VolumetricLighting_FieldIndex.ColorR;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _ColorGLocation = (stream.Position - offset);
+                    return (int)VolumetricLighting_FieldIndex.ColorG;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _ColorBLocation = (stream.Position - offset);
+                    return (int)VolumetricLighting_FieldIndex.ColorB;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    _DensityContributionLocation = (stream.Position - offset);
+                    return (int)VolumetricLighting_FieldIndex.DensityContribution;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _DensitySizeLocation = (stream.Position - offset);
+                    return (int)VolumetricLighting_FieldIndex.DensitySize;
+                }
+                case RecordTypeInts.JNAM:
+                {
+                    _DensityWindSpeedLocation = (stream.Position - offset);
+                    return (int)VolumetricLighting_FieldIndex.DensityWindSpeed;
+                }
+                case RecordTypeInts.KNAM:
+                {
+                    _DensityFallingSpeedLocation = (stream.Position - offset);
+                    return (int)VolumetricLighting_FieldIndex.DensityFallingSpeed;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    _PhaseFunctionContributionLocation = (stream.Position - offset);
+                    return (int)VolumetricLighting_FieldIndex.PhaseFunctionContribution;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _PhaseFunctionScatteringLocation = (stream.Position - offset);
+                    return (int)VolumetricLighting_FieldIndex.PhaseFunctionScattering;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    _SamplingRepartitionRangeFactorLocation = (stream.Position - offset);
+                    return (int)VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void ToString(

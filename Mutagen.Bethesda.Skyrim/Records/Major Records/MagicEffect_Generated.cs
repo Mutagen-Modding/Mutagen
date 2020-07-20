@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -72,8 +66,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -232,8 +226,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<MagicEffect>> _CounterEffects = new ExtendedList<IFormLink<MagicEffect>>();
-        public ExtendedList<IFormLink<MagicEffect>> CounterEffects
+        private IExtendedList<IFormLink<MagicEffect>> _CounterEffects = new ExtendedList<IFormLink<MagicEffect>>();
+        public IExtendedList<IFormLink<MagicEffect>> CounterEffects
         {
             get => this._CounterEffects;
             protected set => this._CounterEffects = value;
@@ -246,8 +240,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<MagicEffectSound>? _Sounds;
-        public ExtendedList<MagicEffectSound>? Sounds
+        private IExtendedList<MagicEffectSound>? _Sounds;
+        public IExtendedList<MagicEffectSound>? Sounds
         {
             get => this._Sounds;
             set => this._Sounds = value;
@@ -265,8 +259,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -307,135 +301,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => MagicEffectXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((MagicEffectXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new MagicEffect CreateFromXml(
-            XElement node,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static MagicEffect CreateFromXml(
-            XElement node,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffect.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static MagicEffect CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new MagicEffect();
-            ((MagicEffectSetterCommon)((IMagicEffectGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static MagicEffect CreateFromXml(
-            string path,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffect CreateFromXml(
-            string path,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffect CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static MagicEffect CreateFromXml(
-            Stream stream,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffect CreateFromXml(
-            Stream stream,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static MagicEffect CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -500,7 +365,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -553,7 +418,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -2285,7 +2150,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = MagicEffect_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = MagicEffect_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2388,7 +2253,7 @@ namespace Mutagen.Bethesda.Skyrim
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new TranslatedString? Name { get; set; }
         new FormLinkNullable<Static> MenuDisplayObject { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new MagicEffect.Flag Flags { get; set; }
         new Single BaseCost { get; set; }
         new ActorValueExtended MagicSkill { get; set; }
@@ -2426,10 +2291,10 @@ namespace Mutagen.Bethesda.Skyrim
         new SoundLevel CastingSoundLevel { get; set; }
         new Single ScriptEffectAIScore { get; set; }
         new Single ScriptEffectAIDelayTime { get; set; }
-        new ExtendedList<IFormLink<MagicEffect>> CounterEffects { get; }
-        new ExtendedList<MagicEffectSound>? Sounds { get; set; }
+        new IExtendedList<IFormLink<MagicEffect>> CounterEffects { get; }
+        new IExtendedList<MagicEffectSound>? Sounds { get; set; }
         new TranslatedString? Description { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
         new MagicEffect.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -2444,11 +2309,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IMagicEffectGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => MagicEffect_Registration.Instance;
+        static new ILoquiRegistration Registration => MagicEffect_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         TranslatedString? Name { get; }
         IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
@@ -2629,131 +2493,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            XElement node,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            XElement node,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffect.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((MagicEffectSetterCommon)((IMagicEffectGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            string path,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            string path,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            Stream stream,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            Stream stream,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IMagicEffectInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            MagicEffect.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -2791,7 +2530,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -3388,7 +3127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.MenuDisplayObject:
                     return typeof(FormLinkNullable<Static>);
                 case MagicEffect_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case MagicEffect_FieldIndex.Flags:
                     return typeof(MagicEffect.Flag);
                 case MagicEffect_FieldIndex.BaseCost:
@@ -3464,13 +3203,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
                     return typeof(Single);
                 case MagicEffect_FieldIndex.CounterEffects:
-                    return typeof(ExtendedList<IFormLink<MagicEffect>>);
+                    return typeof(IExtendedList<IFormLink<MagicEffect>>);
                 case MagicEffect_FieldIndex.Sounds:
-                    return typeof(ExtendedList<MagicEffectSound>);
+                    return typeof(IExtendedList<MagicEffectSound>);
                 case MagicEffect_FieldIndex.Description:
                     return typeof(TranslatedString);
                 case MagicEffect_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case MagicEffect_FieldIndex.DATADataTypeState:
                     return typeof(MagicEffect.DATADataType);
                 default:
@@ -3478,7 +3217,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(MagicEffectXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.MGEF;
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectBinaryWriteTranslation);
         #region Interface
@@ -3580,86 +3318,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IMagicEffectInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IMagicEffectInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IMagicEffectInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    MagicEffectXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (MagicEffect)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (MagicEffect)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -4170,7 +3828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (MagicEffect_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (MagicEffect_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (MagicEffect_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (MagicEffect_FieldIndex)((int)index);
@@ -4191,7 +3849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (MagicEffect_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (MagicEffect_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (MagicEffect_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (MagicEffect_FieldIndex)((int)index);
@@ -4893,1546 +4551,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class MagicEffectXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static MagicEffectXmlWriteTranslation Instance = new MagicEffectXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IMagicEffectGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.VirtualMachineAdapter != null)
-                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.VirtualMachineAdapter) ?? true))
-            {
-                if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
-                {
-                    ((VirtualMachineAdapterXmlWriteTranslation)((IXmlItem)VirtualMachineAdapterItem).XmlWriteTranslator).Write(
-                        item: VirtualMachineAdapterItem,
-                        node: node,
-                        name: nameof(item.VirtualMachineAdapter),
-                        fieldIndex: (int)MagicEffect_FieldIndex.VirtualMachineAdapter,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.VirtualMachineAdapter));
-                }
-            }
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((item.MenuDisplayObject.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MenuDisplayObject) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MenuDisplayObject),
-                    item: item.MenuDisplayObject.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.MenuDisplayObject,
-                    errorMask: errorMask);
-            }
-            if ((item.Keywords != null)
-                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Keywords) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IKeywordGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Keywords),
-                    item: item.Keywords,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Keywords,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Keywords),
-                    transl: (XElement subNode, IFormLink<IKeywordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<MagicEffect.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.BaseCost) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BaseCost),
-                    item: item.BaseCost,
-                    fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MagicSkill) ?? true))
-            {
-                EnumXmlTranslation<ActorValueExtended>.Instance.Write(
-                    node: node,
-                    name: nameof(item.MagicSkill),
-                    item: item.MagicSkill,
-                    fieldIndex: (int)MagicEffect_FieldIndex.MagicSkill,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ResistValue) ?? true))
-            {
-                EnumXmlTranslation<ActorValueExtended>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ResistValue),
-                    item: item.ResistValue,
-                    fieldIndex: (int)MagicEffect_FieldIndex.ResistValue,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CounterEffectCount),
-                    item: item.CounterEffectCount,
-                    fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown1) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown1),
-                    item: item.Unknown1,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Unknown1,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingLight) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CastingLight),
-                    item: item.CastingLight.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.CastingLight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperWeight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TaperWeight),
-                    item: item.TaperWeight,
-                    fieldIndex: (int)MagicEffect_FieldIndex.TaperWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitShader) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HitShader),
-                    item: item.HitShader.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.HitShader,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantShader) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EnchantShader),
-                    item: item.EnchantShader.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.EnchantShader,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MinimumSkillLevel) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MinimumSkillLevel),
-                    item: item.MinimumSkillLevel,
-                    fieldIndex: (int)MagicEffect_FieldIndex.MinimumSkillLevel,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingArea) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpellmakingArea),
-                    item: item.SpellmakingArea,
-                    fieldIndex: (int)MagicEffect_FieldIndex.SpellmakingArea,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingCastingTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpellmakingCastingTime),
-                    item: item.SpellmakingCastingTime,
-                    fieldIndex: (int)MagicEffect_FieldIndex.SpellmakingCastingTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperCurve) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TaperCurve),
-                    item: item.TaperCurve,
-                    fieldIndex: (int)MagicEffect_FieldIndex.TaperCurve,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperDuration) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TaperDuration),
-                    item: item.TaperDuration,
-                    fieldIndex: (int)MagicEffect_FieldIndex.TaperDuration,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValueWeight) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SecondActorValueWeight),
-                    item: item.SecondActorValueWeight,
-                    fieldIndex: (int)MagicEffect_FieldIndex.SecondActorValueWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
-            {
-                var ArchetypeItem = item.Archetype;
-                ((MagicEffectArchetypeXmlWriteTranslation)((IXmlItem)ArchetypeItem).XmlWriteTranslator).Write(
-                    item: ArchetypeItem,
-                    node: node,
-                    name: nameof(item.Archetype),
-                    fieldIndex: (int)MagicEffect_FieldIndex.Archetype,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Archetype));
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Projectile) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Projectile),
-                    item: item.Projectile.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Projectile,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Explosion) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Explosion),
-                    item: item.Explosion.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Explosion,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastType) ?? true))
-            {
-                EnumXmlTranslation<CastType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CastType),
-                    item: item.CastType,
-                    fieldIndex: (int)MagicEffect_FieldIndex.CastType,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TargetType) ?? true))
-            {
-                EnumXmlTranslation<TargetType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.TargetType),
-                    item: item.TargetType,
-                    fieldIndex: (int)MagicEffect_FieldIndex.TargetType,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValue) ?? true))
-            {
-                EnumXmlTranslation<ActorValueExtended>.Instance.Write(
-                    node: node,
-                    name: nameof(item.SecondActorValue),
-                    item: item.SecondActorValue,
-                    fieldIndex: (int)MagicEffect_FieldIndex.SecondActorValue,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingArt) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CastingArt),
-                    item: item.CastingArt.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.CastingArt,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitEffectArt) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HitEffectArt),
-                    item: item.HitEffectArt.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.HitEffectArt,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImpactData) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ImpactData),
-                    item: item.ImpactData.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.ImpactData,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SkillUsageMultiplier) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SkillUsageMultiplier),
-                    item: item.SkillUsageMultiplier,
-                    fieldIndex: (int)MagicEffect_FieldIndex.SkillUsageMultiplier,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastArt) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DualCastArt),
-                    item: item.DualCastArt.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.DualCastArt,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastScale) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DualCastScale),
-                    item: item.DualCastScale,
-                    fieldIndex: (int)MagicEffect_FieldIndex.DualCastScale,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantArt) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EnchantArt),
-                    item: item.EnchantArt.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.EnchantArt,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown2) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown2),
-                    item: item.Unknown2.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Unknown2,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown3) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown3),
-                    item: item.Unknown3.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Unknown3,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EquipAbility) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EquipAbility),
-                    item: item.EquipAbility.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.EquipAbility,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImageSpaceModifier) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ImageSpaceModifier),
-                    item: item.ImageSpaceModifier.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.ImageSpaceModifier,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.PerkToApply) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PerkToApply),
-                    item: item.PerkToApply.FormKey,
-                    fieldIndex: (int)MagicEffect_FieldIndex.PerkToApply,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingSoundLevel) ?? true))
-            {
-                EnumXmlTranslation<SoundLevel>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CastingSoundLevel),
-                    item: item.CastingSoundLevel,
-                    fieldIndex: (int)MagicEffect_FieldIndex.CastingSoundLevel,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIScore) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ScriptEffectAIScore),
-                    item: item.ScriptEffectAIScore,
-                    fieldIndex: (int)MagicEffect_FieldIndex.ScriptEffectAIScore,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ScriptEffectAIDelayTime),
-                    item: item.ScriptEffectAIDelayTime,
-                    fieldIndex: (int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IMagicEffectGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CounterEffects),
-                    item: item.CounterEffects,
-                    fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.CounterEffects),
-                    transl: (XElement subNode, IFormLink<IMagicEffectGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.Sounds != null)
-                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Sounds) ?? true))
-            {
-                ListXmlTranslation<IMagicEffectSoundGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Sounds),
-                    item: item.Sounds,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Sounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Sounds),
-                    transl: (XElement subNode, IMagicEffectSoundGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((MagicEffectSoundXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Description != null)
-                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Description) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Description),
-                    item: item.Description,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Description,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Conditions) ?? true))
-            {
-                ListXmlTranslation<IConditionGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Conditions),
-                    item: item.Conditions,
-                    fieldIndex: (int)MagicEffect_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Conditions),
-                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<MagicEffect.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)MagicEffect_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IMagicEffectGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.MagicEffect");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.MagicEffect");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IMagicEffectGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IMagicEffectGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IMagicEffectGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class MagicEffectXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static MagicEffectXmlCreateTranslation Instance = new MagicEffectXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IMagicEffectInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    MagicEffectXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IMagicEffectInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "VirtualMachineAdapter":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.VirtualMachineAdapter);
-                    try
-                    {
-                        item.VirtualMachineAdapter = LoquiXmlTranslation<VirtualMachineAdapter>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.VirtualMachineAdapter));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Name":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MenuDisplayObject":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.MenuDisplayObject);
-                    try
-                    {
-                        item.MenuDisplayObject = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Keywords":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Keywords);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
-                            node: node,
-                            enumer: out var KeywordsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Keywords = KeywordsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Keywords = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<MagicEffect.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BaseCost":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.BaseCost);
-                    try
-                    {
-                        item.BaseCost = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MagicSkill":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.MagicSkill);
-                    try
-                    {
-                        item.MagicSkill = EnumXmlTranslation<ActorValueExtended>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ResistValue":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.ResistValue);
-                    try
-                    {
-                        item.ResistValue = EnumXmlTranslation<ActorValueExtended>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CounterEffectCount":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffectCount);
-                    try
-                    {
-                        item.CounterEffectCount = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown1":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Unknown1);
-                    try
-                    {
-                        item.Unknown1 = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CastingLight":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.CastingLight);
-                    try
-                    {
-                        item.CastingLight = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TaperWeight":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.TaperWeight);
-                    try
-                    {
-                        item.TaperWeight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HitShader":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.HitShader);
-                    try
-                    {
-                        item.HitShader = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EnchantShader":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.EnchantShader);
-                    try
-                    {
-                        item.EnchantShader = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MinimumSkillLevel":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.MinimumSkillLevel);
-                    try
-                    {
-                        item.MinimumSkillLevel = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SpellmakingArea":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.SpellmakingArea);
-                    try
-                    {
-                        item.SpellmakingArea = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SpellmakingCastingTime":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.SpellmakingCastingTime);
-                    try
-                    {
-                        item.SpellmakingCastingTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TaperCurve":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.TaperCurve);
-                    try
-                    {
-                        item.TaperCurve = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TaperDuration":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.TaperDuration);
-                    try
-                    {
-                        item.TaperDuration = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SecondActorValueWeight":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.SecondActorValueWeight);
-                    try
-                    {
-                        item.SecondActorValueWeight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Archetype":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Archetype);
-                    try
-                    {
-                        item.Archetype = LoquiXmlTranslation<MagicEffectArchetype>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Archetype));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Projectile":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Projectile);
-                    try
-                    {
-                        item.Projectile = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Explosion":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Explosion);
-                    try
-                    {
-                        item.Explosion = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CastType":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.CastType);
-                    try
-                    {
-                        item.CastType = EnumXmlTranslation<CastType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TargetType":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.TargetType);
-                    try
-                    {
-                        item.TargetType = EnumXmlTranslation<TargetType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SecondActorValue":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.SecondActorValue);
-                    try
-                    {
-                        item.SecondActorValue = EnumXmlTranslation<ActorValueExtended>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CastingArt":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.CastingArt);
-                    try
-                    {
-                        item.CastingArt = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HitEffectArt":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.HitEffectArt);
-                    try
-                    {
-                        item.HitEffectArt = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ImpactData":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.ImpactData);
-                    try
-                    {
-                        item.ImpactData = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkillUsageMultiplier":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.SkillUsageMultiplier);
-                    try
-                    {
-                        item.SkillUsageMultiplier = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DualCastArt":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.DualCastArt);
-                    try
-                    {
-                        item.DualCastArt = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DualCastScale":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.DualCastScale);
-                    try
-                    {
-                        item.DualCastScale = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EnchantArt":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.EnchantArt);
-                    try
-                    {
-                        item.EnchantArt = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown2":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Unknown2);
-                    try
-                    {
-                        item.Unknown2 = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown3":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Unknown3);
-                    try
-                    {
-                        item.Unknown3 = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EquipAbility":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.EquipAbility);
-                    try
-                    {
-                        item.EquipAbility = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ImageSpaceModifier":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.ImageSpaceModifier);
-                    try
-                    {
-                        item.ImageSpaceModifier = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PerkToApply":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.PerkToApply);
-                    try
-                    {
-                        item.PerkToApply = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CastingSoundLevel":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.CastingSoundLevel);
-                    try
-                    {
-                        item.CastingSoundLevel = EnumXmlTranslation<SoundLevel>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ScriptEffectAIScore":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.ScriptEffectAIScore);
-                    try
-                    {
-                        item.ScriptEffectAIScore = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ScriptEffectAIDelayTime":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime);
-                    try
-                    {
-                        item.ScriptEffectAIDelayTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CounterEffects":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffects);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<MagicEffect>>.Instance.Parse(
-                            node: node,
-                            enumer: out var CounterEffectsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.CounterEffects.SetTo(CounterEffectsItem);
-                        }
-                        else
-                        {
-                            item.CounterEffects.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sounds":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Sounds);
-                    try
-                    {
-                        if (ListXmlTranslation<MagicEffectSound>.Instance.Parse(
-                            node: node,
-                            enumer: out var SoundsItem,
-                            transl: LoquiXmlTranslation<MagicEffectSound>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Sounds = SoundsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Sounds = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Description":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Description);
-                    try
-                    {
-                        item.Description = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conditions":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Conditions);
-                    try
-                    {
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<MagicEffect.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class MagicEffectXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IMagicEffectGetter item,
-            XElement node,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((MagicEffectXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffect.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IMagicEffectGetter item,
-            string path,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IMagicEffectGetter item,
-            Stream stream,
-            out MagicEffect.ErrorMask errorMask,
-            MagicEffect.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -6690,10 +4808,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -6746,9 +4866,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IMagicEffectInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -6759,7 +4880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.VirtualMachineAdapter);
+                    return (int)MagicEffect_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -6768,7 +4889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Name);
+                    return (int)MagicEffect_FieldIndex.Name;
                 }
                 case RecordTypeInts.MDOB:
                 {
@@ -6776,7 +4897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MenuDisplayObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.MenuDisplayObject);
+                    return (int)MagicEffect_FieldIndex.MenuDisplayObject;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -6788,8 +4909,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Keywords);
+                        .CastExtendedList<IFormLink<Keyword>>();
+                    return (int)MagicEffect_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -6867,7 +4988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CastingSoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.ScriptEffectAIScore = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.ScriptEffectAIDelayTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime);
+                    return (int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime;
                 }
                 case RecordTypeInts.ESCE:
                 {
@@ -6876,7 +4997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ESCE),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
+                    return (int)MagicEffect_FieldIndex.CounterEffects;
                 }
                 case RecordTypeInts.SNDD:
                 {
@@ -6885,8 +5006,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<MagicEffectSound>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: MagicEffectSound.TryCreateFromBinary)
-                        .ToExtendedList<MagicEffectSound>();
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Sounds);
+                        .CastExtendedList<MagicEffectSound>();
+                    return (int)MagicEffect_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -6895,19 +5016,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Description);
+                    return (int)MagicEffect_FieldIndex.Description;
                 }
                 case RecordTypeInts.CTDA:
                 {
                     MagicEffectBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Conditions);
+                    return (int)MagicEffect_FieldIndex.Conditions;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -6966,21 +5088,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => MagicEffectXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((MagicEffectXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -7004,7 +5111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
         public bool MenuDisplayObject_IsSet => _MenuDisplayObjectLocation.HasValue;
-        public IFormLinkNullable<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        public IFormLinkNullable<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
         private int? _DATALocation;
@@ -7017,7 +5124,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region BaseCost
         private int _BaseCostLocation => _DATALocation!.Value + 0x4;
         private bool _BaseCost_IsSet => _DATALocation.HasValue;
-        public Single BaseCost => _BaseCost_IsSet ? SpanExt.GetFloat(_data.Slice(_BaseCostLocation, 4)) : default;
+        public Single BaseCost => _BaseCost_IsSet ? _data.Slice(_BaseCostLocation, 4).Float() : default;
         #endregion
         #region AssociatedItem
         partial void AssociatedItemCustomParse(
@@ -7052,7 +5159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region TaperWeight
         private int _TaperWeightLocation => _DATALocation!.Value + 0x1C;
         private bool _TaperWeight_IsSet => _DATALocation.HasValue;
-        public Single TaperWeight => _TaperWeight_IsSet ? SpanExt.GetFloat(_data.Slice(_TaperWeightLocation, 4)) : default;
+        public Single TaperWeight => _TaperWeight_IsSet ? _data.Slice(_TaperWeightLocation, 4).Float() : default;
         #endregion
         #region HitShader
         private int _HitShaderLocation => _DATALocation!.Value + 0x20;
@@ -7077,22 +5184,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region SpellmakingCastingTime
         private int _SpellmakingCastingTimeLocation => _DATALocation!.Value + 0x30;
         private bool _SpellmakingCastingTime_IsSet => _DATALocation.HasValue;
-        public Single SpellmakingCastingTime => _SpellmakingCastingTime_IsSet ? SpanExt.GetFloat(_data.Slice(_SpellmakingCastingTimeLocation, 4)) : default;
+        public Single SpellmakingCastingTime => _SpellmakingCastingTime_IsSet ? _data.Slice(_SpellmakingCastingTimeLocation, 4).Float() : default;
         #endregion
         #region TaperCurve
         private int _TaperCurveLocation => _DATALocation!.Value + 0x34;
         private bool _TaperCurve_IsSet => _DATALocation.HasValue;
-        public Single TaperCurve => _TaperCurve_IsSet ? SpanExt.GetFloat(_data.Slice(_TaperCurveLocation, 4)) : default;
+        public Single TaperCurve => _TaperCurve_IsSet ? _data.Slice(_TaperCurveLocation, 4).Float() : default;
         #endregion
         #region TaperDuration
         private int _TaperDurationLocation => _DATALocation!.Value + 0x38;
         private bool _TaperDuration_IsSet => _DATALocation.HasValue;
-        public Single TaperDuration => _TaperDuration_IsSet ? SpanExt.GetFloat(_data.Slice(_TaperDurationLocation, 4)) : default;
+        public Single TaperDuration => _TaperDuration_IsSet ? _data.Slice(_TaperDurationLocation, 4).Float() : default;
         #endregion
         #region SecondActorValueWeight
         private int _SecondActorValueWeightLocation => _DATALocation!.Value + 0x3C;
         private bool _SecondActorValueWeight_IsSet => _DATALocation.HasValue;
-        public Single SecondActorValueWeight => _SecondActorValueWeight_IsSet ? SpanExt.GetFloat(_data.Slice(_SecondActorValueWeightLocation, 4)) : default;
+        public Single SecondActorValueWeight => _SecondActorValueWeight_IsSet ? _data.Slice(_SecondActorValueWeightLocation, 4).Float() : default;
         #endregion
         #region Archetype
         private int _ArchetypeLocation => _DATALocation!.Value + 0x40;
@@ -7141,7 +5248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region SkillUsageMultiplier
         private int _SkillUsageMultiplierLocation => _DATALocation!.Value + 0x68;
         private bool _SkillUsageMultiplier_IsSet => _DATALocation.HasValue;
-        public Single SkillUsageMultiplier => _SkillUsageMultiplier_IsSet ? SpanExt.GetFloat(_data.Slice(_SkillUsageMultiplierLocation, 4)) : default;
+        public Single SkillUsageMultiplier => _SkillUsageMultiplier_IsSet ? _data.Slice(_SkillUsageMultiplierLocation, 4).Float() : default;
         #endregion
         #region DualCastArt
         private int _DualCastArtLocation => _DATALocation!.Value + 0x6C;
@@ -7151,7 +5258,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region DualCastScale
         private int _DualCastScaleLocation => _DATALocation!.Value + 0x70;
         private bool _DualCastScale_IsSet => _DATALocation.HasValue;
-        public Single DualCastScale => _DualCastScale_IsSet ? SpanExt.GetFloat(_data.Slice(_DualCastScaleLocation, 4)) : default;
+        public Single DualCastScale => _DualCastScale_IsSet ? _data.Slice(_DualCastScaleLocation, 4).Float() : default;
         #endregion
         #region EnchantArt
         private int _EnchantArtLocation => _DATALocation!.Value + 0x74;
@@ -7191,12 +5298,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ScriptEffectAIScore
         private int _ScriptEffectAIScoreLocation => _DATALocation!.Value + 0x90;
         private bool _ScriptEffectAIScore_IsSet => _DATALocation.HasValue;
-        public Single ScriptEffectAIScore => _ScriptEffectAIScore_IsSet ? SpanExt.GetFloat(_data.Slice(_ScriptEffectAIScoreLocation, 4)) : default;
+        public Single ScriptEffectAIScore => _ScriptEffectAIScore_IsSet ? _data.Slice(_ScriptEffectAIScoreLocation, 4).Float() : default;
         #endregion
         #region ScriptEffectAIDelayTime
         private int _ScriptEffectAIDelayTimeLocation => _DATALocation!.Value + 0x94;
         private bool _ScriptEffectAIDelayTime_IsSet => _DATALocation.HasValue;
-        public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ScriptEffectAIDelayTimeLocation, 4)) : default;
+        public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? _data.Slice(_ScriptEffectAIDelayTimeLocation, 4).Float() : default;
         #endregion
         public IReadOnlyList<IFormLink<IMagicEffectGetter>> CounterEffects { get; private set; } = ListExt.Empty<IFormLink<IMagicEffectGetter>>();
         public IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; private set; }
@@ -7237,8 +5344,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new MagicEffectBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -7264,12 +5372,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -7278,22 +5387,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.VirtualMachineAdapter);
+                    return (int)MagicEffect_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Name);
+                    return (int)MagicEffect_FieldIndex.Name;
                 }
                 case RecordTypeInts.MDOB:
                 {
                     _MenuDisplayObjectLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.MenuDisplayObject);
+                    return (int)MagicEffect_FieldIndex.MenuDisplayObject;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -7301,16 +5410,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Keywords);
+                    return (int)MagicEffect_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime);
+                    return (int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime;
                 }
                 case RecordTypeInts.ESCE:
                 {
-                    this.CounterEffects = BinaryOverlayList<IFormLink<IMagicEffectGetter>>.FactoryByArray(
+                    this.CounterEffects = BinaryOverlayList.FactoryByArray<IFormLink<IMagicEffectGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IMagicEffectGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -7320,24 +5429,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
+                    return (int)MagicEffect_FieldIndex.CounterEffects;
                 }
                 case RecordTypeInts.SNDD:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Sounds = BinaryOverlayList<MagicEffectSoundBinaryOverlay>.FactoryByStartIndex(
+                    this.Sounds = BinaryOverlayList.FactoryByStartIndex<MagicEffectSoundBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
                         getter: (s, p) => MagicEffectSoundBinaryOverlay.MagicEffectSoundFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Sounds);
+                    return (int)MagicEffect_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Description);
+                    return (int)MagicEffect_FieldIndex.Description;
                 }
                 case RecordTypeInts.CTDA:
                 {
@@ -7347,7 +5456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Conditions);
+                    return (int)MagicEffect_FieldIndex.Conditions;
                 }
                 default:
                     return base.FillRecordType(
@@ -7355,7 +5464,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

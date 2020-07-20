@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -248,135 +242,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => CombatStyleXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((CombatStyleXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new CombatStyle CreateFromXml(
-            XElement node,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static CombatStyle CreateFromXml(
-            XElement node,
-            out CombatStyle.ErrorMask errorMask,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CombatStyle.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static CombatStyle CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new CombatStyle();
-            ((CombatStyleSetterCommon)((ICombatStyleGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static CombatStyle CreateFromXml(
-            string path,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static CombatStyle CreateFromXml(
-            string path,
-            out CombatStyle.ErrorMask errorMask,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static CombatStyle CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static CombatStyle CreateFromXml(
-            Stream stream,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static CombatStyle CreateFromXml(
-            Stream stream,
-            out CombatStyle.ErrorMask errorMask,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static CombatStyle CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -409,7 +274,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -433,7 +298,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -1121,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = CombatStyle_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = CombatStyle_Registration.TriggeringRecordType;
         public CombatStyle(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1254,10 +1119,9 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICombatStyleGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<ICombatStyleGetter>,
-        IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => CombatStyle_Registration.Instance;
+        static new ILoquiRegistration Registration => CombatStyle_Registration.Instance;
         Single OffensiveMult { get; }
         Single DefensiveMult { get; }
         Single GroupOffensiveMult { get; }
@@ -1413,131 +1277,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ICombatStyleInternal item,
-            XElement node,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ICombatStyleInternal item,
-            XElement node,
-            out CombatStyle.ErrorMask errorMask,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CombatStyle.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this ICombatStyleInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICombatStyleInternal item,
-            string path,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICombatStyleInternal item,
-            string path,
-            out CombatStyle.ErrorMask errorMask,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICombatStyleInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this ICombatStyleInternal item,
-            Stream stream,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICombatStyleInternal item,
-            Stream stream,
-            out CombatStyle.ErrorMask errorMask,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ICombatStyleInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            CombatStyle.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1575,7 +1314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1913,7 +1652,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(CombatStyleXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.CSTY;
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleBinaryWriteTranslation);
         #region Interface
@@ -1986,88 +1724,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ICombatStyleInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            ICombatStyleInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            ICombatStyleInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                item.CSGDDataTypeState |= CombatStyle.CSGDDataType.Break0;
-                item.CSGDDataTypeState |= CombatStyle.CSGDDataType.Break1;
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    CombatStyleXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (CombatStyle)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (CombatStyle)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2344,7 +2000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (CombatStyle_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (CombatStyle_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (CombatStyle_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (CombatStyle_FieldIndex)((int)index);
@@ -2365,7 +2021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (CombatStyle_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (CombatStyle_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (CombatStyle_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (CombatStyle_FieldIndex)((int)index);
@@ -2797,702 +2453,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class CombatStyleXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static CombatStyleXmlWriteTranslation Instance = new CombatStyleXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            ICombatStyleGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.OffensiveMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.OffensiveMult),
-                    item: item.OffensiveMult,
-                    fieldIndex: (int)CombatStyle_FieldIndex.OffensiveMult,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DefensiveMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DefensiveMult),
-                    item: item.DefensiveMult,
-                    fieldIndex: (int)CombatStyle_FieldIndex.DefensiveMult,
-                    errorMask: errorMask);
-            }
-            if (!item.CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0))
-            {
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroupOffensiveMult) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.GroupOffensiveMult),
-                        item: item.GroupOffensiveMult,
-                        fieldIndex: (int)CombatStyle_FieldIndex.GroupOffensiveMult,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultMelee) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EquipmentScoreMultMelee),
-                        item: item.EquipmentScoreMultMelee,
-                        fieldIndex: (int)CombatStyle_FieldIndex.EquipmentScoreMultMelee,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultMagic) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EquipmentScoreMultMagic),
-                        item: item.EquipmentScoreMultMagic,
-                        fieldIndex: (int)CombatStyle_FieldIndex.EquipmentScoreMultMagic,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultRanged) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EquipmentScoreMultRanged),
-                        item: item.EquipmentScoreMultRanged,
-                        fieldIndex: (int)CombatStyle_FieldIndex.EquipmentScoreMultRanged,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultShout) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EquipmentScoreMultShout),
-                        item: item.EquipmentScoreMultShout,
-                        fieldIndex: (int)CombatStyle_FieldIndex.EquipmentScoreMultShout,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultUnarmed) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EquipmentScoreMultUnarmed),
-                        item: item.EquipmentScoreMultUnarmed,
-                        fieldIndex: (int)CombatStyle_FieldIndex.EquipmentScoreMultUnarmed,
-                        errorMask: errorMask);
-                }
-                if (!item.CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break1))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultStaff) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.EquipmentScoreMultStaff),
-                            item: item.EquipmentScoreMultStaff,
-                            fieldIndex: (int)CombatStyle_FieldIndex.EquipmentScoreMultStaff,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AvoidThreatChance) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.AvoidThreatChance),
-                            item: item.AvoidThreatChance,
-                            fieldIndex: (int)CombatStyle_FieldIndex.AvoidThreatChance,
-                            errorMask: errorMask);
-                    }
-                }
-            }
-            else
-            {
-                node.Add(new XElement("HasCSGDDataType"));
-            }
-            if ((item.CSMD != null)
-                && (translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMD) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CSMD),
-                    item: item.CSMD.Value,
-                    fieldIndex: (int)CombatStyle_FieldIndex.CSMD,
-                    errorMask: errorMask);
-            }
-            if ((item.Melee != null)
-                && (translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Melee) ?? true))
-            {
-                if (item.Melee.TryGet(out var MeleeItem))
-                {
-                    ((CombatStyleMeleeXmlWriteTranslation)((IXmlItem)MeleeItem).XmlWriteTranslator).Write(
-                        item: MeleeItem,
-                        node: node,
-                        name: nameof(item.Melee),
-                        fieldIndex: (int)CombatStyle_FieldIndex.Melee,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Melee));
-                }
-            }
-            if ((item.CloseRange != null)
-                && (translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRange) ?? true))
-            {
-                if (item.CloseRange.TryGet(out var CloseRangeItem))
-                {
-                    ((CombatStyleCloseRangeXmlWriteTranslation)((IXmlItem)CloseRangeItem).XmlWriteTranslator).Write(
-                        item: CloseRangeItem,
-                        node: node,
-                        name: nameof(item.CloseRange),
-                        fieldIndex: (int)CombatStyle_FieldIndex.CloseRange,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.CloseRange));
-                }
-            }
-            if ((item.LongRangeStrafeMult != null)
-                && (translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeStrafeMult) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LongRangeStrafeMult),
-                    item: item.LongRangeStrafeMult.Value,
-                    fieldIndex: (int)CombatStyle_FieldIndex.LongRangeStrafeMult,
-                    errorMask: errorMask);
-            }
-            if ((item.Flight != null)
-                && (translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flight) ?? true))
-            {
-                if (item.Flight.TryGet(out var FlightItem))
-                {
-                    ((CombatStyleFlightXmlWriteTranslation)((IXmlItem)FlightItem).XmlWriteTranslator).Write(
-                        item: FlightItem,
-                        node: node,
-                        name: nameof(item.Flight),
-                        fieldIndex: (int)CombatStyle_FieldIndex.Flight,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Flight));
-                }
-            }
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<CombatStyle.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)CombatStyle_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSGDDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<CombatStyle.CSGDDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CSGDDataTypeState),
-                    item: item.CSGDDataTypeState,
-                    fieldIndex: (int)CombatStyle_FieldIndex.CSGDDataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            ICombatStyleGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.CombatStyle");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.CombatStyle");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ICombatStyleGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ICombatStyleGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ICombatStyleGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class CombatStyleXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static CombatStyleXmlCreateTranslation Instance = new CombatStyleXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            ICombatStyleInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    CombatStyleXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            ICombatStyleInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "OffensiveMult":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.OffensiveMult);
-                    try
-                    {
-                        item.OffensiveMult = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DefensiveMult":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.DefensiveMult);
-                    try
-                    {
-                        item.DefensiveMult = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "GroupOffensiveMult":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.GroupOffensiveMult);
-                    try
-                    {
-                        item.GroupOffensiveMult = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.CSGDDataTypeState &= ~CombatStyle.CSGDDataType.Break0;
-                    break;
-                case "EquipmentScoreMultMelee":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.EquipmentScoreMultMelee);
-                    try
-                    {
-                        item.EquipmentScoreMultMelee = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EquipmentScoreMultMagic":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.EquipmentScoreMultMagic);
-                    try
-                    {
-                        item.EquipmentScoreMultMagic = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EquipmentScoreMultRanged":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.EquipmentScoreMultRanged);
-                    try
-                    {
-                        item.EquipmentScoreMultRanged = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EquipmentScoreMultShout":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.EquipmentScoreMultShout);
-                    try
-                    {
-                        item.EquipmentScoreMultShout = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EquipmentScoreMultUnarmed":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.EquipmentScoreMultUnarmed);
-                    try
-                    {
-                        item.EquipmentScoreMultUnarmed = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EquipmentScoreMultStaff":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.EquipmentScoreMultStaff);
-                    try
-                    {
-                        item.EquipmentScoreMultStaff = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.CSGDDataTypeState &= ~CombatStyle.CSGDDataType.Break1;
-                    break;
-                case "AvoidThreatChance":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.AvoidThreatChance);
-                    try
-                    {
-                        item.AvoidThreatChance = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CSMD":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.CSMD);
-                    try
-                    {
-                        item.CSMD = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Melee":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.Melee);
-                    try
-                    {
-                        item.Melee = LoquiXmlTranslation<CombatStyleMelee>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Melee));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CloseRange":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.CloseRange);
-                    try
-                    {
-                        item.CloseRange = LoquiXmlTranslation<CombatStyleCloseRange>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.CloseRange));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LongRangeStrafeMult":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.LongRangeStrafeMult);
-                    try
-                    {
-                        item.LongRangeStrafeMult = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flight":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.Flight);
-                    try
-                    {
-                        item.Flight = LoquiXmlTranslation<CombatStyleFlight>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Flight));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<CombatStyle.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CSGDDataTypeState":
-                    errorMask?.PushIndex((int)CombatStyle_FieldIndex.CSGDDataTypeState);
-                    try
-                    {
-                        item.CSGDDataTypeState = EnumXmlTranslation<CombatStyle.CSGDDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class CombatStyleXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this ICombatStyleGetter item,
-            XElement node,
-            out CombatStyle.ErrorMask errorMask,
-            CombatStyle.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((CombatStyleXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = CombatStyle.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this ICombatStyleGetter item,
-            string path,
-            out CombatStyle.ErrorMask errorMask,
-            CombatStyle.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ICombatStyleGetter item,
-            Stream stream,
-            out CombatStyle.ErrorMask errorMask,
-            CombatStyle.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3608,10 +2568,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -3664,9 +2626,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ICombatStyleInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3683,7 +2646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.CSGDDataTypeState |= CombatStyle.CSGDDataType.Break0;
-                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.DefensiveMult);
+                        return (int)CombatStyle_FieldIndex.DefensiveMult;
                     }
                     item.GroupOffensiveMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.EquipmentScoreMultMelee = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
@@ -3694,49 +2657,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.CSGDDataTypeState |= CombatStyle.CSGDDataType.Break1;
-                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.EquipmentScoreMultUnarmed);
+                        return (int)CombatStyle_FieldIndex.EquipmentScoreMultUnarmed;
                     }
                     item.EquipmentScoreMultStaff = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.AvoidThreatChance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.AvoidThreatChance);
+                    return (int)CombatStyle_FieldIndex.AvoidThreatChance;
                 }
                 case RecordTypeInts.CSMD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CSMD = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.CSMD);
+                    return (int)CombatStyle_FieldIndex.CSMD;
                 }
                 case RecordTypeInts.CSME:
                 {
                     item.Melee = Mutagen.Bethesda.Skyrim.CombatStyleMelee.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Melee);
+                    return (int)CombatStyle_FieldIndex.Melee;
                 }
                 case RecordTypeInts.CSCR:
                 {
                     item.CloseRange = Mutagen.Bethesda.Skyrim.CombatStyleCloseRange.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.CloseRange);
+                    return (int)CombatStyle_FieldIndex.CloseRange;
                 }
                 case RecordTypeInts.CSLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LongRangeStrafeMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.LongRangeStrafeMult);
+                    return (int)CombatStyle_FieldIndex.LongRangeStrafeMult;
                 }
                 case RecordTypeInts.CSFL:
                 {
                     item.Flight = Mutagen.Bethesda.Skyrim.CombatStyleFlight.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Flight);
+                    return (int)CombatStyle_FieldIndex.Flight;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<CombatStyle.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Flags);
+                    return (int)CombatStyle_FieldIndex.Flags;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3777,21 +2741,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => CombatStyleXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((CombatStyleXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3809,52 +2758,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region OffensiveMult
         private int _OffensiveMultLocation => _CSGDLocation!.Value;
         private bool _OffensiveMult_IsSet => _CSGDLocation.HasValue;
-        public Single OffensiveMult => _OffensiveMult_IsSet ? SpanExt.GetFloat(_data.Slice(_OffensiveMultLocation, 4)) : default;
+        public Single OffensiveMult => _OffensiveMult_IsSet ? _data.Slice(_OffensiveMultLocation, 4).Float() : default;
         #endregion
         #region DefensiveMult
         private int _DefensiveMultLocation => _CSGDLocation!.Value + 0x4;
         private bool _DefensiveMult_IsSet => _CSGDLocation.HasValue;
-        public Single DefensiveMult => _DefensiveMult_IsSet ? SpanExt.GetFloat(_data.Slice(_DefensiveMultLocation, 4)) : default;
+        public Single DefensiveMult => _DefensiveMult_IsSet ? _data.Slice(_DefensiveMultLocation, 4).Float() : default;
         #endregion
         #region GroupOffensiveMult
         private int _GroupOffensiveMultLocation => _CSGDLocation!.Value + 0x8;
         private bool _GroupOffensiveMult_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single GroupOffensiveMult => _GroupOffensiveMult_IsSet ? SpanExt.GetFloat(_data.Slice(_GroupOffensiveMultLocation, 4)) : default;
+        public Single GroupOffensiveMult => _GroupOffensiveMult_IsSet ? _data.Slice(_GroupOffensiveMultLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultMelee
         private int _EquipmentScoreMultMeleeLocation => _CSGDLocation!.Value + 0xC;
         private bool _EquipmentScoreMultMelee_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultMelee => _EquipmentScoreMultMelee_IsSet ? SpanExt.GetFloat(_data.Slice(_EquipmentScoreMultMeleeLocation, 4)) : default;
+        public Single EquipmentScoreMultMelee => _EquipmentScoreMultMelee_IsSet ? _data.Slice(_EquipmentScoreMultMeleeLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultMagic
         private int _EquipmentScoreMultMagicLocation => _CSGDLocation!.Value + 0x10;
         private bool _EquipmentScoreMultMagic_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultMagic => _EquipmentScoreMultMagic_IsSet ? SpanExt.GetFloat(_data.Slice(_EquipmentScoreMultMagicLocation, 4)) : default;
+        public Single EquipmentScoreMultMagic => _EquipmentScoreMultMagic_IsSet ? _data.Slice(_EquipmentScoreMultMagicLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultRanged
         private int _EquipmentScoreMultRangedLocation => _CSGDLocation!.Value + 0x14;
         private bool _EquipmentScoreMultRanged_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultRanged => _EquipmentScoreMultRanged_IsSet ? SpanExt.GetFloat(_data.Slice(_EquipmentScoreMultRangedLocation, 4)) : default;
+        public Single EquipmentScoreMultRanged => _EquipmentScoreMultRanged_IsSet ? _data.Slice(_EquipmentScoreMultRangedLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultShout
         private int _EquipmentScoreMultShoutLocation => _CSGDLocation!.Value + 0x18;
         private bool _EquipmentScoreMultShout_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultShout => _EquipmentScoreMultShout_IsSet ? SpanExt.GetFloat(_data.Slice(_EquipmentScoreMultShoutLocation, 4)) : default;
+        public Single EquipmentScoreMultShout => _EquipmentScoreMultShout_IsSet ? _data.Slice(_EquipmentScoreMultShoutLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultUnarmed
         private int _EquipmentScoreMultUnarmedLocation => _CSGDLocation!.Value + 0x1C;
         private bool _EquipmentScoreMultUnarmed_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultUnarmed => _EquipmentScoreMultUnarmed_IsSet ? SpanExt.GetFloat(_data.Slice(_EquipmentScoreMultUnarmedLocation, 4)) : default;
+        public Single EquipmentScoreMultUnarmed => _EquipmentScoreMultUnarmed_IsSet ? _data.Slice(_EquipmentScoreMultUnarmedLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultStaff
         private int _EquipmentScoreMultStaffLocation => _CSGDLocation!.Value + 0x20;
         private bool _EquipmentScoreMultStaff_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break1);
-        public Single EquipmentScoreMultStaff => _EquipmentScoreMultStaff_IsSet ? SpanExt.GetFloat(_data.Slice(_EquipmentScoreMultStaffLocation, 4)) : default;
+        public Single EquipmentScoreMultStaff => _EquipmentScoreMultStaff_IsSet ? _data.Slice(_EquipmentScoreMultStaffLocation, 4).Float() : default;
         #endregion
         #region AvoidThreatChance
         private int _AvoidThreatChanceLocation => _CSGDLocation!.Value + 0x24;
         private bool _AvoidThreatChance_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break1);
-        public Single AvoidThreatChance => _AvoidThreatChance_IsSet ? SpanExt.GetFloat(_data.Slice(_AvoidThreatChanceLocation, 4)) : default;
+        public Single AvoidThreatChance => _AvoidThreatChance_IsSet ? _data.Slice(_AvoidThreatChanceLocation, 4).Float() : default;
         #endregion
         #region CSMD
         private int? _CSMDLocation;
@@ -3872,7 +2821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LongRangeStrafeMult
         private int? _LongRangeStrafeMultLocation;
-        public Single? LongRangeStrafeMult => _LongRangeStrafeMultLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _LongRangeStrafeMultLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? LongRangeStrafeMult => _LongRangeStrafeMultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LongRangeStrafeMultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Flight
         private RangeInt32? _FlightLocation;
@@ -3881,7 +2830,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public CombatStyle.Flag? Flags => _FlagsLocation.HasValue ? (CombatStyle.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(CombatStyle.Flag?);
+        public CombatStyle.Flag? Flags => _FlagsLocation.HasValue ? (CombatStyle.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(CombatStyle.Flag?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3908,8 +2857,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new CombatStyleBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3935,12 +2885,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3958,37 +2909,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.CSGDDataTypeState |= CombatStyle.CSGDDataType.Break1;
                     }
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.AvoidThreatChance);
+                    return (int)CombatStyle_FieldIndex.AvoidThreatChance;
                 }
                 case RecordTypeInts.CSMD:
                 {
                     _CSMDLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.CSMD);
+                    return (int)CombatStyle_FieldIndex.CSMD;
                 }
                 case RecordTypeInts.CSME:
                 {
                     _MeleeLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Melee);
+                    return (int)CombatStyle_FieldIndex.Melee;
                 }
                 case RecordTypeInts.CSCR:
                 {
                     _CloseRangeLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.CloseRange);
+                    return (int)CombatStyle_FieldIndex.CloseRange;
                 }
                 case RecordTypeInts.CSLR:
                 {
                     _LongRangeStrafeMultLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.LongRangeStrafeMult);
+                    return (int)CombatStyle_FieldIndex.LongRangeStrafeMult;
                 }
                 case RecordTypeInts.CSFL:
                 {
                     _FlightLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Flight);
+                    return (int)CombatStyle_FieldIndex.Flight;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Flags);
+                    return (int)CombatStyle_FieldIndex.Flags;
                 }
                 default:
                     return base.FillRecordType(
@@ -3996,7 +2947,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

@@ -178,13 +178,12 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj)
             {
                 if (frame.Reader.Complete) return;
-                GroupHeader groupMeta = frame.GetGroup();
-                if (!groupMeta.IsGroup) return;
+                if (!frame.TryGetGroup(out var groupMeta)) return;
                 if (groupMeta.GroupType == (int)GroupTypeEnum.TopicChildren)
                 {
-                    obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
+                    obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                     obj.Unknown = frame.GetInt32(offset: 20);
-                    if (FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan)) != obj.FormKey)
+                    if (FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)) != obj.FormKey)
                     {
                         throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
                     }
@@ -273,7 +272,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             private ReadOnlyMemorySlice<byte>? _grupData;
 
-            public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedSpan) : 0;
+            public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedData) : 0;
 
             public int Unknown => _grupData.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData.Value.Slice(20)) : default;
 
@@ -281,24 +280,23 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (stream.Complete) return;
                 var startPos = stream.Position;
-                var groupMeta = stream.GetGroup();
-                if (!groupMeta.IsGroup) return;
+                if (!stream.TryGetGroup(out var groupMeta)) return;
                 if (groupMeta.GroupType != (int)GroupTypeEnum.TopicChildren) return;
                 this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
-                var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
+                var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
                 if (formKey != this.FormKey)
                 {
                     throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
                 }
                 var contentSpan = this._grupData.Value.Slice(_package.MetaData.Constants.GroupConstants.HeaderLength);
-                this.Responses = BinaryOverlayList<IDialogResponsesGetter>.FactoryByArray(
+                this.Responses = BinaryOverlayList.FactoryByArray<IDialogResponsesGetter>(
                     contentSpan,
                     _package,
                     getter: (s, p) => DialogResponsesBinaryOverlay.DialogResponsesFactory(new OverlayStream(s, p), p),
                     locs: ParseRecordLocations(
                         stream: new OverlayStream(contentSpan, _package),
                         trigger: DialogResponses_Registration.TriggeringRecordType,
-                        constants: GameConstants.Skyrim.MajorConstants,
+                        constants: stream.MetaData.Constants.MajorConstants,
                         skipHeader: false));
             }
         }

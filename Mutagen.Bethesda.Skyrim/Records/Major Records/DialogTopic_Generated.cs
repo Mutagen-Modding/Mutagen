@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -87,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<DialogResponses> _Responses = new ExtendedList<DialogResponses>();
-        public ExtendedList<DialogResponses> Responses
+        private IExtendedList<DialogResponses> _Responses = new ExtendedList<DialogResponses>();
+        public IExtendedList<DialogResponses> Responses
         {
             get => this._Responses;
             protected set => this._Responses = value;
@@ -132,135 +126,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => DialogTopicXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((DialogTopicXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new DialogTopic CreateFromXml(
-            XElement node,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static DialogTopic CreateFromXml(
-            XElement node,
-            out DialogTopic.ErrorMask errorMask,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = DialogTopic.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static DialogTopic CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new DialogTopic();
-            ((DialogTopicSetterCommon)((IDialogTopicGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static DialogTopic CreateFromXml(
-            string path,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static DialogTopic CreateFromXml(
-            string path,
-            out DialogTopic.ErrorMask errorMask,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static DialogTopic CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static DialogTopic CreateFromXml(
-            Stream stream,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static DialogTopic CreateFromXml(
-            Stream stream,
-            out DialogTopic.ErrorMask errorMask,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static DialogTopic CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -288,7 +153,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -307,7 +172,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -917,7 +782,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = DialogTopic_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = DialogTopic_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => DialogTopicCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1041,7 +906,7 @@ namespace Mutagen.Bethesda.Skyrim
         new RecordType SubtypeName { get; set; }
         new Int32 Timestamp { get; set; }
         new Int32 Unknown { get; set; }
-        new ExtendedList<DialogResponses> Responses { get; }
+        new IExtendedList<DialogResponses> Responses { get; }
         new DialogTopic.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1058,11 +923,10 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IDialogTopicGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => DialogTopic_Registration.Instance;
+        static new ILoquiRegistration Registration => DialogTopic_Registration.Instance;
         TranslatedString? Name { get; }
         Single Priority { get; }
         IFormLinkNullable<IDialogBranchGetter> Branch { get; }
@@ -1209,131 +1073,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IDialogTopicInternal item,
-            XElement node,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IDialogTopicInternal item,
-            XElement node,
-            out DialogTopic.ErrorMask errorMask,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = DialogTopic.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogTopicInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((DialogTopicSetterCommon)((IDialogTopicGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogTopicInternal item,
-            string path,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogTopicInternal item,
-            string path,
-            out DialogTopic.ErrorMask errorMask,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogTopicInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IDialogTopicInternal item,
-            Stream stream,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogTopicInternal item,
-            Stream stream,
-            out DialogTopic.ErrorMask errorMask,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogTopicInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            DialogTopic.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Mutagen
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IDialogTopicGetter obj)
@@ -1434,7 +1173,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1705,7 +1444,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case DialogTopic_FieldIndex.Unknown:
                     return typeof(Int32);
                 case DialogTopic_FieldIndex.Responses:
-                    return typeof(ExtendedList<DialogResponses>);
+                    return typeof(IExtendedList<DialogResponses>);
                 case DialogTopic_FieldIndex.DATADataTypeState:
                     return typeof(DialogTopic.DATADataType);
                 default:
@@ -1713,7 +1452,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(DialogTopicXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.DIAL;
         public static readonly Type BinaryWriteTranslation = typeof(DialogTopicBinaryWriteTranslation);
         #region Interface
@@ -1781,86 +1519,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IDialogTopicInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IDialogTopicInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IDialogTopicInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    DialogTopicXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (DialogTopic)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (DialogTopic)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IDialogTopicInternal obj)
@@ -2126,7 +1784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (DialogTopic_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (DialogTopic_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (DialogTopic_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (DialogTopic_FieldIndex)((int)index);
@@ -2147,7 +1805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (DialogTopic_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (DialogTopic_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (DialogTopic_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (DialogTopic_FieldIndex)((int)index);
@@ -2557,558 +2215,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class DialogTopicXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static DialogTopicXmlWriteTranslation Instance = new DialogTopicXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IDialogTopicGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)DialogTopic_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Priority) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Priority),
-                    item: item.Priority,
-                    fieldIndex: (int)DialogTopic_FieldIndex.Priority,
-                    errorMask: errorMask);
-            }
-            if ((item.Branch.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Branch) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Branch),
-                    item: item.Branch.FormKey,
-                    fieldIndex: (int)DialogTopic_FieldIndex.Branch,
-                    errorMask: errorMask);
-            }
-            if ((item.Quest.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Quest),
-                    item: item.Quest.FormKey,
-                    fieldIndex: (int)DialogTopic_FieldIndex.Quest,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicFlags) ?? true))
-            {
-                EnumXmlTranslation<DialogTopic.TopicFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.TopicFlags),
-                    item: item.TopicFlags,
-                    fieldIndex: (int)DialogTopic_FieldIndex.TopicFlags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Category) ?? true))
-            {
-                EnumXmlTranslation<DialogTopic.CategoryEnum>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Category),
-                    item: item.Category,
-                    fieldIndex: (int)DialogTopic_FieldIndex.Category,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Subtype) ?? true))
-            {
-                EnumXmlTranslation<DialogTopic.SubtypeEnum>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Subtype),
-                    item: item.Subtype,
-                    fieldIndex: (int)DialogTopic_FieldIndex.Subtype,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.SubtypeName) ?? true))
-            {
-                RecordTypeXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SubtypeName),
-                    item: item.SubtypeName,
-                    fieldIndex: (int)DialogTopic_FieldIndex.SubtypeName,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Timestamp),
-                    item: item.Timestamp,
-                    fieldIndex: (int)DialogTopic_FieldIndex.Timestamp,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Unknown) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)DialogTopic_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Responses) ?? true))
-            {
-                ListXmlTranslation<IDialogResponsesGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Responses),
-                    item: item.Responses,
-                    fieldIndex: (int)DialogTopic_FieldIndex.Responses,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)DialogTopic_FieldIndex.Responses),
-                    transl: (XElement subNode, IDialogResponsesGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((DialogResponsesXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<DialogTopic.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)DialogTopic_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IDialogTopicGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.DialogTopic");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.DialogTopic");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IDialogTopicGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IDialogTopicGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IDialogTopicGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class DialogTopicXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static DialogTopicXmlCreateTranslation Instance = new DialogTopicXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IDialogTopicInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    DialogTopicXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IDialogTopicInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Name":
-                    errorMask?.PushIndex((int)DialogTopic_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Priority":
-                    errorMask?.PushIndex((int)DialogTopic_FieldIndex.Priority);
-                    try
-                    {
-                        item.Priority = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Branch":
-                    errorMask?.PushIndex((int)DialogTopic_FieldIndex.Branch);
-                    try
-                    {
-                        item.Branch = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Quest":
-                    errorMask?.PushIndex((int)DialogTopic_FieldIndex.Quest);
-                    try
-                    {
-                        item.Quest = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TopicFlags":
-                    errorMask?.PushIndex((int)DialogTopic_FieldIndex.TopicFlags);
-                    try
-                    {
-                        item.TopicFlags = EnumXmlTranslation<DialogTopic.TopicFlag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Category":
-                    errorMask?.PushIndex((int)DialogTopic_FieldIndex.Category);
-                    try
-                    {
-                        item.Category = EnumXmlTranslation<DialogTopic.CategoryEnum>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Subtype":
-                    errorMask?.PushIndex((int)DialogTopic_FieldIndex.Subtype);
-                    try
-                    {
-                        item.Subtype = EnumXmlTranslation<DialogTopic.SubtypeEnum>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SubtypeName":
-                    errorMask?.PushIndex((int)DialogTopic_FieldIndex.SubtypeName);
-                    try
-                    {
-                        item.SubtypeName = RecordTypeXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Timestamp":
-                    errorMask?.PushIndex((int)DialogTopic_FieldIndex.Timestamp);
-                    try
-                    {
-                        item.Timestamp = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)DialogTopic_FieldIndex.Unknown);
-                    try
-                    {
-                        item.Unknown = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Responses":
-                    errorMask?.PushIndex((int)DialogTopic_FieldIndex.Responses);
-                    try
-                    {
-                        if (ListXmlTranslation<DialogResponses>.Instance.Parse(
-                            node: node,
-                            enumer: out var ResponsesItem,
-                            transl: LoquiXmlTranslation<DialogResponses>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Responses.SetTo(ResponsesItem);
-                        }
-                        else
-                        {
-                            item.Responses.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)DialogTopic_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<DialogTopic.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class DialogTopicXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IDialogTopicGetter item,
-            XElement node,
-            out DialogTopic.ErrorMask errorMask,
-            DialogTopic.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((DialogTopicXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = DialogTopic.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IDialogTopicGetter item,
-            string path,
-            out DialogTopic.ErrorMask errorMask,
-            DialogTopic.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IDialogTopicGetter item,
-            Stream stream,
-            out DialogTopic.ErrorMask errorMask,
-            DialogTopic.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3215,10 +2321,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
             CustomBinaryEndExportInternal(
                 writer: writer,
@@ -3274,9 +2382,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IDialogTopicInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3291,13 +2400,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
+                    return (int)DialogTopic_FieldIndex.Name;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Priority = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Priority);
+                    return (int)DialogTopic_FieldIndex.Priority;
                 }
                 case RecordTypeInts.BNAM:
                 {
@@ -3305,7 +2414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Branch = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Branch);
+                    return (int)DialogTopic_FieldIndex.Branch;
                 }
                 case RecordTypeInts.QNAM:
                 {
@@ -3313,7 +2422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quest);
+                    return (int)DialogTopic_FieldIndex.Quest;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3322,25 +2431,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TopicFlags = EnumBinaryTranslation<DialogTopic.TopicFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Category = EnumBinaryTranslation<DialogTopic.CategoryEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Subtype = EnumBinaryTranslation<DialogTopic.SubtypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Subtype);
+                    return (int)DialogTopic_FieldIndex.Subtype;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SubtypeName = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.SubtypeName);
+                    return (int)DialogTopic_FieldIndex.SubtypeName;
                 }
                 case RecordTypeInts.TIFC:
                 {
                     DialogTopicBinaryCreateTranslation.FillBinaryResponseCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3408,21 +2518,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => DialogTopicXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((DialogTopicXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogTopicBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3440,17 +2535,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Priority
         private int? _PriorityLocation;
-        public Single Priority => _PriorityLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _PriorityLocation.Value, _package.MetaData.Constants)) : default;
+        public Single Priority => _PriorityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PriorityLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region Branch
         private int? _BranchLocation;
         public bool Branch_IsSet => _BranchLocation.HasValue;
-        public IFormLinkNullable<IDialogBranchGetter> Branch => _BranchLocation.HasValue ? new FormLinkNullable<IDialogBranchGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BranchLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogBranchGetter>.Null;
+        public IFormLinkNullable<IDialogBranchGetter> Branch => _BranchLocation.HasValue ? new FormLinkNullable<IDialogBranchGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BranchLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogBranchGetter>.Null;
         #endregion
         #region Quest
         private int? _QuestLocation;
         public bool Quest_IsSet => _QuestLocation.HasValue;
-        public IFormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         private int? _DATALocation;
         public DialogTopic.DATADataType DATADataTypeState { get; private set; }
@@ -3508,8 +2603,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new DialogTopicBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3539,12 +2635,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3553,39 +2650,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
+                    return (int)DialogTopic_FieldIndex.Name;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     _PriorityLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Priority);
+                    return (int)DialogTopic_FieldIndex.Priority;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     _BranchLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Branch);
+                    return (int)DialogTopic_FieldIndex.Branch;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     _QuestLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quest);
+                    return (int)DialogTopic_FieldIndex.Quest;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Subtype);
+                    return (int)DialogTopic_FieldIndex.Subtype;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _SubtypeNameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.SubtypeName);
+                    return (int)DialogTopic_FieldIndex.SubtypeName;
                 }
                 case RecordTypeInts.TIFC:
                 {
                     ResponseCountCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 default:
                     return base.FillRecordType(
@@ -3593,7 +2690,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

@@ -19,14 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using System.Drawing;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -52,8 +46,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ActorCellPersistentReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationReference>? _ActorCellPersistentReferences;
-        public ExtendedList<LocationReference>? ActorCellPersistentReferences
+        private IExtendedList<LocationReference>? _ActorCellPersistentReferences;
+        public IExtendedList<LocationReference>? ActorCellPersistentReferences
         {
             get => this._ActorCellPersistentReferences;
             set => this._ActorCellPersistentReferences = value;
@@ -66,8 +60,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellPersistentReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationReference>? _LocationCellPersistentReferences;
-        public ExtendedList<LocationReference>? LocationCellPersistentReferences
+        private IExtendedList<LocationReference>? _LocationCellPersistentReferences;
+        public IExtendedList<LocationReference>? LocationCellPersistentReferences
         {
             get => this._LocationCellPersistentReferences;
             set => this._LocationCellPersistentReferences = value;
@@ -80,8 +74,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ReferenceCellPersistentReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPlacedSimple>>? _ReferenceCellPersistentReferences;
-        public ExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellPersistentReferences
+        private IExtendedList<IFormLink<IPlacedSimple>>? _ReferenceCellPersistentReferences;
+        public IExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellPersistentReferences
         {
             get => this._ReferenceCellPersistentReferences;
             set => this._ReferenceCellPersistentReferences = value;
@@ -94,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellUniques
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationReference>? _ActorCellUniques;
-        public ExtendedList<LocationReference>? ActorCellUniques
+        private IExtendedList<LocationReference>? _ActorCellUniques;
+        public IExtendedList<LocationReference>? ActorCellUniques
         {
             get => this._ActorCellUniques;
             set => this._ActorCellUniques = value;
@@ -108,8 +102,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellUniques
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationReference>? _LocationCellUniques;
-        public ExtendedList<LocationReference>? LocationCellUniques
+        private IExtendedList<LocationReference>? _LocationCellUniques;
+        public IExtendedList<LocationReference>? LocationCellUniques
         {
             get => this._LocationCellUniques;
             set => this._LocationCellUniques = value;
@@ -122,8 +116,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ReferenceCellUnique
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Npc>>? _ReferenceCellUnique;
-        public ExtendedList<IFormLink<Npc>>? ReferenceCellUnique
+        private IExtendedList<IFormLink<Npc>>? _ReferenceCellUnique;
+        public IExtendedList<IFormLink<Npc>>? ReferenceCellUnique
         {
             get => this._ReferenceCellUnique;
             set => this._ReferenceCellUnique = value;
@@ -136,8 +130,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellStaticReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCellStaticReference>? _ActorCellStaticReferences;
-        public ExtendedList<LocationCellStaticReference>? ActorCellStaticReferences
+        private IExtendedList<LocationCellStaticReference>? _ActorCellStaticReferences;
+        public IExtendedList<LocationCellStaticReference>? ActorCellStaticReferences
         {
             get => this._ActorCellStaticReferences;
             set => this._ActorCellStaticReferences = value;
@@ -150,8 +144,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellStaticReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCellStaticReference>? _LocationCellStaticReferences;
-        public ExtendedList<LocationCellStaticReference>? LocationCellStaticReferences
+        private IExtendedList<LocationCellStaticReference>? _LocationCellStaticReferences;
+        public IExtendedList<LocationCellStaticReference>? LocationCellStaticReferences
         {
             get => this._LocationCellStaticReferences;
             set => this._LocationCellStaticReferences = value;
@@ -164,8 +158,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ReferenceCellStaticReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPlacedSimple>>? _ReferenceCellStaticReferences;
-        public ExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellStaticReferences
+        private IExtendedList<IFormLink<IPlacedSimple>>? _ReferenceCellStaticReferences;
+        public IExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellStaticReferences
         {
             get => this._ReferenceCellStaticReferences;
             set => this._ReferenceCellStaticReferences = value;
@@ -178,8 +172,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellEncounterCell
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCoordinate> _ActorCellEncounterCell = new ExtendedList<LocationCoordinate>();
-        public ExtendedList<LocationCoordinate> ActorCellEncounterCell
+        private IExtendedList<LocationCoordinate> _ActorCellEncounterCell = new ExtendedList<LocationCoordinate>();
+        public IExtendedList<LocationCoordinate> ActorCellEncounterCell
         {
             get => this._ActorCellEncounterCell;
             protected set => this._ActorCellEncounterCell = value;
@@ -192,8 +186,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellEncounterCell
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCoordinate> _LocationCellEncounterCell = new ExtendedList<LocationCoordinate>();
-        public ExtendedList<LocationCoordinate> LocationCellEncounterCell
+        private IExtendedList<LocationCoordinate> _LocationCellEncounterCell = new ExtendedList<LocationCoordinate>();
+        public IExtendedList<LocationCoordinate> LocationCellEncounterCell
         {
             get => this._LocationCellEncounterCell;
             protected set => this._LocationCellEncounterCell = value;
@@ -206,8 +200,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ReferenceCellEncounterCell
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCoordinate> _ReferenceCellEncounterCell = new ExtendedList<LocationCoordinate>();
-        public ExtendedList<LocationCoordinate> ReferenceCellEncounterCell
+        private IExtendedList<LocationCoordinate> _ReferenceCellEncounterCell = new ExtendedList<LocationCoordinate>();
+        public IExtendedList<LocationCoordinate> ReferenceCellEncounterCell
         {
             get => this._ReferenceCellEncounterCell;
             protected set => this._ReferenceCellEncounterCell = value;
@@ -220,8 +214,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellMarkerReference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPlaced>>? _ActorCellMarkerReference;
-        public ExtendedList<IFormLink<IPlaced>>? ActorCellMarkerReference
+        private IExtendedList<IFormLink<IPlaced>>? _ActorCellMarkerReference;
+        public IExtendedList<IFormLink<IPlaced>>? ActorCellMarkerReference
         {
             get => this._ActorCellMarkerReference;
             set => this._ActorCellMarkerReference = value;
@@ -234,8 +228,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellMarkerReference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPlaced>>? _LocationCellMarkerReference;
-        public ExtendedList<IFormLink<IPlaced>>? LocationCellMarkerReference
+        private IExtendedList<IFormLink<IPlaced>>? _LocationCellMarkerReference;
+        public IExtendedList<IFormLink<IPlaced>>? LocationCellMarkerReference
         {
             get => this._LocationCellMarkerReference;
             set => this._LocationCellMarkerReference = value;
@@ -248,8 +242,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellEnablePoint
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCellEnablePoint>? _ActorCellEnablePoint;
-        public ExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint
+        private IExtendedList<LocationCellEnablePoint>? _ActorCellEnablePoint;
+        public IExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint
         {
             get => this._ActorCellEnablePoint;
             set => this._ActorCellEnablePoint = value;
@@ -262,8 +256,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellEnablePoint
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCellEnablePoint>? _LocationCellEnablePoint;
-        public ExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint
+        private IExtendedList<LocationCellEnablePoint>? _LocationCellEnablePoint;
+        public IExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint
         {
             get => this._LocationCellEnablePoint;
             set => this._LocationCellEnablePoint = value;
@@ -281,8 +275,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -358,135 +352,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => LocationXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((LocationXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Location CreateFromXml(
-            XElement node,
-            Location.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Location CreateFromXml(
-            XElement node,
-            out Location.ErrorMask errorMask,
-            Location.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Location.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Location CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Location();
-            ((LocationSetterCommon)((ILocationGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Location CreateFromXml(
-            string path,
-            Location.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Location CreateFromXml(
-            string path,
-            out Location.ErrorMask errorMask,
-            Location.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Location CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Location.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Location CreateFromXml(
-            Stream stream,
-            Location.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Location CreateFromXml(
-            Stream stream,
-            out Location.ErrorMask errorMask,
-            Location.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Location CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Location.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -527,7 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -559,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -2705,7 +2570,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Location_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Location_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LocationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2802,24 +2667,24 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         ILoquiObjectSetter<ILocationInternal>
     {
-        new ExtendedList<LocationReference>? ActorCellPersistentReferences { get; set; }
-        new ExtendedList<LocationReference>? LocationCellPersistentReferences { get; set; }
-        new ExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellPersistentReferences { get; set; }
-        new ExtendedList<LocationReference>? ActorCellUniques { get; set; }
-        new ExtendedList<LocationReference>? LocationCellUniques { get; set; }
-        new ExtendedList<IFormLink<Npc>>? ReferenceCellUnique { get; set; }
-        new ExtendedList<LocationCellStaticReference>? ActorCellStaticReferences { get; set; }
-        new ExtendedList<LocationCellStaticReference>? LocationCellStaticReferences { get; set; }
-        new ExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellStaticReferences { get; set; }
-        new ExtendedList<LocationCoordinate> ActorCellEncounterCell { get; }
-        new ExtendedList<LocationCoordinate> LocationCellEncounterCell { get; }
-        new ExtendedList<LocationCoordinate> ReferenceCellEncounterCell { get; }
-        new ExtendedList<IFormLink<IPlaced>>? ActorCellMarkerReference { get; set; }
-        new ExtendedList<IFormLink<IPlaced>>? LocationCellMarkerReference { get; set; }
-        new ExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint { get; set; }
-        new ExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint { get; set; }
+        new IExtendedList<LocationReference>? ActorCellPersistentReferences { get; set; }
+        new IExtendedList<LocationReference>? LocationCellPersistentReferences { get; set; }
+        new IExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellPersistentReferences { get; set; }
+        new IExtendedList<LocationReference>? ActorCellUniques { get; set; }
+        new IExtendedList<LocationReference>? LocationCellUniques { get; set; }
+        new IExtendedList<IFormLink<Npc>>? ReferenceCellUnique { get; set; }
+        new IExtendedList<LocationCellStaticReference>? ActorCellStaticReferences { get; set; }
+        new IExtendedList<LocationCellStaticReference>? LocationCellStaticReferences { get; set; }
+        new IExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellStaticReferences { get; set; }
+        new IExtendedList<LocationCoordinate> ActorCellEncounterCell { get; }
+        new IExtendedList<LocationCoordinate> LocationCellEncounterCell { get; }
+        new IExtendedList<LocationCoordinate> ReferenceCellEncounterCell { get; }
+        new IExtendedList<IFormLink<IPlaced>>? ActorCellMarkerReference { get; set; }
+        new IExtendedList<IFormLink<IPlaced>>? LocationCellMarkerReference { get; set; }
+        new IExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint { get; set; }
+        new IExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint { get; set; }
         new TranslatedString? Name { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new FormLinkNullable<Location> ParentLocation { get; set; }
         new FormLinkNullable<MusicType> Music { get; set; }
         new FormLinkNullable<Faction> UnreportedCrimeFaction { get; set; }
@@ -2841,11 +2706,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationRecordGetter,
         ITranslatedNamedGetter,
         ILoquiObject<ILocationGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Location_Registration.Instance;
+        static new ILoquiRegistration Registration => Location_Registration.Instance;
         IReadOnlyList<ILocationReferenceGetter>? ActorCellPersistentReferences { get; }
         IReadOnlyList<ILocationReferenceGetter>? LocationCellPersistentReferences { get; }
         IReadOnlyList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; }
@@ -3005,131 +2869,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ILocationInternal item,
-            XElement node,
-            Location.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this ILocationInternal item,
-            XElement node,
-            out Location.ErrorMask errorMask,
-            Location.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Location.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this ILocationInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((LocationSetterCommon)((ILocationGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILocationInternal item,
-            string path,
-            Location.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILocationInternal item,
-            string path,
-            out Location.ErrorMask errorMask,
-            Location.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILocationInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Location.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this ILocationInternal item,
-            Stream stream,
-            Location.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILocationInternal item,
-            Stream stream,
-            out Location.ErrorMask errorMask,
-            Location.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this ILocationInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Location.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -3167,7 +2906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -3548,41 +3287,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Location_FieldIndex.ActorCellPersistentReferences:
-                    return typeof(ExtendedList<LocationReference>);
+                    return typeof(IExtendedList<LocationReference>);
                 case Location_FieldIndex.LocationCellPersistentReferences:
-                    return typeof(ExtendedList<LocationReference>);
+                    return typeof(IExtendedList<LocationReference>);
                 case Location_FieldIndex.ReferenceCellPersistentReferences:
-                    return typeof(ExtendedList<IFormLink<IPlacedSimple>>);
+                    return typeof(IExtendedList<IFormLink<IPlacedSimple>>);
                 case Location_FieldIndex.ActorCellUniques:
-                    return typeof(ExtendedList<LocationReference>);
+                    return typeof(IExtendedList<LocationReference>);
                 case Location_FieldIndex.LocationCellUniques:
-                    return typeof(ExtendedList<LocationReference>);
+                    return typeof(IExtendedList<LocationReference>);
                 case Location_FieldIndex.ReferenceCellUnique:
-                    return typeof(ExtendedList<IFormLink<Npc>>);
+                    return typeof(IExtendedList<IFormLink<Npc>>);
                 case Location_FieldIndex.ActorCellStaticReferences:
-                    return typeof(ExtendedList<LocationCellStaticReference>);
+                    return typeof(IExtendedList<LocationCellStaticReference>);
                 case Location_FieldIndex.LocationCellStaticReferences:
-                    return typeof(ExtendedList<LocationCellStaticReference>);
+                    return typeof(IExtendedList<LocationCellStaticReference>);
                 case Location_FieldIndex.ReferenceCellStaticReferences:
-                    return typeof(ExtendedList<IFormLink<IPlacedSimple>>);
+                    return typeof(IExtendedList<IFormLink<IPlacedSimple>>);
                 case Location_FieldIndex.ActorCellEncounterCell:
-                    return typeof(ExtendedList<LocationCoordinate>);
+                    return typeof(IExtendedList<LocationCoordinate>);
                 case Location_FieldIndex.LocationCellEncounterCell:
-                    return typeof(ExtendedList<LocationCoordinate>);
+                    return typeof(IExtendedList<LocationCoordinate>);
                 case Location_FieldIndex.ReferenceCellEncounterCell:
-                    return typeof(ExtendedList<LocationCoordinate>);
+                    return typeof(IExtendedList<LocationCoordinate>);
                 case Location_FieldIndex.ActorCellMarkerReference:
-                    return typeof(ExtendedList<IFormLink<IPlaced>>);
+                    return typeof(IExtendedList<IFormLink<IPlaced>>);
                 case Location_FieldIndex.LocationCellMarkerReference:
-                    return typeof(ExtendedList<IFormLink<IPlaced>>);
+                    return typeof(IExtendedList<IFormLink<IPlaced>>);
                 case Location_FieldIndex.ActorCellEnablePoint:
-                    return typeof(ExtendedList<LocationCellEnablePoint>);
+                    return typeof(IExtendedList<LocationCellEnablePoint>);
                 case Location_FieldIndex.LocationCellEnablePoint:
-                    return typeof(ExtendedList<LocationCellEnablePoint>);
+                    return typeof(IExtendedList<LocationCellEnablePoint>);
                 case Location_FieldIndex.Name:
                     return typeof(TranslatedString);
                 case Location_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Location_FieldIndex.ParentLocation:
                     return typeof(FormLinkNullable<Location>);
                 case Location_FieldIndex.Music:
@@ -3602,7 +3341,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(LocationXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.LCTN;
         public static readonly Type BinaryWriteTranslation = typeof(LocationBinaryWriteTranslation);
         #region Interface
@@ -3683,86 +3421,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ILocationInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            ILocationInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            ILocationInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    LocationXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Location)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Location)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -4417,7 +4075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Location_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Location_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Location_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Location_FieldIndex)((int)index);
@@ -4438,7 +4096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Location_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Location_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Location_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Location_FieldIndex)((int)index);
@@ -5403,1252 +5061,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class LocationXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static LocationXmlWriteTranslation Instance = new LocationXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            ILocationGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.ActorCellPersistentReferences != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellPersistentReferences) ?? true))
-            {
-                ListXmlTranslation<ILocationReferenceGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ActorCellPersistentReferences),
-                    item: item.ActorCellPersistentReferences,
-                    fieldIndex: (int)Location_FieldIndex.ActorCellPersistentReferences,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellPersistentReferences),
-                    transl: (XElement subNode, ILocationReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LocationReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.LocationCellPersistentReferences != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellPersistentReferences) ?? true))
-            {
-                ListXmlTranslation<ILocationReferenceGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.LocationCellPersistentReferences),
-                    item: item.LocationCellPersistentReferences,
-                    fieldIndex: (int)Location_FieldIndex.LocationCellPersistentReferences,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellPersistentReferences),
-                    transl: (XElement subNode, ILocationReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LocationReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.ReferenceCellPersistentReferences != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellPersistentReferences) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IPlacedSimpleGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ReferenceCellPersistentReferences),
-                    item: item.ReferenceCellPersistentReferences,
-                    fieldIndex: (int)Location_FieldIndex.ReferenceCellPersistentReferences,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ReferenceCellPersistentReferences),
-                    transl: (XElement subNode, IFormLink<IPlacedSimpleGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.ActorCellUniques != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellUniques) ?? true))
-            {
-                ListXmlTranslation<ILocationReferenceGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ActorCellUniques),
-                    item: item.ActorCellUniques,
-                    fieldIndex: (int)Location_FieldIndex.ActorCellUniques,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellUniques),
-                    transl: (XElement subNode, ILocationReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LocationReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.LocationCellUniques != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellUniques) ?? true))
-            {
-                ListXmlTranslation<ILocationReferenceGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.LocationCellUniques),
-                    item: item.LocationCellUniques,
-                    fieldIndex: (int)Location_FieldIndex.LocationCellUniques,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellUniques),
-                    transl: (XElement subNode, ILocationReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LocationReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.ReferenceCellUnique != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellUnique) ?? true))
-            {
-                ListXmlTranslation<IFormLink<INpcGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ReferenceCellUnique),
-                    item: item.ReferenceCellUnique,
-                    fieldIndex: (int)Location_FieldIndex.ReferenceCellUnique,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ReferenceCellUnique),
-                    transl: (XElement subNode, IFormLink<INpcGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.ActorCellStaticReferences != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellStaticReferences) ?? true))
-            {
-                ListXmlTranslation<ILocationCellStaticReferenceGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ActorCellStaticReferences),
-                    item: item.ActorCellStaticReferences,
-                    fieldIndex: (int)Location_FieldIndex.ActorCellStaticReferences,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellStaticReferences),
-                    transl: (XElement subNode, ILocationCellStaticReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LocationCellStaticReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.LocationCellStaticReferences != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellStaticReferences) ?? true))
-            {
-                ListXmlTranslation<ILocationCellStaticReferenceGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.LocationCellStaticReferences),
-                    item: item.LocationCellStaticReferences,
-                    fieldIndex: (int)Location_FieldIndex.LocationCellStaticReferences,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellStaticReferences),
-                    transl: (XElement subNode, ILocationCellStaticReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LocationCellStaticReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.ReferenceCellStaticReferences != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellStaticReferences) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IPlacedSimpleGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ReferenceCellStaticReferences),
-                    item: item.ReferenceCellStaticReferences,
-                    fieldIndex: (int)Location_FieldIndex.ReferenceCellStaticReferences,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ReferenceCellStaticReferences),
-                    transl: (XElement subNode, IFormLink<IPlacedSimpleGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEncounterCell) ?? true))
-            {
-                ListXmlTranslation<ILocationCoordinateGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ActorCellEncounterCell),
-                    item: item.ActorCellEncounterCell,
-                    fieldIndex: (int)Location_FieldIndex.ActorCellEncounterCell,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellEncounterCell),
-                    transl: (XElement subNode, ILocationCoordinateGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LocationCoordinateXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEncounterCell) ?? true))
-            {
-                ListXmlTranslation<ILocationCoordinateGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.LocationCellEncounterCell),
-                    item: item.LocationCellEncounterCell,
-                    fieldIndex: (int)Location_FieldIndex.LocationCellEncounterCell,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellEncounterCell),
-                    transl: (XElement subNode, ILocationCoordinateGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LocationCoordinateXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellEncounterCell) ?? true))
-            {
-                ListXmlTranslation<ILocationCoordinateGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ReferenceCellEncounterCell),
-                    item: item.ReferenceCellEncounterCell,
-                    fieldIndex: (int)Location_FieldIndex.ReferenceCellEncounterCell,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ReferenceCellEncounterCell),
-                    transl: (XElement subNode, ILocationCoordinateGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LocationCoordinateXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.ActorCellMarkerReference != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellMarkerReference) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IPlacedGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ActorCellMarkerReference),
-                    item: item.ActorCellMarkerReference,
-                    fieldIndex: (int)Location_FieldIndex.ActorCellMarkerReference,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellMarkerReference),
-                    transl: (XElement subNode, IFormLink<IPlacedGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.LocationCellMarkerReference != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellMarkerReference) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IPlacedGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.LocationCellMarkerReference),
-                    item: item.LocationCellMarkerReference,
-                    fieldIndex: (int)Location_FieldIndex.LocationCellMarkerReference,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellMarkerReference),
-                    transl: (XElement subNode, IFormLink<IPlacedGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.ActorCellEnablePoint != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEnablePoint) ?? true))
-            {
-                ListXmlTranslation<ILocationCellEnablePointGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ActorCellEnablePoint),
-                    item: item.ActorCellEnablePoint,
-                    fieldIndex: (int)Location_FieldIndex.ActorCellEnablePoint,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellEnablePoint),
-                    transl: (XElement subNode, ILocationCellEnablePointGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LocationCellEnablePointXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.LocationCellEnablePoint != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEnablePoint) ?? true))
-            {
-                ListXmlTranslation<ILocationCellEnablePointGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.LocationCellEnablePoint),
-                    item: item.LocationCellEnablePoint,
-                    fieldIndex: (int)Location_FieldIndex.LocationCellEnablePoint,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellEnablePoint),
-                    transl: (XElement subNode, ILocationCellEnablePointGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LocationCellEnablePointXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Location_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((item.Keywords != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.Keywords) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IKeywordGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Keywords),
-                    item: item.Keywords,
-                    fieldIndex: (int)Location_FieldIndex.Keywords,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.Keywords),
-                    transl: (XElement subNode, IFormLink<IKeywordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.ParentLocation.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ParentLocation) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ParentLocation),
-                    item: item.ParentLocation.FormKey,
-                    fieldIndex: (int)Location_FieldIndex.ParentLocation,
-                    errorMask: errorMask);
-            }
-            if ((item.Music.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.Music) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Music),
-                    item: item.Music.FormKey,
-                    fieldIndex: (int)Location_FieldIndex.Music,
-                    errorMask: errorMask);
-            }
-            if ((item.UnreportedCrimeFaction.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.UnreportedCrimeFaction),
-                    item: item.UnreportedCrimeFaction.FormKey,
-                    fieldIndex: (int)Location_FieldIndex.UnreportedCrimeFaction,
-                    errorMask: errorMask);
-            }
-            if ((item.WorldLocationMarkerRef.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationMarkerRef) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WorldLocationMarkerRef),
-                    item: item.WorldLocationMarkerRef.FormKey,
-                    fieldIndex: (int)Location_FieldIndex.WorldLocationMarkerRef,
-                    errorMask: errorMask);
-            }
-            if ((item.WorldLocationRadius != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationRadius) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WorldLocationRadius),
-                    item: item.WorldLocationRadius.Value,
-                    fieldIndex: (int)Location_FieldIndex.WorldLocationRadius,
-                    errorMask: errorMask);
-            }
-            if ((item.HorseMarkerRef.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.HorseMarkerRef) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HorseMarkerRef),
-                    item: item.HorseMarkerRef.FormKey,
-                    fieldIndex: (int)Location_FieldIndex.HorseMarkerRef,
-                    errorMask: errorMask);
-            }
-            if ((item.Color != null)
-                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Color),
-                    item: item.Color.Value,
-                    fieldIndex: (int)Location_FieldIndex.Color,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            ILocationGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Location");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Location");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILocationGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILocationGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ILocationGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class LocationXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static LocationXmlCreateTranslation Instance = new LocationXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            ILocationInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    LocationXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            ILocationInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "ActorCellPersistentReferences":
-                    errorMask?.PushIndex((int)Location_FieldIndex.ActorCellPersistentReferences);
-                    try
-                    {
-                        if (ListXmlTranslation<LocationReference>.Instance.Parse(
-                            node: node,
-                            enumer: out var ActorCellPersistentReferencesItem,
-                            transl: LoquiXmlTranslation<LocationReference>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.ActorCellPersistentReferences = ActorCellPersistentReferencesItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.ActorCellPersistentReferences = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LocationCellPersistentReferences":
-                    errorMask?.PushIndex((int)Location_FieldIndex.LocationCellPersistentReferences);
-                    try
-                    {
-                        if (ListXmlTranslation<LocationReference>.Instance.Parse(
-                            node: node,
-                            enumer: out var LocationCellPersistentReferencesItem,
-                            transl: LoquiXmlTranslation<LocationReference>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.LocationCellPersistentReferences = LocationCellPersistentReferencesItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.LocationCellPersistentReferences = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ReferenceCellPersistentReferences":
-                    errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellPersistentReferences);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<IPlacedSimple>>.Instance.Parse(
-                            node: node,
-                            enumer: out var ReferenceCellPersistentReferencesItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.ReferenceCellPersistentReferences = ReferenceCellPersistentReferencesItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.ReferenceCellPersistentReferences = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ActorCellUniques":
-                    errorMask?.PushIndex((int)Location_FieldIndex.ActorCellUniques);
-                    try
-                    {
-                        if (ListXmlTranslation<LocationReference>.Instance.Parse(
-                            node: node,
-                            enumer: out var ActorCellUniquesItem,
-                            transl: LoquiXmlTranslation<LocationReference>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.ActorCellUniques = ActorCellUniquesItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.ActorCellUniques = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LocationCellUniques":
-                    errorMask?.PushIndex((int)Location_FieldIndex.LocationCellUniques);
-                    try
-                    {
-                        if (ListXmlTranslation<LocationReference>.Instance.Parse(
-                            node: node,
-                            enumer: out var LocationCellUniquesItem,
-                            transl: LoquiXmlTranslation<LocationReference>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.LocationCellUniques = LocationCellUniquesItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.LocationCellUniques = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ReferenceCellUnique":
-                    errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellUnique);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Npc>>.Instance.Parse(
-                            node: node,
-                            enumer: out var ReferenceCellUniqueItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.ReferenceCellUnique = ReferenceCellUniqueItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.ReferenceCellUnique = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ActorCellStaticReferences":
-                    errorMask?.PushIndex((int)Location_FieldIndex.ActorCellStaticReferences);
-                    try
-                    {
-                        if (ListXmlTranslation<LocationCellStaticReference>.Instance.Parse(
-                            node: node,
-                            enumer: out var ActorCellStaticReferencesItem,
-                            transl: LoquiXmlTranslation<LocationCellStaticReference>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.ActorCellStaticReferences = ActorCellStaticReferencesItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.ActorCellStaticReferences = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LocationCellStaticReferences":
-                    errorMask?.PushIndex((int)Location_FieldIndex.LocationCellStaticReferences);
-                    try
-                    {
-                        if (ListXmlTranslation<LocationCellStaticReference>.Instance.Parse(
-                            node: node,
-                            enumer: out var LocationCellStaticReferencesItem,
-                            transl: LoquiXmlTranslation<LocationCellStaticReference>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.LocationCellStaticReferences = LocationCellStaticReferencesItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.LocationCellStaticReferences = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ReferenceCellStaticReferences":
-                    errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellStaticReferences);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<IPlacedSimple>>.Instance.Parse(
-                            node: node,
-                            enumer: out var ReferenceCellStaticReferencesItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.ReferenceCellStaticReferences = ReferenceCellStaticReferencesItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.ReferenceCellStaticReferences = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ActorCellEncounterCell":
-                    errorMask?.PushIndex((int)Location_FieldIndex.ActorCellEncounterCell);
-                    try
-                    {
-                        if (ListXmlTranslation<LocationCoordinate>.Instance.Parse(
-                            node: node,
-                            enumer: out var ActorCellEncounterCellItem,
-                            transl: LoquiXmlTranslation<LocationCoordinate>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.ActorCellEncounterCell.SetTo(ActorCellEncounterCellItem);
-                        }
-                        else
-                        {
-                            item.ActorCellEncounterCell.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LocationCellEncounterCell":
-                    errorMask?.PushIndex((int)Location_FieldIndex.LocationCellEncounterCell);
-                    try
-                    {
-                        if (ListXmlTranslation<LocationCoordinate>.Instance.Parse(
-                            node: node,
-                            enumer: out var LocationCellEncounterCellItem,
-                            transl: LoquiXmlTranslation<LocationCoordinate>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.LocationCellEncounterCell.SetTo(LocationCellEncounterCellItem);
-                        }
-                        else
-                        {
-                            item.LocationCellEncounterCell.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ReferenceCellEncounterCell":
-                    errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellEncounterCell);
-                    try
-                    {
-                        if (ListXmlTranslation<LocationCoordinate>.Instance.Parse(
-                            node: node,
-                            enumer: out var ReferenceCellEncounterCellItem,
-                            transl: LoquiXmlTranslation<LocationCoordinate>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.ReferenceCellEncounterCell.SetTo(ReferenceCellEncounterCellItem);
-                        }
-                        else
-                        {
-                            item.ReferenceCellEncounterCell.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ActorCellMarkerReference":
-                    errorMask?.PushIndex((int)Location_FieldIndex.ActorCellMarkerReference);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<IPlaced>>.Instance.Parse(
-                            node: node,
-                            enumer: out var ActorCellMarkerReferenceItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.ActorCellMarkerReference = ActorCellMarkerReferenceItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.ActorCellMarkerReference = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LocationCellMarkerReference":
-                    errorMask?.PushIndex((int)Location_FieldIndex.LocationCellMarkerReference);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<IPlaced>>.Instance.Parse(
-                            node: node,
-                            enumer: out var LocationCellMarkerReferenceItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.LocationCellMarkerReference = LocationCellMarkerReferenceItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.LocationCellMarkerReference = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ActorCellEnablePoint":
-                    errorMask?.PushIndex((int)Location_FieldIndex.ActorCellEnablePoint);
-                    try
-                    {
-                        if (ListXmlTranslation<LocationCellEnablePoint>.Instance.Parse(
-                            node: node,
-                            enumer: out var ActorCellEnablePointItem,
-                            transl: LoquiXmlTranslation<LocationCellEnablePoint>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.ActorCellEnablePoint = ActorCellEnablePointItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.ActorCellEnablePoint = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LocationCellEnablePoint":
-                    errorMask?.PushIndex((int)Location_FieldIndex.LocationCellEnablePoint);
-                    try
-                    {
-                        if (ListXmlTranslation<LocationCellEnablePoint>.Instance.Parse(
-                            node: node,
-                            enumer: out var LocationCellEnablePointItem,
-                            transl: LoquiXmlTranslation<LocationCellEnablePoint>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.LocationCellEnablePoint = LocationCellEnablePointItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.LocationCellEnablePoint = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Name":
-                    errorMask?.PushIndex((int)Location_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Keywords":
-                    errorMask?.PushIndex((int)Location_FieldIndex.Keywords);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
-                            node: node,
-                            enumer: out var KeywordsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Keywords = KeywordsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Keywords = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ParentLocation":
-                    errorMask?.PushIndex((int)Location_FieldIndex.ParentLocation);
-                    try
-                    {
-                        item.ParentLocation = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Music":
-                    errorMask?.PushIndex((int)Location_FieldIndex.Music);
-                    try
-                    {
-                        item.Music = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnreportedCrimeFaction":
-                    errorMask?.PushIndex((int)Location_FieldIndex.UnreportedCrimeFaction);
-                    try
-                    {
-                        item.UnreportedCrimeFaction = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WorldLocationMarkerRef":
-                    errorMask?.PushIndex((int)Location_FieldIndex.WorldLocationMarkerRef);
-                    try
-                    {
-                        item.WorldLocationMarkerRef = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WorldLocationRadius":
-                    errorMask?.PushIndex((int)Location_FieldIndex.WorldLocationRadius);
-                    try
-                    {
-                        item.WorldLocationRadius = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HorseMarkerRef":
-                    errorMask?.PushIndex((int)Location_FieldIndex.HorseMarkerRef);
-                    try
-                    {
-                        item.HorseMarkerRef = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Color":
-                    errorMask?.PushIndex((int)Location_FieldIndex.Color);
-                    try
-                    {
-                        item.Color = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class LocationXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this ILocationGetter item,
-            XElement node,
-            out Location.ErrorMask errorMask,
-            Location.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((LocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Location.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this ILocationGetter item,
-            string path,
-            out Location.ErrorMask errorMask,
-            Location.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this ILocationGetter item,
-            Stream stream,
-            out Location.ErrorMask errorMask,
-            Location.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -6916,10 +5328,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -6972,9 +5386,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILocationInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -6989,8 +5404,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationReference>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
-                        .ToExtendedList<LocationReference>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellPersistentReferences);
+                        .CastExtendedList<LocationReference>();
+                    return (int)Location_FieldIndex.ActorCellPersistentReferences;
                 }
                 case RecordTypeInts.LCPR:
                 {
@@ -6999,8 +5414,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationReference>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
-                        .ToExtendedList<LocationReference>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellPersistentReferences);
+                        .CastExtendedList<LocationReference>();
+                    return (int)Location_FieldIndex.LocationCellPersistentReferences;
                 }
                 case RecordTypeInts.RCPR:
                 {
@@ -7009,8 +5424,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimple>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<IPlacedSimple>>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellPersistentReferences);
+                        .CastExtendedList<IFormLink<IPlacedSimple>>();
+                    return (int)Location_FieldIndex.ReferenceCellPersistentReferences;
                 }
                 case RecordTypeInts.ACUN:
                 {
@@ -7019,8 +5434,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationReference>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
-                        .ToExtendedList<LocationReference>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellUniques);
+                        .CastExtendedList<LocationReference>();
+                    return (int)Location_FieldIndex.ActorCellUniques;
                 }
                 case RecordTypeInts.LCUN:
                 {
@@ -7029,8 +5444,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationReference>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
-                        .ToExtendedList<LocationReference>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellUniques);
+                        .CastExtendedList<LocationReference>();
+                    return (int)Location_FieldIndex.LocationCellUniques;
                 }
                 case RecordTypeInts.RCUN:
                 {
@@ -7039,8 +5454,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Npc>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Npc>>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellUnique);
+                        .CastExtendedList<IFormLink<Npc>>();
+                    return (int)Location_FieldIndex.ReferenceCellUnique;
                 }
                 case RecordTypeInts.ACSR:
                 {
@@ -7049,8 +5464,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationCellStaticReference>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationCellStaticReference.TryCreateFromBinary)
-                        .ToExtendedList<LocationCellStaticReference>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellStaticReferences);
+                        .CastExtendedList<LocationCellStaticReference>();
+                    return (int)Location_FieldIndex.ActorCellStaticReferences;
                 }
                 case RecordTypeInts.LCSR:
                 {
@@ -7059,8 +5474,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationCellStaticReference>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationCellStaticReference.TryCreateFromBinary)
-                        .ToExtendedList<LocationCellStaticReference>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellStaticReferences);
+                        .CastExtendedList<LocationCellStaticReference>();
+                    return (int)Location_FieldIndex.LocationCellStaticReferences;
                 }
                 case RecordTypeInts.RCSR:
                 {
@@ -7069,8 +5484,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimple>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<IPlacedSimple>>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellStaticReferences);
+                        .CastExtendedList<IFormLink<IPlacedSimple>>();
+                    return (int)Location_FieldIndex.ReferenceCellStaticReferences;
                 }
                 case RecordTypeInts.ACEC:
                 {
@@ -7081,7 +5496,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter,
                             transl: LocationCoordinate.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellEncounterCell);
+                    return (int)Location_FieldIndex.ActorCellEncounterCell;
                 }
                 case RecordTypeInts.LCEC:
                 {
@@ -7092,7 +5507,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter,
                             transl: LocationCoordinate.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellEncounterCell);
+                    return (int)Location_FieldIndex.LocationCellEncounterCell;
                 }
                 case RecordTypeInts.RCEC:
                 {
@@ -7103,7 +5518,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter,
                             transl: LocationCoordinate.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellEncounterCell);
+                    return (int)Location_FieldIndex.ReferenceCellEncounterCell;
                 }
                 case RecordTypeInts.ACID:
                 {
@@ -7112,8 +5527,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlaced>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<IPlaced>>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellMarkerReference);
+                        .CastExtendedList<IFormLink<IPlaced>>();
+                    return (int)Location_FieldIndex.ActorCellMarkerReference;
                 }
                 case RecordTypeInts.LCID:
                 {
@@ -7122,8 +5537,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlaced>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<IPlaced>>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellMarkerReference);
+                        .CastExtendedList<IFormLink<IPlaced>>();
+                    return (int)Location_FieldIndex.LocationCellMarkerReference;
                 }
                 case RecordTypeInts.ACEP:
                 {
@@ -7132,8 +5547,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationCellEnablePoint>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationCellEnablePoint.TryCreateFromBinary)
-                        .ToExtendedList<LocationCellEnablePoint>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellEnablePoint);
+                        .CastExtendedList<LocationCellEnablePoint>();
+                    return (int)Location_FieldIndex.ActorCellEnablePoint;
                 }
                 case RecordTypeInts.LCEP:
                 {
@@ -7142,8 +5557,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationCellEnablePoint>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationCellEnablePoint.TryCreateFromBinary)
-                        .ToExtendedList<LocationCellEnablePoint>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellEnablePoint);
+                        .CastExtendedList<LocationCellEnablePoint>();
+                    return (int)Location_FieldIndex.LocationCellEnablePoint;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -7152,7 +5567,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Name);
+                    return (int)Location_FieldIndex.Name;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -7164,8 +5579,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Keywords);
+                        .CastExtendedList<IFormLink<Keyword>>();
+                    return (int)Location_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:
                 {
@@ -7173,7 +5588,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ParentLocation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ParentLocation);
+                    return (int)Location_FieldIndex.ParentLocation;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -7181,7 +5596,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Music = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Music);
+                    return (int)Location_FieldIndex.Music;
                 }
                 case RecordTypeInts.FNAM:
                 {
@@ -7189,7 +5604,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.UnreportedCrimeFaction = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.UnreportedCrimeFaction);
+                    return (int)Location_FieldIndex.UnreportedCrimeFaction;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -7197,13 +5612,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.WorldLocationMarkerRef = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.WorldLocationMarkerRef);
+                    return (int)Location_FieldIndex.WorldLocationMarkerRef;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.WorldLocationRadius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.WorldLocationRadius);
+                    return (int)Location_FieldIndex.WorldLocationRadius;
                 }
                 case RecordTypeInts.NAM0:
                 {
@@ -7211,18 +5626,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.HorseMarkerRef = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.HorseMarkerRef);
+                    return (int)Location_FieldIndex.HorseMarkerRef;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Color = frame.ReadColor(ColorBinaryType.Alpha);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Color);
+                    return (int)Location_FieldIndex.Color;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -7269,21 +5685,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => LocationXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((LocationXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LocationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -7319,31 +5720,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ParentLocation
         private int? _ParentLocationLocation;
         public bool ParentLocation_IsSet => _ParentLocationLocation.HasValue;
-        public IFormLinkNullable<ILocationGetter> ParentLocation => _ParentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ParentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullable<ILocationGetter> ParentLocation => _ParentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
         #endregion
         #region Music
         private int? _MusicLocation;
         public bool Music_IsSet => _MusicLocation.HasValue;
-        public IFormLinkNullable<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
+        public IFormLinkNullable<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
         #endregion
         #region UnreportedCrimeFaction
         private int? _UnreportedCrimeFactionLocation;
         public bool UnreportedCrimeFaction_IsSet => _UnreportedCrimeFactionLocation.HasValue;
-        public IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction => _UnreportedCrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _UnreportedCrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
+        public IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction => _UnreportedCrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnreportedCrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
         #endregion
         #region WorldLocationMarkerRef
         private int? _WorldLocationMarkerRefLocation;
         public bool WorldLocationMarkerRef_IsSet => _WorldLocationMarkerRefLocation.HasValue;
-        public IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef => _WorldLocationMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedSimpleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WorldLocationMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedSimpleGetter>.Null;
+        public IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef => _WorldLocationMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedSimpleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldLocationMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedSimpleGetter>.Null;
         #endregion
         #region WorldLocationRadius
         private int? _WorldLocationRadiusLocation;
-        public Single? WorldLocationRadius => _WorldLocationRadiusLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldLocationRadiusLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? WorldLocationRadius => _WorldLocationRadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _WorldLocationRadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region HorseMarkerRef
         private int? _HorseMarkerRefLocation;
         public bool HorseMarkerRef_IsSet => _HorseMarkerRefLocation.HasValue;
-        public IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef => _HorseMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HorseMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef => _HorseMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HorseMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region Color
         private int? _ColorLocation;
@@ -7374,8 +5775,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new LocationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -7401,12 +5803,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -7416,109 +5819,109 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ActorCellPersistentReferences = BinaryOverlayList<LocationReferenceBinaryOverlay>.FactoryByStartIndex(
+                    this.ActorCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
                         getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellPersistentReferences);
+                    return (int)Location_FieldIndex.ActorCellPersistentReferences;
                 }
                 case RecordTypeInts.LCPR:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.LocationCellPersistentReferences = BinaryOverlayList<LocationReferenceBinaryOverlay>.FactoryByStartIndex(
+                    this.LocationCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
                         getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellPersistentReferences);
+                    return (int)Location_FieldIndex.LocationCellPersistentReferences;
                 }
                 case RecordTypeInts.RCPR:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ReferenceCellPersistentReferences = BinaryOverlayList<IFormLink<IPlacedSimpleGetter>>.FactoryByStartIndex(
+                    this.ReferenceCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<IFormLink<IPlacedSimpleGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IPlacedSimpleGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellPersistentReferences);
+                    return (int)Location_FieldIndex.ReferenceCellPersistentReferences;
                 }
                 case RecordTypeInts.ACUN:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ActorCellUniques = BinaryOverlayList<LocationReferenceBinaryOverlay>.FactoryByStartIndex(
+                    this.ActorCellUniques = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
                         getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellUniques);
+                    return (int)Location_FieldIndex.ActorCellUniques;
                 }
                 case RecordTypeInts.LCUN:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.LocationCellUniques = BinaryOverlayList<LocationReferenceBinaryOverlay>.FactoryByStartIndex(
+                    this.LocationCellUniques = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
                         getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellUniques);
+                    return (int)Location_FieldIndex.LocationCellUniques;
                 }
                 case RecordTypeInts.RCUN:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ReferenceCellUnique = BinaryOverlayList<IFormLink<INpcGetter>>.FactoryByStartIndex(
+                    this.ReferenceCellUnique = BinaryOverlayList.FactoryByStartIndex<IFormLink<INpcGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new FormLink<INpcGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellUnique);
+                    return (int)Location_FieldIndex.ReferenceCellUnique;
                 }
                 case RecordTypeInts.ACSR:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ActorCellStaticReferences = BinaryOverlayList<LocationCellStaticReferenceBinaryOverlay>.FactoryByStartIndex(
+                    this.ActorCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<LocationCellStaticReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
                         getter: (s, p) => LocationCellStaticReferenceBinaryOverlay.LocationCellStaticReferenceFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellStaticReferences);
+                    return (int)Location_FieldIndex.ActorCellStaticReferences;
                 }
                 case RecordTypeInts.LCSR:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.LocationCellStaticReferences = BinaryOverlayList<LocationCellStaticReferenceBinaryOverlay>.FactoryByStartIndex(
+                    this.LocationCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<LocationCellStaticReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
                         getter: (s, p) => LocationCellStaticReferenceBinaryOverlay.LocationCellStaticReferenceFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellStaticReferences);
+                    return (int)Location_FieldIndex.LocationCellStaticReferences;
                 }
                 case RecordTypeInts.RCSR:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ReferenceCellStaticReferences = BinaryOverlayList<IFormLink<IPlacedSimpleGetter>>.FactoryByStartIndex(
+                    this.ReferenceCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<IFormLink<IPlacedSimpleGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IPlacedSimpleGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellStaticReferences);
+                    return (int)Location_FieldIndex.ReferenceCellStaticReferences;
                 }
                 case RecordTypeInts.ACEC:
                 {
@@ -7528,7 +5931,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         trigger: RecordTypes.ACEC,
                         factory:  LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
                         skipHeader: true);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellEncounterCell);
+                    return (int)Location_FieldIndex.ActorCellEncounterCell;
                 }
                 case RecordTypeInts.LCEC:
                 {
@@ -7538,7 +5941,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         trigger: RecordTypes.LCEC,
                         factory:  LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
                         skipHeader: true);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellEncounterCell);
+                    return (int)Location_FieldIndex.LocationCellEncounterCell;
                 }
                 case RecordTypeInts.RCEC:
                 {
@@ -7548,65 +5951,65 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         trigger: RecordTypes.RCEC,
                         factory:  LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
                         skipHeader: true);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellEncounterCell);
+                    return (int)Location_FieldIndex.ReferenceCellEncounterCell;
                 }
                 case RecordTypeInts.ACID:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ActorCellMarkerReference = BinaryOverlayList<IFormLink<IPlacedGetter>>.FactoryByStartIndex(
+                    this.ActorCellMarkerReference = BinaryOverlayList.FactoryByStartIndex<IFormLink<IPlacedGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IPlacedGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellMarkerReference);
+                    return (int)Location_FieldIndex.ActorCellMarkerReference;
                 }
                 case RecordTypeInts.LCID:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.LocationCellMarkerReference = BinaryOverlayList<IFormLink<IPlacedGetter>>.FactoryByStartIndex(
+                    this.LocationCellMarkerReference = BinaryOverlayList.FactoryByStartIndex<IFormLink<IPlacedGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IPlacedGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellMarkerReference);
+                    return (int)Location_FieldIndex.LocationCellMarkerReference;
                 }
                 case RecordTypeInts.ACEP:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ActorCellEnablePoint = BinaryOverlayList<LocationCellEnablePointBinaryOverlay>.FactoryByStartIndex(
+                    this.ActorCellEnablePoint = BinaryOverlayList.FactoryByStartIndex<LocationCellEnablePointBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
                         getter: (s, p) => LocationCellEnablePointBinaryOverlay.LocationCellEnablePointFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellEnablePoint);
+                    return (int)Location_FieldIndex.ActorCellEnablePoint;
                 }
                 case RecordTypeInts.LCEP:
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.LocationCellEnablePoint = BinaryOverlayList<LocationCellEnablePointBinaryOverlay>.FactoryByStartIndex(
+                    this.LocationCellEnablePoint = BinaryOverlayList.FactoryByStartIndex<LocationCellEnablePointBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
                         getter: (s, p) => LocationCellEnablePointBinaryOverlay.LocationCellEnablePointFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellEnablePoint);
+                    return (int)Location_FieldIndex.LocationCellEnablePoint;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Name);
+                    return (int)Location_FieldIndex.Name;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -7614,42 +6017,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Keywords);
+                    return (int)Location_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     _ParentLocationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ParentLocation);
+                    return (int)Location_FieldIndex.ParentLocation;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     _MusicLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Music);
+                    return (int)Location_FieldIndex.Music;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _UnreportedCrimeFactionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.UnreportedCrimeFaction);
+                    return (int)Location_FieldIndex.UnreportedCrimeFaction;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _WorldLocationMarkerRefLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.WorldLocationMarkerRef);
+                    return (int)Location_FieldIndex.WorldLocationMarkerRef;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     _WorldLocationRadiusLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.WorldLocationRadius);
+                    return (int)Location_FieldIndex.WorldLocationRadius;
                 }
                 case RecordTypeInts.NAM0:
                 {
                     _HorseMarkerRefLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.HorseMarkerRef);
+                    return (int)Location_FieldIndex.HorseMarkerRef;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _ColorLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Color);
+                    return (int)Location_FieldIndex.Color;
                 }
                 default:
                     return base.FillRecordType(
@@ -7657,7 +6060,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

@@ -6,14 +6,14 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkyrimMajorRecord
     {
-        protected override int? VersionAbstract => this.FormVersion;
+        protected override ushort? FormVersionAbstract => this.FormVersion;
     }
 
     namespace Internals
     {
         public partial class SkyrimMajorRecordBinaryOverlay
         {
-            protected override int? VersionAbstract => this.FormVersion;
+            protected override ushort? FormVersionAbstract => this.FormVersion;
         }
     }
 }

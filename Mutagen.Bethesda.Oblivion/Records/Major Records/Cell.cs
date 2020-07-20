@@ -68,12 +68,11 @@ namespace Mutagen.Bethesda.Oblivion
             private static void CustomBinaryEnd(MutagenFrame frame, ICellInternal obj)
             {
                 if (frame.Reader.Complete) return;
-                var groupMeta = frame.GetGroup();
-                if (!groupMeta.IsGroup) return;
-                var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
+                if (!frame.TryGetGroup(out var groupMeta)) return;
+                var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
                 if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
                 {
-                    obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
+                    obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                     frame.Position += groupMeta.HeaderLength;
                     if (formKey != obj.FormKey)
                     {
@@ -128,18 +127,18 @@ namespace Mutagen.Bethesda.Oblivion
                 bool persistentParse)
             {
                 var groupMeta = frame.ReadGroup();
-                var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
+                var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
                 if (formKey != obj.FormKey)
                 {
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
                 if (persistentParse)
                 {
-                    obj.PersistentTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
+                    obj.PersistentTimestamp = groupMeta.LastModifiedData.Int32();
                 }
                 else
                 {
-                    obj.VisibleWhenDistantTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
+                    obj.VisibleWhenDistantTimestamp = groupMeta.LastModifiedData.Int32();
                 }
                 coll.AddRange(
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
@@ -187,12 +186,12 @@ namespace Mutagen.Bethesda.Oblivion
             static void ParseTemporary(MutagenFrame frame, ICellInternal obj)
             {
                 var groupMeta = frame.ReadGroup();
-                var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
+                var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
                 if (formKey != obj.FormKey)
                 {
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
-                obj.TemporaryTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
+                obj.TemporaryTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                 var items = Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
                     frame: frame,
                     transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
@@ -327,18 +326,18 @@ namespace Mutagen.Bethesda.Oblivion
             private int? _landscapeLocation;
             public ILandscapeGetter? Landscape => _landscapeLocation.HasValue ? LandscapeBinaryOverlay.LandscapeFactory(new OverlayStream(_grupData!.Value.Slice(_landscapeLocation!.Value), _package), _package) : default;
 
-            public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedSpan) : 0;
+            public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedData) : 0;
 
             private int? _persistentLocation;
-            public int PersistentTimestamp => _persistentLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_persistentLocation.Value)).LastModifiedSpan) : 0;
+            public int PersistentTimestamp => _persistentLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_persistentLocation.Value)).LastModifiedData) : 0;
             public IReadOnlyList<IPlacedGetter> Persistent { get; private set; } = ListExt.Empty<IPlacedGetter>();
 
             private int? _temporaryLocation;
-            public int TemporaryTimestamp => _temporaryLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_temporaryLocation.Value)).LastModifiedSpan) : 0;
+            public int TemporaryTimestamp => _temporaryLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_temporaryLocation.Value)).LastModifiedData) : 0;
             public IReadOnlyList<IPlacedGetter> Temporary { get; private set; } = ListExt.Empty<IPlacedGetter>();
 
             private int? _visibleWhenDistantLocation;
-            public int VisibleWhenDistantTimestamp => _visibleWhenDistantLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_visibleWhenDistantLocation.Value)).LastModifiedSpan) : 0;
+            public int VisibleWhenDistantTimestamp => _visibleWhenDistantLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_visibleWhenDistantLocation.Value)).LastModifiedData) : 0;
             public IReadOnlyList<IPlacedGetter> VisibleWhenDistant { get; private set; } = ListExt.Empty<IPlacedGetter>();
 
             public static int[] ParseRecordLocations(OverlayStream stream, BinaryOverlayFactoryPackage package)
@@ -352,10 +351,10 @@ namespace Mutagen.Bethesda.Oblivion
                     ret.Add(stream.Position - startingPos);
                     stream.Position += (int)cellMeta.TotalLength;
                     if (stream.Complete) break;
-                    var grupMeta = stream.GetGroup();
-                    if (grupMeta.IsGroup && (grupMeta.GroupType == (int)GroupTypeEnum.CellChildren))
+                    if (!stream.TryGetGroup(out var groupFrame)) continue;
+                    if (groupFrame.GroupType == (int)GroupTypeEnum.CellChildren)
                     {
-                        stream.Position += (int)grupMeta.TotalLength;
+                        stream.Position += (int)groupFrame.TotalLength;
                     }
                 }
                 return ret.ToArray();
@@ -365,9 +364,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (stream.Complete) return;
                 var startPos = stream.Position;
-                var groupMeta = stream.GetGroup();
-                if (!groupMeta.IsGroup) return;
-                var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
+                if (!stream.TryGetGroup(out var groupMeta)) return;
+                var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
                 if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
                 {
                     if (formKey != this.FormKey)
@@ -416,7 +414,7 @@ namespace Mutagen.Bethesda.Oblivion
                             {
                                 this._persistentLocation = checked((int)subGroupLocation);
                                 var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
-                                this.Persistent = BinaryOverlayList<IPlacedGetter>.FactoryByArray(
+                                this.Persistent = BinaryOverlayList.FactoryByArray<IPlacedGetter>(
                                     contentSpan,
                                     _package,
                                     getter: TypicalGetter,
@@ -466,7 +464,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     }
                                     stream.Position += (int)majorMeta.TotalLength;
                                 }
-                                this.Temporary = BinaryOverlayList<IPlacedGetter>.FactoryByArray(
+                                this.Temporary = BinaryOverlayList.FactoryByArray<IPlacedGetter>(
                                     contentSpan,
                                     _package,
                                     getter: TypicalGetter,
@@ -477,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
                             {
                                 this._visibleWhenDistantLocation = checked((int)subGroupLocation);
                                 var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
-                                this.VisibleWhenDistant = BinaryOverlayList<IPlacedGetter>.FactoryByArray(
+                                this.VisibleWhenDistant = BinaryOverlayList.FactoryByArray<IPlacedGetter>(
                                     contentSpan,
                                     _package,
                                     getter: TypicalGetter,

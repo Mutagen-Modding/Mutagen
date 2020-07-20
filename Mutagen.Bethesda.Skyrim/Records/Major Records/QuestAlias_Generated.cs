@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -140,8 +134,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -154,8 +148,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -168,8 +162,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ContainerEntry>? _Items;
-        public ExtendedList<ContainerEntry>? Items
+        private IExtendedList<ContainerEntry>? _Items;
+        public IExtendedList<ContainerEntry>? Items
         {
             get => this._Items;
             set => this._Items = value;
@@ -207,8 +201,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Spell>> _Spells = new ExtendedList<IFormLink<Spell>>();
-        public ExtendedList<IFormLink<Spell>> Spells
+        private IExtendedList<IFormLink<Spell>> _Spells = new ExtendedList<IFormLink<Spell>>();
+        public IExtendedList<IFormLink<Spell>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
@@ -221,8 +215,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Faction>> _Factions = new ExtendedList<IFormLink<Faction>>();
-        public ExtendedList<IFormLink<Faction>> Factions
+        private IExtendedList<IFormLink<Faction>> _Factions = new ExtendedList<IFormLink<Faction>>();
+        public IExtendedList<IFormLink<Faction>> Factions
         {
             get => this._Factions;
             protected set => this._Factions = value;
@@ -235,8 +229,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region PackageData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Package>> _PackageData = new ExtendedList<IFormLink<Package>>();
-        public ExtendedList<IFormLink<Package>> PackageData
+        private IExtendedList<IFormLink<Package>> _PackageData = new ExtendedList<IFormLink<Package>>();
+        public IExtendedList<IFormLink<Package>> PackageData
         {
             get => this._PackageData;
             protected set => this._PackageData = value;
@@ -279,137 +273,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((QuestAliasCommon)((IQuestAliasGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => QuestAliasXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((QuestAliasXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static QuestAlias CreateFromXml(
-            XElement node,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static QuestAlias CreateFromXml(
-            XElement node,
-            out QuestAlias.ErrorMask errorMask,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = QuestAlias.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static QuestAlias CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new QuestAlias();
-            ((QuestAliasSetterCommon)((IQuestAliasGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static QuestAlias CreateFromXml(
-            string path,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static QuestAlias CreateFromXml(
-            string path,
-            out QuestAlias.ErrorMask errorMask,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static QuestAlias CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static QuestAlias CreateFromXml(
-            Stream stream,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static QuestAlias CreateFromXml(
-            Stream stream,
-            out QuestAlias.ErrorMask errorMask,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static QuestAlias CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -1928,24 +1791,23 @@ namespace Mutagen.Bethesda.Skyrim
         new CreateReferenceToObject? CreateReferenceToObject { get; set; }
         new FindMatchingRefNearAlias? FindMatchingRefNearAlias { get; set; }
         new FindMatchingRefFromEvent? FindMatchingRefFromEvent { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new ExtendedList<ContainerEntry>? Items { get; set; }
+        new IExtendedList<Condition> Conditions { get; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<ContainerEntry>? Items { get; set; }
         new FormLinkNullable<FormList> SpectatorOverridePackageList { get; set; }
         new FormLinkNullable<FormList> ObserveDeadBodyOverridePackageList { get; set; }
         new FormLinkNullable<FormList> GuardWarnOverridePackageList { get; set; }
         new FormLinkNullable<FormList> CombatOverridePackageList { get; set; }
         new FormLinkNullable<Message> DisplayName { get; set; }
-        new ExtendedList<IFormLink<Spell>> Spells { get; }
-        new ExtendedList<IFormLink<Faction>> Factions { get; }
-        new ExtendedList<IFormLink<Package>> PackageData { get; }
+        new IExtendedList<IFormLink<Spell>> Spells { get; }
+        new IExtendedList<IFormLink<Faction>> Factions { get; }
+        new IExtendedList<IFormLink<Package>> PackageData { get; }
         new FormLinkNullable<IAliasVoiceType> VoiceTypes { get; set; }
     }
 
     public partial interface IQuestAliasGetter :
         ILoquiObject,
         ILoquiObject<IQuestAliasGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -2137,131 +1999,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IQuestAlias item,
-            XElement node,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IQuestAlias item,
-            XElement node,
-            out QuestAlias.ErrorMask errorMask,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = QuestAlias.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestAlias item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((QuestAliasSetterCommon)((IQuestAliasGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestAlias item,
-            string path,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestAlias item,
-            string path,
-            out QuestAlias.ErrorMask errorMask,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestAlias item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IQuestAlias item,
-            Stream stream,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestAlias item,
-            Stream stream,
-            out QuestAlias.ErrorMask errorMask,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IQuestAlias item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -2701,11 +2438,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestAlias_FieldIndex.FindMatchingRefFromEvent:
                     return typeof(FindMatchingRefFromEvent);
                 case QuestAlias_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case QuestAlias_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case QuestAlias_FieldIndex.Items:
-                    return typeof(ExtendedList<ContainerEntry>);
+                    return typeof(IExtendedList<ContainerEntry>);
                 case QuestAlias_FieldIndex.SpectatorOverridePackageList:
                     return typeof(FormLinkNullable<FormList>);
                 case QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList:
@@ -2717,11 +2454,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestAlias_FieldIndex.DisplayName:
                     return typeof(FormLinkNullable<Message>);
                 case QuestAlias_FieldIndex.Spells:
-                    return typeof(ExtendedList<IFormLink<Spell>>);
+                    return typeof(IExtendedList<IFormLink<Spell>>);
                 case QuestAlias_FieldIndex.Factions:
-                    return typeof(ExtendedList<IFormLink<Faction>>);
+                    return typeof(IExtendedList<IFormLink<Faction>>);
                 case QuestAlias_FieldIndex.PackageData:
-                    return typeof(ExtendedList<IFormLink<Package>>);
+                    return typeof(IExtendedList<IFormLink<Package>>);
                 case QuestAlias_FieldIndex.VoiceTypes:
                     return typeof(FormLinkNullable<IAliasVoiceType>);
                 default:
@@ -2729,7 +2466,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(QuestAliasXmlWriteTranslation);
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -2810,34 +2546,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.PackageData.Clear();
             item.VoiceTypes = FormLinkNullable<IAliasVoiceType>.Null;
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IQuestAlias item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    QuestAliasXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -3903,1126 +3611,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class QuestAliasXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static QuestAliasXmlWriteTranslation Instance = new QuestAliasXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IQuestAliasGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.ID) ?? true))
-            {
-                UInt32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ID),
-                    item: item.ID,
-                    fieldIndex: (int)QuestAlias_FieldIndex.ID,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Type) ?? true))
-            {
-                EnumXmlTranslation<QuestAlias.TypeEnum>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)QuestAlias_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)QuestAlias_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<QuestAlias.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)QuestAlias_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((item.AliasIndexToForceIntoWhenFilled != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AliasIndexToForceIntoWhenFilled),
-                    item: item.AliasIndexToForceIntoWhenFilled.Value,
-                    fieldIndex: (int)QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled,
-                    errorMask: errorMask);
-            }
-            if ((item.SpecificLocation.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.SpecificLocation) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpecificLocation),
-                    item: item.SpecificLocation.FormKey,
-                    fieldIndex: (int)QuestAlias_FieldIndex.SpecificLocation,
-                    errorMask: errorMask);
-            }
-            if ((item.ForcedReference.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.ForcedReference) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ForcedReference),
-                    item: item.ForcedReference.FormKey,
-                    fieldIndex: (int)QuestAlias_FieldIndex.ForcedReference,
-                    errorMask: errorMask);
-            }
-            if ((item.UniqueActor.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.UniqueActor) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.UniqueActor),
-                    item: item.UniqueActor.FormKey,
-                    fieldIndex: (int)QuestAlias_FieldIndex.UniqueActor,
-                    errorMask: errorMask);
-            }
-            if ((item.Location != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Location) ?? true))
-            {
-                if (item.Location.TryGet(out var LocationItem))
-                {
-                    ((LocationAliasReferenceXmlWriteTranslation)((IXmlItem)LocationItem).XmlWriteTranslator).Write(
-                        item: LocationItem,
-                        node: node,
-                        name: nameof(item.Location),
-                        fieldIndex: (int)QuestAlias_FieldIndex.Location,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.Location));
-                }
-            }
-            if ((item.External != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.External) ?? true))
-            {
-                if (item.External.TryGet(out var ExternalItem))
-                {
-                    ((ExternalAliasReferenceXmlWriteTranslation)((IXmlItem)ExternalItem).XmlWriteTranslator).Write(
-                        item: ExternalItem,
-                        node: node,
-                        name: nameof(item.External),
-                        fieldIndex: (int)QuestAlias_FieldIndex.External,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.External));
-                }
-            }
-            if ((item.CreateReferenceToObject != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.CreateReferenceToObject) ?? true))
-            {
-                if (item.CreateReferenceToObject.TryGet(out var CreateReferenceToObjectItem))
-                {
-                    ((CreateReferenceToObjectXmlWriteTranslation)((IXmlItem)CreateReferenceToObjectItem).XmlWriteTranslator).Write(
-                        item: CreateReferenceToObjectItem,
-                        node: node,
-                        name: nameof(item.CreateReferenceToObject),
-                        fieldIndex: (int)QuestAlias_FieldIndex.CreateReferenceToObject,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.CreateReferenceToObject));
-                }
-            }
-            if ((item.FindMatchingRefNearAlias != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.FindMatchingRefNearAlias) ?? true))
-            {
-                if (item.FindMatchingRefNearAlias.TryGet(out var FindMatchingRefNearAliasItem))
-                {
-                    ((FindMatchingRefNearAliasXmlWriteTranslation)((IXmlItem)FindMatchingRefNearAliasItem).XmlWriteTranslator).Write(
-                        item: FindMatchingRefNearAliasItem,
-                        node: node,
-                        name: nameof(item.FindMatchingRefNearAlias),
-                        fieldIndex: (int)QuestAlias_FieldIndex.FindMatchingRefNearAlias,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.FindMatchingRefNearAlias));
-                }
-            }
-            if ((item.FindMatchingRefFromEvent != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.FindMatchingRefFromEvent) ?? true))
-            {
-                if (item.FindMatchingRefFromEvent.TryGet(out var FindMatchingRefFromEventItem))
-                {
-                    ((FindMatchingRefFromEventXmlWriteTranslation)((IXmlItem)FindMatchingRefFromEventItem).XmlWriteTranslator).Write(
-                        item: FindMatchingRefFromEventItem,
-                        node: node,
-                        name: nameof(item.FindMatchingRefFromEvent),
-                        fieldIndex: (int)QuestAlias_FieldIndex.FindMatchingRefFromEvent,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.FindMatchingRefFromEvent));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Conditions) ?? true))
-            {
-                ListXmlTranslation<IConditionGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Conditions),
-                    item: item.Conditions,
-                    fieldIndex: (int)QuestAlias_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.Conditions),
-                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.Keywords != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Keywords) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IKeywordGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Keywords),
-                    item: item.Keywords,
-                    fieldIndex: (int)QuestAlias_FieldIndex.Keywords,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.Keywords),
-                    transl: (XElement subNode, IFormLink<IKeywordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.Items != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Items) ?? true))
-            {
-                ListXmlTranslation<IContainerEntryGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Items),
-                    item: item.Items,
-                    fieldIndex: (int)QuestAlias_FieldIndex.Items,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.Items),
-                    transl: (XElement subNode, IContainerEntryGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ContainerEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((item.SpectatorOverridePackageList.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.SpectatorOverridePackageList) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpectatorOverridePackageList),
-                    item: item.SpectatorOverridePackageList.FormKey,
-                    fieldIndex: (int)QuestAlias_FieldIndex.SpectatorOverridePackageList,
-                    errorMask: errorMask);
-            }
-            if ((item.ObserveDeadBodyOverridePackageList.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ObserveDeadBodyOverridePackageList),
-                    item: item.ObserveDeadBodyOverridePackageList.FormKey,
-                    fieldIndex: (int)QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList,
-                    errorMask: errorMask);
-            }
-            if ((item.GuardWarnOverridePackageList.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.GuardWarnOverridePackageList) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.GuardWarnOverridePackageList),
-                    item: item.GuardWarnOverridePackageList.FormKey,
-                    fieldIndex: (int)QuestAlias_FieldIndex.GuardWarnOverridePackageList,
-                    errorMask: errorMask);
-            }
-            if ((item.CombatOverridePackageList.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.CombatOverridePackageList) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CombatOverridePackageList),
-                    item: item.CombatOverridePackageList.FormKey,
-                    fieldIndex: (int)QuestAlias_FieldIndex.CombatOverridePackageList,
-                    errorMask: errorMask);
-            }
-            if ((item.DisplayName.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.DisplayName) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DisplayName),
-                    item: item.DisplayName.FormKey,
-                    fieldIndex: (int)QuestAlias_FieldIndex.DisplayName,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Spells) ?? true))
-            {
-                ListXmlTranslation<IFormLink<ISpellGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Spells),
-                    item: item.Spells,
-                    fieldIndex: (int)QuestAlias_FieldIndex.Spells,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.Spells),
-                    transl: (XElement subNode, IFormLink<ISpellGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Factions) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IFactionGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Factions),
-                    item: item.Factions,
-                    fieldIndex: (int)QuestAlias_FieldIndex.Factions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.Factions),
-                    transl: (XElement subNode, IFormLink<IFactionGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.PackageData) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IPackageGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.PackageData),
-                    item: item.PackageData,
-                    fieldIndex: (int)QuestAlias_FieldIndex.PackageData,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.PackageData),
-                    transl: (XElement subNode, IFormLink<IPackageGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.VoiceTypes.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.VoiceTypes) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VoiceTypes),
-                    item: item.VoiceTypes.FormKey,
-                    fieldIndex: (int)QuestAlias_FieldIndex.VoiceTypes,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IQuestAliasGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.QuestAlias");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.QuestAlias");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IQuestAliasGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IQuestAliasGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IQuestAliasGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class QuestAliasXmlCreateTranslation
-    {
-        public readonly static QuestAliasXmlCreateTranslation Instance = new QuestAliasXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IQuestAlias item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    QuestAliasXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IQuestAlias item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "ID":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.ID);
-                    try
-                    {
-                        item.ID = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Type":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.Type);
-                    try
-                    {
-                        item.Type = EnumXmlTranslation<QuestAlias.TypeEnum>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Name":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<QuestAlias.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AliasIndexToForceIntoWhenFilled":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled);
-                    try
-                    {
-                        item.AliasIndexToForceIntoWhenFilled = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SpecificLocation":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.SpecificLocation);
-                    try
-                    {
-                        item.SpecificLocation = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ForcedReference":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.ForcedReference);
-                    try
-                    {
-                        item.ForcedReference = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UniqueActor":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.UniqueActor);
-                    try
-                    {
-                        item.UniqueActor = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Location":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.Location);
-                    try
-                    {
-                        item.Location = LoquiXmlTranslation<LocationAliasReference>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.Location));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "External":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.External);
-                    try
-                    {
-                        item.External = LoquiXmlTranslation<ExternalAliasReference>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.External));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CreateReferenceToObject":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.CreateReferenceToObject);
-                    try
-                    {
-                        item.CreateReferenceToObject = LoquiXmlTranslation<CreateReferenceToObject>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.CreateReferenceToObject));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FindMatchingRefNearAlias":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.FindMatchingRefNearAlias);
-                    try
-                    {
-                        item.FindMatchingRefNearAlias = LoquiXmlTranslation<FindMatchingRefNearAlias>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.FindMatchingRefNearAlias));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FindMatchingRefFromEvent":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.FindMatchingRefFromEvent);
-                    try
-                    {
-                        item.FindMatchingRefFromEvent = LoquiXmlTranslation<FindMatchingRefFromEvent>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)QuestAlias_FieldIndex.FindMatchingRefFromEvent));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conditions":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.Conditions);
-                    try
-                    {
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Keywords":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.Keywords);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
-                            node: node,
-                            enumer: out var KeywordsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Keywords = KeywordsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Keywords = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Items":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.Items);
-                    try
-                    {
-                        if (ListXmlTranslation<ContainerEntry>.Instance.Parse(
-                            node: node,
-                            enumer: out var ItemsItem,
-                            transl: LoquiXmlTranslation<ContainerEntry>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Items = ItemsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Items = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SpectatorOverridePackageList":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.SpectatorOverridePackageList);
-                    try
-                    {
-                        item.SpectatorOverridePackageList = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ObserveDeadBodyOverridePackageList":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList);
-                    try
-                    {
-                        item.ObserveDeadBodyOverridePackageList = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "GuardWarnOverridePackageList":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.GuardWarnOverridePackageList);
-                    try
-                    {
-                        item.GuardWarnOverridePackageList = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CombatOverridePackageList":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.CombatOverridePackageList);
-                    try
-                    {
-                        item.CombatOverridePackageList = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisplayName":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.DisplayName);
-                    try
-                    {
-                        item.DisplayName = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Spells":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.Spells);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Spell>>.Instance.Parse(
-                            node: node,
-                            enumer: out var SpellsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Spells.SetTo(SpellsItem);
-                        }
-                        else
-                        {
-                            item.Spells.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Factions":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.Factions);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Faction>>.Instance.Parse(
-                            node: node,
-                            enumer: out var FactionsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Factions.SetTo(FactionsItem);
-                        }
-                        else
-                        {
-                            item.Factions.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PackageData":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.PackageData);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Package>>.Instance.Parse(
-                            node: node,
-                            enumer: out var PackageDataItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.PackageData.SetTo(PackageDataItem);
-                        }
-                        else
-                        {
-                            item.PackageData.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VoiceTypes":
-                    errorMask?.PushIndex((int)QuestAlias_FieldIndex.VoiceTypes);
-                    try
-                    {
-                        item.VoiceTypes = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class QuestAliasXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IQuestAliasGetter item,
-            XElement node,
-            out QuestAlias.ErrorMask errorMask,
-            QuestAlias.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((QuestAliasXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = QuestAlias.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IQuestAliasGetter item,
-            string path,
-            out QuestAlias.ErrorMask errorMask,
-            QuestAlias.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IQuestAliasGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IQuestAliasGetter item,
-            Stream stream,
-            out QuestAlias.ErrorMask errorMask,
-            QuestAlias.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IQuestAliasGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IQuestAliasGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((QuestAliasXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IQuestAliasGetter item,
-            XElement node,
-            string? name = null,
-            QuestAlias.TranslationMask? translationMask = null)
-        {
-            ((QuestAliasXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IQuestAliasGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((QuestAliasXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IQuestAliasGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((QuestAliasXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -5268,10 +3856,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IQuestAlias item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -5282,11 +3871,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestAlias_FieldIndex.ID) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestAlias_FieldIndex.ID) return ParseResult.Stop;
                     QuestAliasBinaryCreateTranslation.FillBinaryIDParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 case RecordTypeInts.ALID:
                 {
@@ -5294,19 +3883,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Name);
+                    return (int)QuestAlias_FieldIndex.Name;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<QuestAlias.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Flags);
+                    return (int)QuestAlias_FieldIndex.Flags;
                 }
                 case RecordTypeInts.ALFI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AliasIndexToForceIntoWhenFilled = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled);
+                    return (int)QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled;
                 }
                 case RecordTypeInts.ALFL:
                 {
@@ -5314,7 +3903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SpecificLocation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.SpecificLocation);
+                    return (int)QuestAlias_FieldIndex.SpecificLocation;
                 }
                 case RecordTypeInts.ALFR:
                 {
@@ -5322,7 +3911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ForcedReference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.ForcedReference);
+                    return (int)QuestAlias_FieldIndex.ForcedReference;
                 }
                 case RecordTypeInts.ALUA:
                 {
@@ -5330,7 +3919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.UniqueActor = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.UniqueActor);
+                    return (int)QuestAlias_FieldIndex.UniqueActor;
                 }
                 case RecordTypeInts.ALFA:
                 case RecordTypeInts.KNAM:
@@ -5339,7 +3928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Location = Mutagen.Bethesda.Skyrim.LocationAliasReference.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Location);
+                    return (int)QuestAlias_FieldIndex.Location;
                 }
                 case RecordTypeInts.ALEQ:
                 case RecordTypeInts.ALEA:
@@ -5347,14 +3936,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.External = Mutagen.Bethesda.Skyrim.ExternalAliasReference.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.External);
+                    return (int)QuestAlias_FieldIndex.External;
                 }
                 case RecordTypeInts.ALCO:
                 {
                     item.CreateReferenceToObject = Mutagen.Bethesda.Skyrim.CreateReferenceToObject.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.CreateReferenceToObject);
+                    return (int)QuestAlias_FieldIndex.CreateReferenceToObject;
                 }
                 case RecordTypeInts.ALNA:
                 case RecordTypeInts.ALNT:
@@ -5362,7 +3951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FindMatchingRefNearAlias = Mutagen.Bethesda.Skyrim.FindMatchingRefNearAlias.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.FindMatchingRefNearAlias);
+                    return (int)QuestAlias_FieldIndex.FindMatchingRefNearAlias;
                 }
                 case RecordTypeInts.ALFE:
                 case RecordTypeInts.ALFD:
@@ -5370,14 +3959,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FindMatchingRefFromEvent = Mutagen.Bethesda.Skyrim.FindMatchingRefFromEvent.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.FindMatchingRefFromEvent);
+                    return (int)QuestAlias_FieldIndex.FindMatchingRefFromEvent;
                 }
                 case RecordTypeInts.CTDA:
                 {
                     QuestAliasBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Conditions);
+                    return (int)QuestAlias_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -5389,8 +3978,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Keywords);
+                        .CastExtendedList<IFormLink<Keyword>>();
+                    return (int)QuestAlias_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
@@ -5403,8 +3992,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.CNTO,
                             recordTypeConverter: recordTypeConverter,
                             transl: ContainerEntry.TryCreateFromBinary)
-                        .ToExtendedList<ContainerEntry>();
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Items);
+                        .CastExtendedList<ContainerEntry>();
+                    return (int)QuestAlias_FieldIndex.Items;
                 }
                 case RecordTypeInts.SPOR:
                 {
@@ -5412,7 +4001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SpectatorOverridePackageList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.SpectatorOverridePackageList);
+                    return (int)QuestAlias_FieldIndex.SpectatorOverridePackageList;
                 }
                 case RecordTypeInts.OCOR:
                 {
@@ -5420,7 +4009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ObserveDeadBodyOverridePackageList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList);
+                    return (int)QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList;
                 }
                 case RecordTypeInts.GWOR:
                 {
@@ -5428,7 +4017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.GuardWarnOverridePackageList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.GuardWarnOverridePackageList);
+                    return (int)QuestAlias_FieldIndex.GuardWarnOverridePackageList;
                 }
                 case RecordTypeInts.ECOR:
                 {
@@ -5436,7 +4025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CombatOverridePackageList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.CombatOverridePackageList);
+                    return (int)QuestAlias_FieldIndex.CombatOverridePackageList;
                 }
                 case RecordTypeInts.ALDN:
                 {
@@ -5444,7 +4033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DisplayName = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.DisplayName);
+                    return (int)QuestAlias_FieldIndex.DisplayName;
                 }
                 case RecordTypeInts.ALSP:
                 {
@@ -5453,7 +4042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ALSP),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Spells);
+                    return (int)QuestAlias_FieldIndex.Spells;
                 }
                 case RecordTypeInts.ALFC:
                 {
@@ -5462,7 +4051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ALFC),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Factions);
+                    return (int)QuestAlias_FieldIndex.Factions;
                 }
                 case RecordTypeInts.ALPC:
                 {
@@ -5471,7 +4060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ALPC),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.PackageData);
+                    return (int)QuestAlias_FieldIndex.PackageData;
                 }
                 case RecordTypeInts.VTCK:
                 {
@@ -5479,17 +4068,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.VoiceTypes = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.VoiceTypes);
+                    return (int)QuestAlias_FieldIndex.VoiceTypes;
                 }
                 case RecordTypeInts.ALED:
                 {
                     QuestAliasBinaryCreateTranslation.FillBinaryEndCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -5562,23 +4151,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAliasCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAliasCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => QuestAliasXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((QuestAliasXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestAliasBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -5603,7 +4175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public QuestAlias.Flag? Flags => _FlagsLocation.HasValue ? (QuestAlias.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(QuestAlias.Flag?);
+        public QuestAlias.Flag? Flags => _FlagsLocation.HasValue ? (QuestAlias.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(QuestAlias.Flag?);
         #endregion
         #region AliasIndexToForceIntoWhenFilled
         private int? _AliasIndexToForceIntoWhenFilledLocation;
@@ -5612,17 +4184,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region SpecificLocation
         private int? _SpecificLocationLocation;
         public bool SpecificLocation_IsSet => _SpecificLocationLocation.HasValue;
-        public IFormLinkNullable<ILocationGetter> SpecificLocation => _SpecificLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SpecificLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullable<ILocationGetter> SpecificLocation => _SpecificLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpecificLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
         #endregion
         #region ForcedReference
         private int? _ForcedReferenceLocation;
         public bool ForcedReference_IsSet => _ForcedReferenceLocation.HasValue;
-        public IFormLinkNullable<IPlacedGetter> ForcedReference => _ForcedReferenceLocation.HasValue ? new FormLinkNullable<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ForcedReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedGetter>.Null;
+        public IFormLinkNullable<IPlacedGetter> ForcedReference => _ForcedReferenceLocation.HasValue ? new FormLinkNullable<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ForcedReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedGetter>.Null;
         #endregion
         #region UniqueActor
         private int? _UniqueActorLocation;
         public bool UniqueActor_IsSet => _UniqueActorLocation.HasValue;
-        public IFormLinkNullable<INpcGetter> UniqueActor => _UniqueActorLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _UniqueActorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        public IFormLinkNullable<INpcGetter> UniqueActor => _UniqueActorLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UniqueActorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
         #endregion
         public ILocationAliasReferenceGetter? Location { get; private set; }
         public IExternalAliasReferenceGetter? External { get; private set; }
@@ -5642,27 +4214,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region SpectatorOverridePackageList
         private int? _SpectatorOverridePackageListLocation;
         public bool SpectatorOverridePackageList_IsSet => _SpectatorOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region ObserveDeadBodyOverridePackageList
         private int? _ObserveDeadBodyOverridePackageListLocation;
         public bool ObserveDeadBodyOverridePackageList_IsSet => _ObserveDeadBodyOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList => _ObserveDeadBodyOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ObserveDeadBodyOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList => _ObserveDeadBodyOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObserveDeadBodyOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region GuardWarnOverridePackageList
         private int? _GuardWarnOverridePackageListLocation;
         public bool GuardWarnOverridePackageList_IsSet => _GuardWarnOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList => _GuardWarnOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GuardWarnOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList => _GuardWarnOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GuardWarnOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region CombatOverridePackageList
         private int? _CombatOverridePackageListLocation;
         public bool CombatOverridePackageList_IsSet => _CombatOverridePackageListLocation.HasValue;
-        public IFormLinkNullable<IFormListGetter> CombatOverridePackageList => _CombatOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CombatOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullable<IFormListGetter> CombatOverridePackageList => _CombatOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region DisplayName
         private int? _DisplayNameLocation;
         public bool DisplayName_IsSet => _DisplayNameLocation.HasValue;
-        public IFormLinkNullable<IMessageGetter> DisplayName => _DisplayNameLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DisplayNameLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
+        public IFormLinkNullable<IMessageGetter> DisplayName => _DisplayNameLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DisplayNameLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLink<ISpellGetter>> Spells { get; private set; } = ListExt.Empty<IFormLink<ISpellGetter>>();
         public IReadOnlyList<IFormLink<IFactionGetter>> Factions { get; private set; } = ListExt.Empty<IFormLink<IFactionGetter>>();
@@ -5670,7 +4242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VoiceTypes
         private int? _VoiceTypesLocation;
         public bool VoiceTypes_IsSet => _VoiceTypesLocation.HasValue;
-        public IFormLinkNullable<IAliasVoiceTypeGetter> VoiceTypes => _VoiceTypesLocation.HasValue ? new FormLinkNullable<IAliasVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VoiceTypesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAliasVoiceTypeGetter>.Null;
+        public IFormLinkNullable<IAliasVoiceTypeGetter> VoiceTypes => _VoiceTypesLocation.HasValue ? new FormLinkNullable<IAliasVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VoiceTypesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAliasVoiceTypeGetter>.Null;
         #endregion
         #region End
         partial void EndCustomParse(
@@ -5722,12 +4294,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -5736,41 +4309,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestAlias_FieldIndex.ID) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestAlias_FieldIndex.ID) return ParseResult.Stop;
                     IDParseCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 case RecordTypeInts.ALID:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Name);
+                    return (int)QuestAlias_FieldIndex.Name;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Flags);
+                    return (int)QuestAlias_FieldIndex.Flags;
                 }
                 case RecordTypeInts.ALFI:
                 {
                     _AliasIndexToForceIntoWhenFilledLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled);
+                    return (int)QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled;
                 }
                 case RecordTypeInts.ALFL:
                 {
                     _SpecificLocationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.SpecificLocation);
+                    return (int)QuestAlias_FieldIndex.SpecificLocation;
                 }
                 case RecordTypeInts.ALFR:
                 {
                     _ForcedReferenceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.ForcedReference);
+                    return (int)QuestAlias_FieldIndex.ForcedReference;
                 }
                 case RecordTypeInts.ALUA:
                 {
                     _UniqueActorLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.UniqueActor);
+                    return (int)QuestAlias_FieldIndex.UniqueActor;
                 }
                 case RecordTypeInts.ALFA:
                 case RecordTypeInts.KNAM:
@@ -5780,7 +4353,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Location);
+                    return (int)QuestAlias_FieldIndex.Location;
                 }
                 case RecordTypeInts.ALEQ:
                 case RecordTypeInts.ALEA:
@@ -5789,7 +4362,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.External);
+                    return (int)QuestAlias_FieldIndex.External;
                 }
                 case RecordTypeInts.ALCO:
                 {
@@ -5797,7 +4370,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.CreateReferenceToObject);
+                    return (int)QuestAlias_FieldIndex.CreateReferenceToObject;
                 }
                 case RecordTypeInts.ALNA:
                 case RecordTypeInts.ALNT:
@@ -5806,7 +4379,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.FindMatchingRefNearAlias);
+                    return (int)QuestAlias_FieldIndex.FindMatchingRefNearAlias;
                 }
                 case RecordTypeInts.ALFE:
                 case RecordTypeInts.ALFD:
@@ -5815,7 +4388,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.FindMatchingRefFromEvent);
+                    return (int)QuestAlias_FieldIndex.FindMatchingRefFromEvent;
                 }
                 case RecordTypeInts.CTDA:
                 {
@@ -5825,12 +4398,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Conditions);
+                    return (int)QuestAlias_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -5838,12 +4411,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Keywords);
+                    return (int)QuestAlias_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
                 {
-                    this.Items = BinaryOverlayList<ContainerEntryBinaryOverlay>.FactoryByCountPerItem(
+                    this.Items = BinaryOverlayList.FactoryByCountPerItem<ContainerEntryBinaryOverlay>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
@@ -5852,36 +4425,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Items);
+                    return (int)QuestAlias_FieldIndex.Items;
                 }
                 case RecordTypeInts.SPOR:
                 {
                     _SpectatorOverridePackageListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.SpectatorOverridePackageList);
+                    return (int)QuestAlias_FieldIndex.SpectatorOverridePackageList;
                 }
                 case RecordTypeInts.OCOR:
                 {
                     _ObserveDeadBodyOverridePackageListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList);
+                    return (int)QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList;
                 }
                 case RecordTypeInts.GWOR:
                 {
                     _GuardWarnOverridePackageListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.GuardWarnOverridePackageList);
+                    return (int)QuestAlias_FieldIndex.GuardWarnOverridePackageList;
                 }
                 case RecordTypeInts.ECOR:
                 {
                     _CombatOverridePackageListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.CombatOverridePackageList);
+                    return (int)QuestAlias_FieldIndex.CombatOverridePackageList;
                 }
                 case RecordTypeInts.ALDN:
                 {
                     _DisplayNameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.DisplayName);
+                    return (int)QuestAlias_FieldIndex.DisplayName;
                 }
                 case RecordTypeInts.ALSP:
                 {
-                    this.Spells = BinaryOverlayList<IFormLink<ISpellGetter>>.FactoryByArray(
+                    this.Spells = BinaryOverlayList.FactoryByArray<IFormLink<ISpellGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<ISpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -5891,11 +4464,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Spells);
+                    return (int)QuestAlias_FieldIndex.Spells;
                 }
                 case RecordTypeInts.ALFC:
                 {
-                    this.Factions = BinaryOverlayList<IFormLink<IFactionGetter>>.FactoryByArray(
+                    this.Factions = BinaryOverlayList.FactoryByArray<IFormLink<IFactionGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IFactionGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -5905,11 +4478,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Factions);
+                    return (int)QuestAlias_FieldIndex.Factions;
                 }
                 case RecordTypeInts.ALPC:
                 {
-                    this.PackageData = BinaryOverlayList<IFormLink<IPackageGetter>>.FactoryByArray(
+                    this.PackageData = BinaryOverlayList.FactoryByArray<IFormLink<IPackageGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -5919,22 +4492,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.PackageData);
+                    return (int)QuestAlias_FieldIndex.PackageData;
                 }
                 case RecordTypeInts.VTCK:
                 {
                     _VoiceTypesLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.VoiceTypes);
+                    return (int)QuestAlias_FieldIndex.VoiceTypes;
                 }
                 case RecordTypeInts.ALED:
                 {
                     EndCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

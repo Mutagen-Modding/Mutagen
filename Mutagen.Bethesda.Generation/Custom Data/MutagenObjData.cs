@@ -26,14 +26,18 @@ namespace Mutagen.Bethesda.Generation
         public CustomEnd CustomBinaryEnd;
         public Task<IEnumerable<KeyValuePair<IEnumerable<RecordType>, ObjectGeneration>>> GenerationTypes => GetGenerationTypes();
         public TaskCompletionSource WiringComplete = new TaskCompletionSource();
+        public TaskCompletionSource DataTypeModuleComplete = new TaskCompletionSource();
         public RecordTypeConverter BaseRecordTypeConverter;
+        public Dictionary<GameRelease, RecordTypeConverter> GameReleaseConverters;
+        public Dictionary<byte, RecordTypeConverter> VersionConverters;
+        public HashSet<GameRelease> GameReleaseOptions;
         public RecordType? EndMarkerType;
         public bool MajorRecordFlags;
-        public GameMode? GameMode
+        public GameCategory? GameCategory
         {
             get
             {
-                if (Enum.TryParse<Bethesda.GameMode>(ObjGen.Namespace.Split('.').Last(), out var mode))
+                if (Enum.TryParse<Bethesda.GameCategory>(ObjGen.Namespace.Split('.').Last(), out var mode))
                 {
                     return mode;
                 }

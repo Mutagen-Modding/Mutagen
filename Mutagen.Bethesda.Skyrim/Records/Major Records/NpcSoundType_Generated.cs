@@ -16,14 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -54,8 +48,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NpcSound> _Sounds = new ExtendedList<NpcSound>();
-        public ExtendedList<NpcSound> Sounds
+        private IExtendedList<NpcSound> _Sounds = new ExtendedList<NpcSound>();
+        public IExtendedList<NpcSound> Sounds
         {
             get => this._Sounds;
             protected set => this._Sounds = value;
@@ -93,137 +87,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((NpcSoundTypeCommon)((INpcSoundTypeGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => NpcSoundTypeXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((NpcSoundTypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static NpcSoundType CreateFromXml(
-            XElement node,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static NpcSoundType CreateFromXml(
-            XElement node,
-            out NpcSoundType.ErrorMask errorMask,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = NpcSoundType.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static NpcSoundType CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new NpcSoundType();
-            ((NpcSoundTypeSetterCommon)((INpcSoundTypeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static NpcSoundType CreateFromXml(
-            string path,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static NpcSoundType CreateFromXml(
-            string path,
-            out NpcSoundType.ErrorMask errorMask,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static NpcSoundType CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static NpcSoundType CreateFromXml(
-            Stream stream,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static NpcSoundType CreateFromXml(
-            Stream stream,
-            out NpcSoundType.ErrorMask errorMask,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static NpcSoundType CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -678,13 +541,12 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INpcSoundType>
     {
         new NpcSoundType.SoundType? Type { get; set; }
-        new ExtendedList<NpcSound> Sounds { get; }
+        new IExtendedList<NpcSound> Sounds { get; }
     }
 
     public partial interface INpcSoundTypeGetter :
         ILoquiObject,
         ILoquiObject<INpcSoundTypeGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -853,131 +715,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this INpcSoundType item,
-            XElement node,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this INpcSoundType item,
-            XElement node,
-            out NpcSoundType.ErrorMask errorMask,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = NpcSoundType.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this INpcSoundType item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((NpcSoundTypeSetterCommon)((INpcSoundTypeGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INpcSoundType item,
-            string path,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INpcSoundType item,
-            string path,
-            out NpcSoundType.ErrorMask errorMask,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INpcSoundType item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this INpcSoundType item,
-            Stream stream,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INpcSoundType item,
-            Stream stream,
-            out NpcSoundType.ErrorMask errorMask,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this INpcSoundType item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1163,13 +900,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case NpcSoundType_FieldIndex.Type:
                     return typeof(NpcSoundType.SoundType);
                 case NpcSoundType_FieldIndex.Sounds:
-                    return typeof(ExtendedList<NpcSound>);
+                    return typeof(IExtendedList<NpcSound>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(NpcSoundTypeXmlWriteTranslation);
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1228,34 +964,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Type = default;
             item.Sounds.Clear();
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            INpcSoundType item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    NpcSoundTypeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1552,365 +1260,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class NpcSoundTypeXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static NpcSoundTypeXmlWriteTranslation Instance = new NpcSoundTypeXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            INpcSoundTypeGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((item.Type != null)
-                && (translationMask?.GetShouldTranslate((int)NpcSoundType_FieldIndex.Type) ?? true))
-            {
-                EnumXmlTranslation<NpcSoundType.SoundType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)NpcSoundType_FieldIndex.Type,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)NpcSoundType_FieldIndex.Sounds) ?? true))
-            {
-                ListXmlTranslation<INpcSoundGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Sounds),
-                    item: item.Sounds,
-                    fieldIndex: (int)NpcSoundType_FieldIndex.Sounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)NpcSoundType_FieldIndex.Sounds),
-                    transl: (XElement subNode, INpcSoundGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((NpcSoundXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-        }
-
-        public void Write(
-            XElement node,
-            INpcSoundTypeGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.NpcSoundType");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.NpcSoundType");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (INpcSoundTypeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            INpcSoundTypeGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (INpcSoundTypeGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class NpcSoundTypeXmlCreateTranslation
-    {
-        public readonly static NpcSoundTypeXmlCreateTranslation Instance = new NpcSoundTypeXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            INpcSoundType item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    NpcSoundTypeXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            INpcSoundType item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Type":
-                    errorMask?.PushIndex((int)NpcSoundType_FieldIndex.Type);
-                    try
-                    {
-                        item.Type = EnumXmlTranslation<NpcSoundType.SoundType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sounds":
-                    errorMask?.PushIndex((int)NpcSoundType_FieldIndex.Sounds);
-                    try
-                    {
-                        if (ListXmlTranslation<NpcSound>.Instance.Parse(
-                            node: node,
-                            enumer: out var SoundsItem,
-                            transl: LoquiXmlTranslation<NpcSound>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Sounds.SetTo(SoundsItem);
-                        }
-                        else
-                        {
-                            item.Sounds.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class NpcSoundTypeXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this INpcSoundTypeGetter item,
-            XElement node,
-            out NpcSoundType.ErrorMask errorMask,
-            NpcSoundType.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((NpcSoundTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = NpcSoundType.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this INpcSoundTypeGetter item,
-            string path,
-            out NpcSoundType.ErrorMask errorMask,
-            NpcSoundType.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this INpcSoundTypeGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this INpcSoundTypeGetter item,
-            Stream stream,
-            out NpcSoundType.ErrorMask errorMask,
-            NpcSoundType.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this INpcSoundTypeGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this INpcSoundTypeGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((NpcSoundTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this INpcSoundTypeGetter item,
-            XElement node,
-            string? name = null,
-            NpcSoundType.TranslationMask? translationMask = null)
-        {
-            ((NpcSoundTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this INpcSoundTypeGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((NpcSoundTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this INpcSoundTypeGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((NpcSoundTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -1975,10 +1324,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             INpcSoundType item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1988,25 +1338,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.CSDT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Type) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Type) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<NpcSoundType.SoundType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)NpcSoundType_FieldIndex.Type);
+                    return (int)NpcSoundType_FieldIndex.Type;
                 }
                 case RecordTypeInts.CSDI:
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Sounds) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Sounds) return ParseResult.Stop;
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<NpcSound>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: NpcSound_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: NpcSound.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)NpcSoundType_FieldIndex.Sounds);
+                    return (int)NpcSoundType_FieldIndex.Sounds;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2067,23 +1417,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypeCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypeCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => NpcSoundTypeXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((NpcSoundTypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcSoundTypeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -2099,7 +1432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Type
         private int? _TypeLocation;
-        public NpcSoundType.SoundType? Type => _TypeLocation.HasValue ? (NpcSoundType.SoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(NpcSoundType.SoundType?);
+        public NpcSoundType.SoundType? Type => _TypeLocation.HasValue ? (NpcSoundType.SoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(NpcSoundType.SoundType?);
         #endregion
         public IReadOnlyList<INpcSoundGetter> Sounds { get; private set; } = ListExt.Empty<NpcSoundBinaryOverlay>();
         partial void CustomFactoryEnd(
@@ -2147,12 +1480,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2160,23 +1494,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.CSDT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Type) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Type) return ParseResult.Stop;
                     _TypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)NpcSoundType_FieldIndex.Type);
+                    return (int)NpcSoundType_FieldIndex.Type;
                 }
                 case RecordTypeInts.CSDI:
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Sounds) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Sounds) return ParseResult.Stop;
                     this.Sounds = this.ParseRepeatedTypelessSubrecord<NpcSoundBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
                         trigger: NpcSound_Registration.TriggeringRecordTypes,
                         factory:  NpcSoundBinaryOverlay.NpcSoundFactory);
-                    return TryGet<int?>.Succeed((int)NpcSoundType_FieldIndex.Sounds);
+                    return (int)NpcSoundType_FieldIndex.Sounds;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

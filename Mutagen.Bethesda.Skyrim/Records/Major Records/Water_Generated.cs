@@ -19,14 +19,8 @@ using System.Drawing;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -57,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region UnusedNoisemaps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String> _UnusedNoisemaps = new ExtendedList<String>();
-        public ExtendedList<String> UnusedNoisemaps
+        private IExtendedList<String> _UnusedNoisemaps = new ExtendedList<String>();
+        public IExtendedList<String> UnusedNoisemaps
         {
             get => this._UnusedNoisemaps;
             protected set => this._UnusedNoisemaps = value;
@@ -284,6 +278,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region SpecularSunSparklePower
         public Single SpecularSunSparklePower { get; set; } = default;
         #endregion
+        #region NoiseFlowmapScale
+        public Single NoiseFlowmapScale { get; set; } = default;
+        #endregion
         #region GNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected MemorySlice<Byte>? _GNAM;
@@ -320,6 +317,11 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IWaterGetter.NoiseLayerThreeTexture => this.NoiseLayerThreeTexture;
         #endregion
+        #region FlowNormalsNoiseTexture
+        public String? FlowNormalsNoiseTexture { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWaterGetter.FlowNormalsNoiseTexture => this.FlowNormalsNoiseTexture;
+        #endregion
         #region DNAMDataTypeState
         public Water.DNAMDataType DNAMDataTypeState { get; set; } = default;
         #endregion
@@ -350,135 +352,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((WaterCommon)((IWaterGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => WaterXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((WaterXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Water CreateFromXml(
-            XElement node,
-            Water.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Water CreateFromXml(
-            XElement node,
-            out Water.ErrorMask errorMask,
-            Water.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Water.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Water CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Water();
-            ((WaterSetterCommon)((IWaterGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Water CreateFromXml(
-            string path,
-            Water.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Water CreateFromXml(
-            string path,
-            out Water.ErrorMask errorMask,
-            Water.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Water CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Water.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Water CreateFromXml(
-            Stream stream,
-            Water.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Water CreateFromXml(
-            Stream stream,
-            out Water.ErrorMask errorMask,
-            Water.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Water CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Water.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -551,19 +424,21 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DepthNormals = initialValue;
                 this.DepthSpecularLighting = initialValue;
                 this.SpecularSunSparklePower = initialValue;
+                this.NoiseFlowmapScale = initialValue;
                 this.GNAM = initialValue;
                 this.LinearVelocity = initialValue;
                 this.AngularVelocity = initialValue;
                 this.NoiseLayerOneTexture = initialValue;
                 this.NoiseLayerTwoTexture = initialValue;
                 this.NoiseLayerThreeTexture = initialValue;
+                this.FlowNormalsNoiseTexture = initialValue;
                 this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -626,17 +501,19 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem DepthNormals,
                 TItem DepthSpecularLighting,
                 TItem SpecularSunSparklePower,
+                TItem NoiseFlowmapScale,
                 TItem GNAM,
                 TItem LinearVelocity,
                 TItem AngularVelocity,
                 TItem NoiseLayerOneTexture,
                 TItem NoiseLayerTwoTexture,
                 TItem NoiseLayerThreeTexture,
+                TItem FlowNormalsNoiseTexture,
                 TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -700,12 +577,14 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DepthNormals = DepthNormals;
                 this.DepthSpecularLighting = DepthSpecularLighting;
                 this.SpecularSunSparklePower = SpecularSunSparklePower;
+                this.NoiseFlowmapScale = NoiseFlowmapScale;
                 this.GNAM = GNAM;
                 this.LinearVelocity = LinearVelocity;
                 this.AngularVelocity = AngularVelocity;
                 this.NoiseLayerOneTexture = NoiseLayerOneTexture;
                 this.NoiseLayerTwoTexture = NoiseLayerTwoTexture;
                 this.NoiseLayerThreeTexture = NoiseLayerThreeTexture;
+                this.FlowNormalsNoiseTexture = FlowNormalsNoiseTexture;
                 this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
@@ -777,12 +656,14 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem DepthNormals;
             public TItem DepthSpecularLighting;
             public TItem SpecularSunSparklePower;
+            public TItem NoiseFlowmapScale;
             public TItem GNAM;
             public TItem LinearVelocity;
             public TItem AngularVelocity;
             public TItem NoiseLayerOneTexture;
             public TItem NoiseLayerTwoTexture;
             public TItem NoiseLayerThreeTexture;
+            public TItem FlowNormalsNoiseTexture;
             public TItem DNAMDataTypeState;
             #endregion
 
@@ -856,12 +737,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.DepthNormals, rhs.DepthNormals)) return false;
                 if (!object.Equals(this.DepthSpecularLighting, rhs.DepthSpecularLighting)) return false;
                 if (!object.Equals(this.SpecularSunSparklePower, rhs.SpecularSunSparklePower)) return false;
+                if (!object.Equals(this.NoiseFlowmapScale, rhs.NoiseFlowmapScale)) return false;
                 if (!object.Equals(this.GNAM, rhs.GNAM)) return false;
                 if (!object.Equals(this.LinearVelocity, rhs.LinearVelocity)) return false;
                 if (!object.Equals(this.AngularVelocity, rhs.AngularVelocity)) return false;
                 if (!object.Equals(this.NoiseLayerOneTexture, rhs.NoiseLayerOneTexture)) return false;
                 if (!object.Equals(this.NoiseLayerTwoTexture, rhs.NoiseLayerTwoTexture)) return false;
                 if (!object.Equals(this.NoiseLayerThreeTexture, rhs.NoiseLayerThreeTexture)) return false;
+                if (!object.Equals(this.FlowNormalsNoiseTexture, rhs.FlowNormalsNoiseTexture)) return false;
                 if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
@@ -927,12 +810,14 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.DepthNormals);
                 hash.Add(this.DepthSpecularLighting);
                 hash.Add(this.SpecularSunSparklePower);
+                hash.Add(this.NoiseFlowmapScale);
                 hash.Add(this.GNAM);
                 hash.Add(this.LinearVelocity);
                 hash.Add(this.AngularVelocity);
                 hash.Add(this.NoiseLayerOneTexture);
                 hash.Add(this.NoiseLayerTwoTexture);
                 hash.Add(this.NoiseLayerThreeTexture);
+                hash.Add(this.FlowNormalsNoiseTexture);
                 hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -1013,12 +898,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.DepthNormals)) return false;
                 if (!eval(this.DepthSpecularLighting)) return false;
                 if (!eval(this.SpecularSunSparklePower)) return false;
+                if (!eval(this.NoiseFlowmapScale)) return false;
                 if (!eval(this.GNAM)) return false;
                 if (!eval(this.LinearVelocity)) return false;
                 if (!eval(this.AngularVelocity)) return false;
                 if (!eval(this.NoiseLayerOneTexture)) return false;
                 if (!eval(this.NoiseLayerTwoTexture)) return false;
                 if (!eval(this.NoiseLayerThreeTexture)) return false;
+                if (!eval(this.FlowNormalsNoiseTexture)) return false;
                 if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
@@ -1097,12 +984,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.DepthNormals)) return true;
                 if (eval(this.DepthSpecularLighting)) return true;
                 if (eval(this.SpecularSunSparklePower)) return true;
+                if (eval(this.NoiseFlowmapScale)) return true;
                 if (eval(this.GNAM)) return true;
                 if (eval(this.LinearVelocity)) return true;
                 if (eval(this.AngularVelocity)) return true;
                 if (eval(this.NoiseLayerOneTexture)) return true;
                 if (eval(this.NoiseLayerTwoTexture)) return true;
                 if (eval(this.NoiseLayerThreeTexture)) return true;
+                if (eval(this.FlowNormalsNoiseTexture)) return true;
                 if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
@@ -1191,12 +1080,14 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.DepthNormals = eval(this.DepthNormals);
                 obj.DepthSpecularLighting = eval(this.DepthSpecularLighting);
                 obj.SpecularSunSparklePower = eval(this.SpecularSunSparklePower);
+                obj.NoiseFlowmapScale = eval(this.NoiseFlowmapScale);
                 obj.GNAM = eval(this.GNAM);
                 obj.LinearVelocity = eval(this.LinearVelocity);
                 obj.AngularVelocity = eval(this.AngularVelocity);
                 obj.NoiseLayerOneTexture = eval(this.NoiseLayerOneTexture);
                 obj.NoiseLayerTwoTexture = eval(this.NoiseLayerTwoTexture);
                 obj.NoiseLayerThreeTexture = eval(this.NoiseLayerThreeTexture);
+                obj.FlowNormalsNoiseTexture = eval(this.FlowNormalsNoiseTexture);
                 obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
@@ -1475,6 +1366,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
                     }
+                    if (printMask?.NoiseFlowmapScale ?? true)
+                    {
+                        fg.AppendItem(NoiseFlowmapScale, "NoiseFlowmapScale");
+                    }
                     if (printMask?.GNAM ?? true)
                     {
                         fg.AppendItem(GNAM, "GNAM");
@@ -1498,6 +1393,10 @@ namespace Mutagen.Bethesda.Skyrim
                     if (printMask?.NoiseLayerThreeTexture ?? true)
                     {
                         fg.AppendItem(NoiseLayerThreeTexture, "NoiseLayerThreeTexture");
+                    }
+                    if (printMask?.FlowNormalsNoiseTexture ?? true)
+                    {
+                        fg.AppendItem(FlowNormalsNoiseTexture, "FlowNormalsNoiseTexture");
                     }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
@@ -1574,12 +1473,14 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? DepthNormals;
             public Exception? DepthSpecularLighting;
             public Exception? SpecularSunSparklePower;
+            public Exception? NoiseFlowmapScale;
             public Exception? GNAM;
             public Exception? LinearVelocity;
             public Exception? AngularVelocity;
             public Exception? NoiseLayerOneTexture;
             public Exception? NoiseLayerTwoTexture;
             public Exception? NoiseLayerThreeTexture;
+            public Exception? FlowNormalsNoiseTexture;
             public Exception? DNAMDataTypeState;
             #endregion
 
@@ -1707,6 +1608,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return DepthSpecularLighting;
                     case Water_FieldIndex.SpecularSunSparklePower:
                         return SpecularSunSparklePower;
+                    case Water_FieldIndex.NoiseFlowmapScale:
+                        return NoiseFlowmapScale;
                     case Water_FieldIndex.GNAM:
                         return GNAM;
                     case Water_FieldIndex.LinearVelocity:
@@ -1719,6 +1622,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return NoiseLayerTwoTexture;
                     case Water_FieldIndex.NoiseLayerThreeTexture:
                         return NoiseLayerThreeTexture;
+                    case Water_FieldIndex.FlowNormalsNoiseTexture:
+                        return FlowNormalsNoiseTexture;
                     case Water_FieldIndex.DNAMDataTypeState:
                         return DNAMDataTypeState;
                     default:
@@ -1908,6 +1813,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case Water_FieldIndex.SpecularSunSparklePower:
                         this.SpecularSunSparklePower = ex;
                         break;
+                    case Water_FieldIndex.NoiseFlowmapScale:
+                        this.NoiseFlowmapScale = ex;
+                        break;
                     case Water_FieldIndex.GNAM:
                         this.GNAM = ex;
                         break;
@@ -1925,6 +1833,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Water_FieldIndex.NoiseLayerThreeTexture:
                         this.NoiseLayerThreeTexture = ex;
+                        break;
+                    case Water_FieldIndex.FlowNormalsNoiseTexture:
+                        this.FlowNormalsNoiseTexture = ex;
                         break;
                     case Water_FieldIndex.DNAMDataTypeState:
                         this.DNAMDataTypeState = ex;
@@ -2117,6 +2028,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case Water_FieldIndex.SpecularSunSparklePower:
                         this.SpecularSunSparklePower = (Exception?)obj;
                         break;
+                    case Water_FieldIndex.NoiseFlowmapScale:
+                        this.NoiseFlowmapScale = (Exception?)obj;
+                        break;
                     case Water_FieldIndex.GNAM:
                         this.GNAM = (Exception?)obj;
                         break;
@@ -2134,6 +2048,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Water_FieldIndex.NoiseLayerThreeTexture:
                         this.NoiseLayerThreeTexture = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FlowNormalsNoiseTexture:
+                        this.FlowNormalsNoiseTexture = (Exception?)obj;
                         break;
                     case Water_FieldIndex.DNAMDataTypeState:
                         this.DNAMDataTypeState = (Exception?)obj;
@@ -2206,12 +2123,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (DepthNormals != null) return true;
                 if (DepthSpecularLighting != null) return true;
                 if (SpecularSunSparklePower != null) return true;
+                if (NoiseFlowmapScale != null) return true;
                 if (GNAM != null) return true;
                 if (LinearVelocity != null) return true;
                 if (AngularVelocity != null) return true;
                 if (NoiseLayerOneTexture != null) return true;
                 if (NoiseLayerTwoTexture != null) return true;
                 if (NoiseLayerThreeTexture != null) return true;
+                if (FlowNormalsNoiseTexture != null) return true;
                 if (DNAMDataTypeState != null) return true;
                 return false;
             }
@@ -2328,12 +2247,14 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(DepthNormals, "DepthNormals");
                 fg.AppendItem(DepthSpecularLighting, "DepthSpecularLighting");
                 fg.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
+                fg.AppendItem(NoiseFlowmapScale, "NoiseFlowmapScale");
                 fg.AppendItem(GNAM, "GNAM");
                 fg.AppendItem(LinearVelocity, "LinearVelocity");
                 fg.AppendItem(AngularVelocity, "AngularVelocity");
                 fg.AppendItem(NoiseLayerOneTexture, "NoiseLayerOneTexture");
                 fg.AppendItem(NoiseLayerTwoTexture, "NoiseLayerTwoTexture");
                 fg.AppendItem(NoiseLayerThreeTexture, "NoiseLayerThreeTexture");
+                fg.AppendItem(FlowNormalsNoiseTexture, "FlowNormalsNoiseTexture");
                 fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
             }
             #endregion
@@ -2402,12 +2323,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.DepthNormals = this.DepthNormals.Combine(rhs.DepthNormals);
                 ret.DepthSpecularLighting = this.DepthSpecularLighting.Combine(rhs.DepthSpecularLighting);
                 ret.SpecularSunSparklePower = this.SpecularSunSparklePower.Combine(rhs.SpecularSunSparklePower);
+                ret.NoiseFlowmapScale = this.NoiseFlowmapScale.Combine(rhs.NoiseFlowmapScale);
                 ret.GNAM = this.GNAM.Combine(rhs.GNAM);
                 ret.LinearVelocity = this.LinearVelocity.Combine(rhs.LinearVelocity);
                 ret.AngularVelocity = this.AngularVelocity.Combine(rhs.AngularVelocity);
                 ret.NoiseLayerOneTexture = this.NoiseLayerOneTexture.Combine(rhs.NoiseLayerOneTexture);
                 ret.NoiseLayerTwoTexture = this.NoiseLayerTwoTexture.Combine(rhs.NoiseLayerTwoTexture);
                 ret.NoiseLayerThreeTexture = this.NoiseLayerThreeTexture.Combine(rhs.NoiseLayerThreeTexture);
+                ret.FlowNormalsNoiseTexture = this.FlowNormalsNoiseTexture.Combine(rhs.FlowNormalsNoiseTexture);
                 ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
@@ -2490,12 +2413,14 @@ namespace Mutagen.Bethesda.Skyrim
             public bool DepthNormals;
             public bool DepthSpecularLighting;
             public bool SpecularSunSparklePower;
+            public bool NoiseFlowmapScale;
             public bool GNAM;
             public bool LinearVelocity;
             public bool AngularVelocity;
             public bool NoiseLayerOneTexture;
             public bool NoiseLayerTwoTexture;
             public bool NoiseLayerThreeTexture;
+            public bool FlowNormalsNoiseTexture;
             public bool DNAMDataTypeState;
             #endregion
 
@@ -2562,12 +2487,14 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DepthNormals = defaultOn;
                 this.DepthSpecularLighting = defaultOn;
                 this.SpecularSunSparklePower = defaultOn;
+                this.NoiseFlowmapScale = defaultOn;
                 this.GNAM = defaultOn;
                 this.LinearVelocity = defaultOn;
                 this.AngularVelocity = defaultOn;
                 this.NoiseLayerOneTexture = defaultOn;
                 this.NoiseLayerTwoTexture = defaultOn;
                 this.NoiseLayerThreeTexture = defaultOn;
+                this.FlowNormalsNoiseTexture = defaultOn;
                 this.DNAMDataTypeState = defaultOn;
             }
 
@@ -2635,19 +2562,21 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((DepthNormals, null));
                 ret.Add((DepthSpecularLighting, null));
                 ret.Add((SpecularSunSparklePower, null));
+                ret.Add((NoiseFlowmapScale, null));
                 ret.Add((GNAM, null));
                 ret.Add((LinearVelocity, null));
                 ret.Add((AngularVelocity, null));
                 ret.Add((NoiseLayerOneTexture, null));
                 ret.Add((NoiseLayerTwoTexture, null));
                 ret.Add((NoiseLayerThreeTexture, null));
+                ret.Add((FlowNormalsNoiseTexture, null));
                 ret.Add((DNAMDataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Water_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Water_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2748,7 +2677,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWaterInternal>
     {
         new TranslatedString? Name { get; set; }
-        new ExtendedList<String> UnusedNoisemaps { get; }
+        new IExtendedList<String> UnusedNoisemaps { get; }
         new Byte Opacity { get; set; }
         new Water.Flag? Flags { get; set; }
         new MemorySlice<Byte>? MNAM { get; set; }
@@ -2806,12 +2735,14 @@ namespace Mutagen.Bethesda.Skyrim
         new Single DepthNormals { get; set; }
         new Single DepthSpecularLighting { get; set; }
         new Single SpecularSunSparklePower { get; set; }
+        new Single NoiseFlowmapScale { get; set; }
         new MemorySlice<Byte>? GNAM { get; set; }
         new P3Float? LinearVelocity { get; set; }
         new P3Float? AngularVelocity { get; set; }
         new String? NoiseLayerOneTexture { get; set; }
         new String? NoiseLayerTwoTexture { get; set; }
         new String? NoiseLayerThreeTexture { get; set; }
+        new String? FlowNormalsNoiseTexture { get; set; }
         new Water.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
@@ -2826,11 +2757,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IWaterGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Water_Registration.Instance;
+        static new ILoquiRegistration Registration => Water_Registration.Instance;
         TranslatedString? Name { get; }
         IReadOnlyList<String> UnusedNoisemaps { get; }
         Byte Opacity { get; }
@@ -2890,12 +2820,14 @@ namespace Mutagen.Bethesda.Skyrim
         Single DepthNormals { get; }
         Single DepthSpecularLighting { get; }
         Single SpecularSunSparklePower { get; }
+        Single NoiseFlowmapScale { get; }
         ReadOnlyMemorySlice<Byte>? GNAM { get; }
         P3Float? LinearVelocity { get; }
         P3Float? AngularVelocity { get; }
         String? NoiseLayerOneTexture { get; }
         String? NoiseLayerTwoTexture { get; }
         String? NoiseLayerThreeTexture { get; }
+        String? FlowNormalsNoiseTexture { get; }
         Water.DNAMDataType DNAMDataTypeState { get; }
 
     }
@@ -3031,131 +2963,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IWaterInternal item,
-            XElement node,
-            Water.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IWaterInternal item,
-            XElement node,
-            out Water.ErrorMask errorMask,
-            Water.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Water.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IWaterInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWaterInternal item,
-            string path,
-            Water.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWaterInternal item,
-            string path,
-            out Water.ErrorMask errorMask,
-            Water.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWaterInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Water.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IWaterInternal item,
-            Stream stream,
-            Water.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWaterInternal item,
-            Stream stream,
-            out Water.ErrorMask errorMask,
-            Water.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWaterInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Water.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -3193,7 +3000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -3256,13 +3063,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         DepthNormals = 62,
         DepthSpecularLighting = 63,
         SpecularSunSparklePower = 64,
-        GNAM = 65,
-        LinearVelocity = 66,
-        AngularVelocity = 67,
-        NoiseLayerOneTexture = 68,
-        NoiseLayerTwoTexture = 69,
-        NoiseLayerThreeTexture = 70,
-        DNAMDataTypeState = 71,
+        NoiseFlowmapScale = 65,
+        GNAM = 66,
+        LinearVelocity = 67,
+        AngularVelocity = 68,
+        NoiseLayerOneTexture = 69,
+        NoiseLayerTwoTexture = 70,
+        NoiseLayerThreeTexture = 71,
+        FlowNormalsNoiseTexture = 72,
+        DNAMDataTypeState = 73,
     }
     #endregion
 
@@ -3280,9 +3089,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "cf1e41d5-72e0-47c6-82ca-e1289b290653";
 
-        public const ushort AdditionalFieldCount = 66;
+        public const ushort AdditionalFieldCount = 68;
 
-        public const ushort FieldCount = 72;
+        public const ushort FieldCount = 74;
 
         public static readonly Type MaskType = typeof(Water.Mask<>);
 
@@ -3430,6 +3239,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Water_FieldIndex.DepthSpecularLighting;
                 case "SPECULARSUNSPARKLEPOWER":
                     return (ushort)Water_FieldIndex.SpecularSunSparklePower;
+                case "NOISEFLOWMAPSCALE":
+                    return (ushort)Water_FieldIndex.NoiseFlowmapScale;
                 case "GNAM":
                     return (ushort)Water_FieldIndex.GNAM;
                 case "LINEARVELOCITY":
@@ -3442,6 +3253,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Water_FieldIndex.NoiseLayerTwoTexture;
                 case "NOISELAYERTHREETEXTURE":
                     return (ushort)Water_FieldIndex.NoiseLayerThreeTexture;
+                case "FLOWNORMALSNOISETEXTURE":
+                    return (ushort)Water_FieldIndex.FlowNormalsNoiseTexture;
                 case "DNAMDATATYPESTATE":
                     return (ushort)Water_FieldIndex.DNAMDataTypeState;
                 default:
@@ -3514,12 +3327,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Water_FieldIndex.DepthNormals:
                 case Water_FieldIndex.DepthSpecularLighting:
                 case Water_FieldIndex.SpecularSunSparklePower:
+                case Water_FieldIndex.NoiseFlowmapScale:
                 case Water_FieldIndex.GNAM:
                 case Water_FieldIndex.LinearVelocity:
                 case Water_FieldIndex.AngularVelocity:
                 case Water_FieldIndex.NoiseLayerOneTexture:
                 case Water_FieldIndex.NoiseLayerTwoTexture:
                 case Water_FieldIndex.NoiseLayerThreeTexture:
+                case Water_FieldIndex.FlowNormalsNoiseTexture:
                 case Water_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
@@ -3591,12 +3406,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Water_FieldIndex.DepthNormals:
                 case Water_FieldIndex.DepthSpecularLighting:
                 case Water_FieldIndex.SpecularSunSparklePower:
+                case Water_FieldIndex.NoiseFlowmapScale:
                 case Water_FieldIndex.GNAM:
                 case Water_FieldIndex.LinearVelocity:
                 case Water_FieldIndex.AngularVelocity:
                 case Water_FieldIndex.NoiseLayerOneTexture:
                 case Water_FieldIndex.NoiseLayerTwoTexture:
                 case Water_FieldIndex.NoiseLayerThreeTexture:
+                case Water_FieldIndex.FlowNormalsNoiseTexture:
                 case Water_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
@@ -3668,12 +3485,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Water_FieldIndex.DepthNormals:
                 case Water_FieldIndex.DepthSpecularLighting:
                 case Water_FieldIndex.SpecularSunSparklePower:
+                case Water_FieldIndex.NoiseFlowmapScale:
                 case Water_FieldIndex.GNAM:
                 case Water_FieldIndex.LinearVelocity:
                 case Water_FieldIndex.AngularVelocity:
                 case Water_FieldIndex.NoiseLayerOneTexture:
                 case Water_FieldIndex.NoiseLayerTwoTexture:
                 case Water_FieldIndex.NoiseLayerThreeTexture:
+                case Water_FieldIndex.FlowNormalsNoiseTexture:
                 case Water_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
@@ -3804,6 +3623,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "DepthSpecularLighting";
                 case Water_FieldIndex.SpecularSunSparklePower:
                     return "SpecularSunSparklePower";
+                case Water_FieldIndex.NoiseFlowmapScale:
+                    return "NoiseFlowmapScale";
                 case Water_FieldIndex.GNAM:
                     return "GNAM";
                 case Water_FieldIndex.LinearVelocity:
@@ -3816,6 +3637,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "NoiseLayerTwoTexture";
                 case Water_FieldIndex.NoiseLayerThreeTexture:
                     return "NoiseLayerThreeTexture";
+                case Water_FieldIndex.FlowNormalsNoiseTexture:
+                    return "FlowNormalsNoiseTexture";
                 case Water_FieldIndex.DNAMDataTypeState:
                     return "DNAMDataTypeState";
                 default:
@@ -3887,12 +3710,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Water_FieldIndex.DepthNormals:
                 case Water_FieldIndex.DepthSpecularLighting:
                 case Water_FieldIndex.SpecularSunSparklePower:
+                case Water_FieldIndex.NoiseFlowmapScale:
                 case Water_FieldIndex.GNAM:
                 case Water_FieldIndex.LinearVelocity:
                 case Water_FieldIndex.AngularVelocity:
                 case Water_FieldIndex.NoiseLayerOneTexture:
                 case Water_FieldIndex.NoiseLayerTwoTexture:
                 case Water_FieldIndex.NoiseLayerThreeTexture:
+                case Water_FieldIndex.FlowNormalsNoiseTexture:
                 case Water_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
@@ -3964,12 +3789,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Water_FieldIndex.DepthNormals:
                 case Water_FieldIndex.DepthSpecularLighting:
                 case Water_FieldIndex.SpecularSunSparklePower:
+                case Water_FieldIndex.NoiseFlowmapScale:
                 case Water_FieldIndex.GNAM:
                 case Water_FieldIndex.LinearVelocity:
                 case Water_FieldIndex.AngularVelocity:
                 case Water_FieldIndex.NoiseLayerOneTexture:
                 case Water_FieldIndex.NoiseLayerTwoTexture:
                 case Water_FieldIndex.NoiseLayerThreeTexture:
+                case Water_FieldIndex.FlowNormalsNoiseTexture:
                 case Water_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
@@ -3985,7 +3812,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Water_FieldIndex.Name:
                     return typeof(TranslatedString);
                 case Water_FieldIndex.UnusedNoisemaps:
-                    return typeof(ExtendedList<String>);
+                    return typeof(IExtendedList<String>);
                 case Water_FieldIndex.Opacity:
                     return typeof(Byte);
                 case Water_FieldIndex.Flags:
@@ -4100,6 +3927,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Single);
                 case Water_FieldIndex.SpecularSunSparklePower:
                     return typeof(Single);
+                case Water_FieldIndex.NoiseFlowmapScale:
+                    return typeof(Single);
                 case Water_FieldIndex.GNAM:
                     return typeof(MemorySlice<Byte>);
                 case Water_FieldIndex.LinearVelocity:
@@ -4112,6 +3941,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(String);
                 case Water_FieldIndex.NoiseLayerThreeTexture:
                     return typeof(String);
+                case Water_FieldIndex.FlowNormalsNoiseTexture:
+                    return typeof(String);
                 case Water_FieldIndex.DNAMDataTypeState:
                     return typeof(Water.DNAMDataType);
                 default:
@@ -4119,7 +3950,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(WaterXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.WATR;
         public static readonly Type BinaryWriteTranslation = typeof(WaterBinaryWriteTranslation);
         #region Interface
@@ -4222,12 +4052,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.DepthNormals = default;
             item.DepthSpecularLighting = default;
             item.SpecularSunSparklePower = default;
+            item.NoiseFlowmapScale = default;
             item.GNAM = default;
             item.LinearVelocity = default;
             item.AngularVelocity = default;
             item.NoiseLayerOneTexture = default;
             item.NoiseLayerTwoTexture = default;
             item.NoiseLayerThreeTexture = default;
+            item.FlowNormalsNoiseTexture = default;
             item.DNAMDataTypeState = default;
             base.Clear(item);
         }
@@ -4241,86 +4073,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IWaterInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IWaterInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IWaterInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    WaterXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Water)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Water)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -4448,12 +4200,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.DepthNormals = item.DepthNormals.EqualsWithin(rhs.DepthNormals);
             ret.DepthSpecularLighting = item.DepthSpecularLighting.EqualsWithin(rhs.DepthSpecularLighting);
             ret.SpecularSunSparklePower = item.SpecularSunSparklePower.EqualsWithin(rhs.SpecularSunSparklePower);
+            ret.NoiseFlowmapScale = item.NoiseFlowmapScale.EqualsWithin(rhs.NoiseFlowmapScale);
             ret.GNAM = MemorySliceExt.Equal(item.GNAM, rhs.GNAM);
             ret.LinearVelocity = item.LinearVelocity.Equals(rhs.LinearVelocity);
             ret.AngularVelocity = item.AngularVelocity.Equals(rhs.AngularVelocity);
             ret.NoiseLayerOneTexture = string.Equals(item.NoiseLayerOneTexture, rhs.NoiseLayerOneTexture);
             ret.NoiseLayerTwoTexture = string.Equals(item.NoiseLayerTwoTexture, rhs.NoiseLayerTwoTexture);
             ret.NoiseLayerThreeTexture = string.Equals(item.NoiseLayerThreeTexture, rhs.NoiseLayerThreeTexture);
+            ret.FlowNormalsNoiseTexture = string.Equals(item.FlowNormalsNoiseTexture, rhs.FlowNormalsNoiseTexture);
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -4764,6 +4518,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.SpecularSunSparklePower, "SpecularSunSparklePower");
             }
+            if (printMask?.NoiseFlowmapScale ?? true)
+            {
+                fg.AppendItem(item.NoiseFlowmapScale, "NoiseFlowmapScale");
+            }
             if ((printMask?.GNAM ?? true)
                 && item.GNAM.TryGet(out var GNAMItem))
             {
@@ -4794,6 +4552,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(NoiseLayerThreeTextureItem, "NoiseLayerThreeTexture");
             }
+            if ((printMask?.FlowNormalsNoiseTexture ?? true)
+                && item.FlowNormalsNoiseTexture.TryGet(out var FlowNormalsNoiseTextureItem))
+            {
+                fg.AppendItem(FlowNormalsNoiseTextureItem, "FlowNormalsNoiseTexture");
+            }
             if (printMask?.DNAMDataTypeState ?? true)
             {
                 fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
@@ -4818,6 +4581,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.NoiseLayerOneTexture.HasValue && checkMask.NoiseLayerOneTexture.Value != (item.NoiseLayerOneTexture != null)) return false;
             if (checkMask.NoiseLayerTwoTexture.HasValue && checkMask.NoiseLayerTwoTexture.Value != (item.NoiseLayerTwoTexture != null)) return false;
             if (checkMask.NoiseLayerThreeTexture.HasValue && checkMask.NoiseLayerThreeTexture.Value != (item.NoiseLayerThreeTexture != null)) return false;
+            if (checkMask.FlowNormalsNoiseTexture.HasValue && checkMask.FlowNormalsNoiseTexture.Value != (item.FlowNormalsNoiseTexture != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -4886,12 +4650,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.DepthNormals = true;
             mask.DepthSpecularLighting = true;
             mask.SpecularSunSparklePower = true;
+            mask.NoiseFlowmapScale = true;
             mask.GNAM = (item.GNAM != null);
             mask.LinearVelocity = (item.LinearVelocity != null);
             mask.AngularVelocity = (item.AngularVelocity != null);
             mask.NoiseLayerOneTexture = (item.NoiseLayerOneTexture != null);
             mask.NoiseLayerTwoTexture = (item.NoiseLayerTwoTexture != null);
             mask.NoiseLayerThreeTexture = (item.NoiseLayerThreeTexture != null);
+            mask.FlowNormalsNoiseTexture = (item.FlowNormalsNoiseTexture != null);
             mask.DNAMDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -4906,7 +4672,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Water_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Water_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Water_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Water_FieldIndex)((int)index);
@@ -4927,7 +4693,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Water_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Water_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Water_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Water_FieldIndex)((int)index);
@@ -5003,12 +4769,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.DepthNormals.EqualsWithin(rhs.DepthNormals)) return false;
             if (!lhs.DepthSpecularLighting.EqualsWithin(rhs.DepthSpecularLighting)) return false;
             if (!lhs.SpecularSunSparklePower.EqualsWithin(rhs.SpecularSunSparklePower)) return false;
+            if (!lhs.NoiseFlowmapScale.EqualsWithin(rhs.NoiseFlowmapScale)) return false;
             if (!MemorySliceExt.Equal(lhs.GNAM, rhs.GNAM)) return false;
             if (!lhs.LinearVelocity.Equals(rhs.LinearVelocity)) return false;
             if (!lhs.AngularVelocity.Equals(rhs.AngularVelocity)) return false;
             if (!string.Equals(lhs.NoiseLayerOneTexture, rhs.NoiseLayerOneTexture)) return false;
             if (!string.Equals(lhs.NoiseLayerTwoTexture, rhs.NoiseLayerTwoTexture)) return false;
             if (!string.Equals(lhs.NoiseLayerThreeTexture, rhs.NoiseLayerThreeTexture)) return false;
+            if (!string.Equals(lhs.FlowNormalsNoiseTexture, rhs.FlowNormalsNoiseTexture)) return false;
             if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             return true;
         }
@@ -5117,6 +4885,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.DepthNormals);
             hash.Add(item.DepthSpecularLighting);
             hash.Add(item.SpecularSunSparklePower);
+            hash.Add(item.NoiseFlowmapScale);
             if (item.GNAM.TryGet(out var GNAMItem))
             {
                 hash.Add(GNAMItem);
@@ -5140,6 +4909,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (item.NoiseLayerThreeTexture.TryGet(out var NoiseLayerThreeTextureitem))
             {
                 hash.Add(NoiseLayerThreeTextureitem);
+            }
+            if (item.FlowNormalsNoiseTexture.TryGet(out var FlowNormalsNoiseTextureitem))
+            {
+                hash.Add(FlowNormalsNoiseTextureitem);
             }
             hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
@@ -5490,6 +5263,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.SpecularSunSparklePower = rhs.SpecularSunSparklePower;
             }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseFlowmapScale) ?? true))
+            {
+                item.NoiseFlowmapScale = rhs.NoiseFlowmapScale;
+            }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
             {
                 if(rhs.GNAM.TryGet(out var GNAMrhs))
@@ -5520,6 +5297,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeTexture) ?? true))
             {
                 item.NoiseLayerThreeTexture = rhs.NoiseLayerThreeTexture;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FlowNormalsNoiseTexture) ?? true))
+            {
+                item.FlowNormalsNoiseTexture = rhs.FlowNormalsNoiseTexture;
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DNAMDataTypeState) ?? true))
             {
@@ -5647,2030 +5428,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class WaterXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static WaterXmlWriteTranslation Instance = new WaterXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IWaterGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Water_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.UnusedNoisemaps) ?? true))
-            {
-                ListXmlTranslation<String>.Instance.Write(
-                    node: node,
-                    name: nameof(item.UnusedNoisemaps),
-                    item: item.UnusedNoisemaps,
-                    fieldIndex: (int)Water_FieldIndex.UnusedNoisemaps,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.UnusedNoisemaps),
-                    transl: (XElement subNode, String subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Opacity),
-                    item: item.Opacity,
-                    fieldIndex: (int)Water_FieldIndex.Opacity,
-                    errorMask: errorMask);
-            }
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Water.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Water_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((item.MNAM != null)
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.MNAM) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MNAM),
-                    item: item.MNAM.Value,
-                    fieldIndex: (int)Water_FieldIndex.MNAM,
-                    errorMask: errorMask);
-            }
-            if ((item.Material.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Material) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Material),
-                    item: item.Material.FormKey,
-                    fieldIndex: (int)Water_FieldIndex.Material,
-                    errorMask: errorMask);
-            }
-            if ((item.OpenSound.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.OpenSound) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.OpenSound),
-                    item: item.OpenSound.FormKey,
-                    fieldIndex: (int)Water_FieldIndex.OpenSound,
-                    errorMask: errorMask);
-            }
-            if ((item.Spell.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Spell) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Spell),
-                    item: item.Spell.FormKey,
-                    fieldIndex: (int)Water_FieldIndex.Spell,
-                    errorMask: errorMask);
-            }
-            if ((item.ImageSpace.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.ImageSpace) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ImageSpace),
-                    item: item.ImageSpace.FormKey,
-                    fieldIndex: (int)Water_FieldIndex.ImageSpace,
-                    errorMask: errorMask);
-            }
-            if ((item.DamagePerSecond != null)
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.DamagePerSecond) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DamagePerSecond),
-                    item: item.DamagePerSecond.Value,
-                    fieldIndex: (int)Water_FieldIndex.DamagePerSecond,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)Water_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunPower) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpecularSunPower),
-                    item: item.SpecularSunPower,
-                    fieldIndex: (int)Water_FieldIndex.SpecularSunPower,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaterReflectivity) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WaterReflectivity),
-                    item: item.WaterReflectivity,
-                    fieldIndex: (int)Water_FieldIndex.WaterReflectivity,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaterFresnel) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WaterFresnel),
-                    item: item.WaterFresnel,
-                    fieldIndex: (int)Water_FieldIndex.WaterFresnel,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown2) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown2),
-                    item: item.Unknown2,
-                    fieldIndex: (int)Water_FieldIndex.Unknown2,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogAboveWaterDistanceNearPlane) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogAboveWaterDistanceNearPlane),
-                    item: item.FogAboveWaterDistanceNearPlane,
-                    fieldIndex: (int)Water_FieldIndex.FogAboveWaterDistanceNearPlane,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogAboveWaterDistanceFarPlane) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogAboveWaterDistanceFarPlane),
-                    item: item.FogAboveWaterDistanceFarPlane,
-                    fieldIndex: (int)Water_FieldIndex.FogAboveWaterDistanceFarPlane,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ShallowColor) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ShallowColor),
-                    item: item.ShallowColor,
-                    fieldIndex: (int)Water_FieldIndex.ShallowColor,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DeepColor) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DeepColor),
-                    item: item.DeepColor,
-                    fieldIndex: (int)Water_FieldIndex.DeepColor,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectionColor) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ReflectionColor),
-                    item: item.ReflectionColor,
-                    fieldIndex: (int)Water_FieldIndex.ReflectionColor,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown3) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown3),
-                    item: item.Unknown3,
-                    fieldIndex: (int)Water_FieldIndex.Unknown3,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementStartingSize) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DisplacementStartingSize),
-                    item: item.DisplacementStartingSize,
-                    fieldIndex: (int)Water_FieldIndex.DisplacementStartingSize,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementFoce) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DisplacementFoce),
-                    item: item.DisplacementFoce,
-                    fieldIndex: (int)Water_FieldIndex.DisplacementFoce,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementVelocity) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DisplacementVelocity),
-                    item: item.DisplacementVelocity,
-                    fieldIndex: (int)Water_FieldIndex.DisplacementVelocity,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementFalloff) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DisplacementFalloff),
-                    item: item.DisplacementFalloff,
-                    fieldIndex: (int)Water_FieldIndex.DisplacementFalloff,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementDampner) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DisplacementDampner),
-                    item: item.DisplacementDampner,
-                    fieldIndex: (int)Water_FieldIndex.DisplacementDampner,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown4) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown4),
-                    item: item.Unknown4,
-                    fieldIndex: (int)Water_FieldIndex.Unknown4,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseFalloff) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseFalloff),
-                    item: item.NoiseFalloff,
-                    fieldIndex: (int)Water_FieldIndex.NoiseFalloff,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneWindDirection) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseLayerOneWindDirection),
-                    item: item.NoiseLayerOneWindDirection,
-                    fieldIndex: (int)Water_FieldIndex.NoiseLayerOneWindDirection,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoWindDirection) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseLayerTwoWindDirection),
-                    item: item.NoiseLayerTwoWindDirection,
-                    fieldIndex: (int)Water_FieldIndex.NoiseLayerTwoWindDirection,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeWindDirection) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseLayerThreeWindDirection),
-                    item: item.NoiseLayerThreeWindDirection,
-                    fieldIndex: (int)Water_FieldIndex.NoiseLayerThreeWindDirection,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneWindSpeed) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseLayerOneWindSpeed),
-                    item: item.NoiseLayerOneWindSpeed,
-                    fieldIndex: (int)Water_FieldIndex.NoiseLayerOneWindSpeed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoWindSpeed) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseLayerTwoWindSpeed),
-                    item: item.NoiseLayerTwoWindSpeed,
-                    fieldIndex: (int)Water_FieldIndex.NoiseLayerTwoWindSpeed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeWindSpeed) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseLayerThreeWindSpeed),
-                    item: item.NoiseLayerThreeWindSpeed,
-                    fieldIndex: (int)Water_FieldIndex.NoiseLayerThreeWindSpeed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown5) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown5),
-                    item: item.Unknown5,
-                    fieldIndex: (int)Water_FieldIndex.Unknown5,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogAboveWaterAmount) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogAboveWaterAmount),
-                    item: item.FogAboveWaterAmount,
-                    fieldIndex: (int)Water_FieldIndex.FogAboveWaterAmount,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown6) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown6),
-                    item: item.Unknown6,
-                    fieldIndex: (int)Water_FieldIndex.Unknown6,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderWaterAmount) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogUnderWaterAmount),
-                    item: item.FogUnderWaterAmount,
-                    fieldIndex: (int)Water_FieldIndex.FogUnderWaterAmount,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderWaterDistanceNearPlane) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogUnderWaterDistanceNearPlane),
-                    item: item.FogUnderWaterDistanceNearPlane,
-                    fieldIndex: (int)Water_FieldIndex.FogUnderWaterDistanceNearPlane,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogUnderWaterDistanceFarPlane) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogUnderWaterDistanceFarPlane),
-                    item: item.FogUnderWaterDistanceFarPlane,
-                    fieldIndex: (int)Water_FieldIndex.FogUnderWaterDistanceFarPlane,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaterRefractionMagnitude) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WaterRefractionMagnitude),
-                    item: item.WaterRefractionMagnitude,
-                    fieldIndex: (int)Water_FieldIndex.WaterRefractionMagnitude,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularPower) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpecularPower),
-                    item: item.SpecularPower,
-                    fieldIndex: (int)Water_FieldIndex.SpecularPower,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Unknown7) ?? true))
-            {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown7),
-                    item: item.Unknown7,
-                    fieldIndex: (int)Water_FieldIndex.Unknown7,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularRadius) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpecularRadius),
-                    item: item.SpecularRadius,
-                    fieldIndex: (int)Water_FieldIndex.SpecularRadius,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularBrightness) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpecularBrightness),
-                    item: item.SpecularBrightness,
-                    fieldIndex: (int)Water_FieldIndex.SpecularBrightness,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneUvScale) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseLayerOneUvScale),
-                    item: item.NoiseLayerOneUvScale,
-                    fieldIndex: (int)Water_FieldIndex.NoiseLayerOneUvScale,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoUvScale) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseLayerTwoUvScale),
-                    item: item.NoiseLayerTwoUvScale,
-                    fieldIndex: (int)Water_FieldIndex.NoiseLayerTwoUvScale,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeUvScale) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseLayerThreeUvScale),
-                    item: item.NoiseLayerThreeUvScale,
-                    fieldIndex: (int)Water_FieldIndex.NoiseLayerThreeUvScale,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneAmplitudeScale) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseLayerOneAmplitudeScale),
-                    item: item.NoiseLayerOneAmplitudeScale,
-                    fieldIndex: (int)Water_FieldIndex.NoiseLayerOneAmplitudeScale,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoAmplitudeScale) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseLayerTwoAmplitudeScale),
-                    item: item.NoiseLayerTwoAmplitudeScale,
-                    fieldIndex: (int)Water_FieldIndex.NoiseLayerTwoAmplitudeScale,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeAmplitudeScale) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseLayerThreeAmplitudeScale),
-                    item: item.NoiseLayerThreeAmplitudeScale,
-                    fieldIndex: (int)Water_FieldIndex.NoiseLayerThreeAmplitudeScale,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaterReflectionMagnitude) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WaterReflectionMagnitude),
-                    item: item.WaterReflectionMagnitude,
-                    fieldIndex: (int)Water_FieldIndex.WaterReflectionMagnitude,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparkleMagnitude) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpecularSunSparkleMagnitude),
-                    item: item.SpecularSunSparkleMagnitude,
-                    fieldIndex: (int)Water_FieldIndex.SpecularSunSparkleMagnitude,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSpecularMagnitude) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpecularSunSpecularMagnitude),
-                    item: item.SpecularSunSpecularMagnitude,
-                    fieldIndex: (int)Water_FieldIndex.SpecularSunSpecularMagnitude,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DepthReflections) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DepthReflections),
-                    item: item.DepthReflections,
-                    fieldIndex: (int)Water_FieldIndex.DepthReflections,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DepthRefraction) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DepthRefraction),
-                    item: item.DepthRefraction,
-                    fieldIndex: (int)Water_FieldIndex.DepthRefraction,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DepthNormals) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DepthNormals),
-                    item: item.DepthNormals,
-                    fieldIndex: (int)Water_FieldIndex.DepthNormals,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DepthSpecularLighting) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DepthSpecularLighting),
-                    item: item.DepthSpecularLighting,
-                    fieldIndex: (int)Water_FieldIndex.DepthSpecularLighting,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SpecularSunSparklePower) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpecularSunSparklePower),
-                    item: item.SpecularSunSparklePower,
-                    fieldIndex: (int)Water_FieldIndex.SpecularSunSparklePower,
-                    errorMask: errorMask);
-            }
-            if ((item.GNAM != null)
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.GNAM),
-                    item: item.GNAM.Value,
-                    fieldIndex: (int)Water_FieldIndex.GNAM,
-                    errorMask: errorMask);
-            }
-            if ((item.LinearVelocity != null)
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.LinearVelocity) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LinearVelocity),
-                    item: item.LinearVelocity.Value,
-                    fieldIndex: (int)Water_FieldIndex.LinearVelocity,
-                    errorMask: errorMask);
-            }
-            if ((item.AngularVelocity != null)
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.AngularVelocity) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AngularVelocity),
-                    item: item.AngularVelocity.Value,
-                    fieldIndex: (int)Water_FieldIndex.AngularVelocity,
-                    errorMask: errorMask);
-            }
-            if ((item.NoiseLayerOneTexture != null)
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerOneTexture) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseLayerOneTexture),
-                    item: item.NoiseLayerOneTexture,
-                    fieldIndex: (int)Water_FieldIndex.NoiseLayerOneTexture,
-                    errorMask: errorMask);
-            }
-            if ((item.NoiseLayerTwoTexture != null)
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerTwoTexture) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseLayerTwoTexture),
-                    item: item.NoiseLayerTwoTexture,
-                    fieldIndex: (int)Water_FieldIndex.NoiseLayerTwoTexture,
-                    errorMask: errorMask);
-            }
-            if ((item.NoiseLayerThreeTexture != null)
-                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeTexture) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NoiseLayerThreeTexture),
-                    item: item.NoiseLayerThreeTexture,
-                    fieldIndex: (int)Water_FieldIndex.NoiseLayerThreeTexture,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DNAMDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Water.DNAMDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DNAMDataTypeState),
-                    item: item.DNAMDataTypeState,
-                    fieldIndex: (int)Water_FieldIndex.DNAMDataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IWaterGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Water");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Water");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IWaterGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IWaterGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IWaterGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class WaterXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static WaterXmlCreateTranslation Instance = new WaterXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IWaterInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    WaterXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IWaterInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Name":
-                    errorMask?.PushIndex((int)Water_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnusedNoisemaps":
-                    errorMask?.PushIndex((int)Water_FieldIndex.UnusedNoisemaps);
-                    try
-                    {
-                        if (ListXmlTranslation<String>.Instance.Parse(
-                            node: node,
-                            enumer: out var UnusedNoisemapsItem,
-                            transl: StringXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.UnusedNoisemaps.SetTo(UnusedNoisemapsItem);
-                        }
-                        else
-                        {
-                            item.UnusedNoisemaps.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Opacity":
-                    errorMask?.PushIndex((int)Water_FieldIndex.Opacity);
-                    try
-                    {
-                        item.Opacity = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Water_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Water.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MNAM":
-                    errorMask?.PushIndex((int)Water_FieldIndex.MNAM);
-                    try
-                    {
-                        item.MNAM = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Material":
-                    errorMask?.PushIndex((int)Water_FieldIndex.Material);
-                    try
-                    {
-                        item.Material = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "OpenSound":
-                    errorMask?.PushIndex((int)Water_FieldIndex.OpenSound);
-                    try
-                    {
-                        item.OpenSound = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Spell":
-                    errorMask?.PushIndex((int)Water_FieldIndex.Spell);
-                    try
-                    {
-                        item.Spell = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ImageSpace":
-                    errorMask?.PushIndex((int)Water_FieldIndex.ImageSpace);
-                    try
-                    {
-                        item.ImageSpace = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DamagePerSecond":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DamagePerSecond);
-                    try
-                    {
-                        item.DamagePerSecond = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)Water_FieldIndex.Unknown);
-                    try
-                    {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            fallbackLength: 16,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SpecularSunPower":
-                    errorMask?.PushIndex((int)Water_FieldIndex.SpecularSunPower);
-                    try
-                    {
-                        item.SpecularSunPower = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WaterReflectivity":
-                    errorMask?.PushIndex((int)Water_FieldIndex.WaterReflectivity);
-                    try
-                    {
-                        item.WaterReflectivity = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WaterFresnel":
-                    errorMask?.PushIndex((int)Water_FieldIndex.WaterFresnel);
-                    try
-                    {
-                        item.WaterFresnel = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown2":
-                    errorMask?.PushIndex((int)Water_FieldIndex.Unknown2);
-                    try
-                    {
-                        item.Unknown2 = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogAboveWaterDistanceNearPlane":
-                    errorMask?.PushIndex((int)Water_FieldIndex.FogAboveWaterDistanceNearPlane);
-                    try
-                    {
-                        item.FogAboveWaterDistanceNearPlane = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogAboveWaterDistanceFarPlane":
-                    errorMask?.PushIndex((int)Water_FieldIndex.FogAboveWaterDistanceFarPlane);
-                    try
-                    {
-                        item.FogAboveWaterDistanceFarPlane = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ShallowColor":
-                    errorMask?.PushIndex((int)Water_FieldIndex.ShallowColor);
-                    try
-                    {
-                        item.ShallowColor = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DeepColor":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DeepColor);
-                    try
-                    {
-                        item.DeepColor = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ReflectionColor":
-                    errorMask?.PushIndex((int)Water_FieldIndex.ReflectionColor);
-                    try
-                    {
-                        item.ReflectionColor = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown3":
-                    errorMask?.PushIndex((int)Water_FieldIndex.Unknown3);
-                    try
-                    {
-                        item.Unknown3 = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            fallbackLength: 20,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisplacementStartingSize":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementStartingSize);
-                    try
-                    {
-                        item.DisplacementStartingSize = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisplacementFoce":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementFoce);
-                    try
-                    {
-                        item.DisplacementFoce = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisplacementVelocity":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementVelocity);
-                    try
-                    {
-                        item.DisplacementVelocity = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisplacementFalloff":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementFalloff);
-                    try
-                    {
-                        item.DisplacementFalloff = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisplacementDampner":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementDampner);
-                    try
-                    {
-                        item.DisplacementDampner = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown4":
-                    errorMask?.PushIndex((int)Water_FieldIndex.Unknown4);
-                    try
-                    {
-                        item.Unknown4 = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseFalloff":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseFalloff);
-                    try
-                    {
-                        item.NoiseFalloff = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseLayerOneWindDirection":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerOneWindDirection);
-                    try
-                    {
-                        item.NoiseLayerOneWindDirection = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseLayerTwoWindDirection":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerTwoWindDirection);
-                    try
-                    {
-                        item.NoiseLayerTwoWindDirection = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseLayerThreeWindDirection":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerThreeWindDirection);
-                    try
-                    {
-                        item.NoiseLayerThreeWindDirection = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseLayerOneWindSpeed":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerOneWindSpeed);
-                    try
-                    {
-                        item.NoiseLayerOneWindSpeed = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseLayerTwoWindSpeed":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerTwoWindSpeed);
-                    try
-                    {
-                        item.NoiseLayerTwoWindSpeed = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseLayerThreeWindSpeed":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerThreeWindSpeed);
-                    try
-                    {
-                        item.NoiseLayerThreeWindSpeed = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown5":
-                    errorMask?.PushIndex((int)Water_FieldIndex.Unknown5);
-                    try
-                    {
-                        item.Unknown5 = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            fallbackLength: 8,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogAboveWaterAmount":
-                    errorMask?.PushIndex((int)Water_FieldIndex.FogAboveWaterAmount);
-                    try
-                    {
-                        item.FogAboveWaterAmount = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown6":
-                    errorMask?.PushIndex((int)Water_FieldIndex.Unknown6);
-                    try
-                    {
-                        item.Unknown6 = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogUnderWaterAmount":
-                    errorMask?.PushIndex((int)Water_FieldIndex.FogUnderWaterAmount);
-                    try
-                    {
-                        item.FogUnderWaterAmount = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogUnderWaterDistanceNearPlane":
-                    errorMask?.PushIndex((int)Water_FieldIndex.FogUnderWaterDistanceNearPlane);
-                    try
-                    {
-                        item.FogUnderWaterDistanceNearPlane = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogUnderWaterDistanceFarPlane":
-                    errorMask?.PushIndex((int)Water_FieldIndex.FogUnderWaterDistanceFarPlane);
-                    try
-                    {
-                        item.FogUnderWaterDistanceFarPlane = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WaterRefractionMagnitude":
-                    errorMask?.PushIndex((int)Water_FieldIndex.WaterRefractionMagnitude);
-                    try
-                    {
-                        item.WaterRefractionMagnitude = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SpecularPower":
-                    errorMask?.PushIndex((int)Water_FieldIndex.SpecularPower);
-                    try
-                    {
-                        item.SpecularPower = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown7":
-                    errorMask?.PushIndex((int)Water_FieldIndex.Unknown7);
-                    try
-                    {
-                        item.Unknown7 = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SpecularRadius":
-                    errorMask?.PushIndex((int)Water_FieldIndex.SpecularRadius);
-                    try
-                    {
-                        item.SpecularRadius = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SpecularBrightness":
-                    errorMask?.PushIndex((int)Water_FieldIndex.SpecularBrightness);
-                    try
-                    {
-                        item.SpecularBrightness = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseLayerOneUvScale":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerOneUvScale);
-                    try
-                    {
-                        item.NoiseLayerOneUvScale = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseLayerTwoUvScale":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerTwoUvScale);
-                    try
-                    {
-                        item.NoiseLayerTwoUvScale = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseLayerThreeUvScale":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerThreeUvScale);
-                    try
-                    {
-                        item.NoiseLayerThreeUvScale = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseLayerOneAmplitudeScale":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerOneAmplitudeScale);
-                    try
-                    {
-                        item.NoiseLayerOneAmplitudeScale = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseLayerTwoAmplitudeScale":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerTwoAmplitudeScale);
-                    try
-                    {
-                        item.NoiseLayerTwoAmplitudeScale = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseLayerThreeAmplitudeScale":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerThreeAmplitudeScale);
-                    try
-                    {
-                        item.NoiseLayerThreeAmplitudeScale = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WaterReflectionMagnitude":
-                    errorMask?.PushIndex((int)Water_FieldIndex.WaterReflectionMagnitude);
-                    try
-                    {
-                        item.WaterReflectionMagnitude = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SpecularSunSparkleMagnitude":
-                    errorMask?.PushIndex((int)Water_FieldIndex.SpecularSunSparkleMagnitude);
-                    try
-                    {
-                        item.SpecularSunSparkleMagnitude = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SpecularSunSpecularMagnitude":
-                    errorMask?.PushIndex((int)Water_FieldIndex.SpecularSunSpecularMagnitude);
-                    try
-                    {
-                        item.SpecularSunSpecularMagnitude = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DepthReflections":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DepthReflections);
-                    try
-                    {
-                        item.DepthReflections = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DepthRefraction":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DepthRefraction);
-                    try
-                    {
-                        item.DepthRefraction = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DepthNormals":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DepthNormals);
-                    try
-                    {
-                        item.DepthNormals = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DepthSpecularLighting":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DepthSpecularLighting);
-                    try
-                    {
-                        item.DepthSpecularLighting = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SpecularSunSparklePower":
-                    errorMask?.PushIndex((int)Water_FieldIndex.SpecularSunSparklePower);
-                    try
-                    {
-                        item.SpecularSunSparklePower = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseFlowmapScale":
-                    break;
-                case "GNAM":
-                    errorMask?.PushIndex((int)Water_FieldIndex.GNAM);
-                    try
-                    {
-                        item.GNAM = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LinearVelocity":
-                    errorMask?.PushIndex((int)Water_FieldIndex.LinearVelocity);
-                    try
-                    {
-                        item.LinearVelocity = P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AngularVelocity":
-                    errorMask?.PushIndex((int)Water_FieldIndex.AngularVelocity);
-                    try
-                    {
-                        item.AngularVelocity = P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseLayerOneTexture":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerOneTexture);
-                    try
-                    {
-                        item.NoiseLayerOneTexture = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseLayerTwoTexture":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerTwoTexture);
-                    try
-                    {
-                        item.NoiseLayerTwoTexture = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NoiseLayerThreeTexture":
-                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseLayerThreeTexture);
-                    try
-                    {
-                        item.NoiseLayerThreeTexture = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DNAMDataTypeState":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DNAMDataTypeState);
-                    try
-                    {
-                        item.DNAMDataTypeState = EnumXmlTranslation<Water.DNAMDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class WaterXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IWaterGetter item,
-            XElement node,
-            out Water.ErrorMask errorMask,
-            Water.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((WaterXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Water.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IWaterGetter item,
-            string path,
-            out Water.ErrorMask errorMask,
-            Water.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IWaterGetter item,
-            Stream stream,
-            out Water.ErrorMask errorMask,
-            Water.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -7883,6 +5640,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SpecularSunSparklePower);
+                if (writer.MetaData.FormVersion!.Value >= 44)
+                {
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.NoiseFlowmapScale);
+                }
             }
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -7911,6 +5674,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.NoiseLayerThreeTexture,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4),
                 binaryType: StringBinaryType.NullTerminate);
+            if (writer.MetaData.FormVersion!.Value >= 44)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                    writer: writer,
+                    item: item.FlowNormalsNoiseTexture,
+                    header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM5),
+                    binaryType: StringBinaryType.NullTerminate);
+            }
         }
 
         public void Write(
@@ -7926,10 +5697,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -7982,9 +5755,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IWaterInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -7999,7 +5773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Name);
+                    return (int)Water_FieldIndex.Name;
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -8008,25 +5782,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
                             transl: StringBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.UnusedNoisemaps);
+                    return (int)Water_FieldIndex.UnusedNoisemaps;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Opacity = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
+                    return (int)Water_FieldIndex.Opacity;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Water.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
+                    return (int)Water_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.MNAM);
+                    return (int)Water_FieldIndex.MNAM;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -8034,7 +5808,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Material = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Material);
+                    return (int)Water_FieldIndex.Material;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -8042,7 +5816,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.OpenSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.OpenSound);
+                    return (int)Water_FieldIndex.OpenSound;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -8050,7 +5824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Spell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Spell);
+                    return (int)Water_FieldIndex.Spell;
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -8058,13 +5832,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImageSpace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.ImageSpace);
+                    return (int)Water_FieldIndex.ImageSpace;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DamagePerSecond = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.DamagePerSecond);
+                    return (int)Water_FieldIndex.DamagePerSecond;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -8119,25 +5893,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DepthNormals = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.DepthSpecularLighting = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.SpecularSunSparklePower = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.SpecularSunSparklePower);
+                    if (frame.MetaData.FormVersion!.Value >= 44)
+                    {
+                        item.NoiseFlowmapScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    }
+                    return (int)Water_FieldIndex.NoiseFlowmapScale;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.GNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.GNAM);
+                    return (int)Water_FieldIndex.GNAM;
                 }
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LinearVelocity = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.LinearVelocity);
+                    return (int)Water_FieldIndex.LinearVelocity;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AngularVelocity = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.AngularVelocity);
+                    return (int)Water_FieldIndex.AngularVelocity;
                 }
                 case RecordTypeInts.NAM2:
                 {
@@ -8145,7 +5923,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.NoiseLayerOneTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerOneTexture);
+                    return (int)Water_FieldIndex.NoiseLayerOneTexture;
                 }
                 case RecordTypeInts.NAM3:
                 {
@@ -8153,7 +5931,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.NoiseLayerTwoTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerTwoTexture);
+                    return (int)Water_FieldIndex.NoiseLayerTwoTexture;
                 }
                 case RecordTypeInts.NAM4:
                 {
@@ -8161,12 +5939,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.NoiseLayerThreeTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerThreeTexture);
+                    return (int)Water_FieldIndex.NoiseLayerThreeTexture;
+                }
+                case RecordTypeInts.NAM5:
+                {
+                    if (frame.MetaData.FormVersion!.Value >= 44)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.FlowNormalsNoiseTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate);
+                    }
+                    return (int)Water_FieldIndex.FlowNormalsNoiseTexture;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -8213,21 +6003,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => WaterXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((WaterXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -8246,11 +6021,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<String> UnusedNoisemaps { get; private set; } = ListExt.Empty<String>();
         #region Opacity
         private int? _OpacityLocation;
-        public Byte Opacity => _OpacityLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _OpacityLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        public Byte Opacity => _OpacityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _OpacityLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Water.Flag? Flags => _FlagsLocation.HasValue ? (Water.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Water.Flag?);
+        public Water.Flag? Flags => _FlagsLocation.HasValue ? (Water.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Water.Flag?);
         #endregion
         #region MNAM
         private int? _MNAMLocation;
@@ -8259,22 +6034,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Material
         private int? _MaterialLocation;
         public bool Material_IsSet => _MaterialLocation.HasValue;
-        public IFormLinkNullable<IMaterialTypeGetter> Material => _MaterialLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MaterialLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public IFormLinkNullable<IMaterialTypeGetter> Material => _MaterialLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
         #endregion
         #region OpenSound
         private int? _OpenSoundLocation;
         public bool OpenSound_IsSet => _OpenSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region Spell
         private int? _SpellLocation;
         public bool Spell_IsSet => _SpellLocation.HasValue;
-        public IFormLinkNullable<ISpellGetter> Spell => _SpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
+        public IFormLinkNullable<ISpellGetter> Spell => _SpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
         #endregion
         #region ImageSpace
         private int? _ImageSpaceLocation;
         public bool ImageSpace_IsSet => _ImageSpaceLocation.HasValue;
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
         #region DamagePerSecond
         private int? _DamagePerSecondLocation;
@@ -8290,17 +6065,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region SpecularSunPower
         private int _SpecularSunPowerLocation => _DNAMLocation!.Value + 0x10;
         private bool _SpecularSunPower_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunPower => _SpecularSunPower_IsSet ? SpanExt.GetFloat(_data.Slice(_SpecularSunPowerLocation, 4)) : default;
+        public Single SpecularSunPower => _SpecularSunPower_IsSet ? _data.Slice(_SpecularSunPowerLocation, 4).Float() : default;
         #endregion
         #region WaterReflectivity
         private int _WaterReflectivityLocation => _DNAMLocation!.Value + 0x14;
         private bool _WaterReflectivity_IsSet => _DNAMLocation.HasValue;
-        public Single WaterReflectivity => _WaterReflectivity_IsSet ? SpanExt.GetFloat(_data.Slice(_WaterReflectivityLocation, 4)) : default;
+        public Single WaterReflectivity => _WaterReflectivity_IsSet ? _data.Slice(_WaterReflectivityLocation, 4).Float() : default;
         #endregion
         #region WaterFresnel
         private int _WaterFresnelLocation => _DNAMLocation!.Value + 0x18;
         private bool _WaterFresnel_IsSet => _DNAMLocation.HasValue;
-        public Single WaterFresnel => _WaterFresnel_IsSet ? SpanExt.GetFloat(_data.Slice(_WaterFresnelLocation, 4)) : default;
+        public Single WaterFresnel => _WaterFresnel_IsSet ? _data.Slice(_WaterFresnelLocation, 4).Float() : default;
         #endregion
         #region Unknown2
         private int _Unknown2Location => _DNAMLocation!.Value + 0x1C;
@@ -8310,12 +6085,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FogAboveWaterDistanceNearPlane
         private int _FogAboveWaterDistanceNearPlaneLocation => _DNAMLocation!.Value + 0x20;
         private bool _FogAboveWaterDistanceNearPlane_IsSet => _DNAMLocation.HasValue;
-        public Single FogAboveWaterDistanceNearPlane => _FogAboveWaterDistanceNearPlane_IsSet ? SpanExt.GetFloat(_data.Slice(_FogAboveWaterDistanceNearPlaneLocation, 4)) : default;
+        public Single FogAboveWaterDistanceNearPlane => _FogAboveWaterDistanceNearPlane_IsSet ? _data.Slice(_FogAboveWaterDistanceNearPlaneLocation, 4).Float() : default;
         #endregion
         #region FogAboveWaterDistanceFarPlane
         private int _FogAboveWaterDistanceFarPlaneLocation => _DNAMLocation!.Value + 0x24;
         private bool _FogAboveWaterDistanceFarPlane_IsSet => _DNAMLocation.HasValue;
-        public Single FogAboveWaterDistanceFarPlane => _FogAboveWaterDistanceFarPlane_IsSet ? SpanExt.GetFloat(_data.Slice(_FogAboveWaterDistanceFarPlaneLocation, 4)) : default;
+        public Single FogAboveWaterDistanceFarPlane => _FogAboveWaterDistanceFarPlane_IsSet ? _data.Slice(_FogAboveWaterDistanceFarPlaneLocation, 4).Float() : default;
         #endregion
         #region ShallowColor
         private int _ShallowColorLocation => _DNAMLocation!.Value + 0x28;
@@ -8340,27 +6115,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region DisplacementStartingSize
         private int _DisplacementStartingSizeLocation => _DNAMLocation!.Value + 0x48;
         private bool _DisplacementStartingSize_IsSet => _DNAMLocation.HasValue;
-        public Single DisplacementStartingSize => _DisplacementStartingSize_IsSet ? SpanExt.GetFloat(_data.Slice(_DisplacementStartingSizeLocation, 4)) : default;
+        public Single DisplacementStartingSize => _DisplacementStartingSize_IsSet ? _data.Slice(_DisplacementStartingSizeLocation, 4).Float() : default;
         #endregion
         #region DisplacementFoce
         private int _DisplacementFoceLocation => _DNAMLocation!.Value + 0x4C;
         private bool _DisplacementFoce_IsSet => _DNAMLocation.HasValue;
-        public Single DisplacementFoce => _DisplacementFoce_IsSet ? SpanExt.GetFloat(_data.Slice(_DisplacementFoceLocation, 4)) : default;
+        public Single DisplacementFoce => _DisplacementFoce_IsSet ? _data.Slice(_DisplacementFoceLocation, 4).Float() : default;
         #endregion
         #region DisplacementVelocity
         private int _DisplacementVelocityLocation => _DNAMLocation!.Value + 0x50;
         private bool _DisplacementVelocity_IsSet => _DNAMLocation.HasValue;
-        public Single DisplacementVelocity => _DisplacementVelocity_IsSet ? SpanExt.GetFloat(_data.Slice(_DisplacementVelocityLocation, 4)) : default;
+        public Single DisplacementVelocity => _DisplacementVelocity_IsSet ? _data.Slice(_DisplacementVelocityLocation, 4).Float() : default;
         #endregion
         #region DisplacementFalloff
         private int _DisplacementFalloffLocation => _DNAMLocation!.Value + 0x54;
         private bool _DisplacementFalloff_IsSet => _DNAMLocation.HasValue;
-        public Single DisplacementFalloff => _DisplacementFalloff_IsSet ? SpanExt.GetFloat(_data.Slice(_DisplacementFalloffLocation, 4)) : default;
+        public Single DisplacementFalloff => _DisplacementFalloff_IsSet ? _data.Slice(_DisplacementFalloffLocation, 4).Float() : default;
         #endregion
         #region DisplacementDampner
         private int _DisplacementDampnerLocation => _DNAMLocation!.Value + 0x58;
         private bool _DisplacementDampner_IsSet => _DNAMLocation.HasValue;
-        public Single DisplacementDampner => _DisplacementDampner_IsSet ? SpanExt.GetFloat(_data.Slice(_DisplacementDampnerLocation, 4)) : default;
+        public Single DisplacementDampner => _DisplacementDampner_IsSet ? _data.Slice(_DisplacementDampnerLocation, 4).Float() : default;
         #endregion
         #region Unknown4
         private int _Unknown4Location => _DNAMLocation!.Value + 0x5C;
@@ -8370,37 +6145,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region NoiseFalloff
         private int _NoiseFalloffLocation => _DNAMLocation!.Value + 0x60;
         private bool _NoiseFalloff_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseFalloff => _NoiseFalloff_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseFalloffLocation, 4)) : default;
+        public Single NoiseFalloff => _NoiseFalloff_IsSet ? _data.Slice(_NoiseFalloffLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerOneWindDirection
         private int _NoiseLayerOneWindDirectionLocation => _DNAMLocation!.Value + 0x64;
         private bool _NoiseLayerOneWindDirection_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerOneWindDirection => _NoiseLayerOneWindDirection_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerOneWindDirectionLocation, 4)) : default;
+        public Single NoiseLayerOneWindDirection => _NoiseLayerOneWindDirection_IsSet ? _data.Slice(_NoiseLayerOneWindDirectionLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerTwoWindDirection
         private int _NoiseLayerTwoWindDirectionLocation => _DNAMLocation!.Value + 0x68;
         private bool _NoiseLayerTwoWindDirection_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerTwoWindDirection => _NoiseLayerTwoWindDirection_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerTwoWindDirectionLocation, 4)) : default;
+        public Single NoiseLayerTwoWindDirection => _NoiseLayerTwoWindDirection_IsSet ? _data.Slice(_NoiseLayerTwoWindDirectionLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerThreeWindDirection
         private int _NoiseLayerThreeWindDirectionLocation => _DNAMLocation!.Value + 0x6C;
         private bool _NoiseLayerThreeWindDirection_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerThreeWindDirection => _NoiseLayerThreeWindDirection_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerThreeWindDirectionLocation, 4)) : default;
+        public Single NoiseLayerThreeWindDirection => _NoiseLayerThreeWindDirection_IsSet ? _data.Slice(_NoiseLayerThreeWindDirectionLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerOneWindSpeed
         private int _NoiseLayerOneWindSpeedLocation => _DNAMLocation!.Value + 0x70;
         private bool _NoiseLayerOneWindSpeed_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerOneWindSpeed => _NoiseLayerOneWindSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerOneWindSpeedLocation, 4)) : default;
+        public Single NoiseLayerOneWindSpeed => _NoiseLayerOneWindSpeed_IsSet ? _data.Slice(_NoiseLayerOneWindSpeedLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerTwoWindSpeed
         private int _NoiseLayerTwoWindSpeedLocation => _DNAMLocation!.Value + 0x74;
         private bool _NoiseLayerTwoWindSpeed_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerTwoWindSpeed => _NoiseLayerTwoWindSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerTwoWindSpeedLocation, 4)) : default;
+        public Single NoiseLayerTwoWindSpeed => _NoiseLayerTwoWindSpeed_IsSet ? _data.Slice(_NoiseLayerTwoWindSpeedLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerThreeWindSpeed
         private int _NoiseLayerThreeWindSpeedLocation => _DNAMLocation!.Value + 0x78;
         private bool _NoiseLayerThreeWindSpeed_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerThreeWindSpeed => _NoiseLayerThreeWindSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerThreeWindSpeedLocation, 4)) : default;
+        public Single NoiseLayerThreeWindSpeed => _NoiseLayerThreeWindSpeed_IsSet ? _data.Slice(_NoiseLayerThreeWindSpeedLocation, 4).Float() : default;
         #endregion
         #region Unknown5
         private int _Unknown5Location => _DNAMLocation!.Value + 0x7C;
@@ -8410,7 +6185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FogAboveWaterAmount
         private int _FogAboveWaterAmountLocation => _DNAMLocation!.Value + 0x84;
         private bool _FogAboveWaterAmount_IsSet => _DNAMLocation.HasValue;
-        public Single FogAboveWaterAmount => _FogAboveWaterAmount_IsSet ? SpanExt.GetFloat(_data.Slice(_FogAboveWaterAmountLocation, 4)) : default;
+        public Single FogAboveWaterAmount => _FogAboveWaterAmount_IsSet ? _data.Slice(_FogAboveWaterAmountLocation, 4).Float() : default;
         #endregion
         #region Unknown6
         private int _Unknown6Location => _DNAMLocation!.Value + 0x88;
@@ -8420,27 +6195,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FogUnderWaterAmount
         private int _FogUnderWaterAmountLocation => _DNAMLocation!.Value + 0x8C;
         private bool _FogUnderWaterAmount_IsSet => _DNAMLocation.HasValue;
-        public Single FogUnderWaterAmount => _FogUnderWaterAmount_IsSet ? SpanExt.GetFloat(_data.Slice(_FogUnderWaterAmountLocation, 4)) : default;
+        public Single FogUnderWaterAmount => _FogUnderWaterAmount_IsSet ? _data.Slice(_FogUnderWaterAmountLocation, 4).Float() : default;
         #endregion
         #region FogUnderWaterDistanceNearPlane
         private int _FogUnderWaterDistanceNearPlaneLocation => _DNAMLocation!.Value + 0x90;
         private bool _FogUnderWaterDistanceNearPlane_IsSet => _DNAMLocation.HasValue;
-        public Single FogUnderWaterDistanceNearPlane => _FogUnderWaterDistanceNearPlane_IsSet ? SpanExt.GetFloat(_data.Slice(_FogUnderWaterDistanceNearPlaneLocation, 4)) : default;
+        public Single FogUnderWaterDistanceNearPlane => _FogUnderWaterDistanceNearPlane_IsSet ? _data.Slice(_FogUnderWaterDistanceNearPlaneLocation, 4).Float() : default;
         #endregion
         #region FogUnderWaterDistanceFarPlane
         private int _FogUnderWaterDistanceFarPlaneLocation => _DNAMLocation!.Value + 0x94;
         private bool _FogUnderWaterDistanceFarPlane_IsSet => _DNAMLocation.HasValue;
-        public Single FogUnderWaterDistanceFarPlane => _FogUnderWaterDistanceFarPlane_IsSet ? SpanExt.GetFloat(_data.Slice(_FogUnderWaterDistanceFarPlaneLocation, 4)) : default;
+        public Single FogUnderWaterDistanceFarPlane => _FogUnderWaterDistanceFarPlane_IsSet ? _data.Slice(_FogUnderWaterDistanceFarPlaneLocation, 4).Float() : default;
         #endregion
         #region WaterRefractionMagnitude
         private int _WaterRefractionMagnitudeLocation => _DNAMLocation!.Value + 0x98;
         private bool _WaterRefractionMagnitude_IsSet => _DNAMLocation.HasValue;
-        public Single WaterRefractionMagnitude => _WaterRefractionMagnitude_IsSet ? SpanExt.GetFloat(_data.Slice(_WaterRefractionMagnitudeLocation, 4)) : default;
+        public Single WaterRefractionMagnitude => _WaterRefractionMagnitude_IsSet ? _data.Slice(_WaterRefractionMagnitudeLocation, 4).Float() : default;
         #endregion
         #region SpecularPower
         private int _SpecularPowerLocation => _DNAMLocation!.Value + 0x9C;
         private bool _SpecularPower_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularPower => _SpecularPower_IsSet ? SpanExt.GetFloat(_data.Slice(_SpecularPowerLocation, 4)) : default;
+        public Single SpecularPower => _SpecularPower_IsSet ? _data.Slice(_SpecularPowerLocation, 4).Float() : default;
         #endregion
         #region Unknown7
         private int _Unknown7Location => _DNAMLocation!.Value + 0xA0;
@@ -8450,82 +6225,88 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region SpecularRadius
         private int _SpecularRadiusLocation => _DNAMLocation!.Value + 0xA4;
         private bool _SpecularRadius_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularRadius => _SpecularRadius_IsSet ? SpanExt.GetFloat(_data.Slice(_SpecularRadiusLocation, 4)) : default;
+        public Single SpecularRadius => _SpecularRadius_IsSet ? _data.Slice(_SpecularRadiusLocation, 4).Float() : default;
         #endregion
         #region SpecularBrightness
         private int _SpecularBrightnessLocation => _DNAMLocation!.Value + 0xA8;
         private bool _SpecularBrightness_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularBrightness => _SpecularBrightness_IsSet ? SpanExt.GetFloat(_data.Slice(_SpecularBrightnessLocation, 4)) : default;
+        public Single SpecularBrightness => _SpecularBrightness_IsSet ? _data.Slice(_SpecularBrightnessLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerOneUvScale
         private int _NoiseLayerOneUvScaleLocation => _DNAMLocation!.Value + 0xAC;
         private bool _NoiseLayerOneUvScale_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerOneUvScale => _NoiseLayerOneUvScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerOneUvScaleLocation, 4)) : default;
+        public Single NoiseLayerOneUvScale => _NoiseLayerOneUvScale_IsSet ? _data.Slice(_NoiseLayerOneUvScaleLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerTwoUvScale
         private int _NoiseLayerTwoUvScaleLocation => _DNAMLocation!.Value + 0xB0;
         private bool _NoiseLayerTwoUvScale_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerTwoUvScale => _NoiseLayerTwoUvScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerTwoUvScaleLocation, 4)) : default;
+        public Single NoiseLayerTwoUvScale => _NoiseLayerTwoUvScale_IsSet ? _data.Slice(_NoiseLayerTwoUvScaleLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerThreeUvScale
         private int _NoiseLayerThreeUvScaleLocation => _DNAMLocation!.Value + 0xB4;
         private bool _NoiseLayerThreeUvScale_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerThreeUvScale => _NoiseLayerThreeUvScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerThreeUvScaleLocation, 4)) : default;
+        public Single NoiseLayerThreeUvScale => _NoiseLayerThreeUvScale_IsSet ? _data.Slice(_NoiseLayerThreeUvScaleLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerOneAmplitudeScale
         private int _NoiseLayerOneAmplitudeScaleLocation => _DNAMLocation!.Value + 0xB8;
         private bool _NoiseLayerOneAmplitudeScale_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerOneAmplitudeScale => _NoiseLayerOneAmplitudeScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerOneAmplitudeScaleLocation, 4)) : default;
+        public Single NoiseLayerOneAmplitudeScale => _NoiseLayerOneAmplitudeScale_IsSet ? _data.Slice(_NoiseLayerOneAmplitudeScaleLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerTwoAmplitudeScale
         private int _NoiseLayerTwoAmplitudeScaleLocation => _DNAMLocation!.Value + 0xBC;
         private bool _NoiseLayerTwoAmplitudeScale_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerTwoAmplitudeScale => _NoiseLayerTwoAmplitudeScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerTwoAmplitudeScaleLocation, 4)) : default;
+        public Single NoiseLayerTwoAmplitudeScale => _NoiseLayerTwoAmplitudeScale_IsSet ? _data.Slice(_NoiseLayerTwoAmplitudeScaleLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerThreeAmplitudeScale
         private int _NoiseLayerThreeAmplitudeScaleLocation => _DNAMLocation!.Value + 0xC0;
         private bool _NoiseLayerThreeAmplitudeScale_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerThreeAmplitudeScale => _NoiseLayerThreeAmplitudeScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseLayerThreeAmplitudeScaleLocation, 4)) : default;
+        public Single NoiseLayerThreeAmplitudeScale => _NoiseLayerThreeAmplitudeScale_IsSet ? _data.Slice(_NoiseLayerThreeAmplitudeScaleLocation, 4).Float() : default;
         #endregion
         #region WaterReflectionMagnitude
         private int _WaterReflectionMagnitudeLocation => _DNAMLocation!.Value + 0xC4;
         private bool _WaterReflectionMagnitude_IsSet => _DNAMLocation.HasValue;
-        public Single WaterReflectionMagnitude => _WaterReflectionMagnitude_IsSet ? SpanExt.GetFloat(_data.Slice(_WaterReflectionMagnitudeLocation, 4)) : default;
+        public Single WaterReflectionMagnitude => _WaterReflectionMagnitude_IsSet ? _data.Slice(_WaterReflectionMagnitudeLocation, 4).Float() : default;
         #endregion
         #region SpecularSunSparkleMagnitude
         private int _SpecularSunSparkleMagnitudeLocation => _DNAMLocation!.Value + 0xC8;
         private bool _SpecularSunSparkleMagnitude_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunSparkleMagnitude => _SpecularSunSparkleMagnitude_IsSet ? SpanExt.GetFloat(_data.Slice(_SpecularSunSparkleMagnitudeLocation, 4)) : default;
+        public Single SpecularSunSparkleMagnitude => _SpecularSunSparkleMagnitude_IsSet ? _data.Slice(_SpecularSunSparkleMagnitudeLocation, 4).Float() : default;
         #endregion
         #region SpecularSunSpecularMagnitude
         private int _SpecularSunSpecularMagnitudeLocation => _DNAMLocation!.Value + 0xCC;
         private bool _SpecularSunSpecularMagnitude_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunSpecularMagnitude => _SpecularSunSpecularMagnitude_IsSet ? SpanExt.GetFloat(_data.Slice(_SpecularSunSpecularMagnitudeLocation, 4)) : default;
+        public Single SpecularSunSpecularMagnitude => _SpecularSunSpecularMagnitude_IsSet ? _data.Slice(_SpecularSunSpecularMagnitudeLocation, 4).Float() : default;
         #endregion
         #region DepthReflections
         private int _DepthReflectionsLocation => _DNAMLocation!.Value + 0xD0;
         private bool _DepthReflections_IsSet => _DNAMLocation.HasValue;
-        public Single DepthReflections => _DepthReflections_IsSet ? SpanExt.GetFloat(_data.Slice(_DepthReflectionsLocation, 4)) : default;
+        public Single DepthReflections => _DepthReflections_IsSet ? _data.Slice(_DepthReflectionsLocation, 4).Float() : default;
         #endregion
         #region DepthRefraction
         private int _DepthRefractionLocation => _DNAMLocation!.Value + 0xD4;
         private bool _DepthRefraction_IsSet => _DNAMLocation.HasValue;
-        public Single DepthRefraction => _DepthRefraction_IsSet ? SpanExt.GetFloat(_data.Slice(_DepthRefractionLocation, 4)) : default;
+        public Single DepthRefraction => _DepthRefraction_IsSet ? _data.Slice(_DepthRefractionLocation, 4).Float() : default;
         #endregion
         #region DepthNormals
         private int _DepthNormalsLocation => _DNAMLocation!.Value + 0xD8;
         private bool _DepthNormals_IsSet => _DNAMLocation.HasValue;
-        public Single DepthNormals => _DepthNormals_IsSet ? SpanExt.GetFloat(_data.Slice(_DepthNormalsLocation, 4)) : default;
+        public Single DepthNormals => _DepthNormals_IsSet ? _data.Slice(_DepthNormalsLocation, 4).Float() : default;
         #endregion
         #region DepthSpecularLighting
         private int _DepthSpecularLightingLocation => _DNAMLocation!.Value + 0xDC;
         private bool _DepthSpecularLighting_IsSet => _DNAMLocation.HasValue;
-        public Single DepthSpecularLighting => _DepthSpecularLighting_IsSet ? SpanExt.GetFloat(_data.Slice(_DepthSpecularLightingLocation, 4)) : default;
+        public Single DepthSpecularLighting => _DepthSpecularLighting_IsSet ? _data.Slice(_DepthSpecularLightingLocation, 4).Float() : default;
         #endregion
         #region SpecularSunSparklePower
         private int _SpecularSunSparklePowerLocation => _DNAMLocation!.Value + 0xE0;
         private bool _SpecularSunSparklePower_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunSparklePower => _SpecularSunSparklePower_IsSet ? SpanExt.GetFloat(_data.Slice(_SpecularSunSparklePowerLocation, 4)) : default;
+        public Single SpecularSunSparklePower => _SpecularSunSparklePower_IsSet ? _data.Slice(_SpecularSunSparklePowerLocation, 4).Float() : default;
+        #endregion
+        #region NoiseFlowmapScale
+        private int _NoiseFlowmapScaleLocation => _DNAMLocation!.Value + 0xE4;
+        private bool _NoiseFlowmapScale_IsSet => _DNAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 44;
+        public Single NoiseFlowmapScale => _NoiseFlowmapScale_IsSet ? _data.Slice(_NoiseFlowmapScaleLocation, 4).Float() : default;
+        int NoiseFlowmapScaleVersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0;
         #endregion
         #region GNAM
         private int? _GNAMLocation;
@@ -8550,6 +6331,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region NoiseLayerThreeTexture
         private int? _NoiseLayerThreeTextureLocation;
         public String? NoiseLayerThreeTexture => _NoiseLayerThreeTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerThreeTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
+        #region FlowNormalsNoiseTexture
+        private int? _FlowNormalsNoiseTextureLocation;
+        public String? FlowNormalsNoiseTexture => _FlowNormalsNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FlowNormalsNoiseTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -8576,8 +6361,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new WaterBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -8603,12 +6389,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -8617,96 +6404,101 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Name);
+                    return (int)Water_FieldIndex.Name;
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    this.UnusedNoisemaps = BinaryOverlayList<String>.FactoryByArray(
+                    this.UnusedNoisemaps = BinaryOverlayList.FactoryByArray<String>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordMemoryFrame(s).Content),
+                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordFrame(s).Content),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: false,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.UnusedNoisemaps);
+                    return (int)Water_FieldIndex.UnusedNoisemaps;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     _OpacityLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
+                    return (int)Water_FieldIndex.Opacity;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
+                    return (int)Water_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _MNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.MNAM);
+                    return (int)Water_FieldIndex.MNAM;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     _MaterialLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Material);
+                    return (int)Water_FieldIndex.Material;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _OpenSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.OpenSound);
+                    return (int)Water_FieldIndex.OpenSound;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     _SpellLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Spell);
+                    return (int)Water_FieldIndex.Spell;
                 }
                 case RecordTypeInts.INAM:
                 {
                     _ImageSpaceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.ImageSpace);
+                    return (int)Water_FieldIndex.ImageSpace;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DamagePerSecondLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.DamagePerSecond);
+                    return (int)Water_FieldIndex.DamagePerSecond;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.SpecularSunSparklePower);
+                    return (int)Water_FieldIndex.NoiseFlowmapScale;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     _GNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.GNAM);
+                    return (int)Water_FieldIndex.GNAM;
                 }
                 case RecordTypeInts.NAM0:
                 {
                     _LinearVelocityLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.LinearVelocity);
+                    return (int)Water_FieldIndex.LinearVelocity;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     _AngularVelocityLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.AngularVelocity);
+                    return (int)Water_FieldIndex.AngularVelocity;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     _NoiseLayerOneTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerOneTexture);
+                    return (int)Water_FieldIndex.NoiseLayerOneTexture;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     _NoiseLayerTwoTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerTwoTexture);
+                    return (int)Water_FieldIndex.NoiseLayerTwoTexture;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     _NoiseLayerThreeTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerThreeTexture);
+                    return (int)Water_FieldIndex.NoiseLayerThreeTexture;
+                }
+                case RecordTypeInts.NAM5:
+                {
+                    _FlowNormalsNoiseTextureLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.FlowNormalsNoiseTexture;
                 }
                 default:
                     return base.FillRecordType(
@@ -8714,7 +6506,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

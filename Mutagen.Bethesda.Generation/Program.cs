@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "ch (var item in GroupCommon<T>.Instance.EnumerateMajorRecords<TMajor>(ob";
+            string testString = "utagen.Bethesda.Binary.EnumBinaryTranslation<Static.Flag>.Instance.Writ";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -34,7 +34,6 @@ namespace Mutagen.Bethesda.Generation
             AttachDebugInspector();
 #endif
             GenerateRecords();
-            GenerateTester();
         }
  
         static bool ShouldRun(string key)
@@ -52,20 +51,8 @@ namespace Mutagen.Bethesda.Generation
                 ToStringDefault = false,
             };
             gen.AddTypicalTypeAssociations();
-            var xmlGen = new MutagenXmlModule(gen);
-            gen.Add(xmlGen);
             gen.Add(gen.MaskModule);
             gen.Namespaces.Add("Mutagen.Bethesda.Internals");
-            xmlGen.ShouldGenerateXSD = false;
-            xmlGen.AddTypeAssociation<FormLinkType>(new FormLinkXmlTranslationGeneration());
-            xmlGen.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
-            xmlGen.AddTypeAssociation<FormKeyType>(new PrimitiveXmlTranslationGeneration<FormKey>());
-            xmlGen.AddTypeAssociation<ModKeyType>(new PrimitiveXmlTranslationGeneration<ModKey>());
-            xmlGen.AddTypeAssociation<RecordTypeType>(new PrimitiveXmlTranslationGeneration<RecordType>());
-            xmlGen.AddTypeAssociation<DataType>(new DataTypeXmlTranslationGeneration());
-            xmlGen.AddTypeAssociation<GenderedType>(new GenderedTypeXmlTranslationGeneration());
-            xmlGen.AddTypeAssociation<Loqui.Generation.StringType>(new StringXmlTranslationGeneration(), overrideExisting: true);
-            xmlGen.AddTypeAssociation<Mutagen.Bethesda.Generation.StringType>(new StringXmlTranslationGeneration());
             gen.MaskModule.AddTypeAssociation<FormLinkType>(MaskModule.TypicalField);
             gen.MaskModule.AddTypeAssociation<GenderedType>(new GenderedItemMaskGeneration());
             gen.GenerationModules.Add(new MutagenModule());
@@ -79,10 +66,10 @@ namespace Mutagen.Bethesda.Generation
             gen.AddTypeAssociation<DataType>("Data");
             gen.AddTypeAssociation<ZeroType>("Zero");
             gen.AddTypeAssociation<CustomLogic>("CustomLogic");
-            gen.AddTypeAssociation<TransferType>("Transfer");
             gen.AddTypeAssociation<GroupType>("Group");
             gen.AddTypeAssociation<GenderedType>("Gendered");
             gen.AddTypeAssociation<BreakType>("Break");
+            gen.AddTypeAssociation<MarkerType>("Marker");
             gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, Mutagen.Bethesda.Generation.EnumType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.StringType, Mutagen.Bethesda.Generation.StringType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.LoquiType, Mutagen.Bethesda.Generation.MutagenLoquiType>();
@@ -144,33 +131,6 @@ namespace Mutagen.Bethesda.Generation
                 proto.AddProjectToModify(
                     new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.Skyrim.csproj")));
             }
-
-            gen.Generate().Wait();
-        }
-
-        static void GenerateTester()
-        {
-            if (!ShouldRun("Test")) return;
-            LoquiGenerator gen = new LoquiGenerator()
-            {
-                NotifyingDefault = NotifyingType.None,
-                HasBeenSetDefault = false
-            };
-            var xmlModule = new XmlTranslationModule(gen)
-            {
-                ShouldGenerateXSD = true
-            };
-            gen.Add(xmlModule);
-            var testerProto = gen.AddProtocol(
-                new ProtocolGeneration(
-                    gen,
-                    new ProtocolKey("Tests"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda.Tests/Settings"))
-                {
-                    DefaultNamespace = "Mutagen.Bethesda.Tests",
-                });
-            testerProto.AddProjectToModify(
-                new FileInfo("../../../../Mutagen.Bethesda.Tests/Mutagen.Bethesda.Tests.csproj"));
 
             gen.Generate().Wait();
         }

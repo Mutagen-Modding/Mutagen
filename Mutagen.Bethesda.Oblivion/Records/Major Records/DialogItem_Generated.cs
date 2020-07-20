@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -72,8 +66,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<DialogTopic>> _Topics = new ExtendedList<IFormLink<DialogTopic>>();
-        public ExtendedList<IFormLink<DialogTopic>> Topics
+        private IExtendedList<IFormLink<DialogTopic>> _Topics = new ExtendedList<IFormLink<DialogTopic>>();
+        public IExtendedList<IFormLink<DialogTopic>> Topics
         {
             get => this._Topics;
             protected set => this._Topics = value;
@@ -86,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<DialogResponse> _Responses = new ExtendedList<DialogResponse>();
-        public ExtendedList<DialogResponse> Responses
+        private IExtendedList<DialogResponse> _Responses = new ExtendedList<DialogResponse>();
+        public IExtendedList<DialogResponse> Responses
         {
             get => this._Responses;
             protected set => this._Responses = value;
@@ -100,8 +94,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -114,8 +108,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Choices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<DialogTopic>> _Choices = new ExtendedList<IFormLink<DialogTopic>>();
-        public ExtendedList<IFormLink<DialogTopic>> Choices
+        private IExtendedList<IFormLink<DialogTopic>> _Choices = new ExtendedList<IFormLink<DialogTopic>>();
+        public IExtendedList<IFormLink<DialogTopic>> Choices
         {
             get => this._Choices;
             protected set => this._Choices = value;
@@ -128,8 +122,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LinkFrom
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<DialogTopic>> _LinkFrom = new ExtendedList<IFormLink<DialogTopic>>();
-        public ExtendedList<IFormLink<DialogTopic>> LinkFrom
+        private IExtendedList<IFormLink<DialogTopic>> _LinkFrom = new ExtendedList<IFormLink<DialogTopic>>();
+        public IExtendedList<IFormLink<DialogTopic>> LinkFrom
         {
             get => this._LinkFrom;
             protected set => this._LinkFrom = value;
@@ -177,135 +171,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => DialogItemXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((DialogItemXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new DialogItem CreateFromXml(
-            XElement node,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static DialogItem CreateFromXml(
-            XElement node,
-            out DialogItem.ErrorMask errorMask,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = DialogItem.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static DialogItem CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new DialogItem();
-            ((DialogItemSetterCommon)((IDialogItemGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static DialogItem CreateFromXml(
-            string path,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static DialogItem CreateFromXml(
-            string path,
-            out DialogItem.ErrorMask errorMask,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static DialogItem CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static DialogItem CreateFromXml(
-            Stream stream,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static DialogItem CreateFromXml(
-            Stream stream,
-            out DialogItem.ErrorMask errorMask,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static DialogItem CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
@@ -330,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem OblivionMajorRecordFlags,
                 TItem Data,
@@ -345,7 +210,7 @@ namespace Mutagen.Bethesda.Oblivion
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
@@ -1187,7 +1052,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = DialogItem_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = DialogItem_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => DialogItemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1285,11 +1150,11 @@ namespace Mutagen.Bethesda.Oblivion
         new DialogItemData? Data { get; set; }
         new FormLinkNullable<Quest> Quest { get; set; }
         new FormLinkNullable<DialogItem> PreviousTopic { get; set; }
-        new ExtendedList<IFormLink<DialogTopic>> Topics { get; }
-        new ExtendedList<DialogResponse> Responses { get; }
-        new ExtendedList<Condition> Conditions { get; }
-        new ExtendedList<IFormLink<DialogTopic>> Choices { get; }
-        new ExtendedList<IFormLink<DialogTopic>> LinkFrom { get; }
+        new IExtendedList<IFormLink<DialogTopic>> Topics { get; }
+        new IExtendedList<DialogResponse> Responses { get; }
+        new IExtendedList<Condition> Conditions { get; }
+        new IExtendedList<IFormLink<DialogTopic>> Choices { get; }
+        new IExtendedList<IFormLink<DialogTopic>> LinkFrom { get; }
         new ScriptFields Script { get; }
     }
 
@@ -1304,11 +1169,10 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IDialogItemGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IDialogItemGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => DialogItem_Registration.Instance;
+        static new ILoquiRegistration Registration => DialogItem_Registration.Instance;
         IDialogItemDataGetter? Data { get; }
         IFormLinkNullable<IQuestGetter> Quest { get; }
         IFormLinkNullable<IDialogItemGetter> PreviousTopic { get; }
@@ -1452,131 +1316,6 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IDialogItemInternal item,
-            XElement node,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IDialogItemInternal item,
-            XElement node,
-            out DialogItem.ErrorMask errorMask,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = DialogItem.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogItemInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((DialogItemSetterCommon)((IDialogItemGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogItemInternal item,
-            string path,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogItemInternal item,
-            string path,
-            out DialogItem.ErrorMask errorMask,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogItemInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IDialogItemInternal item,
-            Stream stream,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogItemInternal item,
-            Stream stream,
-            out DialogItem.ErrorMask errorMask,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogItemInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            DialogItem.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1614,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         OblivionMajorRecordFlags = 4,
         Data = 5,
@@ -1842,15 +1581,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.PreviousTopic:
                     return typeof(FormLinkNullable<DialogItem>);
                 case DialogItem_FieldIndex.Topics:
-                    return typeof(ExtendedList<IFormLink<DialogTopic>>);
+                    return typeof(IExtendedList<IFormLink<DialogTopic>>);
                 case DialogItem_FieldIndex.Responses:
-                    return typeof(ExtendedList<DialogResponse>);
+                    return typeof(IExtendedList<DialogResponse>);
                 case DialogItem_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case DialogItem_FieldIndex.Choices:
-                    return typeof(ExtendedList<IFormLink<DialogTopic>>);
+                    return typeof(IExtendedList<IFormLink<DialogTopic>>);
                 case DialogItem_FieldIndex.LinkFrom:
-                    return typeof(ExtendedList<IFormLink<DialogTopic>>);
+                    return typeof(IExtendedList<IFormLink<DialogTopic>>);
                 case DialogItem_FieldIndex.Script:
                     return typeof(ScriptFields);
                 default:
@@ -1858,7 +1597,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(DialogItemXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.INFO;
         public static readonly Type BinaryWriteTranslation = typeof(DialogItemBinaryWriteTranslation);
         #region Interface
@@ -1922,105 +1660,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IDialogItemInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IDialogItemInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Script":
-                    errorMask?.PushIndex((int)DialogItem_FieldIndex.Script);
-                    try
-                    {
-                        item.Script.CopyInFromXml(
-                            node: node,
-                            translationMask: translationMask,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    OblivionMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IDialogItemInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    DialogItemXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            IOblivionMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (DialogItem)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (DialogItem)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2318,7 +1957,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (DialogItem_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
                     return (DialogItem_FieldIndex)((int)index);
-                case OblivionMajorRecord_FieldIndex.Version:
+                case OblivionMajorRecord_FieldIndex.VersionControl:
                     return (DialogItem_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
                     return (DialogItem_FieldIndex)((int)index);
@@ -2337,7 +1976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (DialogItem_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (DialogItem_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (DialogItem_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (DialogItem_FieldIndex)((int)index);
@@ -2789,544 +2428,6 @@ namespace Mutagen.Bethesda.Oblivion
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
-{
-    public partial class DialogItemXmlWriteTranslation :
-        OblivionMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static DialogItemXmlWriteTranslation Instance = new DialogItemXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IDialogItemGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            OblivionMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Data) ?? true))
-            {
-                if (item.Data.TryGet(out var DataItem))
-                {
-                    ((DialogItemDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                        item: DataItem,
-                        node: node,
-                        name: nameof(item.Data),
-                        fieldIndex: (int)DialogItem_FieldIndex.Data,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Data));
-                }
-            }
-            if ((item.Quest.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Quest) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Quest),
-                    item: item.Quest.FormKey,
-                    fieldIndex: (int)DialogItem_FieldIndex.Quest,
-                    errorMask: errorMask);
-            }
-            if ((item.PreviousTopic.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.PreviousTopic) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PreviousTopic),
-                    item: item.PreviousTopic.FormKey,
-                    fieldIndex: (int)DialogItem_FieldIndex.PreviousTopic,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Topics) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IDialogTopicGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Topics),
-                    item: item.Topics,
-                    fieldIndex: (int)DialogItem_FieldIndex.Topics,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Topics),
-                    transl: (XElement subNode, IFormLink<IDialogTopicGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Responses) ?? true))
-            {
-                ListXmlTranslation<IDialogResponseGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Responses),
-                    item: item.Responses,
-                    fieldIndex: (int)DialogItem_FieldIndex.Responses,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Responses),
-                    transl: (XElement subNode, IDialogResponseGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((DialogResponseXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Conditions) ?? true))
-            {
-                ListXmlTranslation<IConditionGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Conditions),
-                    item: item.Conditions,
-                    fieldIndex: (int)DialogItem_FieldIndex.Conditions,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Conditions),
-                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Choices) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IDialogTopicGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Choices),
-                    item: item.Choices,
-                    fieldIndex: (int)DialogItem_FieldIndex.Choices,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Choices),
-                    transl: (XElement subNode, IFormLink<IDialogTopicGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.LinkFrom) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IDialogTopicGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.LinkFrom),
-                    item: item.LinkFrom,
-                    fieldIndex: (int)DialogItem_FieldIndex.LinkFrom,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.LinkFrom),
-                    transl: (XElement subNode, IFormLink<IDialogTopicGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Script) ?? true))
-            {
-                var ScriptItem = item.Script;
-                ((ScriptFieldsXmlWriteTranslation)((IXmlItem)ScriptItem).XmlWriteTranslator).Write(
-                    item: ScriptItem,
-                    node: node,
-                    name: nameof(item.Script),
-                    fieldIndex: (int)DialogItem_FieldIndex.Script,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Script));
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IDialogItemGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.DialogItem");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.DialogItem");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IDialogItemGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IOblivionMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IDialogItemGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IDialogItemGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class DialogItemXmlCreateTranslation : OblivionMajorRecordXmlCreateTranslation
-    {
-        public new readonly static DialogItemXmlCreateTranslation Instance = new DialogItemXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IDialogItemInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    DialogItemXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IDialogItemInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "Data":
-                    errorMask?.PushIndex((int)DialogItem_FieldIndex.Data);
-                    try
-                    {
-                        item.Data = LoquiXmlTranslation<DialogItemData>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)DialogItem_FieldIndex.Data));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Quest":
-                    errorMask?.PushIndex((int)DialogItem_FieldIndex.Quest);
-                    try
-                    {
-                        item.Quest = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PreviousTopic":
-                    errorMask?.PushIndex((int)DialogItem_FieldIndex.PreviousTopic);
-                    try
-                    {
-                        item.PreviousTopic = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Topics":
-                    errorMask?.PushIndex((int)DialogItem_FieldIndex.Topics);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<DialogTopic>>.Instance.Parse(
-                            node: node,
-                            enumer: out var TopicsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Topics.SetTo(TopicsItem);
-                        }
-                        else
-                        {
-                            item.Topics.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Responses":
-                    errorMask?.PushIndex((int)DialogItem_FieldIndex.Responses);
-                    try
-                    {
-                        if (ListXmlTranslation<DialogResponse>.Instance.Parse(
-                            node: node,
-                            enumer: out var ResponsesItem,
-                            transl: LoquiXmlTranslation<DialogResponse>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Responses.SetTo(ResponsesItem);
-                        }
-                        else
-                        {
-                            item.Responses.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conditions":
-                    errorMask?.PushIndex((int)DialogItem_FieldIndex.Conditions);
-                    try
-                    {
-                        if (ListXmlTranslation<Condition>.Instance.Parse(
-                            node: node,
-                            enumer: out var ConditionsItem,
-                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Conditions.SetTo(ConditionsItem);
-                        }
-                        else
-                        {
-                            item.Conditions.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Choices":
-                    errorMask?.PushIndex((int)DialogItem_FieldIndex.Choices);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<DialogTopic>>.Instance.Parse(
-                            node: node,
-                            enumer: out var ChoicesItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Choices.SetTo(ChoicesItem);
-                        }
-                        else
-                        {
-                            item.Choices.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LinkFrom":
-                    errorMask?.PushIndex((int)DialogItem_FieldIndex.LinkFrom);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<DialogTopic>>.Instance.Parse(
-                            node: node,
-                            enumer: out var LinkFromItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.LinkFrom.SetTo(LinkFromItem);
-                        }
-                        else
-                        {
-                            item.LinkFrom.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    OblivionMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Oblivion
-{
-    #region Xml Write Mixins
-    public static class DialogItemXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IDialogItemGetter item,
-            XElement node,
-            out DialogItem.ErrorMask errorMask,
-            DialogItem.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((DialogItemXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = DialogItem.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IDialogItemGetter item,
-            string path,
-            out DialogItem.ErrorMask errorMask,
-            DialogItem.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IDialogItemGetter item,
-            Stream stream,
-            out DialogItem.ErrorMask errorMask,
-            DialogItem.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -3432,10 +2533,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -3488,9 +2591,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IDialogItemInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3501,7 +2605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.DialogItemData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Data);
+                    return (int)DialogItem_FieldIndex.Data;
                 }
                 case RecordTypeInts.QSTI:
                 {
@@ -3509,7 +2613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
+                    return (int)DialogItem_FieldIndex.Quest;
                 }
                 case RecordTypeInts.PNAM:
                 {
@@ -3517,7 +2621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.PreviousTopic = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
+                    return (int)DialogItem_FieldIndex.PreviousTopic;
                 }
                 case RecordTypeInts.NAME:
                 {
@@ -3526,7 +2630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.NAME),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
+                    return (int)DialogItem_FieldIndex.Topics;
                 }
                 case RecordTypeInts.TRDT:
                 case RecordTypeInts.NAM1:
@@ -3538,7 +2642,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: DialogResponse_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: DialogResponse.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
+                    return (int)DialogItem_FieldIndex.Responses;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
@@ -3549,7 +2653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
+                    return (int)DialogItem_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.TCLT:
                 {
@@ -3558,7 +2662,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TCLT),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
+                    return (int)DialogItem_FieldIndex.Choices;
                 }
                 case RecordTypeInts.TCLF:
                 {
@@ -3567,7 +2671,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TCLF),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
+                    return (int)DialogItem_FieldIndex.LinkFrom;
                 }
                 case RecordTypeInts.SCHD:
                 case RecordTypeInts.SCHR:
@@ -3575,12 +2679,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script.CopyInFromBinary(
                         frame: frame,
                         recordTypeConverter: null);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Script);
+                    return (int)DialogItem_FieldIndex.Script;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -3627,21 +2732,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogItemCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogItemCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => DialogItemXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((DialogItemXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3661,12 +2751,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Quest
         private int? _QuestLocation;
         public bool Quest_IsSet => _QuestLocation.HasValue;
-        public IFormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region PreviousTopic
         private int? _PreviousTopicLocation;
         public bool PreviousTopic_IsSet => _PreviousTopicLocation.HasValue;
-        public IFormLinkNullable<IDialogItemGetter> PreviousTopic => _PreviousTopicLocation.HasValue ? new FormLinkNullable<IDialogItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PreviousTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogItemGetter>.Null;
+        public IFormLinkNullable<IDialogItemGetter> PreviousTopic => _PreviousTopicLocation.HasValue ? new FormLinkNullable<IDialogItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviousTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogItemGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLink<IDialogTopicGetter>> Topics { get; private set; } = ListExt.Empty<IFormLink<IDialogTopicGetter>>();
         public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = ListExt.Empty<DialogResponseBinaryOverlay>();
@@ -3702,8 +2792,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new DialogItemBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -3729,12 +2820,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -3743,21 +2835,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Data);
+                    return (int)DialogItem_FieldIndex.Data;
                 }
                 case RecordTypeInts.QSTI:
                 {
                     _QuestLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
+                    return (int)DialogItem_FieldIndex.Quest;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     _PreviousTopicLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
+                    return (int)DialogItem_FieldIndex.PreviousTopic;
                 }
                 case RecordTypeInts.NAME:
                 {
-                    this.Topics = BinaryOverlayList<IFormLink<IDialogTopicGetter>>.FactoryByArray(
+                    this.Topics = BinaryOverlayList.FactoryByArray<IFormLink<IDialogTopicGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IDialogTopicGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -3767,7 +2859,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
+                    return (int)DialogItem_FieldIndex.Topics;
                 }
                 case RecordTypeInts.TRDT:
                 case RecordTypeInts.NAM1:
@@ -3778,12 +2870,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: DialogResponse_Registration.TriggeringRecordTypes,
                         factory:  DialogResponseBinaryOverlay.DialogResponseFactory);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
+                    return (int)DialogItem_FieldIndex.Responses;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
                 {
-                    this.Conditions = BinaryOverlayList<ConditionBinaryOverlay>.FactoryByArray(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -3793,11 +2885,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
+                    return (int)DialogItem_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.TCLT:
                 {
-                    this.Choices = BinaryOverlayList<IFormLink<IDialogTopicGetter>>.FactoryByArray(
+                    this.Choices = BinaryOverlayList.FactoryByArray<IFormLink<IDialogTopicGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IDialogTopicGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -3807,11 +2899,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
+                    return (int)DialogItem_FieldIndex.Choices;
                 }
                 case RecordTypeInts.TCLF:
                 {
-                    this.LinkFrom = BinaryOverlayList<IFormLink<IDialogTopicGetter>>.FactoryByArray(
+                    this.LinkFrom = BinaryOverlayList.FactoryByArray<IFormLink<IDialogTopicGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IDialogTopicGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -3821,7 +2913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
+                    return (int)DialogItem_FieldIndex.LinkFrom;
                 }
                 case RecordTypeInts.SCHD:
                 case RecordTypeInts.SCHR:
@@ -3830,7 +2922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Script);
+                    return (int)DialogItem_FieldIndex.Script;
                 }
                 default:
                     return base.FillRecordType(
@@ -3838,7 +2930,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

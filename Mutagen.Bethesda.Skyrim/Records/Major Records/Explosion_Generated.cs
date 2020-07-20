@@ -18,14 +18,8 @@ using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -208,135 +202,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ExplosionXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ExplosionXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Explosion CreateFromXml(
-            XElement node,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Explosion CreateFromXml(
-            XElement node,
-            out Explosion.ErrorMask errorMask,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Explosion.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Explosion CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Explosion();
-            ((ExplosionSetterCommon)((IExplosionGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Explosion CreateFromXml(
-            string path,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Explosion CreateFromXml(
-            string path,
-            out Explosion.ErrorMask errorMask,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Explosion CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Explosion CreateFromXml(
-            Stream stream,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Explosion CreateFromXml(
-            Stream stream,
-            out Explosion.ErrorMask errorMask,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Explosion CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -372,7 +237,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -399,7 +264,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -1165,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Explosion_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Explosion_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1303,11 +1168,10 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IObjectBoundedGetter,
         ILoquiObject<IExplosionGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Explosion_Registration.Instance;
+        static new ILoquiRegistration Registration => Explosion_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
         TranslatedString? Name { get; }
@@ -1462,131 +1326,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IExplosionInternal item,
-            XElement node,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IExplosionInternal item,
-            XElement node,
-            out Explosion.ErrorMask errorMask,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Explosion.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IExplosionInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((ExplosionSetterCommon)((IExplosionGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IExplosionInternal item,
-            string path,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IExplosionInternal item,
-            string path,
-            out Explosion.ErrorMask errorMask,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IExplosionInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IExplosionInternal item,
-            Stream stream,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IExplosionInternal item,
-            Stream stream,
-            out Explosion.ErrorMask errorMask,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IExplosionInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Explosion.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -1624,7 +1363,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1998,7 +1737,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ExplosionXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.EXPL;
         public static readonly Type BinaryWriteTranslation = typeof(ExplosionBinaryWriteTranslation);
         #region Interface
@@ -2074,89 +1812,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IExplosionInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IExplosionInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IExplosionInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                item.DATADataTypeState |= Explosion.DATADataType.Break0;
-                item.DATADataTypeState |= Explosion.DATADataType.Break1;
-                item.DATADataTypeState |= Explosion.DATADataType.Break2;
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    ExplosionXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Explosion)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Explosion)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2443,7 +2098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Explosion_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Explosion_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Explosion_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Explosion_FieldIndex)((int)index);
@@ -2464,7 +2119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Explosion_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Explosion_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Explosion_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Explosion_FieldIndex)((int)index);
@@ -2928,784 +2583,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class ExplosionXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static ExplosionXmlWriteTranslation Instance = new ExplosionXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IExplosionGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((item.VirtualMachineAdapter != null)
-                && (translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.VirtualMachineAdapter) ?? true))
-            {
-                if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
-                {
-                    ((VirtualMachineAdapterXmlWriteTranslation)((IXmlItem)VirtualMachineAdapterItem).XmlWriteTranslator).Write(
-                        item: VirtualMachineAdapterItem,
-                        node: node,
-                        name: nameof(item.VirtualMachineAdapter),
-                        fieldIndex: (int)Explosion_FieldIndex.VirtualMachineAdapter,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Explosion_FieldIndex.VirtualMachineAdapter));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectBounds) ?? true))
-            {
-                var ObjectBoundsItem = item.ObjectBounds;
-                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    node: node,
-                    name: nameof(item.ObjectBounds),
-                    fieldIndex: (int)Explosion_FieldIndex.ObjectBounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Explosion_FieldIndex.ObjectBounds));
-            }
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.Name) ?? true))
-            {
-                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Explosion_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((item.Model != null)
-                && (translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.Model) ?? true))
-            {
-                if (item.Model.TryGet(out var ModelItem))
-                {
-                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
-                        item: ModelItem,
-                        node: node,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)Explosion_FieldIndex.Model,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Explosion_FieldIndex.Model));
-                }
-            }
-            if ((item.ObjectEffect.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectEffect) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ObjectEffect),
-                    item: item.ObjectEffect.FormKey,
-                    fieldIndex: (int)Explosion_FieldIndex.ObjectEffect,
-                    errorMask: errorMask);
-            }
-            if ((item.ImageSpaceModifier.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImageSpaceModifier) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ImageSpaceModifier),
-                    item: item.ImageSpaceModifier.FormKey,
-                    fieldIndex: (int)Explosion_FieldIndex.ImageSpaceModifier,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.Light) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Light),
-                    item: item.Light.FormKey,
-                    fieldIndex: (int)Explosion_FieldIndex.Light,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound1) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Sound1),
-                    item: item.Sound1.FormKey,
-                    fieldIndex: (int)Explosion_FieldIndex.Sound1,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound2) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Sound2),
-                    item: item.Sound2.FormKey,
-                    fieldIndex: (int)Explosion_FieldIndex.Sound2,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImpactDataSet) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ImpactDataSet),
-                    item: item.ImpactDataSet.FormKey,
-                    fieldIndex: (int)Explosion_FieldIndex.ImpactDataSet,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.PlacedObject) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PlacedObject),
-                    item: item.PlacedObject.FormKey,
-                    fieldIndex: (int)Explosion_FieldIndex.PlacedObject,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.SpawnProjectile) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpawnProjectile),
-                    item: item.SpawnProjectile.FormKey,
-                    fieldIndex: (int)Explosion_FieldIndex.SpawnProjectile,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.Force) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Force),
-                    item: item.Force,
-                    fieldIndex: (int)Explosion_FieldIndex.Force,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.Damage) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Damage),
-                    item: item.Damage,
-                    fieldIndex: (int)Explosion_FieldIndex.Damage,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.Radius) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Radius),
-                    item: item.Radius,
-                    fieldIndex: (int)Explosion_FieldIndex.Radius,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.ISRadius) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ISRadius),
-                    item: item.ISRadius,
-                    fieldIndex: (int)Explosion_FieldIndex.ISRadius,
-                    errorMask: errorMask);
-            }
-            if (!item.DATADataTypeState.HasFlag(Explosion.DATADataType.Break0))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.VerticalOffsetMult) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.VerticalOffsetMult),
-                        item: item.VerticalOffsetMult,
-                        fieldIndex: (int)Explosion_FieldIndex.VerticalOffsetMult,
-                        errorMask: errorMask);
-                }
-                if (!item.DATADataTypeState.HasFlag(Explosion.DATADataType.Break1))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.Flags) ?? true))
-                    {
-                        EnumXmlTranslation<Explosion.Flag>.Instance.Write(
-                            node: node,
-                            name: nameof(item.Flags),
-                            item: item.Flags,
-                            fieldIndex: (int)Explosion_FieldIndex.Flags,
-                            errorMask: errorMask);
-                    }
-                    if (!item.DATADataTypeState.HasFlag(Explosion.DATADataType.Break2))
-                    {
-                        if ((translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.SoundLevel) ?? true))
-                        {
-                            EnumXmlTranslation<SoundLevel>.Instance.Write(
-                                node: node,
-                                name: nameof(item.SoundLevel),
-                                item: item.SoundLevel,
-                                fieldIndex: (int)Explosion_FieldIndex.SoundLevel,
-                                errorMask: errorMask);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                node.Add(new XElement("HasDATADataType"));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Explosion_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Explosion.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Explosion_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IExplosionGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Explosion");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Explosion");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IExplosionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IExplosionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IExplosionGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class ExplosionXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static ExplosionXmlCreateTranslation Instance = new ExplosionXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IExplosionInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    ExplosionXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IExplosionInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "VirtualMachineAdapter":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.VirtualMachineAdapter);
-                    try
-                    {
-                        item.VirtualMachineAdapter = LoquiXmlTranslation<VirtualMachineAdapter>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Explosion_FieldIndex.VirtualMachineAdapter));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ObjectBounds":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.ObjectBounds);
-                    try
-                    {
-                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Explosion_FieldIndex.ObjectBounds));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Name":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.Name);
-                    try
-                    {
-                        item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Model":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.Model);
-                    try
-                    {
-                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Explosion_FieldIndex.Model));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ObjectEffect":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.ObjectEffect);
-                    try
-                    {
-                        item.ObjectEffect = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ImageSpaceModifier":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.ImageSpaceModifier);
-                    try
-                    {
-                        item.ImageSpaceModifier = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Light":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.Light);
-                    try
-                    {
-                        item.Light = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sound1":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.Sound1);
-                    try
-                    {
-                        item.Sound1 = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sound2":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.Sound2);
-                    try
-                    {
-                        item.Sound2 = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ImpactDataSet":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.ImpactDataSet);
-                    try
-                    {
-                        item.ImpactDataSet = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PlacedObject":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.PlacedObject);
-                    try
-                    {
-                        item.PlacedObject = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SpawnProjectile":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.SpawnProjectile);
-                    try
-                    {
-                        item.SpawnProjectile = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Force":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.Force);
-                    try
-                    {
-                        item.Force = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Damage":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.Damage);
-                    try
-                    {
-                        item.Damage = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Radius":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.Radius);
-                    try
-                    {
-                        item.Radius = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ISRadius":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.ISRadius);
-                    try
-                    {
-                        item.ISRadius = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VerticalOffsetMult":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.VerticalOffsetMult);
-                    try
-                    {
-                        item.VerticalOffsetMult = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~Explosion.DATADataType.Break0;
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Explosion.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~Explosion.DATADataType.Break1;
-                    break;
-                case "SoundLevel":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.SoundLevel);
-                    try
-                    {
-                        item.SoundLevel = EnumXmlTranslation<SoundLevel>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~Explosion.DATADataType.Break2;
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Explosion_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Explosion.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class ExplosionXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IExplosionGetter item,
-            XElement node,
-            out Explosion.ErrorMask errorMask,
-            Explosion.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ExplosionXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Explosion.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IExplosionGetter item,
-            string path,
-            out Explosion.ErrorMask errorMask,
-            Explosion.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IExplosionGetter item,
-            Stream stream,
-            out Explosion.ErrorMask errorMask,
-            Explosion.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -3834,10 +2711,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -3890,9 +2769,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IExplosionInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3903,12 +2783,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.VirtualMachineAdapter);
+                    return (int)Explosion_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ObjectBounds);
+                    return (int)Explosion_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -3917,14 +2797,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.Name);
+                    return (int)Explosion_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.Model);
+                    return (int)Explosion_FieldIndex.Model;
                 }
                 case RecordTypeInts.EITM:
                 {
@@ -3932,7 +2812,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ObjectEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ObjectEffect);
+                    return (int)Explosion_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -3940,7 +2820,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImageSpaceModifier = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ImageSpaceModifier);
+                    return (int)Explosion_FieldIndex.ImageSpaceModifier;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3971,27 +2851,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Explosion.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ISRadius);
+                        return (int)Explosion_FieldIndex.ISRadius;
                     }
                     item.VerticalOffsetMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Explosion.DATADataType.Break1;
-                        return TryGet<int?>.Succeed((int)Explosion_FieldIndex.VerticalOffsetMult);
+                        return (int)Explosion_FieldIndex.VerticalOffsetMult;
                     }
                     item.Flags = EnumBinaryTranslation<Explosion.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Explosion.DATADataType.Break2;
-                        return TryGet<int?>.Succeed((int)Explosion_FieldIndex.Flags);
+                        return (int)Explosion_FieldIndex.Flags;
                     }
                     item.SoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.SoundLevel);
+                    return (int)Explosion_FieldIndex.SoundLevel;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength);
             }
@@ -4038,21 +2919,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ExplosionXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((ExplosionXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ExplosionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -4082,12 +2948,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ObjectEffect
         private int? _ObjectEffectLocation;
         public bool ObjectEffect_IsSet => _ObjectEffectLocation.HasValue;
-        public IFormLinkNullable<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ObjectEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectRecordGetter>.Null;
+        public IFormLinkNullable<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectRecordGetter>.Null;
         #endregion
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;
         public bool ImageSpaceModifier_IsSet => _ImageSpaceModifierLocation.HasValue;
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
         private int? _DATALocation;
         public Explosion.DATADataType DATADataTypeState { get; private set; }
@@ -4124,27 +2990,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Force
         private int _ForceLocation => _DATALocation!.Value + 0x18;
         private bool _Force_IsSet => _DATALocation.HasValue;
-        public Single Force => _Force_IsSet ? SpanExt.GetFloat(_data.Slice(_ForceLocation, 4)) : default;
+        public Single Force => _Force_IsSet ? _data.Slice(_ForceLocation, 4).Float() : default;
         #endregion
         #region Damage
         private int _DamageLocation => _DATALocation!.Value + 0x1C;
         private bool _Damage_IsSet => _DATALocation.HasValue;
-        public Single Damage => _Damage_IsSet ? SpanExt.GetFloat(_data.Slice(_DamageLocation, 4)) : default;
+        public Single Damage => _Damage_IsSet ? _data.Slice(_DamageLocation, 4).Float() : default;
         #endregion
         #region Radius
         private int _RadiusLocation => _DATALocation!.Value + 0x20;
         private bool _Radius_IsSet => _DATALocation.HasValue;
-        public Single Radius => _Radius_IsSet ? SpanExt.GetFloat(_data.Slice(_RadiusLocation, 4)) : default;
+        public Single Radius => _Radius_IsSet ? _data.Slice(_RadiusLocation, 4).Float() : default;
         #endregion
         #region ISRadius
         private int _ISRadiusLocation => _DATALocation!.Value + 0x24;
         private bool _ISRadius_IsSet => _DATALocation.HasValue;
-        public Single ISRadius => _ISRadius_IsSet ? SpanExt.GetFloat(_data.Slice(_ISRadiusLocation, 4)) : default;
+        public Single ISRadius => _ISRadius_IsSet ? _data.Slice(_ISRadiusLocation, 4).Float() : default;
         #endregion
         #region VerticalOffsetMult
         private int _VerticalOffsetMultLocation => _DATALocation!.Value + 0x28;
         private bool _VerticalOffsetMult_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Explosion.DATADataType.Break0);
-        public Single VerticalOffsetMult => _VerticalOffsetMult_IsSet ? SpanExt.GetFloat(_data.Slice(_VerticalOffsetMultLocation, 4)) : default;
+        public Single VerticalOffsetMult => _VerticalOffsetMult_IsSet ? _data.Slice(_VerticalOffsetMultLocation, 4).Float() : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0x2C;
@@ -4181,8 +3047,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new ExplosionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -4208,12 +3075,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -4222,17 +3090,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.VirtualMachineAdapter);
+                    return (int)Explosion_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ObjectBounds);
+                    return (int)Explosion_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.Name);
+                    return (int)Explosion_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -4240,17 +3108,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.Model);
+                    return (int)Explosion_FieldIndex.Model;
                 }
                 case RecordTypeInts.EITM:
                 {
                     _ObjectEffectLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ObjectEffect);
+                    return (int)Explosion_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _ImageSpaceModifierLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ImageSpaceModifier);
+                    return (int)Explosion_FieldIndex.ImageSpaceModifier;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -4268,7 +3136,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.DATADataTypeState |= Explosion.DATADataType.Break2;
                     }
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.SoundLevel);
+                    return (int)Explosion_FieldIndex.SoundLevel;
                 }
                 default:
                     return base.FillRecordType(
@@ -4276,7 +3144,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
-                        lastParsed: lastParsed);
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
             }
         }
         #region To String

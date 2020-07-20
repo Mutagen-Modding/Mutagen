@@ -19,14 +19,8 @@ using Mutagen.Bethesda.Skyrim;
 using System.Drawing;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 #endregion
@@ -316,8 +310,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WeatherSound> _Sounds = new ExtendedList<WeatherSound>();
-        public ExtendedList<WeatherSound> Sounds
+        private IExtendedList<WeatherSound> _Sounds = new ExtendedList<WeatherSound>();
+        public IExtendedList<WeatherSound> Sounds
         {
             get => this._Sounds;
             protected set => this._Sounds = value;
@@ -330,8 +324,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SkyStatics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Static>> _SkyStatics = new ExtendedList<IFormLink<Static>>();
-        public ExtendedList<IFormLink<Static>> SkyStatics
+        private IExtendedList<IFormLink<Static>> _SkyStatics = new ExtendedList<IFormLink<Static>>();
+        public IExtendedList<IFormLink<Static>> SkyStatics
         {
             get => this._SkyStatics;
             protected set => this._SkyStatics = value;
@@ -352,6 +346,17 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IWeatherImageSpacesGetter? IWeatherGetter.ImageSpaces => this.ImageSpaces;
+        #endregion
+        #region VolumetricLighting
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private WeatherVolumetricLighting? _VolumetricLighting;
+        public WeatherVolumetricLighting? VolumetricLighting
+        {
+            get => _VolumetricLighting;
+            set => _VolumetricLighting = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWeatherVolumetricLightingGetter? IWeatherGetter.VolumetricLighting => this.VolumetricLighting;
         #endregion
         #region DirectionalAmbientLightingColors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -397,6 +402,11 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IWeatherGetter.Aurora => this.Aurora;
         #endregion
+        #region SunGlareLensFlare
+        public FormLinkNullable<LensFlare> SunGlareLensFlare { get; set; } = new FormLinkNullable<LensFlare>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<ILensFlareGetter> IWeatherGetter.SunGlareLensFlare => this.SunGlareLensFlare;
+        #endregion
         #region NAM0DataTypeState
         public Weather.NAM0DataType NAM0DataTypeState { get; set; } = default;
         #endregion
@@ -433,135 +443,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => WeatherXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((WeatherXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static new Weather CreateFromXml(
-            XElement node,
-            Weather.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static Weather CreateFromXml(
-            XElement node,
-            out Weather.ErrorMask errorMask,
-            Weather.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Weather.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public new static Weather CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new Weather();
-            ((WeatherSetterCommon)((IWeatherGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static Weather CreateFromXml(
-            string path,
-            Weather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Weather CreateFromXml(
-            string path,
-            out Weather.ErrorMask errorMask,
-            Weather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Weather CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Weather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static Weather CreateFromXml(
-            Stream stream,
-            Weather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static Weather CreateFromXml(
-            Stream stream,
-            out Weather.ErrorMask errorMask,
-            Weather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static Weather CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Weather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -629,10 +510,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
                 this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ImageSpaces = new MaskItem<TItem, WeatherImageSpaces.Mask<TItem>?>(initialValue, new WeatherImageSpaces.Mask<TItem>(initialValue));
+                this.VolumetricLighting = new MaskItem<TItem, WeatherVolumetricLighting.Mask<TItem>?>(initialValue, new WeatherVolumetricLighting.Mask<TItem>(initialValue));
                 this.DirectionalAmbientLightingColors = new MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>(initialValue, new WeatherAmbientColorSet.Mask<TItem>(initialValue));
                 this.NAM2 = initialValue;
                 this.NAM3 = initialValue;
                 this.Aurora = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.SunGlareLensFlare = initialValue;
                 this.NAM0DataTypeState = initialValue;
                 this.FNAMDataTypeState = initialValue;
                 this.DATADataTypeState = initialValue;
@@ -641,7 +524,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -699,17 +582,19 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Sounds,
                 TItem SkyStatics,
                 TItem ImageSpaces,
+                TItem VolumetricLighting,
                 TItem DirectionalAmbientLightingColors,
                 TItem NAM2,
                 TItem NAM3,
                 TItem Aurora,
+                TItem SunGlareLensFlare,
                 TItem NAM0DataTypeState,
                 TItem FNAMDataTypeState,
                 TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -768,10 +653,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
                 this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SkyStatics, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ImageSpaces = new MaskItem<TItem, WeatherImageSpaces.Mask<TItem>?>(ImageSpaces, new WeatherImageSpaces.Mask<TItem>(ImageSpaces));
+                this.VolumetricLighting = new MaskItem<TItem, WeatherVolumetricLighting.Mask<TItem>?>(VolumetricLighting, new WeatherVolumetricLighting.Mask<TItem>(VolumetricLighting));
                 this.DirectionalAmbientLightingColors = new MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>(DirectionalAmbientLightingColors, new WeatherAmbientColorSet.Mask<TItem>(DirectionalAmbientLightingColors));
                 this.NAM2 = NAM2;
                 this.NAM3 = NAM3;
                 this.Aurora = new MaskItem<TItem, Model.Mask<TItem>?>(Aurora, new Model.Mask<TItem>(Aurora));
+                this.SunGlareLensFlare = SunGlareLensFlare;
                 this.NAM0DataTypeState = NAM0DataTypeState;
                 this.FNAMDataTypeState = FNAMDataTypeState;
                 this.DATADataTypeState = DATADataTypeState;
@@ -840,10 +727,12 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>? Sounds;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SkyStatics;
             public MaskItem<TItem, WeatherImageSpaces.Mask<TItem>?>? ImageSpaces { get; set; }
+            public MaskItem<TItem, WeatherVolumetricLighting.Mask<TItem>?>? VolumetricLighting { get; set; }
             public MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>? DirectionalAmbientLightingColors { get; set; }
             public TItem NAM2;
             public TItem NAM3;
             public MaskItem<TItem, Model.Mask<TItem>?>? Aurora { get; set; }
+            public TItem SunGlareLensFlare;
             public TItem NAM0DataTypeState;
             public TItem FNAMDataTypeState;
             public TItem DATADataTypeState;
@@ -914,10 +803,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
                 if (!object.Equals(this.SkyStatics, rhs.SkyStatics)) return false;
                 if (!object.Equals(this.ImageSpaces, rhs.ImageSpaces)) return false;
+                if (!object.Equals(this.VolumetricLighting, rhs.VolumetricLighting)) return false;
                 if (!object.Equals(this.DirectionalAmbientLightingColors, rhs.DirectionalAmbientLightingColors)) return false;
                 if (!object.Equals(this.NAM2, rhs.NAM2)) return false;
                 if (!object.Equals(this.NAM3, rhs.NAM3)) return false;
                 if (!object.Equals(this.Aurora, rhs.Aurora)) return false;
+                if (!object.Equals(this.SunGlareLensFlare, rhs.SunGlareLensFlare)) return false;
                 if (!object.Equals(this.NAM0DataTypeState, rhs.NAM0DataTypeState)) return false;
                 if (!object.Equals(this.FNAMDataTypeState, rhs.FNAMDataTypeState)) return false;
                 if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
@@ -980,10 +871,12 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Sounds);
                 hash.Add(this.SkyStatics);
                 hash.Add(this.ImageSpaces);
+                hash.Add(this.VolumetricLighting);
                 hash.Add(this.DirectionalAmbientLightingColors);
                 hash.Add(this.NAM2);
                 hash.Add(this.NAM3);
                 hash.Add(this.Aurora);
+                hash.Add(this.SunGlareLensFlare);
                 hash.Add(this.NAM0DataTypeState);
                 hash.Add(this.FNAMDataTypeState);
                 hash.Add(this.DATADataTypeState);
@@ -1165,6 +1058,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.ImageSpaces.Overall)) return false;
                     if (this.ImageSpaces.Specific != null && !this.ImageSpaces.Specific.All(eval)) return false;
                 }
+                if (VolumetricLighting != null)
+                {
+                    if (!eval(this.VolumetricLighting.Overall)) return false;
+                    if (this.VolumetricLighting.Specific != null && !this.VolumetricLighting.Specific.All(eval)) return false;
+                }
                 if (DirectionalAmbientLightingColors != null)
                 {
                     if (!eval(this.DirectionalAmbientLightingColors.Overall)) return false;
@@ -1177,6 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Aurora.Overall)) return false;
                     if (this.Aurora.Specific != null && !this.Aurora.Specific.All(eval)) return false;
                 }
+                if (!eval(this.SunGlareLensFlare)) return false;
                 if (!eval(this.NAM0DataTypeState)) return false;
                 if (!eval(this.FNAMDataTypeState)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
@@ -1356,6 +1255,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.ImageSpaces.Overall)) return true;
                     if (this.ImageSpaces.Specific != null && this.ImageSpaces.Specific.Any(eval)) return true;
                 }
+                if (VolumetricLighting != null)
+                {
+                    if (eval(this.VolumetricLighting.Overall)) return true;
+                    if (this.VolumetricLighting.Specific != null && this.VolumetricLighting.Specific.Any(eval)) return true;
+                }
                 if (DirectionalAmbientLightingColors != null)
                 {
                     if (eval(this.DirectionalAmbientLightingColors.Overall)) return true;
@@ -1368,6 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Aurora.Overall)) return true;
                     if (this.Aurora.Specific != null && this.Aurora.Specific.Any(eval)) return true;
                 }
+                if (eval(this.SunGlareLensFlare)) return true;
                 if (eval(this.NAM0DataTypeState)) return true;
                 if (eval(this.FNAMDataTypeState)) return true;
                 if (eval(this.DATADataTypeState)) return true;
@@ -1494,10 +1399,12 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.ImageSpaces = this.ImageSpaces == null ? null : new MaskItem<R, WeatherImageSpaces.Mask<R>?>(eval(this.ImageSpaces.Overall), this.ImageSpaces.Specific?.Translate(eval));
+                obj.VolumetricLighting = this.VolumetricLighting == null ? null : new MaskItem<R, WeatherVolumetricLighting.Mask<R>?>(eval(this.VolumetricLighting.Overall), this.VolumetricLighting.Specific?.Translate(eval));
                 obj.DirectionalAmbientLightingColors = this.DirectionalAmbientLightingColors == null ? null : new MaskItem<R, WeatherAmbientColorSet.Mask<R>?>(eval(this.DirectionalAmbientLightingColors.Overall), this.DirectionalAmbientLightingColors.Specific?.Translate(eval));
                 obj.NAM2 = eval(this.NAM2);
                 obj.NAM3 = eval(this.NAM3);
                 obj.Aurora = this.Aurora == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Aurora.Overall), this.Aurora.Specific?.Translate(eval));
+                obj.SunGlareLensFlare = eval(this.SunGlareLensFlare);
                 obj.NAM0DataTypeState = eval(this.NAM0DataTypeState);
                 obj.FNAMDataTypeState = eval(this.FNAMDataTypeState);
                 obj.DATADataTypeState = eval(this.DATADataTypeState);
@@ -1815,6 +1722,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         ImageSpaces?.ToString(fg);
                     }
+                    if (printMask?.VolumetricLighting?.Overall ?? true)
+                    {
+                        VolumetricLighting?.ToString(fg);
+                    }
                     if (printMask?.DirectionalAmbientLightingColors?.Overall ?? true)
                     {
                         DirectionalAmbientLightingColors?.ToString(fg);
@@ -1830,6 +1741,10 @@ namespace Mutagen.Bethesda.Skyrim
                     if (printMask?.Aurora?.Overall ?? true)
                     {
                         Aurora?.ToString(fg);
+                    }
+                    if (printMask?.SunGlareLensFlare ?? true)
+                    {
+                        fg.AppendItem(SunGlareLensFlare, "SunGlareLensFlare");
                     }
                     if (printMask?.NAM0DataTypeState ?? true)
                     {
@@ -1909,10 +1824,12 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>? Sounds;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SkyStatics;
             public MaskItem<Exception?, WeatherImageSpaces.ErrorMask?>? ImageSpaces;
+            public MaskItem<Exception?, WeatherVolumetricLighting.ErrorMask?>? VolumetricLighting;
             public MaskItem<Exception?, WeatherAmbientColorSet.ErrorMask?>? DirectionalAmbientLightingColors;
             public Exception? NAM2;
             public Exception? NAM3;
             public MaskItem<Exception?, Model.ErrorMask?>? Aurora;
+            public Exception? SunGlareLensFlare;
             public Exception? NAM0DataTypeState;
             public Exception? FNAMDataTypeState;
             public Exception? DATADataTypeState;
@@ -2032,6 +1949,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return SkyStatics;
                     case Weather_FieldIndex.ImageSpaces:
                         return ImageSpaces;
+                    case Weather_FieldIndex.VolumetricLighting:
+                        return VolumetricLighting;
                     case Weather_FieldIndex.DirectionalAmbientLightingColors:
                         return DirectionalAmbientLightingColors;
                     case Weather_FieldIndex.NAM2:
@@ -2040,6 +1959,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return NAM3;
                     case Weather_FieldIndex.Aurora:
                         return Aurora;
+                    case Weather_FieldIndex.SunGlareLensFlare:
+                        return SunGlareLensFlare;
                     case Weather_FieldIndex.NAM0DataTypeState:
                         return NAM0DataTypeState;
                     case Weather_FieldIndex.FNAMDataTypeState:
@@ -2218,6 +2139,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case Weather_FieldIndex.ImageSpaces:
                         this.ImageSpaces = new MaskItem<Exception?, WeatherImageSpaces.ErrorMask?>(ex, null);
                         break;
+                    case Weather_FieldIndex.VolumetricLighting:
+                        this.VolumetricLighting = new MaskItem<Exception?, WeatherVolumetricLighting.ErrorMask?>(ex, null);
+                        break;
                     case Weather_FieldIndex.DirectionalAmbientLightingColors:
                         this.DirectionalAmbientLightingColors = new MaskItem<Exception?, WeatherAmbientColorSet.ErrorMask?>(ex, null);
                         break;
@@ -2229,6 +2153,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Weather_FieldIndex.Aurora:
                         this.Aurora = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Weather_FieldIndex.SunGlareLensFlare:
+                        this.SunGlareLensFlare = ex;
                         break;
                     case Weather_FieldIndex.NAM0DataTypeState:
                         this.NAM0DataTypeState = ex;
@@ -2412,6 +2339,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case Weather_FieldIndex.ImageSpaces:
                         this.ImageSpaces = (MaskItem<Exception?, WeatherImageSpaces.ErrorMask?>?)obj;
                         break;
+                    case Weather_FieldIndex.VolumetricLighting:
+                        this.VolumetricLighting = (MaskItem<Exception?, WeatherVolumetricLighting.ErrorMask?>?)obj;
+                        break;
                     case Weather_FieldIndex.DirectionalAmbientLightingColors:
                         this.DirectionalAmbientLightingColors = (MaskItem<Exception?, WeatherAmbientColorSet.ErrorMask?>?)obj;
                         break;
@@ -2423,6 +2353,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Weather_FieldIndex.Aurora:
                         this.Aurora = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Weather_FieldIndex.SunGlareLensFlare:
+                        this.SunGlareLensFlare = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.NAM0DataTypeState:
                         this.NAM0DataTypeState = (Exception?)obj;
@@ -2496,10 +2429,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Sounds != null) return true;
                 if (SkyStatics != null) return true;
                 if (ImageSpaces != null) return true;
+                if (VolumetricLighting != null) return true;
                 if (DirectionalAmbientLightingColors != null) return true;
                 if (NAM2 != null) return true;
                 if (NAM3 != null) return true;
                 if (Aurora != null) return true;
+                if (SunGlareLensFlare != null) return true;
                 if (NAM0DataTypeState != null) return true;
                 if (FNAMDataTypeState != null) return true;
                 if (DATADataTypeState != null) return true;
@@ -2676,10 +2611,12 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 ImageSpaces?.ToString(fg);
+                VolumetricLighting?.ToString(fg);
                 DirectionalAmbientLightingColors?.ToString(fg);
                 fg.AppendItem(NAM2, "NAM2");
                 fg.AppendItem(NAM3, "NAM3");
                 Aurora?.ToString(fg);
+                fg.AppendItem(SunGlareLensFlare, "SunGlareLensFlare");
                 fg.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
                 fg.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
                 fg.AppendItem(DATADataTypeState, "DATADataTypeState");
@@ -2745,10 +2682,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 ret.SkyStatics = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SkyStatics?.Overall, rhs.SkyStatics?.Overall), ExceptionExt.Combine(this.SkyStatics?.Specific, rhs.SkyStatics?.Specific));
                 ret.ImageSpaces = this.ImageSpaces.Combine(rhs.ImageSpaces, (l, r) => l.Combine(r));
+                ret.VolumetricLighting = this.VolumetricLighting.Combine(rhs.VolumetricLighting, (l, r) => l.Combine(r));
                 ret.DirectionalAmbientLightingColors = this.DirectionalAmbientLightingColors.Combine(rhs.DirectionalAmbientLightingColors, (l, r) => l.Combine(r));
                 ret.NAM2 = this.NAM2.Combine(rhs.NAM2);
                 ret.NAM3 = this.NAM3.Combine(rhs.NAM3);
                 ret.Aurora = this.Aurora.Combine(rhs.Aurora, (l, r) => l.Combine(r));
+                ret.SunGlareLensFlare = this.SunGlareLensFlare.Combine(rhs.SunGlareLensFlare);
                 ret.NAM0DataTypeState = this.NAM0DataTypeState.Combine(rhs.NAM0DataTypeState);
                 ret.FNAMDataTypeState = this.FNAMDataTypeState.Combine(rhs.FNAMDataTypeState);
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
@@ -2828,10 +2767,12 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, WeatherSound.TranslationMask?> Sounds;
             public bool SkyStatics;
             public MaskItem<bool, WeatherImageSpaces.TranslationMask?> ImageSpaces;
+            public MaskItem<bool, WeatherVolumetricLighting.TranslationMask?> VolumetricLighting;
             public MaskItem<bool, WeatherAmbientColorSet.TranslationMask?> DirectionalAmbientLightingColors;
             public bool NAM2;
             public bool NAM3;
             public MaskItem<bool, Model.TranslationMask?> Aurora;
+            public bool SunGlareLensFlare;
             public bool NAM0DataTypeState;
             public bool FNAMDataTypeState;
             public bool DATADataTypeState;
@@ -2895,10 +2836,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sounds = new MaskItem<bool, WeatherSound.TranslationMask?>(defaultOn, null);
                 this.SkyStatics = defaultOn;
                 this.ImageSpaces = new MaskItem<bool, WeatherImageSpaces.TranslationMask?>(defaultOn, null);
+                this.VolumetricLighting = new MaskItem<bool, WeatherVolumetricLighting.TranslationMask?>(defaultOn, null);
                 this.DirectionalAmbientLightingColors = new MaskItem<bool, WeatherAmbientColorSet.TranslationMask?>(defaultOn, null);
                 this.NAM2 = defaultOn;
                 this.NAM3 = defaultOn;
                 this.Aurora = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.SunGlareLensFlare = defaultOn;
                 this.NAM0DataTypeState = defaultOn;
                 this.FNAMDataTypeState = defaultOn;
                 this.DATADataTypeState = defaultOn;
@@ -2963,10 +2906,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
                 ret.Add((SkyStatics, null));
                 ret.Add((ImageSpaces?.Overall ?? true, ImageSpaces?.Specific?.GetCrystal()));
+                ret.Add((VolumetricLighting?.Overall ?? true, VolumetricLighting?.Specific?.GetCrystal()));
                 ret.Add((DirectionalAmbientLightingColors?.Overall ?? true, DirectionalAmbientLightingColors?.Specific?.GetCrystal()));
                 ret.Add((NAM2, null));
                 ret.Add((NAM3, null));
                 ret.Add((Aurora?.Overall ?? true, Aurora?.Specific?.GetCrystal()));
+                ret.Add((SunGlareLensFlare, null));
                 ret.Add((NAM0DataTypeState, null));
                 ret.Add((FNAMDataTypeState, null));
                 ret.Add((DATADataTypeState, null));
@@ -2975,7 +2920,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Weather_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Weather_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3135,13 +3080,15 @@ namespace Mutagen.Bethesda.Skyrim
         new Percent VisualEffectEnd { get; set; }
         new Single WindDirection { get; set; }
         new Single WindDirectionRange { get; set; }
-        new ExtendedList<WeatherSound> Sounds { get; }
-        new ExtendedList<IFormLink<Static>> SkyStatics { get; }
+        new IExtendedList<WeatherSound> Sounds { get; }
+        new IExtendedList<IFormLink<Static>> SkyStatics { get; }
         new WeatherImageSpaces? ImageSpaces { get; set; }
+        new WeatherVolumetricLighting? VolumetricLighting { get; set; }
         new WeatherAmbientColorSet? DirectionalAmbientLightingColors { get; set; }
         new MemorySlice<Byte>? NAM2 { get; set; }
         new MemorySlice<Byte>? NAM3 { get; set; }
         new Model? Aurora { get; set; }
+        new FormLinkNullable<LensFlare> SunGlareLensFlare { get; set; }
         new Weather.NAM0DataType NAM0DataTypeState { get; set; }
         new Weather.FNAMDataType FNAMDataTypeState { get; set; }
         new Weather.DATADataType DATADataTypeState { get; set; }
@@ -3157,11 +3104,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IWeatherGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Weather_Registration.Instance;
+        static new ILoquiRegistration Registration => Weather_Registration.Instance;
         ReadOnlyMemorySlice<String?> CloudTextures { get; }
         ReadOnlyMemorySlice<Byte>? DNAM { get; }
         ReadOnlyMemorySlice<Byte>? CNAM { get; }
@@ -3216,10 +3162,12 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IWeatherSoundGetter> Sounds { get; }
         IReadOnlyList<IFormLink<IStaticGetter>> SkyStatics { get; }
         IWeatherImageSpacesGetter? ImageSpaces { get; }
+        IWeatherVolumetricLightingGetter? VolumetricLighting { get; }
         IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors { get; }
         ReadOnlyMemorySlice<Byte>? NAM2 { get; }
         ReadOnlyMemorySlice<Byte>? NAM3 { get; }
         IModelGetter? Aurora { get; }
+        IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; }
         Weather.NAM0DataType NAM0DataTypeState { get; }
         Weather.FNAMDataType FNAMDataTypeState { get; }
         Weather.DATADataType DATADataTypeState { get; }
@@ -3357,131 +3305,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IWeatherInternal item,
-            XElement node,
-            Weather.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IWeatherInternal item,
-            XElement node,
-            out Weather.ErrorMask errorMask,
-            Weather.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Weather.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IWeatherInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((WeatherSetterCommon)((IWeatherGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWeatherInternal item,
-            string path,
-            Weather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWeatherInternal item,
-            string path,
-            out Weather.ErrorMask errorMask,
-            Weather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWeatherInternal item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            Weather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IWeatherInternal item,
-            Stream stream,
-            Weather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWeatherInternal item,
-            Stream stream,
-            out Weather.ErrorMask errorMask,
-            Weather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IWeatherInternal item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            Weather.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
-
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
@@ -3519,7 +3342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -3577,13 +3400,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Sounds = 57,
         SkyStatics = 58,
         ImageSpaces = 59,
-        DirectionalAmbientLightingColors = 60,
-        NAM2 = 61,
-        NAM3 = 62,
-        Aurora = 63,
-        NAM0DataTypeState = 64,
-        FNAMDataTypeState = 65,
-        DATADataTypeState = 66,
+        VolumetricLighting = 60,
+        DirectionalAmbientLightingColors = 61,
+        NAM2 = 62,
+        NAM3 = 63,
+        Aurora = 64,
+        SunGlareLensFlare = 65,
+        NAM0DataTypeState = 66,
+        FNAMDataTypeState = 67,
+        DATADataTypeState = 68,
     }
     #endregion
 
@@ -3601,9 +3426,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "2a067384-8f2a-4245-9c26-092e2a0351f0";
 
-        public const ushort AdditionalFieldCount = 61;
+        public const ushort AdditionalFieldCount = 63;
 
-        public const ushort FieldCount = 67;
+        public const ushort FieldCount = 69;
 
         public static readonly Type MaskType = typeof(Weather.Mask<>);
 
@@ -3741,6 +3566,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Weather_FieldIndex.SkyStatics;
                 case "IMAGESPACES":
                     return (ushort)Weather_FieldIndex.ImageSpaces;
+                case "VOLUMETRICLIGHTING":
+                    return (ushort)Weather_FieldIndex.VolumetricLighting;
                 case "DIRECTIONALAMBIENTLIGHTINGCOLORS":
                     return (ushort)Weather_FieldIndex.DirectionalAmbientLightingColors;
                 case "NAM2":
@@ -3749,6 +3576,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Weather_FieldIndex.NAM3;
                 case "AURORA":
                     return (ushort)Weather_FieldIndex.Aurora;
+                case "SUNGLARELENSFLARE":
+                    return (ushort)Weather_FieldIndex.SunGlareLensFlare;
                 case "NAM0DATATYPESTATE":
                     return (ushort)Weather_FieldIndex.NAM0DataTypeState;
                 case "FNAMDATATYPESTATE":
@@ -3820,10 +3649,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.WindDirection:
                 case Weather_FieldIndex.WindDirectionRange:
                 case Weather_FieldIndex.ImageSpaces:
+                case Weather_FieldIndex.VolumetricLighting:
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                 case Weather_FieldIndex.NAM2:
                 case Weather_FieldIndex.NAM3:
                 case Weather_FieldIndex.Aurora:
+                case Weather_FieldIndex.SunGlareLensFlare:
                 case Weather_FieldIndex.NAM0DataTypeState:
                 case Weather_FieldIndex.FNAMDataTypeState:
                 case Weather_FieldIndex.DATADataTypeState:
@@ -3858,6 +3689,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.MoonGlareColor:
                 case Weather_FieldIndex.Sounds:
                 case Weather_FieldIndex.ImageSpaces:
+                case Weather_FieldIndex.VolumetricLighting:
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                 case Weather_FieldIndex.Aurora:
                     return true;
@@ -3897,6 +3729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.SkyStatics:
                 case Weather_FieldIndex.NAM2:
                 case Weather_FieldIndex.NAM3:
+                case Weather_FieldIndex.SunGlareLensFlare:
                 case Weather_FieldIndex.NAM0DataTypeState:
                 case Weather_FieldIndex.FNAMDataTypeState:
                 case Weather_FieldIndex.DATADataTypeState:
@@ -3965,10 +3798,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.Sounds:
                 case Weather_FieldIndex.SkyStatics:
                 case Weather_FieldIndex.ImageSpaces:
+                case Weather_FieldIndex.VolumetricLighting:
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                 case Weather_FieldIndex.NAM2:
                 case Weather_FieldIndex.NAM3:
                 case Weather_FieldIndex.Aurora:
+                case Weather_FieldIndex.SunGlareLensFlare:
                 case Weather_FieldIndex.NAM0DataTypeState:
                 case Weather_FieldIndex.FNAMDataTypeState:
                 case Weather_FieldIndex.DATADataTypeState:
@@ -4091,6 +3926,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "SkyStatics";
                 case Weather_FieldIndex.ImageSpaces:
                     return "ImageSpaces";
+                case Weather_FieldIndex.VolumetricLighting:
+                    return "VolumetricLighting";
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                     return "DirectionalAmbientLightingColors";
                 case Weather_FieldIndex.NAM2:
@@ -4099,6 +3936,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "NAM3";
                 case Weather_FieldIndex.Aurora:
                     return "Aurora";
+                case Weather_FieldIndex.SunGlareLensFlare:
+                    return "SunGlareLensFlare";
                 case Weather_FieldIndex.NAM0DataTypeState:
                     return "NAM0DataTypeState";
                 case Weather_FieldIndex.FNAMDataTypeState:
@@ -4169,10 +4008,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.Sounds:
                 case Weather_FieldIndex.SkyStatics:
                 case Weather_FieldIndex.ImageSpaces:
+                case Weather_FieldIndex.VolumetricLighting:
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                 case Weather_FieldIndex.NAM2:
                 case Weather_FieldIndex.NAM3:
                 case Weather_FieldIndex.Aurora:
+                case Weather_FieldIndex.SunGlareLensFlare:
                 case Weather_FieldIndex.NAM0DataTypeState:
                 case Weather_FieldIndex.FNAMDataTypeState:
                 case Weather_FieldIndex.DATADataTypeState:
@@ -4241,10 +4082,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.Sounds:
                 case Weather_FieldIndex.SkyStatics:
                 case Weather_FieldIndex.ImageSpaces:
+                case Weather_FieldIndex.VolumetricLighting:
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                 case Weather_FieldIndex.NAM2:
                 case Weather_FieldIndex.NAM3:
                 case Weather_FieldIndex.Aurora:
+                case Weather_FieldIndex.SunGlareLensFlare:
                 case Weather_FieldIndex.NAM0DataTypeState:
                 case Weather_FieldIndex.FNAMDataTypeState:
                 case Weather_FieldIndex.DATADataTypeState:
@@ -4362,11 +4205,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.WindDirectionRange:
                     return typeof(Single);
                 case Weather_FieldIndex.Sounds:
-                    return typeof(ExtendedList<WeatherSound>);
+                    return typeof(IExtendedList<WeatherSound>);
                 case Weather_FieldIndex.SkyStatics:
-                    return typeof(ExtendedList<IFormLink<Static>>);
+                    return typeof(IExtendedList<IFormLink<Static>>);
                 case Weather_FieldIndex.ImageSpaces:
                     return typeof(WeatherImageSpaces);
+                case Weather_FieldIndex.VolumetricLighting:
+                    return typeof(WeatherVolumetricLighting);
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                     return typeof(WeatherAmbientColorSet);
                 case Weather_FieldIndex.NAM2:
@@ -4375,6 +4220,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(MemorySlice<Byte>);
                 case Weather_FieldIndex.Aurora:
                     return typeof(Model);
+                case Weather_FieldIndex.SunGlareLensFlare:
+                    return typeof(FormLinkNullable<LensFlare>);
                 case Weather_FieldIndex.NAM0DataTypeState:
                     return typeof(Weather.NAM0DataType);
                 case Weather_FieldIndex.FNAMDataTypeState:
@@ -4386,7 +4233,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(WeatherXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.WTHR;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherBinaryWriteTranslation);
         #region Interface
@@ -4484,10 +4330,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Sounds.Clear();
             item.SkyStatics.Clear();
             item.ImageSpaces = null;
+            item.VolumetricLighting = null;
             item.DirectionalAmbientLightingColors = null;
             item.NAM2 = default;
             item.NAM3 = default;
             item.Aurora = null;
+            item.SunGlareLensFlare = FormLinkNullable<LensFlare>.Null;
             item.NAM0DataTypeState = default;
             item.FNAMDataTypeState = default;
             item.DATADataTypeState = default;
@@ -4503,88 +4351,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IWeatherInternal)item);
         }
-        
-        #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IWeatherInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
-        public virtual void CopyInFromXml(
-            IWeatherInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                item.NAM0DataTypeState |= Weather.NAM0DataType.Break0;
-                item.NAM0DataTypeState |= Weather.NAM0DataType.Break1;
-                foreach (var elem in node.Elements())
-                {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    WeatherXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Weather)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Weather)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -4720,6 +4486,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.ImageSpaces,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.VolumetricLighting = EqualsMaskHelper.EqualsHelper(
+                item.VolumetricLighting,
+                rhs.VolumetricLighting,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.DirectionalAmbientLightingColors = EqualsMaskHelper.EqualsHelper(
                 item.DirectionalAmbientLightingColors,
                 rhs.DirectionalAmbientLightingColors,
@@ -4732,6 +4503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Aurora,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.SunGlareLensFlare = object.Equals(item.SunGlareLensFlare, rhs.SunGlareLensFlare);
             ret.NAM0DataTypeState = item.NAM0DataTypeState == rhs.NAM0DataTypeState;
             ret.FNAMDataTypeState = item.FNAMDataTypeState == rhs.FNAMDataTypeState;
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
@@ -5066,6 +4838,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ImageSpacesItem?.ToString(fg, "ImageSpaces");
             }
+            if ((printMask?.VolumetricLighting?.Overall ?? true)
+                && item.VolumetricLighting.TryGet(out var VolumetricLightingItem))
+            {
+                VolumetricLightingItem?.ToString(fg, "VolumetricLighting");
+            }
             if ((printMask?.DirectionalAmbientLightingColors?.Overall ?? true)
                 && item.DirectionalAmbientLightingColors.TryGet(out var DirectionalAmbientLightingColorsItem))
             {
@@ -5085,6 +4862,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 && item.Aurora.TryGet(out var AuroraItem))
             {
                 AuroraItem?.ToString(fg, "Aurora");
+            }
+            if ((printMask?.SunGlareLensFlare ?? true)
+                && item.SunGlareLensFlare.TryGet(out var SunGlareLensFlareItem))
+            {
+                fg.AppendItem(SunGlareLensFlareItem, "SunGlareLensFlare");
             }
             if (printMask?.NAM0DataTypeState ?? true)
             {
@@ -5113,12 +4895,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.ONAM.HasValue && checkMask.ONAM.Value != (item.ONAM != null)) return false;
             if (checkMask.ImageSpaces?.Overall.HasValue ?? false && checkMask.ImageSpaces.Overall.Value != (item.ImageSpaces != null)) return false;
             if (checkMask.ImageSpaces?.Specific != null && (item.ImageSpaces == null || !item.ImageSpaces.HasBeenSet(checkMask.ImageSpaces.Specific))) return false;
+            if (checkMask.VolumetricLighting?.Overall.HasValue ?? false && checkMask.VolumetricLighting.Overall.Value != (item.VolumetricLighting != null)) return false;
+            if (checkMask.VolumetricLighting?.Specific != null && (item.VolumetricLighting == null || !item.VolumetricLighting.HasBeenSet(checkMask.VolumetricLighting.Specific))) return false;
             if (checkMask.DirectionalAmbientLightingColors?.Overall.HasValue ?? false && checkMask.DirectionalAmbientLightingColors.Overall.Value != (item.DirectionalAmbientLightingColors != null)) return false;
             if (checkMask.DirectionalAmbientLightingColors?.Specific != null && (item.DirectionalAmbientLightingColors == null || !item.DirectionalAmbientLightingColors.HasBeenSet(checkMask.DirectionalAmbientLightingColors.Specific))) return false;
             if (checkMask.NAM2.HasValue && checkMask.NAM2.Value != (item.NAM2 != null)) return false;
             if (checkMask.NAM3.HasValue && checkMask.NAM3.Value != (item.NAM3 != null)) return false;
             if (checkMask.Aurora?.Overall.HasValue ?? false && checkMask.Aurora.Overall.Value != (item.Aurora != null)) return false;
             if (checkMask.Aurora?.Specific != null && (item.Aurora == null || !item.Aurora.HasBeenSet(checkMask.Aurora.Specific))) return false;
+            if (checkMask.SunGlareLensFlare.HasValue && checkMask.SunGlareLensFlare.Value != (item.SunGlareLensFlare.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -5185,12 +4970,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.SkyStatics = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             var itemImageSpaces = item.ImageSpaces;
             mask.ImageSpaces = new MaskItem<bool, WeatherImageSpaces.Mask<bool>?>(itemImageSpaces != null, itemImageSpaces?.GetHasBeenSetMask());
+            var itemVolumetricLighting = item.VolumetricLighting;
+            mask.VolumetricLighting = new MaskItem<bool, WeatherVolumetricLighting.Mask<bool>?>(itemVolumetricLighting != null, itemVolumetricLighting?.GetHasBeenSetMask());
             var itemDirectionalAmbientLightingColors = item.DirectionalAmbientLightingColors;
             mask.DirectionalAmbientLightingColors = new MaskItem<bool, WeatherAmbientColorSet.Mask<bool>?>(itemDirectionalAmbientLightingColors != null, itemDirectionalAmbientLightingColors?.GetHasBeenSetMask());
             mask.NAM2 = (item.NAM2 != null);
             mask.NAM3 = (item.NAM3 != null);
             var itemAurora = item.Aurora;
             mask.Aurora = new MaskItem<bool, Model.Mask<bool>?>(itemAurora != null, itemAurora?.GetHasBeenSetMask());
+            mask.SunGlareLensFlare = (item.SunGlareLensFlare.FormKey != null);
             mask.NAM0DataTypeState = true;
             mask.FNAMDataTypeState = true;
             mask.DATADataTypeState = true;
@@ -5207,7 +4995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Weather_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (Weather_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (Weather_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (Weather_FieldIndex)((int)index);
@@ -5228,7 +5016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Weather_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (Weather_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (Weather_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (Weather_FieldIndex)((int)index);
@@ -5299,10 +5087,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
             if (!lhs.SkyStatics.SequenceEqual(rhs.SkyStatics)) return false;
             if (!object.Equals(lhs.ImageSpaces, rhs.ImageSpaces)) return false;
+            if (!object.Equals(lhs.VolumetricLighting, rhs.VolumetricLighting)) return false;
             if (!object.Equals(lhs.DirectionalAmbientLightingColors, rhs.DirectionalAmbientLightingColors)) return false;
             if (!MemorySliceExt.Equal(lhs.NAM2, rhs.NAM2)) return false;
             if (!MemorySliceExt.Equal(lhs.NAM3, rhs.NAM3)) return false;
             if (!object.Equals(lhs.Aurora, rhs.Aurora)) return false;
+            if (!lhs.SunGlareLensFlare.Equals(rhs.SunGlareLensFlare)) return false;
             if (lhs.NAM0DataTypeState != rhs.NAM0DataTypeState) return false;
             if (lhs.FNAMDataTypeState != rhs.FNAMDataTypeState) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
@@ -5408,6 +5198,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(ImageSpacesitem);
             }
+            if (item.VolumetricLighting.TryGet(out var VolumetricLightingitem))
+            {
+                hash.Add(VolumetricLightingitem);
+            }
             if (item.DirectionalAmbientLightingColors.TryGet(out var DirectionalAmbientLightingColorsitem))
             {
                 hash.Add(DirectionalAmbientLightingColorsitem);
@@ -5423,6 +5217,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (item.Aurora.TryGet(out var Auroraitem))
             {
                 hash.Add(Auroraitem);
+            }
+            if (item.SunGlareLensFlare.TryGet(out var SunGlareLensFlareitem))
+            {
+                hash.Add(SunGlareLensFlareitem);
             }
             hash.Add(item.NAM0DataTypeState);
             hash.Add(item.FNAMDataTypeState);
@@ -5476,12 +5274,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.VolumetricLighting.TryGet(out var VolumetricLightingItems))
+            {
+                foreach (var item in VolumetricLightingItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             if (obj.Aurora.TryGet(out var AuroraItems))
             {
                 foreach (var item in AuroraItems.LinkFormKeys)
                 {
                     yield return item;
                 }
+            }
+            if (obj.SunGlareLensFlare.FormKey.TryGet(out var SunGlareLensFlareKey))
+            {
+                yield return SunGlareLensFlareKey;
             }
             yield break;
         }
@@ -6158,6 +5967,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.VolumetricLighting) ?? true))
+            {
+                errorMask?.PushIndex((int)Weather_FieldIndex.VolumetricLighting);
+                try
+                {
+                    if(rhs.VolumetricLighting.TryGet(out var rhsVolumetricLighting))
+                    {
+                        item.VolumetricLighting = rhsVolumetricLighting.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weather_FieldIndex.VolumetricLighting));
+                    }
+                    else
+                    {
+                        item.VolumetricLighting = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.DirectionalAmbientLightingColors) ?? true))
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.DirectionalAmbientLightingColors);
@@ -6231,6 +6066,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareLensFlare) ?? true))
+            {
+                item.SunGlareLensFlare = rhs.SunGlareLensFlare.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
             {
@@ -6366,2027 +6205,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class WeatherXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
-        IXmlWriteTranslator
-    {
-        public new readonly static WeatherXmlWriteTranslation Instance = new WeatherXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IWeatherGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
-            {
-                ListXmlTranslation<String>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CloudTextures),
-                    item: item.CloudTextures,
-                    fieldIndex: (int)Weather_FieldIndex.CloudTextures,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.CloudTextures),
-                    transl: (XElement subNode, String subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.DNAM != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DNAM),
-                    item: item.DNAM.Value,
-                    fieldIndex: (int)Weather_FieldIndex.DNAM,
-                    errorMask: errorMask);
-            }
-            if ((item.CNAM != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.CNAM) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.CNAM),
-                    item: item.CNAM.Value,
-                    fieldIndex: (int)Weather_FieldIndex.CNAM,
-                    errorMask: errorMask);
-            }
-            if ((item.ANAM != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ANAM) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ANAM),
-                    item: item.ANAM.Value,
-                    fieldIndex: (int)Weather_FieldIndex.ANAM,
-                    errorMask: errorMask);
-            }
-            if ((item.BNAM != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.BNAM) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BNAM),
-                    item: item.BNAM.Value,
-                    fieldIndex: (int)Weather_FieldIndex.BNAM,
-                    errorMask: errorMask);
-            }
-            if ((item.LNAM != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.LNAM) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LNAM),
-                    item: item.LNAM.Value,
-                    fieldIndex: (int)Weather_FieldIndex.LNAM,
-                    errorMask: errorMask);
-            }
-            if ((item.Precipitation.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Precipitation) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Precipitation),
-                    item: item.Precipitation.FormKey,
-                    fieldIndex: (int)Weather_FieldIndex.Precipitation,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffect) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VisualEffect),
-                    item: item.VisualEffect.FormKey,
-                    fieldIndex: (int)Weather_FieldIndex.VisualEffect,
-                    errorMask: errorMask);
-            }
-            if ((item.ONAM != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ONAM) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ONAM),
-                    item: item.ONAM.Value,
-                    fieldIndex: (int)Weather_FieldIndex.ONAM,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Clouds) ?? true))
-            {
-                ListXmlTranslation<ICloudLayerGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Clouds),
-                    item: item.Clouds,
-                    fieldIndex: (int)Weather_FieldIndex.Clouds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Clouds),
-                    transl: (XElement subNode, ICloudLayerGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((CloudLayerXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SkyUpperColor) ?? true))
-            {
-                var SkyUpperColorItem = item.SkyUpperColor;
-                ((WeatherColorXmlWriteTranslation)((IXmlItem)SkyUpperColorItem).XmlWriteTranslator).Write(
-                    item: SkyUpperColorItem,
-                    node: node,
-                    name: nameof(item.SkyUpperColor),
-                    fieldIndex: (int)Weather_FieldIndex.SkyUpperColor,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.SkyUpperColor));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNearColor) ?? true))
-            {
-                var FogNearColorItem = item.FogNearColor;
-                ((WeatherColorXmlWriteTranslation)((IXmlItem)FogNearColorItem).XmlWriteTranslator).Write(
-                    item: FogNearColorItem,
-                    node: node,
-                    name: nameof(item.FogNearColor),
-                    fieldIndex: (int)Weather_FieldIndex.FogNearColor,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.FogNearColor));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.UnknownColor) ?? true))
-            {
-                var UnknownColorItem = item.UnknownColor;
-                ((WeatherColorXmlWriteTranslation)((IXmlItem)UnknownColorItem).XmlWriteTranslator).Write(
-                    item: UnknownColorItem,
-                    node: node,
-                    name: nameof(item.UnknownColor),
-                    fieldIndex: (int)Weather_FieldIndex.UnknownColor,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.UnknownColor));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.AmbientColor) ?? true))
-            {
-                var AmbientColorItem = item.AmbientColor;
-                ((WeatherColorXmlWriteTranslation)((IXmlItem)AmbientColorItem).XmlWriteTranslator).Write(
-                    item: AmbientColorItem,
-                    node: node,
-                    name: nameof(item.AmbientColor),
-                    fieldIndex: (int)Weather_FieldIndex.AmbientColor,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.AmbientColor));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunlightColor) ?? true))
-            {
-                var SunlightColorItem = item.SunlightColor;
-                ((WeatherColorXmlWriteTranslation)((IXmlItem)SunlightColorItem).XmlWriteTranslator).Write(
-                    item: SunlightColorItem,
-                    node: node,
-                    name: nameof(item.SunlightColor),
-                    fieldIndex: (int)Weather_FieldIndex.SunlightColor,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.SunlightColor));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunColor) ?? true))
-            {
-                var SunColorItem = item.SunColor;
-                ((WeatherColorXmlWriteTranslation)((IXmlItem)SunColorItem).XmlWriteTranslator).Write(
-                    item: SunColorItem,
-                    node: node,
-                    name: nameof(item.SunColor),
-                    fieldIndex: (int)Weather_FieldIndex.SunColor,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.SunColor));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.StarsColor) ?? true))
-            {
-                var StarsColorItem = item.StarsColor;
-                ((WeatherColorXmlWriteTranslation)((IXmlItem)StarsColorItem).XmlWriteTranslator).Write(
-                    item: StarsColorItem,
-                    node: node,
-                    name: nameof(item.StarsColor),
-                    fieldIndex: (int)Weather_FieldIndex.StarsColor,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.StarsColor));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SkyLowerColor) ?? true))
-            {
-                var SkyLowerColorItem = item.SkyLowerColor;
-                ((WeatherColorXmlWriteTranslation)((IXmlItem)SkyLowerColorItem).XmlWriteTranslator).Write(
-                    item: SkyLowerColorItem,
-                    node: node,
-                    name: nameof(item.SkyLowerColor),
-                    fieldIndex: (int)Weather_FieldIndex.SkyLowerColor,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.SkyLowerColor));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HorizonColor) ?? true))
-            {
-                var HorizonColorItem = item.HorizonColor;
-                ((WeatherColorXmlWriteTranslation)((IXmlItem)HorizonColorItem).XmlWriteTranslator).Write(
-                    item: HorizonColorItem,
-                    node: node,
-                    name: nameof(item.HorizonColor),
-                    fieldIndex: (int)Weather_FieldIndex.HorizonColor,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.HorizonColor));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.EffectLightingColor) ?? true))
-            {
-                var EffectLightingColorItem = item.EffectLightingColor;
-                ((WeatherColorXmlWriteTranslation)((IXmlItem)EffectLightingColorItem).XmlWriteTranslator).Write(
-                    item: EffectLightingColorItem,
-                    node: node,
-                    name: nameof(item.EffectLightingColor),
-                    fieldIndex: (int)Weather_FieldIndex.EffectLightingColor,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.EffectLightingColor));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudLodDiffuseColor) ?? true))
-            {
-                var CloudLodDiffuseColorItem = item.CloudLodDiffuseColor;
-                ((WeatherColorXmlWriteTranslation)((IXmlItem)CloudLodDiffuseColorItem).XmlWriteTranslator).Write(
-                    item: CloudLodDiffuseColorItem,
-                    node: node,
-                    name: nameof(item.CloudLodDiffuseColor),
-                    fieldIndex: (int)Weather_FieldIndex.CloudLodDiffuseColor,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.CloudLodDiffuseColor));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudLodAmbientColor) ?? true))
-            {
-                var CloudLodAmbientColorItem = item.CloudLodAmbientColor;
-                ((WeatherColorXmlWriteTranslation)((IXmlItem)CloudLodAmbientColorItem).XmlWriteTranslator).Write(
-                    item: CloudLodAmbientColorItem,
-                    node: node,
-                    name: nameof(item.CloudLodAmbientColor),
-                    fieldIndex: (int)Weather_FieldIndex.CloudLodAmbientColor,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.CloudLodAmbientColor));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogFarColor) ?? true))
-            {
-                var FogFarColorItem = item.FogFarColor;
-                ((WeatherColorXmlWriteTranslation)((IXmlItem)FogFarColorItem).XmlWriteTranslator).Write(
-                    item: FogFarColorItem,
-                    node: node,
-                    name: nameof(item.FogFarColor),
-                    fieldIndex: (int)Weather_FieldIndex.FogFarColor,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.FogFarColor));
-            }
-            if (!item.NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break0))
-            {
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SkyStaticsColor) ?? true))
-                {
-                    var SkyStaticsColorItem = item.SkyStaticsColor;
-                    ((WeatherColorXmlWriteTranslation)((IXmlItem)SkyStaticsColorItem).XmlWriteTranslator).Write(
-                        item: SkyStaticsColorItem,
-                        node: node,
-                        name: nameof(item.SkyStaticsColor),
-                        fieldIndex: (int)Weather_FieldIndex.SkyStaticsColor,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.SkyStaticsColor));
-                }
-                if (!item.NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break1))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.WaterMultiplierColor) ?? true))
-                    {
-                        var WaterMultiplierColorItem = item.WaterMultiplierColor;
-                        ((WeatherColorXmlWriteTranslation)((IXmlItem)WaterMultiplierColorItem).XmlWriteTranslator).Write(
-                            item: WaterMultiplierColorItem,
-                            node: node,
-                            name: nameof(item.WaterMultiplierColor),
-                            fieldIndex: (int)Weather_FieldIndex.WaterMultiplierColor,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.WaterMultiplierColor));
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareColor) ?? true))
-                    {
-                        var SunGlareColorItem = item.SunGlareColor;
-                        ((WeatherColorXmlWriteTranslation)((IXmlItem)SunGlareColorItem).XmlWriteTranslator).Write(
-                            item: SunGlareColorItem,
-                            node: node,
-                            name: nameof(item.SunGlareColor),
-                            fieldIndex: (int)Weather_FieldIndex.SunGlareColor,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.SunGlareColor));
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.MoonGlareColor) ?? true))
-                    {
-                        var MoonGlareColorItem = item.MoonGlareColor;
-                        ((WeatherColorXmlWriteTranslation)((IXmlItem)MoonGlareColorItem).XmlWriteTranslator).Write(
-                            item: MoonGlareColorItem,
-                            node: node,
-                            name: nameof(item.MoonGlareColor),
-                            fieldIndex: (int)Weather_FieldIndex.MoonGlareColor,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.MoonGlareColor));
-                    }
-                }
-            }
-            else
-            {
-                node.Add(new XElement("HasNAM0DataType"));
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayNear) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogDistanceDayNear),
-                    item: item.FogDistanceDayNear,
-                    fieldIndex: (int)Weather_FieldIndex.FogDistanceDayNear,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayFar) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogDistanceDayFar),
-                    item: item.FogDistanceDayFar,
-                    fieldIndex: (int)Weather_FieldIndex.FogDistanceDayFar,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightNear) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogDistanceNightNear),
-                    item: item.FogDistanceNightNear,
-                    fieldIndex: (int)Weather_FieldIndex.FogDistanceNightNear,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightFar) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogDistanceNightFar),
-                    item: item.FogDistanceNightFar,
-                    fieldIndex: (int)Weather_FieldIndex.FogDistanceNightFar,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayPower) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogDistanceDayPower),
-                    item: item.FogDistanceDayPower,
-                    fieldIndex: (int)Weather_FieldIndex.FogDistanceDayPower,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightPower) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogDistanceNightPower),
-                    item: item.FogDistanceNightPower,
-                    fieldIndex: (int)Weather_FieldIndex.FogDistanceNightPower,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayMax) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogDistanceDayMax),
-                    item: item.FogDistanceDayMax,
-                    fieldIndex: (int)Weather_FieldIndex.FogDistanceDayMax,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightMax) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FogDistanceNightMax),
-                    item: item.FogDistanceNightMax,
-                    fieldIndex: (int)Weather_FieldIndex.FogDistanceNightMax,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.WindSpeed) ?? true))
-            {
-                PercentXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WindSpeed),
-                    item: item.WindSpeed,
-                    fieldIndex: (int)Weather_FieldIndex.WindSpeed,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Unknown) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)Weather_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.TransDelta) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TransDelta),
-                    item: item.TransDelta,
-                    fieldIndex: (int)Weather_FieldIndex.TransDelta,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlare) ?? true))
-            {
-                PercentXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SunGlare),
-                    item: item.SunGlare,
-                    fieldIndex: (int)Weather_FieldIndex.SunGlare,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunDamage) ?? true))
-            {
-                PercentXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SunDamage),
-                    item: item.SunDamage,
-                    fieldIndex: (int)Weather_FieldIndex.SunDamage,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationBeginFadeIn) ?? true))
-            {
-                PercentXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PrecipitationBeginFadeIn),
-                    item: item.PrecipitationBeginFadeIn,
-                    fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationEndFadeOut) ?? true))
-            {
-                PercentXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PrecipitationEndFadeOut),
-                    item: item.PrecipitationEndFadeOut,
-                    fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningBeginFadeIn) ?? true))
-            {
-                PercentXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ThunderLightningBeginFadeIn),
-                    item: item.ThunderLightningBeginFadeIn,
-                    fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningEndFadeOut) ?? true))
-            {
-                PercentXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ThunderLightningEndFadeOut),
-                    item: item.ThunderLightningEndFadeOut,
-                    fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningFrequency) ?? true))
-            {
-                PercentXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ThunderLightningFrequency),
-                    item: item.ThunderLightningFrequency,
-                    fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<Weather.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)Weather_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.LightningColor) ?? true))
-            {
-                ColorXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LightningColor),
-                    item: item.LightningColor,
-                    fieldIndex: (int)Weather_FieldIndex.LightningColor,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffectBegin) ?? true))
-            {
-                PercentXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VisualEffectBegin),
-                    item: item.VisualEffectBegin,
-                    fieldIndex: (int)Weather_FieldIndex.VisualEffectBegin,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffectEnd) ?? true))
-            {
-                PercentXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VisualEffectEnd),
-                    item: item.VisualEffectEnd,
-                    fieldIndex: (int)Weather_FieldIndex.VisualEffectEnd,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.WindDirection) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WindDirection),
-                    item: item.WindDirection,
-                    fieldIndex: (int)Weather_FieldIndex.WindDirection,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.WindDirectionRange) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.WindDirectionRange),
-                    item: item.WindDirectionRange,
-                    fieldIndex: (int)Weather_FieldIndex.WindDirectionRange,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
-            {
-                ListXmlTranslation<IWeatherSoundGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Sounds),
-                    item: item.Sounds,
-                    fieldIndex: (int)Weather_FieldIndex.Sounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Sounds),
-                    transl: (XElement subNode, IWeatherSoundGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((WeatherSoundXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SkyStatics) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IStaticGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.SkyStatics),
-                    item: item.SkyStatics,
-                    fieldIndex: (int)Weather_FieldIndex.SkyStatics,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.SkyStatics),
-                    transl: (XElement subNode, IFormLink<IStaticGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.ImageSpaces != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaces) ?? true))
-            {
-                if (item.ImageSpaces.TryGet(out var ImageSpacesItem))
-                {
-                    ((WeatherImageSpacesXmlWriteTranslation)((IXmlItem)ImageSpacesItem).XmlWriteTranslator).Write(
-                        item: ImageSpacesItem,
-                        node: node,
-                        name: nameof(item.ImageSpaces),
-                        fieldIndex: (int)Weather_FieldIndex.ImageSpaces,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.ImageSpaces));
-                }
-            }
-            if ((item.DirectionalAmbientLightingColors != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.DirectionalAmbientLightingColors) ?? true))
-            {
-                if (item.DirectionalAmbientLightingColors.TryGet(out var DirectionalAmbientLightingColorsItem))
-                {
-                    ((WeatherAmbientColorSetXmlWriteTranslation)((IXmlItem)DirectionalAmbientLightingColorsItem).XmlWriteTranslator).Write(
-                        item: DirectionalAmbientLightingColorsItem,
-                        node: node,
-                        name: nameof(item.DirectionalAmbientLightingColors),
-                        fieldIndex: (int)Weather_FieldIndex.DirectionalAmbientLightingColors,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.DirectionalAmbientLightingColors));
-                }
-            }
-            if ((item.NAM2 != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM2) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NAM2),
-                    item: item.NAM2.Value,
-                    fieldIndex: (int)Weather_FieldIndex.NAM2,
-                    errorMask: errorMask);
-            }
-            if ((item.NAM3 != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM3) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NAM3),
-                    item: item.NAM3.Value,
-                    fieldIndex: (int)Weather_FieldIndex.NAM3,
-                    errorMask: errorMask);
-            }
-            if ((item.Aurora != null)
-                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Aurora) ?? true))
-            {
-                if (item.Aurora.TryGet(out var AuroraItem))
-                {
-                    ((ModelXmlWriteTranslation)((IXmlItem)AuroraItem).XmlWriteTranslator).Write(
-                        item: AuroraItem,
-                        node: node,
-                        name: nameof(item.Aurora),
-                        fieldIndex: (int)Weather_FieldIndex.Aurora,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Aurora));
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Weather.NAM0DataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.NAM0DataTypeState),
-                    item: item.NAM0DataTypeState,
-                    fieldIndex: (int)Weather_FieldIndex.NAM0DataTypeState,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FNAMDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Weather.FNAMDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.FNAMDataTypeState),
-                    item: item.FNAMDataTypeState,
-                    fieldIndex: (int)Weather_FieldIndex.FNAMDataTypeState,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Weather.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Weather_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IWeatherGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Weather");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Weather");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IWeatherGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            ISkyrimMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IWeatherGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IWeatherGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-    }
-
-    public partial class WeatherXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
-    {
-        public new readonly static WeatherXmlCreateTranslation Instance = new WeatherXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IWeatherInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    WeatherXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IWeatherInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "CloudTextures":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.CloudTextures);
-                    try
-                    {
-                        if (ListXmlTranslation<String>.Instance.Parse(
-                            node: node,
-                            enumer: out var CloudTexturesItem,
-                            transl: StringXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.CloudTextures.SetTo(CloudTexturesItem);
-                        }
-                        else
-                        {
-                            item.CloudTextures.ResetToNull();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DNAM":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.DNAM);
-                    try
-                    {
-                        item.DNAM = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CNAM":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.CNAM);
-                    try
-                    {
-                        item.CNAM = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ANAM":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.ANAM);
-                    try
-                    {
-                        item.ANAM = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BNAM":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.BNAM);
-                    try
-                    {
-                        item.BNAM = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LNAM":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.LNAM);
-                    try
-                    {
-                        item.LNAM = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Precipitation":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Precipitation);
-                    try
-                    {
-                        item.Precipitation = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VisualEffect":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.VisualEffect);
-                    try
-                    {
-                        item.VisualEffect = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ONAM":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.ONAM);
-                    try
-                    {
-                        item.ONAM = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Clouds":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Clouds);
-                    try
-                    {
-                        if (ListXmlTranslation<CloudLayer>.Instance.Parse(
-                            node: node,
-                            enumer: out var CloudsItem,
-                            transl: LoquiXmlTranslation<CloudLayer>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Clouds.SetTo(CloudsItem);
-                        }
-                        else
-                        {
-                            item.Clouds.Fill(() => new CloudLayer());
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkyUpperColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.SkyUpperColor);
-                    try
-                    {
-                        item.SkyUpperColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.SkyUpperColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogNearColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FogNearColor);
-                    try
-                    {
-                        item.FogNearColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.FogNearColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnknownColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.UnknownColor);
-                    try
-                    {
-                        item.UnknownColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.UnknownColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AmbientColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.AmbientColor);
-                    try
-                    {
-                        item.AmbientColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.AmbientColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunlightColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.SunlightColor);
-                    try
-                    {
-                        item.SunlightColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.SunlightColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.SunColor);
-                    try
-                    {
-                        item.SunColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.SunColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "StarsColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.StarsColor);
-                    try
-                    {
-                        item.StarsColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.StarsColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkyLowerColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.SkyLowerColor);
-                    try
-                    {
-                        item.SkyLowerColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.SkyLowerColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HorizonColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HorizonColor);
-                    try
-                    {
-                        item.HorizonColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.HorizonColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EffectLightingColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.EffectLightingColor);
-                    try
-                    {
-                        item.EffectLightingColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.EffectLightingColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CloudLodDiffuseColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.CloudLodDiffuseColor);
-                    try
-                    {
-                        item.CloudLodDiffuseColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.CloudLodDiffuseColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CloudLodAmbientColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.CloudLodAmbientColor);
-                    try
-                    {
-                        item.CloudLodAmbientColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.CloudLodAmbientColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogFarColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FogFarColor);
-                    try
-                    {
-                        item.FogFarColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.FogFarColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkyStaticsColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.SkyStaticsColor);
-                    try
-                    {
-                        item.SkyStaticsColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.SkyStaticsColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.NAM0DataTypeState &= ~Weather.NAM0DataType.Break0;
-                    break;
-                case "WaterMultiplierColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.WaterMultiplierColor);
-                    try
-                    {
-                        item.WaterMultiplierColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.WaterMultiplierColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.NAM0DataTypeState &= ~Weather.NAM0DataType.Break1;
-                    break;
-                case "SunGlareColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.SunGlareColor);
-                    try
-                    {
-                        item.SunGlareColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.SunGlareColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MoonGlareColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.MoonGlareColor);
-                    try
-                    {
-                        item.MoonGlareColor = LoquiXmlTranslation<WeatherColor>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.MoonGlareColor));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogDistanceDayNear":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FogDistanceDayNear);
-                    try
-                    {
-                        item.FogDistanceDayNear = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogDistanceDayFar":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FogDistanceDayFar);
-                    try
-                    {
-                        item.FogDistanceDayFar = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogDistanceNightNear":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FogDistanceNightNear);
-                    try
-                    {
-                        item.FogDistanceNightNear = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogDistanceNightFar":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FogDistanceNightFar);
-                    try
-                    {
-                        item.FogDistanceNightFar = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogDistanceDayPower":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FogDistanceDayPower);
-                    try
-                    {
-                        item.FogDistanceDayPower = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogDistanceNightPower":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FogDistanceNightPower);
-                    try
-                    {
-                        item.FogDistanceNightPower = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogDistanceDayMax":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FogDistanceDayMax);
-                    try
-                    {
-                        item.FogDistanceDayMax = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogDistanceNightMax":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FogDistanceNightMax);
-                    try
-                    {
-                        item.FogDistanceNightMax = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WindSpeed":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.WindSpeed);
-                    try
-                    {
-                        item.WindSpeed = PercentXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Unknown);
-                    try
-                    {
-                        item.Unknown = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TransDelta":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.TransDelta);
-                    try
-                    {
-                        item.TransDelta = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunGlare":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.SunGlare);
-                    try
-                    {
-                        item.SunGlare = PercentXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunDamage":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.SunDamage);
-                    try
-                    {
-                        item.SunDamage = PercentXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PrecipitationBeginFadeIn":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationBeginFadeIn);
-                    try
-                    {
-                        item.PrecipitationBeginFadeIn = PercentXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PrecipitationEndFadeOut":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationEndFadeOut);
-                    try
-                    {
-                        item.PrecipitationEndFadeOut = PercentXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ThunderLightningBeginFadeIn":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningBeginFadeIn);
-                    try
-                    {
-                        item.ThunderLightningBeginFadeIn = PercentXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ThunderLightningEndFadeOut":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningEndFadeOut);
-                    try
-                    {
-                        item.ThunderLightningEndFadeOut = PercentXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ThunderLightningFrequency":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningFrequency);
-                    try
-                    {
-                        item.ThunderLightningFrequency = PercentXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Weather.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LightningColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.LightningColor);
-                    try
-                    {
-                        item.LightningColor = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VisualEffectBegin":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.VisualEffectBegin);
-                    try
-                    {
-                        item.VisualEffectBegin = PercentXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VisualEffectEnd":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.VisualEffectEnd);
-                    try
-                    {
-                        item.VisualEffectEnd = PercentXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WindDirection":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.WindDirection);
-                    try
-                    {
-                        item.WindDirection = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WindDirectionRange":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.WindDirectionRange);
-                    try
-                    {
-                        item.WindDirectionRange = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sounds":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Sounds);
-                    try
-                    {
-                        if (ListXmlTranslation<WeatherSound>.Instance.Parse(
-                            node: node,
-                            enumer: out var SoundsItem,
-                            transl: LoquiXmlTranslation<WeatherSound>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Sounds.SetTo(SoundsItem);
-                        }
-                        else
-                        {
-                            item.Sounds.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkyStatics":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.SkyStatics);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<Static>>.Instance.Parse(
-                            node: node,
-                            enumer: out var SkyStaticsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.SkyStatics.SetTo(SkyStaticsItem);
-                        }
-                        else
-                        {
-                            item.SkyStatics.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ImageSpaces":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.ImageSpaces);
-                    try
-                    {
-                        item.ImageSpaces = LoquiXmlTranslation<WeatherImageSpaces>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.ImageSpaces));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DirectionalAmbientLightingColors":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.DirectionalAmbientLightingColors);
-                    try
-                    {
-                        item.DirectionalAmbientLightingColors = LoquiXmlTranslation<WeatherAmbientColorSet>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.DirectionalAmbientLightingColors));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NAM2":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.NAM2);
-                    try
-                    {
-                        item.NAM2 = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NAM3":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.NAM3);
-                    try
-                    {
-                        item.NAM3 = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Aurora":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Aurora);
-                    try
-                    {
-                        item.Aurora = LoquiXmlTranslation<Model>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Aurora));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NAM0DataTypeState":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.NAM0DataTypeState);
-                    try
-                    {
-                        item.NAM0DataTypeState = EnumXmlTranslation<Weather.NAM0DataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FNAMDataTypeState":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FNAMDataTypeState);
-                    try
-                    {
-                        item.FNAMDataTypeState = EnumXmlTranslation<Weather.FNAMDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Weather.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class WeatherXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IWeatherGetter item,
-            XElement node,
-            out Weather.ErrorMask errorMask,
-            Weather.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((WeatherXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = Weather.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IWeatherGetter item,
-            string path,
-            out Weather.ErrorMask errorMask,
-            Weather.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IWeatherGetter item,
-            Stream stream,
-            out Weather.ErrorMask errorMask,
-            Weather.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -8771,6 +6589,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
+            if (writer.MetaData.FormVersion!.Value >= 43)
+            {
+                if (item.VolumetricLighting.TryGet(out var VolumetricLightingItem))
+                {
+                    ((WeatherVolumetricLightingBinaryWriteTranslation)((IBinaryItem)VolumetricLightingItem).BinaryWriteTranslator).Write(
+                        item: VolumetricLightingItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
             WeatherBinaryWriteTranslation.WriteBinaryDirectionalAmbientLightingColors(
                 writer: writer,
                 item: item);
@@ -8789,6 +6617,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
+            if (writer.MetaData.FormVersion!.Value >= 44)
+            {
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                    writer: writer,
+                    item: item.SunGlareLensFlare,
+                    header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
+            }
         }
 
         public void Write(
@@ -8804,10 +6639,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 
@@ -8860,9 +6697,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IWeatherInternal item,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -8874,31 +6712,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.DNAM);
+                    return (int)Weather_FieldIndex.DNAM;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.CNAM);
+                    return (int)Weather_FieldIndex.CNAM;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ANAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.ANAM);
+                    return (int)Weather_FieldIndex.ANAM;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.BNAM);
+                    return (int)Weather_FieldIndex.BNAM;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.LNAM);
+                    return (int)Weather_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -8906,7 +6744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Precipitation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Precipitation);
+                    return (int)Weather_FieldIndex.Precipitation;
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -8914,41 +6752,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.VisualEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.VisualEffect);
+                    return (int)Weather_FieldIndex.VisualEffect;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ONAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.ONAM);
+                    return (int)Weather_FieldIndex.ONAM;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     WeatherBinaryCreateTranslation.FillBinaryCloudsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Clouds);
+                    return (int)Weather_FieldIndex.Clouds;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     WeatherBinaryCreateTranslation.FillBinaryCloudXSpeedsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     WeatherBinaryCreateTranslation.FillBinaryCloudColorsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.JNAM:
                 {
                     WeatherBinaryCreateTranslation.FillBinaryCloudAlphasCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.NAM0:
                 {
@@ -8970,18 +6808,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.NAM0DataTypeState |= Weather.NAM0DataType.Break0;
-                        return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogFarColor);
+                        return (int)Weather_FieldIndex.FogFarColor;
                     }
                     item.SkyStaticsColor = Mutagen.Bethesda.Skyrim.WeatherColor.CreateFromBinary(frame: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.NAM0DataTypeState |= Weather.NAM0DataType.Break1;
-                        return TryGet<int?>.Succeed((int)Weather_FieldIndex.SkyStaticsColor);
+                        return (int)Weather_FieldIndex.SkyStaticsColor;
                     }
                     item.WaterMultiplierColor = Mutagen.Bethesda.Skyrim.WeatherColor.CreateFromBinary(frame: dataFrame);
                     item.SunGlareColor = Mutagen.Bethesda.Skyrim.WeatherColor.CreateFromBinary(frame: dataFrame);
                     item.MoonGlareColor = Mutagen.Bethesda.Skyrim.WeatherColor.CreateFromBinary(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.MoonGlareColor);
+                    return (int)Weather_FieldIndex.MoonGlareColor;
                 }
                 case RecordTypeInts.FNAM:
                 {
@@ -8995,7 +6833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FogDistanceNightPower = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.FogDistanceDayMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.FogDistanceNightMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogDistanceNightMax);
+                    return (int)Weather_FieldIndex.FogDistanceNightMax;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -9046,14 +6884,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: dataFrame,
                         integerType: FloatIntegerType.Byte,
                         multiplier: 0.005555555555555556);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.WindDirectionRange);
+                    return (int)Weather_FieldIndex.WindDirectionRange;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     WeatherBinaryCreateTranslation.FillBinaryDisabledCloudLayersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -9063,7 +6901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.SNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: WeatherSound.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);
+                    return (int)Weather_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -9072,43 +6910,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.SkyStatics);
+                    return (int)Weather_FieldIndex.SkyStatics;
                 }
                 case RecordTypeInts.IMSP:
                 {
                     item.ImageSpaces = Mutagen.Bethesda.Skyrim.WeatherImageSpaces.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.ImageSpaces);
+                    return (int)Weather_FieldIndex.ImageSpaces;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    if (frame.MetaData.FormVersion!.Value >= 43)
+                    {
+                        item.VolumetricLighting = Mutagen.Bethesda.Skyrim.WeatherVolumetricLighting.CreateFromBinary(frame: frame);
+                    }
+                    return (int)Weather_FieldIndex.VolumetricLighting;
                 }
                 case RecordTypeInts.DALC:
                 {
                     WeatherBinaryCreateTranslation.FillBinaryDirectionalAmbientLightingColorsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.DirectionalAmbientLightingColors);
+                    return (int)Weather_FieldIndex.DirectionalAmbientLightingColors;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NAM2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.NAM2);
+                    return (int)Weather_FieldIndex.NAM2;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NAM3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.NAM3);
+                    return (int)Weather_FieldIndex.NAM3;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Aurora = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Aurora);
+                    return (int)Weather_FieldIndex.Aurora;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    if (frame.MetaData.FormVersion!.Value >= 44)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.SunGlareLensFlare = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            defaultVal: FormKey.Null);
+                    }
+                    return (int)Weather_FieldIndex.SunGlareLensFlare;
                 }
                 default:
                     return CustomRecordFallback(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter);
@@ -9184,21 +7042,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => WeatherXmlWriteTranslation.Instance;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((WeatherXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -9239,12 +7082,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Precipitation
         private int? _PrecipitationLocation;
         public bool Precipitation_IsSet => _PrecipitationLocation.HasValue;
-        public IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
+        public IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
         #endregion
         #region VisualEffect
         private int? _VisualEffectLocation;
         public bool VisualEffect_IsSet => _VisualEffectLocation.HasValue;
-        public IFormLink<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
+        public IFormLink<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
         #endregion
         #region ONAM
         private int? _ONAMLocation;
@@ -9382,42 +7225,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FogDistanceDayNear
         private int _FogDistanceDayNearLocation => _FNAMLocation!.Value;
         private bool _FogDistanceDayNear_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayNear => _FogDistanceDayNear_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceDayNearLocation, 4)) : default;
+        public Single FogDistanceDayNear => _FogDistanceDayNear_IsSet ? _data.Slice(_FogDistanceDayNearLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayFar
         private int _FogDistanceDayFarLocation => _FNAMLocation!.Value + 0x4;
         private bool _FogDistanceDayFar_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayFar => _FogDistanceDayFar_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceDayFarLocation, 4)) : default;
+        public Single FogDistanceDayFar => _FogDistanceDayFar_IsSet ? _data.Slice(_FogDistanceDayFarLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightNear
         private int _FogDistanceNightNearLocation => _FNAMLocation!.Value + 0x8;
         private bool _FogDistanceNightNear_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightNear => _FogDistanceNightNear_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceNightNearLocation, 4)) : default;
+        public Single FogDistanceNightNear => _FogDistanceNightNear_IsSet ? _data.Slice(_FogDistanceNightNearLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightFar
         private int _FogDistanceNightFarLocation => _FNAMLocation!.Value + 0xC;
         private bool _FogDistanceNightFar_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightFar => _FogDistanceNightFar_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceNightFarLocation, 4)) : default;
+        public Single FogDistanceNightFar => _FogDistanceNightFar_IsSet ? _data.Slice(_FogDistanceNightFarLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayPower
         private int _FogDistanceDayPowerLocation => _FNAMLocation!.Value + 0x10;
         private bool _FogDistanceDayPower_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayPower => _FogDistanceDayPower_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceDayPowerLocation, 4)) : default;
+        public Single FogDistanceDayPower => _FogDistanceDayPower_IsSet ? _data.Slice(_FogDistanceDayPowerLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightPower
         private int _FogDistanceNightPowerLocation => _FNAMLocation!.Value + 0x14;
         private bool _FogDistanceNightPower_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightPower => _FogDistanceNightPower_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceNightPowerLocation, 4)) : default;
+        public Single FogDistanceNightPower => _FogDistanceNightPower_IsSet ? _data.Slice(_FogDistanceNightPowerLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayMax
         private int _FogDistanceDayMaxLocation => _FNAMLocation!.Value + 0x18;
         private bool _FogDistanceDayMax_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayMax => _FogDistanceDayMax_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceDayMaxLocation, 4)) : default;
+        public Single FogDistanceDayMax => _FogDistanceDayMax_IsSet ? _data.Slice(_FogDistanceDayMaxLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightMax
         private int _FogDistanceNightMaxLocation => _FNAMLocation!.Value + 0x1C;
         private bool _FogDistanceNightMax_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightMax => _FogDistanceNightMax_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceNightMaxLocation, 4)) : default;
+        public Single FogDistanceNightMax => _FogDistanceNightMax_IsSet ? _data.Slice(_FogDistanceNightMaxLocation, 4).Float() : default;
         #endregion
         private int? _DATALocation;
         public Weather.DATADataType DATADataTypeState { get; private set; }
@@ -9513,6 +7356,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IWeatherImageSpacesGetter? ImageSpaces => _ImageSpacesLocation.HasValue ? WeatherImageSpacesBinaryOverlay.WeatherImageSpacesFactory(new OverlayStream(_data.Slice(_ImageSpacesLocation!.Value.Min), _package), _package) : default;
         public bool ImageSpaces_IsSet => _ImageSpacesLocation.HasValue;
         #endregion
+        #region VolumetricLighting
+        private RangeInt32? _VolumetricLightingLocation;
+        public IWeatherVolumetricLightingGetter? VolumetricLighting => _VolumetricLightingLocation.HasValue ? WeatherVolumetricLightingBinaryOverlay.WeatherVolumetricLightingFactory(new OverlayStream(_data.Slice(_VolumetricLightingLocation!.Value.Min), _package), _package) : default;
+        public bool VolumetricLighting_IsSet => _VolumetricLightingLocation.HasValue;
+        #endregion
         #region DirectionalAmbientLightingColors
         partial void DirectionalAmbientLightingColorsCustomParse(
             OverlayStream stream,
@@ -9529,6 +7377,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ReadOnlyMemorySlice<Byte>? NAM3 => _NAM3Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NAM3Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IModelGetter? Aurora { get; private set; }
+        #region SunGlareLensFlare
+        private int? _SunGlareLensFlareLocation;
+        public bool SunGlareLensFlare_IsSet => _SunGlareLensFlareLocation.HasValue;
+        public IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -9554,8 +7407,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new WeatherBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -9581,12 +7435,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -9595,42 +7450,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.DNAM);
+                    return (int)Weather_FieldIndex.DNAM;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _CNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.CNAM);
+                    return (int)Weather_FieldIndex.CNAM;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     _ANAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.ANAM);
+                    return (int)Weather_FieldIndex.ANAM;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     _BNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.BNAM);
+                    return (int)Weather_FieldIndex.BNAM;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     _LNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.LNAM);
+                    return (int)Weather_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _PrecipitationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Precipitation);
+                    return (int)Weather_FieldIndex.Precipitation;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     _VisualEffectLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.VisualEffect);
+                    return (int)Weather_FieldIndex.VisualEffect;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     _ONAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.ONAM);
+                    return (int)Weather_FieldIndex.ONAM;
                 }
                 case RecordTypeInts.RNAM:
                 {
@@ -9640,28 +7495,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Clouds);
+                    return (int)Weather_FieldIndex.Clouds;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     CloudXSpeedsCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     CloudColorsCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.JNAM:
                 {
                     CloudAlphasCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.NAM0:
                 {
@@ -9675,28 +7530,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.NAM0DataTypeState |= Weather.NAM0DataType.Break1;
                     }
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.MoonGlareColor);
+                    return (int)Weather_FieldIndex.MoonGlareColor;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogDistanceNightMax);
+                    return (int)Weather_FieldIndex.FogDistanceNightMax;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.WindDirectionRange);
+                    return (int)Weather_FieldIndex.WindDirectionRange;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     DisabledCloudLayersCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.Sounds = BinaryOverlayList<WeatherSoundBinaryOverlay>.FactoryByArray(
+                    this.Sounds = BinaryOverlayList.FactoryByArray<WeatherSoundBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -9706,11 +7561,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);
+                    return (int)Weather_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    this.SkyStatics = BinaryOverlayList<IFormLink<IStaticGetter>>.FactoryByArray(
+                    this.SkyStatics = BinaryOverlayList.FactoryByArray<IFormLink<IStaticGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IStaticGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -9720,12 +7575,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.SkyStatics);
+                    return (int)Weather_FieldIndex.SkyStatics;
                 }
                 case RecordTypeInts.IMSP:
                 {
                     _ImageSpacesLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.ImageSpaces);
+                    return (int)Weather_FieldIndex.ImageSpaces;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    _VolumetricLightingLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return (int)Weather_FieldIndex.VolumetricLighting;
                 }
                 case RecordTypeInts.DALC:
                 {
@@ -9733,17 +7593,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream,
                         finalPos,
                         offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.DirectionalAmbientLightingColors);
+                    return (int)Weather_FieldIndex.DirectionalAmbientLightingColors;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     _NAM2Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.NAM2);
+                    return (int)Weather_FieldIndex.NAM2;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     _NAM3Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.NAM3);
+                    return (int)Weather_FieldIndex.NAM3;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -9751,7 +7611,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Aurora);
+                    return (int)Weather_FieldIndex.Aurora;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _SunGlareLensFlareLocation = (stream.Position - offset);
+                    return (int)Weather_FieldIndex.SunGlareLensFlare;
                 }
                 default:
                     return CustomRecordFallback(

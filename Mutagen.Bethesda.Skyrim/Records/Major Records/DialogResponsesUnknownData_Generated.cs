@@ -15,14 +15,8 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.IO;
-using Noggog.Xml;
-using Loqui.Xml;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Xml;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Internals;
@@ -92,137 +86,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public override int GetHashCode() => ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-        #region Xml Translation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => DialogResponsesUnknownDataXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((DialogResponsesUnknownDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        #region Xml Create
-        [DebuggerStepThrough]
-        public static DialogResponsesUnknownData CreateFromXml(
-            XElement node,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            return CreateFromXml(
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static DialogResponsesUnknownData CreateFromXml(
-            XElement node,
-            out DialogResponsesUnknownData.ErrorMask errorMask,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            var ret = CreateFromXml(
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = DialogResponsesUnknownData.ErrorMask.Factory(errorMaskBuilder);
-            return ret;
-        }
-
-        public static DialogResponsesUnknownData CreateFromXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            var ret = new DialogResponsesUnknownData();
-            ((DialogResponsesUnknownDataSetterCommon)((IDialogResponsesUnknownDataGetter)ret).CommonSetterInstance()!).CopyInFromXml(
-                item: ret,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            return ret;
-        }
-
-        public static DialogResponsesUnknownData CreateFromXml(
-            string path,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static DialogResponsesUnknownData CreateFromXml(
-            string path,
-            out DialogResponsesUnknownData.ErrorMask errorMask,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static DialogResponsesUnknownData CreateFromXml(
-            string path,
-            ErrorMaskBuilder? errorMask,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static DialogResponsesUnknownData CreateFromXml(
-            Stream stream,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static DialogResponsesUnknownData CreateFromXml(
-            Stream stream,
-            out DialogResponsesUnknownData.ErrorMask errorMask,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static DialogResponsesUnknownData CreateFromXml(
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            return CreateFromXml(
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #endregion
 
@@ -636,7 +499,6 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDialogResponsesUnknownDataGetter :
         ILoquiObject,
         ILoquiObject<IDialogResponsesUnknownDataGetter>,
-        IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -806,131 +668,6 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
-
-        #region Xml Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IDialogResponsesUnknownData item,
-            XElement node,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromXml(
-            this IDialogResponsesUnknownData item,
-            XElement node,
-            out DialogResponsesUnknownData.ErrorMask errorMask,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = DialogResponsesUnknownData.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogResponsesUnknownData item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            ((DialogResponsesUnknownDataSetterCommon)((IDialogResponsesUnknownDataGetter)item).CommonSetterInstance()!).CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogResponsesUnknownData item,
-            string path,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogResponsesUnknownData item,
-            string path,
-            out DialogResponsesUnknownData.ErrorMask errorMask,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogResponsesUnknownData item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(path).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void CopyInFromXml(
-            this IDialogResponsesUnknownData item,
-            Stream stream,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogResponsesUnknownData item,
-            Stream stream,
-            out DialogResponsesUnknownData.ErrorMask errorMask,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void CopyInFromXml(
-            this IDialogResponsesUnknownData item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            var node = XDocument.Load(stream).Root;
-            CopyInFromXml(
-                item: item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        #endregion
 
         #region Binary Translation
         [DebuggerStepThrough]
@@ -1132,7 +869,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(DialogResponsesUnknownDataXmlWriteTranslation);
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1192,34 +928,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.QNAM = FormLinkNullable<SkyrimMajorRecord>.Null;
             item.NEXT = default;
         }
-        
-        #region Xml Translation
-        public virtual void CopyInFromXml(
-            IDialogResponsesUnknownData item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    DialogResponsesUnknownDataXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-        
-        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1502,372 +1210,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 
 #region Modules
-#region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
-{
-    public partial class DialogResponsesUnknownDataXmlWriteTranslation : IXmlWriteTranslator
-    {
-        public readonly static DialogResponsesUnknownDataXmlWriteTranslation Instance = new DialogResponsesUnknownDataXmlWriteTranslation();
-
-        public static void WriteToNodeXml(
-            IDialogResponsesUnknownDataGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            if ((item.SCHR != null)
-                && (translationMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.SCHR) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SCHR),
-                    item: item.SCHR.Value,
-                    fieldIndex: (int)DialogResponsesUnknownData_FieldIndex.SCHR,
-                    errorMask: errorMask);
-            }
-            if ((item.QNAM.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.QNAM) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.QNAM),
-                    item: item.QNAM.FormKey,
-                    fieldIndex: (int)DialogResponsesUnknownData_FieldIndex.QNAM,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.NEXT) ?? true))
-            {
-                BooleanXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NEXT),
-                    item: item.NEXT,
-                    fieldIndex: (int)DialogResponsesUnknownData_FieldIndex.NEXT,
-                    errorMask: errorMask);
-            }
-        }
-
-        public void Write(
-            XElement node,
-            IDialogResponsesUnknownDataGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.DialogResponsesUnknownData");
-            node.Add(elem);
-            if (name != null)
-            {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.DialogResponsesUnknownData");
-            }
-            WriteToNodeXml(
-                item: item,
-                node: elem,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            object item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IDialogResponsesUnknownDataGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public void Write(
-            XElement node,
-            IDialogResponsesUnknownDataGetter item,
-            ErrorMaskBuilder? errorMask,
-            int fieldIndex,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            errorMask?.PushIndex(fieldIndex);
-            try
-            {
-                Write(
-                    item: (IDialogResponsesUnknownDataGetter)item,
-                    name: name,
-                    node: node,
-                    errorMask: errorMask,
-                    translationMask: translationMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-            finally
-            {
-                errorMask?.PopIndex();
-            }
-        }
-
-    }
-
-    public partial class DialogResponsesUnknownDataXmlCreateTranslation
-    {
-        public readonly static DialogResponsesUnknownDataXmlCreateTranslation Instance = new DialogResponsesUnknownDataXmlCreateTranslation();
-
-        public static void FillPublicXml(
-            IDialogResponsesUnknownData item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            try
-            {
-                foreach (var elem in node.Elements())
-                {
-                    DialogResponsesUnknownDataXmlCreateTranslation.FillPublicElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
-        }
-
-        public static void FillPublicElementXml(
-            IDialogResponsesUnknownData item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "SCHR":
-                    errorMask?.PushIndex((int)DialogResponsesUnknownData_FieldIndex.SCHR);
-                    try
-                    {
-                        item.SCHR = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "QNAM":
-                    errorMask?.PushIndex((int)DialogResponsesUnknownData_FieldIndex.QNAM);
-                    try
-                    {
-                        item.QNAM = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "NEXT":
-                    errorMask?.PushIndex((int)DialogResponsesUnknownData_FieldIndex.NEXT);
-                    try
-                    {
-                        item.NEXT = BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-}
-namespace Mutagen.Bethesda.Skyrim
-{
-    #region Xml Write Mixins
-    public static class DialogResponsesUnknownDataXmlTranslationMixIn
-    {
-        public static void WriteToXml(
-            this IDialogResponsesUnknownDataGetter item,
-            XElement node,
-            out DialogResponsesUnknownData.ErrorMask errorMask,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((DialogResponsesUnknownDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMaskBuilder,
-                translationMask: translationMask?.GetCrystal());
-            errorMask = DialogResponsesUnknownData.ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToXml(
-            this IDialogResponsesUnknownDataGetter item,
-            string path,
-            out DialogResponsesUnknownData.ErrorMask errorMask,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IDialogResponsesUnknownDataGetter item,
-            string path,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IDialogResponsesUnknownDataGetter item,
-            Stream stream,
-            out DialogResponsesUnknownData.ErrorMask errorMask,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: out errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IDialogResponsesUnknownDataGetter item,
-            Stream stream,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            WriteToXml(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-            node.Elements().First().Save(stream);
-        }
-
-        public static void WriteToXml(
-            this IDialogResponsesUnknownDataGetter item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask = null,
-            string? name = null)
-        {
-            ((DialogResponsesUnknownDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public static void WriteToXml(
-            this IDialogResponsesUnknownDataGetter item,
-            XElement node,
-            string? name = null,
-            DialogResponsesUnknownData.TranslationMask? translationMask = null)
-        {
-            ((DialogResponsesUnknownDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: translationMask?.GetCrystal());
-        }
-
-        public static void WriteToXml(
-            this IDialogResponsesUnknownDataGetter item,
-            string path,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((DialogResponsesUnknownDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().SaveIfChanged(path);
-        }
-
-        public static void WriteToXml(
-            this IDialogResponsesUnknownDataGetter item,
-            Stream stream,
-            string? name = null)
-        {
-            var node = new XElement("topnode");
-            ((DialogResponsesUnknownDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
-                item: item,
-                name: name,
-                node: node,
-                errorMask: null,
-                translationMask: null);
-            node.Elements().First().Save(stream);
-        }
-
-    }
-    #endregion
-
-
-}
-#endregion
-
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
@@ -1928,10 +1270,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IDialogResponsesUnknownData item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1941,28 +1284,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.SCHR) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.SCHR) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCHR = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.SCHR);
+                    return (int)DialogResponsesUnknownData_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.QNAM) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.QNAM) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.QNAM = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.QNAM);
+                    return (int)DialogResponsesUnknownData_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.NEXT) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.NEXT) return ParseResult.Stop;
                     item.NEXT = true;
-                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.NEXT);
+                    return (int)DialogResponsesUnknownData_FieldIndex.NEXT;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2023,23 +1366,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesUnknownDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesUnknownDataCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => DialogResponsesUnknownDataXmlWriteTranslation.Instance;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
-        void IXmlItem.WriteToXml(
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            ((DialogResponsesUnknownDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
-                item: this,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DialogResponsesUnknownDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
@@ -2060,7 +1386,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region QNAM
         private int? _QNAMLocation;
         public bool QNAM_IsSet => _QNAMLocation.HasValue;
-        public IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM => _QNAMLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _QNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
+        public IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM => _QNAMLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
         #endregion
         #region NEXT
         private int? _NEXTLocation;
@@ -2111,12 +1437,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2124,24 +1451,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.SCHR) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.SCHR) return ParseResult.Stop;
                     _SCHRLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.SCHR);
+                    return (int)DialogResponsesUnknownData_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.QNAM) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.QNAM) return ParseResult.Stop;
                     _QNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.QNAM);
+                    return (int)DialogResponsesUnknownData_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.NEXT) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.NEXT) return ParseResult.Stop;
                     _NEXTLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogResponsesUnknownData_FieldIndex.NEXT);
+                    return (int)DialogResponsesUnknownData_FieldIndex.NEXT;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

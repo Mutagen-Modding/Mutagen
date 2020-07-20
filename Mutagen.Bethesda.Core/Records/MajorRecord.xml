@@ -4,7 +4,7 @@
     <Fields>
       <Int32 name="MajorRecordFlagsRaw" hasBeenSet="False" />
       <FormKey name="FormKey" setPermission="protected" hasBeenSet="False" internalSetInterface="true" copy="true" />
-      <UInt32 name="Version" hasBeenSet="False" />
+      <UInt32 name="VersionControl" hasBeenSet="False" />
       <String name="EditorID" recordType="EDID" generateClassMembers="false" />
     </Fields>
   </Object>
