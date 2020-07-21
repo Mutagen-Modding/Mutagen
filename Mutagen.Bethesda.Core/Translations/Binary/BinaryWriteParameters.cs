@@ -177,6 +177,30 @@ namespace Mutagen.Bethesda
         public NextFormIDOption NextFormID { get; set; } = NextFormIDOption.Iterate;
         #endregion
 
+        #region Form ID Uniqueness
+        /// <summary>
+        /// Flag to specify what logic to use to ensure a mod's formIDs are unique
+        /// </summary>
+        public enum FormIDUniquenessOption
+        {
+            /// <summary>
+            /// Do no check
+            /// </summary>
+            NoCheck,
+
+            /// <summary>
+            /// Iterate source mod
+            /// </summary>
+            Iterate,
+        }
+
+        /// <summary>
+        /// Logic to use to ensure a mod's formIDs are unique.<br/>
+        /// If there is a collision, an ArgumentException will be thrown.
+        /// </summary>
+        public FormIDUniquenessOption FormIDUniqueness { get; set; } = FormIDUniquenessOption.Iterate;
+        #endregion
+
         /// <summary>
         /// Optional StringsWriter override, for mods that are able to localize.
         /// </summary>

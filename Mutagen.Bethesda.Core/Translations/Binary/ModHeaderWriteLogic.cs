@@ -19,6 +19,7 @@ namespace Mutagen.Bethesda.Internals
         private readonly HashSet<ModKey> _modKeys = new HashSet<ModKey>();
         private uint _numRecords;
         private uint _nextFormID;
+        private readonly HashSet<FormKey> _formKeyUniqueness = new HashSet<FormKey>();
 
         private ModHeaderWriteLogic(
             BinaryWriteParameters? param,
@@ -31,6 +32,7 @@ namespace Mutagen.Bethesda.Internals
             AddMasterCollectionActions(mod);
             AddRecordCount();
             AddNextFormIDActions();
+            AddFormIDUniqueness();
 
             // Do any major record iteration work
             if (_recordIterationActions.Count > 0
@@ -99,6 +101,28 @@ namespace Mutagen.Bethesda.Internals
                     break;
                 case BinaryWriteParameters.RecordCountOption.Iterate:
                     _recordIterationActions.Add(maj => _numRecords++);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+        #endregion
+
+        #region FormID Uniqueness Logic
+        private void AddFormIDUniqueness()
+        {
+            switch (_params.FormIDUniqueness)
+            {
+                case BinaryWriteParameters.FormIDUniquenessOption.NoCheck:
+                    break;
+                case BinaryWriteParameters.FormIDUniquenessOption.Iterate:
+                    _recordIterationActions.Add(maj =>
+                    {
+                        if (!_formKeyUniqueness.Add(maj.FormKey))
+                        {
+                            throw new ArgumentException($"Two records with the same FormKey were encountered: {maj.FormKey}");
+                        }
+                    });
                     break;
                 default:
                     throw new NotImplementedException();
