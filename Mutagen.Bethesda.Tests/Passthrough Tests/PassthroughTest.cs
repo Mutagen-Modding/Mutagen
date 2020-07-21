@@ -142,6 +142,7 @@ namespace Mutagen.Bethesda.Tests
                 ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
                 MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
                 RecordCount = BinaryWriteParameters.RecordCountOption.NoCheck,
+                NextFormID = BinaryWriteParameters.NextFormIDOption.NoCheck,
             };
 
             // Do normal

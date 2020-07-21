@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda
         /// </exception>
         ICache<TMajor, FormKey> GetGroup<TMajor>() where TMajor : IMajorRecordCommon;
 
-        uint NextObjectID { get; set; }
+        uint NextFormID { get; set; }
 
         void SyncRecordCount();
     }

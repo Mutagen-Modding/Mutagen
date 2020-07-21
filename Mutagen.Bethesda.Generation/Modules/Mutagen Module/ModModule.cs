@@ -67,11 +67,11 @@ namespace Mutagen.Bethesda.Generation
 
             // NextObjectID member
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-            fg.AppendLine($"uint IMod.NextObjectID");
+            fg.AppendLine($"uint IMod.NextFormID");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"get => this.ModHeader.Stats.NextObjectID;");
-                fg.AppendLine($"set => this.ModHeader.Stats.NextObjectID = value;");
+                fg.AppendLine($"get => this.ModHeader.Stats.NextFormID;");
+                fg.AppendLine($"set => this.ModHeader.Stats.NextFormID = value;");
             }
 
             using (var args = new FunctionWrapper(fg,
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("this.ModHeader.Stats.NextObjectID = GetDefaultInitialNextObjectID();");
+                fg.AppendLine("this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();");
                 if (objData.GameReleaseOptions != null)
                 {
                     fg.AppendLine($"this.{ReleaseEnumName(obj)} = release;");

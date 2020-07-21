@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Core.Persistance
             {
                 throw new ArgumentException($"Unconvertable next ID line: {idLine}");
             }
-            this.Mod.NextObjectID = nextID;
+            this.Mod.NextFormID = nextID;
             while (true)
             {
                 var edidStr = streamReader.ReadLine();
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Core.Persistance
             {
                 return new FormKey(
                     this.Mod.ModKey,
-                    checked(this.Mod.NextObjectID++));
+                    checked(this.Mod.NextFormID++));
             }
         }
 

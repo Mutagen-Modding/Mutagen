@@ -15,16 +15,22 @@ namespace Mutagen.Bethesda.Internals
         private readonly List<Action<FormKey>> _formLinkIterationActions = new List<Action<FormKey>>();
         private readonly BinaryWriteParameters _params;
 
+        private readonly ModKey _modKey;
         private readonly HashSet<ModKey> _modKeys = new HashSet<ModKey>();
         private uint _numRecords;
+        private uint _nextFormID;
 
         private ModHeaderWriteLogic(
             BinaryWriteParameters? param,
-            IModGetter mod)
+            IModGetter mod,
+            IModHeaderCommon modHeader)
         {
             _params = param ?? BinaryWriteParameters.Default;
+            _modKey = mod.ModKey;
+            _nextFormID = modHeader.MinimumCustomFormID;
             AddMasterCollectionActions(mod);
             AddRecordCount();
+            AddNextFormIDActions();
 
             // Do any major record iteration work
             if (_recordIterationActions.Count > 0
@@ -56,7 +62,8 @@ namespace Mutagen.Bethesda.Internals
         {
             var modHeaderWriter = new ModHeaderWriteLogic(
                 param: param,
-                mod: mod);
+                mod: mod,
+                modHeader: modHeader);
             writer.MetaData.MasterReferences = modHeaderWriter.ConstructWriteMasters(mod);
             modHeaderWriter.WriteModHeader(
                 modHeader: modHeader,
@@ -81,6 +88,9 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
+        #endregion
+
+        #region Record Count Logic
         private void AddRecordCount()
         {
             switch (_params.RecordCount)
@@ -89,6 +99,30 @@ namespace Mutagen.Bethesda.Internals
                     break;
                 case BinaryWriteParameters.RecordCountOption.Iterate:
                     _recordIterationActions.Add(maj => _numRecords++);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+        #endregion
+
+        #region Next Form ID
+        private void AddNextFormIDActions()
+        {
+            switch (_params.NextFormID)
+            {
+                case BinaryWriteParameters.NextFormIDOption.NoCheck:
+                    break;
+                case BinaryWriteParameters.NextFormIDOption.Iterate:
+                    _recordIterationActions.Add(maj =>
+                    {
+                        var fk = maj.FormKey;
+                        if (fk.ModKey != _modKey) return;
+                        if (fk.ID > _nextFormID)
+                        {
+                            _nextFormID = fk.ID;
+                        }
+                    });
                     break;
                 default:
                     throw new NotImplementedException();
@@ -145,6 +179,10 @@ namespace Mutagen.Bethesda.Internals
             if (_params.RecordCount != BinaryWriteParameters.RecordCountOption.NoCheck)
             {
                 modHeader.NumRecords = _numRecords;
+            }
+            if (_params.NextFormID != BinaryWriteParameters.NextFormIDOption.NoCheck)
+            {
+                modHeader.NextFormID = _nextFormID + 1;
             }
             modHeader.WriteToBinary(writer);
         }

@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda
             public static implicit operator AMastersListOrderingOption(MastersListOrderingOption option)
             {
                 return new MastersListOrderingEnumOption()
-                { 
+                {
                     Option = option
                 };
             }
@@ -152,6 +152,29 @@ namespace Mutagen.Bethesda
         {
             public MastersListOrderingOption Option { get; set; } = MastersListOrderingOption.MastersFirst;
         }
+        #endregion
+
+        #region Next Form ID
+        /// <summary>
+        /// Flag to specify what logic to use to keep a mod header's next formID field in sync
+        /// </summary>
+        public enum NextFormIDOption
+        {
+            /// <summary>
+            /// Do no check
+            /// </summary>
+            NoCheck,
+
+            /// <summary>
+            /// Iterate source mod
+            /// </summary>
+            Iterate,
+        }
+
+        /// <summary>
+        /// Logic to use to keep a mod header's next formID field in sync
+        /// </summary>
+        public NextFormIDOption NextFormID { get; set; } = NextFormIDOption.Iterate;
         #endregion
 
         /// <summary>

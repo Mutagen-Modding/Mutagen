@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
         IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();
-        uint IMod.NextObjectID { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        uint IMod.NextFormID { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public abstract bool CanUseLocalization { get; }
         ICache<T, FormKey> IMod.GetGroup<T>() => throw new NotImplementedException();
         public abstract void SyncRecordCount();

@@ -5341,17 +5341,17 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        uint IMod.NextObjectID
+        uint IMod.NextFormID
         {
-            get => this.ModHeader.Stats.NextObjectID;
-            set => this.ModHeader.Stats.NextObjectID = value;
+            get => this.ModHeader.Stats.NextFormID;
+            set => this.ModHeader.Stats.NextFormID = value;
         }
         public SkyrimMod(
             ModKey modKey,
             SkyrimRelease release)
             : base(modKey)
         {
-            this.ModHeader.Stats.NextObjectID = GetDefaultInitialNextObjectID();
+            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();
             this.SkyrimRelease = release;
             _GameSettings_Object = new Group<GameSetting>(this);
             _Keywords_Object = new Group<Keyword>(this);

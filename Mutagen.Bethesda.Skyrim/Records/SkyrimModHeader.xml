@@ -24,7 +24,7 @@
     <Fields>
       <Float name="Version" />
       <UInt32 name="NumRecords" />
-      <UInt32 name="NextObjectID" />
+      <UInt32 name="NextFormID" />
     </Fields>
   </Object>
 </Loqui>

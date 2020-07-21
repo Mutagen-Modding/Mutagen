@@ -2832,15 +2832,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        uint IMod.NextObjectID
+        uint IMod.NextFormID
         {
-            get => this.ModHeader.Stats.NextObjectID;
-            set => this.ModHeader.Stats.NextObjectID = value;
+            get => this.ModHeader.Stats.NextFormID;
+            set => this.ModHeader.Stats.NextFormID = value;
         }
         public OblivionMod(ModKey modKey)
             : base(modKey)
         {
-            this.ModHeader.Stats.NextObjectID = GetDefaultInitialNextObjectID();
+            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();
             _GameSettings_Object = new Group<GameSetting>(this);
             _Globals_Object = new Group<Global>(this);
             _Classes_Object = new Group<Class>(this);

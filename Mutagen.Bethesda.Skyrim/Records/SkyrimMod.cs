@@ -16,8 +16,8 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkyrimMod : AMod
     {
-        public const uint DefaultInitialNextObjectID = 0x800;
-        private uint GetDefaultInitialNextObjectID() => DefaultInitialNextObjectID;
+        public const uint DefaultInitialNextFormID = 0x800;
+        private uint GetDefaultInitialNextFormID() => DefaultInitialNextFormID;
     }
 
     namespace Internals

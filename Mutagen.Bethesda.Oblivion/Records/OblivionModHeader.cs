@@ -30,6 +30,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => this.Stats.NumRecords;
             set => this.Stats.NumRecords = value;
         }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        uint IModHeaderCommon.NextFormID
+        {
+            get => this.Stats.NextFormID;
+            set => this.Stats.NextFormID = value;
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        uint IModHeaderCommon.MinimumCustomFormID => OblivionMod.DefaultInitialNextFormID;
     }
 
     public partial interface IOblivionModHeader : IModHeaderCommon

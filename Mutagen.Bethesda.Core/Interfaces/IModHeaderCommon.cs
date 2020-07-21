@@ -11,5 +11,7 @@ namespace Mutagen.Bethesda.Core
         IExtendedList<MasterReference> MasterReferences { get; }
         int RawFlags { get; set; }
         uint NumRecords { get; set; }
+        uint NextFormID { get; set; }
+        uint MinimumCustomFormID { get; }
     }
 }
