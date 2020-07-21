@@ -29,6 +29,7 @@ namespace Mutagen.Bethesda
         public static readonly ModKey Null = new ModKey(null!, master: false);
 
         private readonly string? name_;
+        private readonly int _hash;
 
         /// <summary>
         /// Mod name
@@ -44,8 +45,8 @@ namespace Mutagen.Bethesda
         /// Convenience accessor to get the appropriate file name
         /// </summary>
         public string FileName => this.ToString();
-        
-        private readonly int _hash;
+
+        private static readonly char[] InvalidChars = new char[] { '/', '\\' };
         
         /// <summary>
         /// Constructor
@@ -56,6 +57,11 @@ namespace Mutagen.Bethesda
             string name,
             bool master)
         {
+            if (name != null
+                && -1 != name.IndexOfAny(InvalidChars))
+            {
+                throw new ArgumentException($"ModKey name contained path characters: {name}");
+            }
             this.name_ = name == null ? null : string.Intern(name);
             this.Master = master;
 

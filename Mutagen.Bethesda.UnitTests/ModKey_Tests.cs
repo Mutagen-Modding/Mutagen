@@ -216,5 +216,12 @@ namespace Mutagen.Bethesda.UnitTests
         }
         #endregion
         #endregion
+
+        [Fact]
+        public void PathCharsThrow()
+        {
+            Assert.Throws<ArgumentException>(() => new ModKey("/hello", true));
+            Assert.Throws<ArgumentException>(() => new ModKey("\\hello", true));
+        }
     }
 }
