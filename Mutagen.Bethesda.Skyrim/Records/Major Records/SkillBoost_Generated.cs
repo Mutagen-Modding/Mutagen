@@ -41,8 +41,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Skill
-        public readonly static ActorValueExtended _Skill_Default = ActorValueExtended.None;
-        public ActorValueExtended Skill { get; set; } = default;
+        public readonly static ActorValue _Skill_Default = ActorValue.None;
+        public ActorValue Skill { get; set; } = default;
         #endregion
         #region Boost
         public SByte Boost { get; set; } = default;
@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkillBoostGetter,
         ILoquiObjectSetter<ISkillBoost>
     {
-        new ActorValueExtended Skill { get; set; }
+        new ActorValue Skill { get; set; }
         new SByte Boost { get; set; }
     }
 
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => SkillBoost_Registration.Instance;
-        ActorValueExtended Skill { get; }
+        ActorValue Skill { get; }
         SByte Boost { get; }
 
     }
@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case SkillBoost_FieldIndex.Skill:
-                    return typeof(ActorValueExtended);
+                    return typeof(ActorValue);
                 case SkillBoost_FieldIndex.Boost:
                     return typeof(SByte);
                 default:
@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkillBoostGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                 writer,
                 item.Skill,
                 length: 1);
@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkillBoost item,
             MutagenFrame frame)
         {
-            item.Skill = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Skill = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.Boost = frame.ReadInt8();
         }
 
@@ -1215,7 +1215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public ActorValueExtended Skill => (ActorValueExtended)_data.Span.Slice(0x0, 0x1)[0];
+        public ActorValue Skill => (ActorValue)_data.Span.Slice(0x0, 0x1)[0];
         public SByte Boost => (sbyte)_data.Slice(0x1, 0x1)[0];
         partial void CustomFactoryEnd(
             OverlayStream stream,

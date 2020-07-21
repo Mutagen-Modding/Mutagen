@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IMagicEffectArchetypeInternal>
     {
         new FormKey AssociationKey { get; set; }
-        new ActorValueExtended ActorValue { get; set; }
+        new ActorValue ActorValue { get; set; }
     }
 
     public partial interface IMagicEffectArchetypeInternal :
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => MagicEffectArchetype_Registration.Instance;
         MagicEffectArchetype.TypeEnum Type { get; }
         FormKey AssociationKey { get; }
-        ActorValueExtended ActorValue { get; }
+        ActorValue ActorValue { get; }
 
     }
 
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffectArchetype_FieldIndex.AssociationKey:
                     return typeof(FormKey);
                 case MagicEffectArchetype_FieldIndex.ActorValue:
-                    return typeof(ActorValueExtended);
+                    return typeof(ActorValue);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

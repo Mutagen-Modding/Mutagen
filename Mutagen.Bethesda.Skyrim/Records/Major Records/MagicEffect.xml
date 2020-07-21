@@ -14,8 +14,8 @@
           <Enum name="Flags" enumName="MagicEffect.Flag" byteLength="4" />
           <Float name="BaseCost" />
           <CustomLogic name="AssociatedItem" byteLength="4" />
-          <Enum name="MagicSkill" enumName="ActorValueExtended" byteLength="4" default="ActorValueExtended.None" />
-          <Enum name="ResistValue" enumName="ActorValueExtended" byteLength="4" default="ActorValueExtended.None" />
+          <Enum name="MagicSkill" enumName="ActorValue" byteLength="4" default="ActorValue.None" />
+          <Enum name="ResistValue" enumName="ActorValue" byteLength="4" default="ActorValue.None" />
           <UInt16 name="CounterEffectCount" />
           <UInt16 name="Unknown1" />
           <FormLink name="CastingLight" refName="Light" />
@@ -34,7 +34,7 @@
           <FormLink name="Explosion" refName="Explosion" />
           <Enum name="CastType" enumName="CastType" byteLength="4" />
           <Enum name="TargetType" enumName="TargetType" byteLength="4" />
-          <Enum name="SecondActorValue" enumName="ActorValueExtended" byteLength="4" default="ActorValueExtended.None" />
+          <Enum name="SecondActorValue" enumName="ActorValue" byteLength="4" default="ActorValue.None" />
           <FormLink name="CastingArt" refName="ArtObject" />
           <FormLink name="HitEffectArt" refName="ArtObject" />
           <FormLink name="ImpactData" refName="ImpactDataSet" />
@@ -70,7 +70,7 @@
     <Fields>
       <Enum name="Type" enumName="MagicEffectArchetype.TypeEnum" binary="NoGeneration" internalSetInterface="true" />
       <FormKey name="AssociationKey" generateClassMembers="false" binary="NoGeneration" />
-      <Enum name="ActorValue" enumName="ActorValueExtended" generateClassMembers="false" binary="NoGeneration" default="ActorValueExtended.None" />
+      <Enum name="ActorValue" enumName="ActorValue" generateClassMembers="false" binary="NoGeneration" default="ActorValue.None" />
     </Fields>
   </Object>
   <Object name="MagicEffectLightArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="6705b341-5add-4696-8844-027e4134ad64" ID="110">

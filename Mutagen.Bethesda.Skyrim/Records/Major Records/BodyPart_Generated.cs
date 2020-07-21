@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte HealthPercent { get; set; } = default;
         #endregion
         #region ActorValue
-        public ActorValueExtended ActorValue { get; set; } = default;
+        public ActorValue ActorValue { get; set; } = default;
         #endregion
         #region ToHitChance
         public Byte ToHitChance { get; set; } = default;
@@ -1448,7 +1448,7 @@ namespace Mutagen.Bethesda.Skyrim
         new BodyPart.Flag Flags { get; set; }
         new BodyPart.PartType Type { get; set; }
         new Byte HealthPercent { get; set; }
-        new ActorValueExtended ActorValue { get; set; }
+        new ActorValue ActorValue { get; set; }
         new Byte ToHitChance { get; set; }
         new Byte ExplodableExplosionChance { get; set; }
         new UInt16 ExplodableDebrisCount { get; set; }
@@ -1497,7 +1497,7 @@ namespace Mutagen.Bethesda.Skyrim
         BodyPart.Flag Flags { get; }
         BodyPart.PartType Type { get; }
         Byte HealthPercent { get; }
-        ActorValueExtended ActorValue { get; }
+        ActorValue ActorValue { get; }
         Byte ToHitChance { get; }
         Byte ExplodableExplosionChance { get; }
         UInt16 ExplodableDebrisCount { get; }
@@ -2186,7 +2186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case BodyPart_FieldIndex.HealthPercent:
                     return typeof(Byte);
                 case BodyPart_FieldIndex.ActorValue:
-                    return typeof(ActorValueExtended);
+                    return typeof(ActorValue);
                 case BodyPart_FieldIndex.ToHitChance:
                     return typeof(Byte);
                 case BodyPart_FieldIndex.ExplodableExplosionChance:
@@ -3017,7 +3017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Type,
                     length: 1);
                 writer.Write(item.HealthPercent);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                     writer,
                     item.ActorValue,
                     length: 1);
@@ -3180,7 +3180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Flags = EnumBinaryTranslation<BodyPart.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Type = EnumBinaryTranslation<BodyPart.PartType>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.HealthPercent = dataFrame.ReadUInt8();
-                    item.ActorValue = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.ActorValue = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.ToHitChance = dataFrame.ReadUInt8();
                     item.ExplodableExplosionChance = dataFrame.ReadUInt8();
                     item.ExplodableDebrisCount = dataFrame.ReadUInt16();
@@ -3356,7 +3356,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ActorValue
         private int _ActorValueLocation => _BPNDLocation!.Value + 0x7;
         private bool _ActorValue_IsSet => _BPNDLocation.HasValue;
-        public ActorValueExtended ActorValue => _ActorValue_IsSet ? (ActorValueExtended)_data.Span.Slice(_ActorValueLocation, 0x1)[0] : default;
+        public ActorValue ActorValue => _ActorValue_IsSet ? (ActorValue)_data.Span.Slice(_ActorValueLocation, 0x1)[0] : default;
         #endregion
         #region ToHitChance
         private int _ToHitChanceLocation => _BPNDLocation!.Value + 0x8;

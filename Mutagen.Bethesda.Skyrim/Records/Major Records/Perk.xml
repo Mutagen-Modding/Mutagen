@@ -66,7 +66,7 @@
   </Object>
   <Object name="PerkModifyActorValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="31a6011e-e36a-4837-954e-60ee728f750e" ID="419">
     <Fields>
-      <Enum name="ActorValue" enumName="ActorValueExtended" />
+      <Enum name="ActorValue" enumName="ActorValue" />
       <Float name="Value" />
       <Enum name="Modification" enumName="PerkModifyActorValue.ModificationType" />
     </Fields>

@@ -85,12 +85,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Single BaseCost { get; set; } = default;
         #endregion
         #region MagicSkill
-        public readonly static ActorValueExtended _MagicSkill_Default = ActorValueExtended.None;
-        public ActorValueExtended MagicSkill { get; set; } = default;
+        public readonly static ActorValue _MagicSkill_Default = ActorValue.None;
+        public ActorValue MagicSkill { get; set; } = default;
         #endregion
         #region ResistValue
-        public readonly static ActorValueExtended _ResistValue_Default = ActorValueExtended.None;
-        public ActorValueExtended ResistValue { get; set; } = default;
+        public readonly static ActorValue _ResistValue_Default = ActorValue.None;
+        public ActorValue ResistValue { get; set; } = default;
         #endregion
         #region CounterEffectCount
         public UInt16 CounterEffectCount { get; set; } = default;
@@ -156,8 +156,8 @@ namespace Mutagen.Bethesda.Skyrim
         public TargetType TargetType { get; set; } = default;
         #endregion
         #region SecondActorValue
-        public readonly static ActorValueExtended _SecondActorValue_Default = ActorValueExtended.None;
-        public ActorValueExtended SecondActorValue { get; set; } = default;
+        public readonly static ActorValue _SecondActorValue_Default = ActorValue.None;
+        public ActorValue SecondActorValue { get; set; } = default;
         #endregion
         #region CastingArt
         public FormLink<ArtObject> CastingArt { get; set; } = new FormLink<ArtObject>();
@@ -2256,8 +2256,8 @@ namespace Mutagen.Bethesda.Skyrim
         new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new MagicEffect.Flag Flags { get; set; }
         new Single BaseCost { get; set; }
-        new ActorValueExtended MagicSkill { get; set; }
-        new ActorValueExtended ResistValue { get; set; }
+        new ActorValue MagicSkill { get; set; }
+        new ActorValue ResistValue { get; set; }
         new UInt16 CounterEffectCount { get; set; }
         new UInt16 Unknown1 { get; set; }
         new FormLink<Light> CastingLight { get; set; }
@@ -2275,7 +2275,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLink<Explosion> Explosion { get; set; }
         new CastType CastType { get; set; }
         new TargetType TargetType { get; set; }
-        new ActorValueExtended SecondActorValue { get; set; }
+        new ActorValue SecondActorValue { get; set; }
         new FormLink<ArtObject> CastingArt { get; set; }
         new FormLink<ArtObject> HitEffectArt { get; set; }
         new FormLink<ImpactDataSet> ImpactData { get; set; }
@@ -2319,8 +2319,8 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         MagicEffect.Flag Flags { get; }
         Single BaseCost { get; }
-        ActorValueExtended MagicSkill { get; }
-        ActorValueExtended ResistValue { get; }
+        ActorValue MagicSkill { get; }
+        ActorValue ResistValue { get; }
         UInt16 CounterEffectCount { get; }
         UInt16 Unknown1 { get; }
         IFormLink<ILightGetter> CastingLight { get; }
@@ -2338,7 +2338,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLink<IExplosionGetter> Explosion { get; }
         CastType CastType { get; }
         TargetType TargetType { get; }
-        ActorValueExtended SecondActorValue { get; }
+        ActorValue SecondActorValue { get; }
         IFormLink<IArtObjectGetter> CastingArt { get; }
         IFormLink<IArtObjectGetter> HitEffectArt { get; }
         IFormLink<IImpactDataSetGetter> ImpactData { get; }
@@ -3133,9 +3133,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.BaseCost:
                     return typeof(Single);
                 case MagicEffect_FieldIndex.MagicSkill:
-                    return typeof(ActorValueExtended);
+                    return typeof(ActorValue);
                 case MagicEffect_FieldIndex.ResistValue:
-                    return typeof(ActorValueExtended);
+                    return typeof(ActorValue);
                 case MagicEffect_FieldIndex.CounterEffectCount:
                     return typeof(UInt16);
                 case MagicEffect_FieldIndex.Unknown1:
@@ -3171,7 +3171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.TargetType:
                     return typeof(TargetType);
                 case MagicEffect_FieldIndex.SecondActorValue:
-                    return typeof(ActorValueExtended);
+                    return typeof(ActorValue);
                 case MagicEffect_FieldIndex.CastingArt:
                     return typeof(FormLink<ArtObject>);
                 case MagicEffect_FieldIndex.HitEffectArt:
@@ -4658,11 +4658,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 MagicEffectBinaryWriteTranslation.WriteBinaryAssociatedItem(
                     writer: writer,
                     item: item);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                     writer,
                     item.MagicSkill,
                     length: 4);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                     writer,
                     item.ResistValue,
                     length: 4);
@@ -4711,7 +4711,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.TargetType,
                     length: 4);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                     writer,
                     item.SecondActorValue,
                     length: 4);
@@ -4921,8 +4921,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     MagicEffectBinaryCreateTranslation.FillBinaryAssociatedItemCustom(
                         frame: dataFrame,
                         item: item);
-                    item.MagicSkill = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.ResistValue = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.MagicSkill = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.ResistValue = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.CounterEffectCount = dataFrame.ReadUInt16();
                     item.Unknown1 = dataFrame.ReadUInt16();
                     item.CastingLight = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
@@ -4952,7 +4952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     item.CastType = EnumBinaryTranslation<CastType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.SecondActorValue = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.SecondActorValue = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.CastingArt = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         defaultVal: FormKey.Null);
@@ -5134,12 +5134,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region MagicSkill
         private int _MagicSkillLocation => _DATALocation!.Value + 0xC;
         private bool _MagicSkill_IsSet => _DATALocation.HasValue;
-        public ActorValueExtended MagicSkill => _MagicSkill_IsSet ? (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MagicSkillLocation, 0x4)) : default;
+        public ActorValue MagicSkill => _MagicSkill_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MagicSkillLocation, 0x4)) : default;
         #endregion
         #region ResistValue
         private int _ResistValueLocation => _DATALocation!.Value + 0x10;
         private bool _ResistValue_IsSet => _DATALocation.HasValue;
-        public ActorValueExtended ResistValue => _ResistValue_IsSet ? (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ResistValueLocation, 0x4)) : default;
+        public ActorValue ResistValue => _ResistValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ResistValueLocation, 0x4)) : default;
         #endregion
         #region CounterEffectCount
         private int _CounterEffectCountLocation => _DATALocation!.Value + 0x14;
@@ -5228,7 +5228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region SecondActorValue
         private int _SecondActorValueLocation => _DATALocation!.Value + 0x58;
         private bool _SecondActorValue_IsSet => _DATALocation.HasValue;
-        public ActorValueExtended SecondActorValue => _SecondActorValue_IsSet ? (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SecondActorValueLocation, 0x4)) : default;
+        public ActorValue SecondActorValue => _SecondActorValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SecondActorValueLocation, 0x4)) : default;
         #endregion
         #region CastingArt
         private int _CastingArtLocation => _DATALocation!.Value + 0x5C;

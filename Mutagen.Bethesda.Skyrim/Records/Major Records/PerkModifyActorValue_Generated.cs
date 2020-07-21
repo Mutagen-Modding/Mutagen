@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ActorValue
-        public ActorValueExtended ActorValue { get; set; } = default;
+        public ActorValue ActorValue { get; set; } = default;
         #endregion
         #region Value
         public Single Value { get; set; } = default;
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAPerkEntryPointEffect,
         ILoquiObjectSetter<IPerkModifyActorValue>
     {
-        new ActorValueExtended ActorValue { get; set; }
+        new ActorValue ActorValue { get; set; }
         new Single Value { get; set; }
         new PerkModifyActorValue.ModificationType Modification { get; set; }
     }
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkModifyActorValue_Registration.Instance;
-        ActorValueExtended ActorValue { get; }
+        ActorValue ActorValue { get; }
         Single Value { get; }
         PerkModifyActorValue.ModificationType Modification { get; }
 
@@ -825,7 +825,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case PerkModifyActorValue_FieldIndex.ActorValue:
-                    return typeof(ActorValueExtended);
+                    return typeof(ActorValue);
                 case PerkModifyActorValue_FieldIndex.Value:
                     return typeof(Single);
                 case PerkModifyActorValue_FieldIndex.Modification:
@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEntryPointEffectBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                 writer,
                 item.ActorValue,
                 length: 4);
@@ -1374,7 +1374,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEntryPointEffectBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.ActorValue = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.ActorValue = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.Value = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Modification = EnumBinaryTranslation<PerkModifyActorValue.ModificationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
@@ -1425,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public ActorValueExtended ActorValue => (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2, 0x4));
+        public ActorValue ActorValue => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2, 0x4));
         public Single Value => _data.Slice(0x6, 0x4).Float();
         public PerkModifyActorValue.ModificationType Modification => (PerkModifyActorValue.ModificationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xA, 0x4));
         partial void CustomFactoryEnd(

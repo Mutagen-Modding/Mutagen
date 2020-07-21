@@ -85,7 +85,7 @@
       <ByteArray name="Unknown3" hasBeenSet="False" byteLength="12" />
       <Enum name="Skill" enumName="Skill" byteLength="4" hasBeenSet="True" hasBeenSetBinaryFallback="-1" />
       <Int64 name="Unknown4" />
-      <Enum name="Resist" enumName="ActorValueExtended" byteLength="4" default="ActorValueExtended.None" />
+      <Enum name="Resist" enumName="ActorValue" byteLength="4" default="ActorValue.None" />
       <Int32 name="Unknown5" />
       <Float name="Stagger" />
     </Fields>

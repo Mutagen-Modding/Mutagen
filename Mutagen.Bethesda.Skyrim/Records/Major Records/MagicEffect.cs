@@ -130,19 +130,19 @@ namespace Mutagen.Bethesda.Skyrim
                     case MagicEffectArchetype.TypeEnum.Frenzy:
                         archetype = new MagicEffectArchetype(archetypeEnum)
                         {
-                            ActorValue = ActorValueExtended.Aggression
+                            ActorValue = ActorValue.Aggression
                         };
                         break;
                     case MagicEffectArchetype.TypeEnum.Invisibility:
                         archetype = new MagicEffectArchetype(archetypeEnum)
                         {
-                            ActorValue = ActorValueExtended.Invisibility
+                            ActorValue = ActorValue.Invisibility
                         };
                         break;
                     case MagicEffectArchetype.TypeEnum.Paralysis:
                         archetype = new MagicEffectArchetype(archetypeEnum)
                         {
-                            ActorValue = ActorValueExtended.Paralysis
+                            ActorValue = ActorValue.Paralysis
                         };
                         break;
                     case MagicEffectArchetype.TypeEnum.Demoralize:
@@ -151,18 +151,18 @@ namespace Mutagen.Bethesda.Skyrim
                     case MagicEffectArchetype.TypeEnum.Banish:
                         archetype = new MagicEffectArchetype(archetypeEnum)
                         {
-                            ActorValue = ActorValueExtended.Confidence
+                            ActorValue = ActorValue.Confidence
                         };
                         break;
                     default:
                         archetype = new MagicEffectArchetype(archetypeEnum)
                         {
-                            ActorValue = ActorValueExtended.None
+                            ActorValue = ActorValue.None
                         };
                         break;
                 }
                 archetype.AssociationKey = associatedItemKey;
-                archetype.ActorValue = (ActorValueExtended)frame.ReadInt32();
+                archetype.ActorValue = (ActorValue)frame.ReadInt32();
                 return archetype;
             }
 

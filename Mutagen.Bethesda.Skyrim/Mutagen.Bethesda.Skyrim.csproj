@@ -21,7 +21,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="Enums\ActorValueExtended.cs" />
+    <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\Agression.cs" />
     <Compile Include="Enums\ArmorType.cs" />
     <Compile Include="Enums\Assistance.cs" />

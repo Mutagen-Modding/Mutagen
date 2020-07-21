@@ -129,8 +129,8 @@ namespace Mutagen.Bethesda.Skyrim
         public Int64 Unknown4 { get; set; } = default;
         #endregion
         #region Resist
-        public readonly static ActorValueExtended _Resist_Default = ActorValueExtended.None;
-        public ActorValueExtended Resist { get; set; } = default;
+        public readonly static ActorValue _Resist_Default = ActorValue.None;
+        public ActorValue Resist { get; set; } = default;
         #endregion
         #region Unknown5
         public Int32 Unknown5 { get; set; } = default;
@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte> Unknown3 { get; set; }
         new Skill? Skill { get; set; }
         new Int64 Unknown4 { get; set; }
-        new ActorValueExtended Resist { get; set; }
+        new ActorValue Resist { get; set; }
         new Int32 Unknown5 { get; set; }
         new Single Stagger { get; set; }
     }
@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> Unknown3 { get; }
         Skill? Skill { get; }
         Int64 Unknown4 { get; }
-        ActorValueExtended Resist { get; }
+        ActorValue Resist { get; }
         Int32 Unknown5 { get; }
         Single Stagger { get; }
 
@@ -1898,7 +1898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case WeaponData_FieldIndex.Unknown4:
                     return typeof(Int64);
                 case WeaponData_FieldIndex.Resist:
-                    return typeof(ActorValueExtended);
+                    return typeof(ActorValue);
                 case WeaponData_FieldIndex.Unknown5:
                     return typeof(Int32);
                 case WeaponData_FieldIndex.Stagger:
@@ -2621,7 +2621,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ((int?)item.Skill) ?? -1,
                 length: 4);
             writer.Write(item.Unknown4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                 writer,
                 item.Resist,
                 length: 4);
@@ -2697,7 +2697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (frame.Complete) return;
             item.Skill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.Unknown4 = frame.ReadInt64();
-            item.Resist = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Resist = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.Unknown5 = frame.ReadInt32();
             item.Stagger = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
@@ -2812,7 +2812,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #endregion
         public Int64 Unknown4 => BinaryPrimitives.ReadInt64LittleEndian(_data.Slice(0x50, 0x8));
-        public ActorValueExtended Resist => (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
+        public ActorValue Resist => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
         public Int32 Unknown5 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x5C, 0x4));
         public Single Stagger => _data.Slice(0x60, 0x4).Float();
         partial void CustomFactoryEnd(

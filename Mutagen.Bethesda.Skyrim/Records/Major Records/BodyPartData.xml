@@ -21,7 +21,7 @@
           <Enum name="Flags" enumName="BodyPart.Flag" byteLength="1" />
           <Enum name="Type" enumName="BodyPart.PartType" byteLength="1" />
           <UInt8 name="HealthPercent" />
-          <Enum name="ActorValue" enumName="ActorValueExtended" byteLength="1" />
+          <Enum name="ActorValue" enumName="ActorValue" byteLength="1" />
           <UInt8 name="ToHitChance" />
           <UInt8 name="ExplodableExplosionChance" />
           <UInt16 name="ExplodableDebrisCount" />
