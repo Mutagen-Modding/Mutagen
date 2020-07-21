@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.UnitTests
                 tempFile.File.Path,
                 new BinaryWriteParameters()
                 {
-                     ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
+                     ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
                 });
             var overlay = SkyrimMod.CreateFromBinaryOverlay(tempFile.File.Path, SkyrimRelease.SkyrimLE, mod.ModKey);
             getter = overlay;

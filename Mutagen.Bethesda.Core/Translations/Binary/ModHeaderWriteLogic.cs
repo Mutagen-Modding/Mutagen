@@ -66,12 +66,12 @@ namespace Mutagen.Bethesda.Internals
         #region Master Sync Logic
         private void AddMasterCollectionActions(IModGetter mod)
         {
-            switch (_params.MastersListSync)
+            switch (_params.MastersListContent)
             {
-                case BinaryWriteParameters.MastersListSyncOption.NoCheck:
+                case BinaryWriteParameters.MastersListContentOption.NoCheck:
                     _modKeys.Add(mod.MasterReferences.Select(m => m.Master));
                     break;
-                case BinaryWriteParameters.MastersListSyncOption.Iterate:
+                case BinaryWriteParameters.MastersListContentOption.Iterate:
                     _recordIterationActions.Add(maj => _modKeys.Add(maj.FormKey.ModKey));
                     _formLinkIterationActions.Add(formLink => _modKeys.Add(formLink.ModKey));
                     break;
@@ -82,11 +82,11 @@ namespace Mutagen.Bethesda.Internals
 
         private void AddRecordCount()
         {
-            switch (_params.RecordCountSync)
+            switch (_params.RecordCount)
             {
-                case BinaryWriteParameters.RecordCountSyncOption.NoCheck:
+                case BinaryWriteParameters.RecordCountOption.NoCheck:
                     break;
-                case BinaryWriteParameters.RecordCountSyncOption.Iterate:
+                case BinaryWriteParameters.RecordCountOption.Iterate:
                     _recordIterationActions.Add(maj => _numRecords++);
                     break;
                 default:
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Internals
         {
             modHeader.RawFlags = EnumExt.SetFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.Master, modKey.Master);
             modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
-            if (_params.RecordCountSync != BinaryWriteParameters.RecordCountSyncOption.NoCheck)
+            if (_params.RecordCount != BinaryWriteParameters.RecordCountOption.NoCheck)
             {
                 modHeader.NumRecords = _numRecords;
             }

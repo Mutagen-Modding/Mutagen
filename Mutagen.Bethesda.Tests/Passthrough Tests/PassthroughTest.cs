@@ -139,9 +139,9 @@ namespace Mutagen.Bethesda.Tests
 
             var writeParams = new BinaryWriteParameters()
             {
-                ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
-                MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
-                RecordCountSync = BinaryWriteParameters.RecordCountSyncOption.NoCheck,
+                ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
+                RecordCount = BinaryWriteParameters.RecordCountOption.NoCheck,
             };
 
             // Do normal

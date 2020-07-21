@@ -16,6 +16,7 @@ namespace Mutagen.Bethesda
         /// Mod object
         /// </summary>
         public TMod? Mod { get; private set; }
+
         /// <summary>
         /// ModKey associated with listing
         /// </summary>

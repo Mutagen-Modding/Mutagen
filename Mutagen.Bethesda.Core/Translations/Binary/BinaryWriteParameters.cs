@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Mutagen.Bethesda
@@ -12,10 +13,11 @@ namespace Mutagen.Bethesda
     {
         public static BinaryWriteParameters Default = new BinaryWriteParameters();
 
+        #region Mod Key Sync
         /// <summary>
         /// Flag to specify what logic to use to keep a mod's ModKey in sync with its path
         /// </summary>
-        public enum ModKeySyncOption
+        public enum ModKeyOption
         {
             /// <summary>
             /// Do no check
@@ -34,9 +36,17 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Flag to specify what logic to use to keep a mod's master list in sync
+        /// Flag to specify what logic to use to keep a mod's ModKey in sync with its path
         /// </summary>
-        public enum MastersListSyncOption
+        public ModKeyOption ModKey = ModKeyOption.ThrowIfMisaligned;
+        #endregion
+
+        #region Masters List Sync
+        /// <summary>
+        /// Flag to specify what logic to use to keep a mod's master list keys in sync<br/>
+        /// This setting is just used to sync the contents of the list, not the order
+        /// </summary>
+        public enum MastersListContentOption
         {
             /// <summary>
             /// Do no check
@@ -49,10 +59,18 @@ namespace Mutagen.Bethesda
             Iterate,
         }
 
+        /// <summary>
+        /// Logic to use to keep a mod's master list content in sync<br/>
+        /// This setting is just used to sync the contents of the list, not the order
+        /// </summary>
+        public MastersListContentOption MastersListContent = MastersListContentOption.Iterate;
+        #endregion
+
+        #region Record Count Sync
         /// <summary>
         /// Flag to specify what logic to use to keep a mod's record count in sync
         /// </summary>
-        public enum RecordCountSyncOption
+        public enum RecordCountOption
         {
             /// <summary>
             /// Do no check
@@ -64,21 +82,12 @@ namespace Mutagen.Bethesda
             /// </summary>
             Iterate,
         }
-
-        /// <summary>
-        /// Flag to specify what logic to use to keep a mod's ModKey in sync with its path
-        /// </summary>
-        public ModKeySyncOption ModKeySync = ModKeySyncOption.ThrowIfMisaligned;
-
-        /// <summary>
-        /// Logic to use to keep a mod's master list in sync
-        /// </summary>
-        public MastersListSyncOption MastersListSync = MastersListSyncOption.Iterate;
 
         /// <summary>
         /// Logic to use to keep a mod's record count in sync
         /// </summary>
-        public RecordCountSyncOption RecordCountSync = RecordCountSyncOption.Iterate;
+        public RecordCountOption RecordCount = RecordCountOption.Iterate;
+        #endregion
 
         /// <summary>
         /// Optional StringsWriter override, for mods that are able to localize.
@@ -97,20 +106,20 @@ namespace Mutagen.Bethesda
         /// <exception cref="ArgumentException">If misaligned and set to ThrowIfMisaligned</exception>
         public ModKey RunMasterMatch(IModGetter mod, string path)
         {
-            if (ModKeySync == ModKeySyncOption.NoCheck) return mod.ModKey;
-            if (!ModKey.TryFactory(Path.GetFileName(path), out var pathModKey))
+            if (ModKey == ModKeyOption.NoCheck) return mod.ModKey;
+            if (!Bethesda.ModKey.TryFactory(Path.GetFileName(path), out var pathModKey))
             {
                 throw new ArgumentException($"Could not convert path to a ModKey to compare against: {Path.GetFileName(path)}");
             }
-            switch (ModKeySync)
+            switch (ModKey)
             {
-                case ModKeySyncOption.ThrowIfMisaligned:
+                case ModKeyOption.ThrowIfMisaligned:
                     if (mod.ModKey != pathModKey)
                     {
                         throw new ArgumentException($"ModKeys were misaligned: {mod.ModKey} != {pathModKey}");
                     }
                     return mod.ModKey;
-                case ModKeySyncOption.CorrectToPath:
+                case ModKeyOption.CorrectToPath:
                     return pathModKey;
                 default:
                     throw new NotImplementedException();

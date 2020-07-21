@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+    <Folder Include="Translations\Binary\WriteParameters\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\ColorBinaryType.cs" />
