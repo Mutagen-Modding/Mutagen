@@ -188,5 +188,67 @@ namespace Mutagen.Bethesda
         {
             return !EqualityComparer<ModKey?>.Default.Equals(a, b);
         }
+
+        #region Comparers
+        private class AlphabeticalMastersFirstComparer : Comparer<ModKey>
+        {
+            public readonly static AlphabeticalMastersFirstComparer Instance = new AlphabeticalMastersFirstComparer();
+            public override int Compare(ModKey x, ModKey y)
+            {
+                if (x.Master == y.Master)
+                {
+                    return string.Compare(x.Name, y.Name, StringComparison.OrdinalIgnoreCase);
+                }
+                return x.Master ? -1 : 1;
+            }
+        }
+
+        public static Comparer<ModKey> AlphabeticalAndMastersFirst => AlphabeticalMastersFirstComparer.Instance;
+
+        public static Comparer<ModKey> LoadOrderComparer(
+            IReadOnlyList<ModKey> loadOrder,
+            Comparer<ModKey>? matchingFallback = null)
+        {
+            return new ModKeyListComparer(loadOrder, matchingFallback);
+        }
+
+        private class ModKeyListComparer : Comparer<ModKey>
+        {
+            private readonly IReadOnlyList<ModKey> _loadOrder;
+            private readonly Comparer<ModKey>? _notOnLoadOrderFallback;
+
+            public ModKeyListComparer(
+                IReadOnlyList<ModKey> loadOrder,
+                Comparer<ModKey>? notOnLoadOrderFallback)
+            {
+                _loadOrder = loadOrder;
+                _notOnLoadOrderFallback = notOnLoadOrderFallback;
+            }
+
+            public override int Compare(ModKey x, ModKey y)
+            {
+                if (x == y) return 0;
+                var xIndex = _loadOrder.IndexOf(x);
+                if (xIndex == -1)
+                {
+                    if (_notOnLoadOrderFallback != null)
+                    {
+                        return _notOnLoadOrderFallback.Compare(x, y);
+                    }
+                    throw new ArgumentOutOfRangeException($"ModKey was not on load order: {x}");
+                }
+                var yIndex = _loadOrder.IndexOf(y);
+                if (yIndex == -1)
+                {
+                    if (_notOnLoadOrderFallback != null)
+                    {
+                        return _notOnLoadOrderFallback.Compare(x, y);
+                    }
+                    throw new ArgumentOutOfRangeException($"ModKey was not on load order: {y}");
+                }
+                return xIndex.CompareTo(yIndex);
+            }
+        }
+        #endregion
     }
 }

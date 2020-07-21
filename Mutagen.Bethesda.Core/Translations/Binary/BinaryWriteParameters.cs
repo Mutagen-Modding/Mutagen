@@ -1,3 +1,4 @@
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -87,6 +88,70 @@ namespace Mutagen.Bethesda
         /// Logic to use to keep a mod's record count in sync
         /// </summary>
         public RecordCountOption RecordCount = RecordCountOption.Iterate;
+        #endregion
+
+        #region Masters List Ordering
+        /// <summary>
+        /// Flag to specify what logic to use to keep a mod's master list keys in order<br/>
+        /// This setting is just used to sync the order of the list, not the content
+        /// </summary>
+        public enum MastersListOrderingOption
+        {
+            /// <summary>
+            /// Do no check
+            /// </summary>
+            NoCheck,
+
+            /// <summary>
+            /// Simply confirms masters come before other mod types
+            /// </summary>
+            MastersFirst,
+        }
+
+        /// <summary>
+        /// Logic to use to keep a mod's master list ordering in sync<br/>
+        /// This setting is just used to sync the order of the list, not the content
+        /// </summary>
+        public AMastersListOrderingOption MastersListOrdering { get; set; } = new MastersListOrderingEnumOption();
+
+        /// <summary>
+        /// An abstract class representing a logic choice for ordering masters
+        /// </summary>
+        public abstract class AMastersListOrderingOption
+        {
+            public static implicit operator AMastersListOrderingOption(MastersListOrderingOption option)
+            {
+                return new MastersListOrderingEnumOption()
+                { 
+                    Option = option
+                };
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public class MastersListOrderingByLoadOrder : AMastersListOrderingOption
+        {
+            private readonly List<ModKey> _modKeys;
+
+            public IReadOnlyList<ModKey> LoadOrder => _modKeys;
+
+            /// <summary>
+            /// Whether to throw an exception if an unknown mod during export that is not on the given load order
+            /// </summary>
+            public bool Strict { get; set; }
+
+            public MastersListOrderingByLoadOrder(IEnumerable<ModKey> modKeys)
+            {
+                _modKeys = modKeys.ToList();
+            }
+        }
+
+        public class MastersListOrderingEnumOption : AMastersListOrderingOption
+        {
+            public MastersListOrderingOption Option { get; set; } = MastersListOrderingOption.MastersFirst;
+        }
         #endregion
 
         /// <summary>

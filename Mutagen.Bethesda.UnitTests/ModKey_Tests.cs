@@ -124,5 +124,97 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(default(ModKey), ModKey.Null);
             Assert.Equal(ModKey.Null.GetHashCode(), default(ModKey).GetHashCode());
         }
+
+        #region Comparers
+        #region Alphabetical
+        [Fact]
+        public void Comparer_Alphabetical_ByMaster()
+        {
+            ModKey k1 = ModKey.Factory("Oblivion.esm");
+            ModKey k2 = ModKey.Factory("Oblivion.esp");
+            var compare = ModKey.AlphabeticalAndMastersFirst;
+            Assert.True(compare.Compare(k1, k2) < 0);
+        }
+
+        [Fact]
+        public void Comparer_Alphabetical_ByMasterGreater()
+        {
+            ModKey k1 = ModKey.Factory("Oblivion.esm");
+            ModKey k2 = ModKey.Factory("Oblivion.esp");
+            var compare = ModKey.AlphabeticalAndMastersFirst;
+            Assert.True(compare.Compare(k2, k1) > 0);
+        }
+
+        [Fact]
+        public void Comparer_Alphabetical_ByName()
+        {
+            ModKey k1 = ModKey.Factory("Knights.esm");
+            ModKey k2 = ModKey.Factory("Oblivion.esm");
+            var compare = ModKey.AlphabeticalAndMastersFirst;
+            Assert.True(compare.Compare(k1, k2) < 0);
+        }
+
+        [Fact]
+        public void Comparer_Alphabetical_ByNameGreater()
+        {
+            ModKey k1 = ModKey.Factory("Knights.esm");
+            ModKey k2 = ModKey.Factory("Oblivion.esm");
+            var compare = ModKey.AlphabeticalAndMastersFirst;
+            Assert.True(compare.Compare(k2, k1) > 0);
+        }
+
+        [Fact]
+        public void Comparer_Alphabetical_Equal()
+        {
+            ModKey k1 = ModKey.Factory("Oblivion.esm");
+            ModKey k2 = ModKey.Factory("Oblivion.esm");
+            var compare = ModKey.AlphabeticalAndMastersFirst;
+            Assert.Equal(0, compare.Compare(k2, k1));
+        }
+        #endregion
+        #region ModKey List
+        [Fact]
+        public void Comparer_ModKeyList_Typical()
+        {
+            List<ModKey> modKeys = new List<ModKey>()
+            {
+                ModKey.Factory("Oblivion.esm"),
+                ModKey.Factory("Knights.esm"),
+            };
+            ModKey k1 = ModKey.Factory("Oblivion.esm");
+            ModKey k2 = ModKey.Factory("Knights.esm");
+            var compare = ModKey.LoadOrderComparer(modKeys);
+            Assert.True(compare.Compare(k1, k2) < 0);
+        }
+
+        [Fact]
+        public void Comparer_ModKeyList_TypicalGreater()
+        {
+            List<ModKey> modKeys = new List<ModKey>()
+            {
+                ModKey.Factory("Oblivion.esm"),
+                ModKey.Factory("Knights.esm"),
+            };
+            ModKey k1 = ModKey.Factory("Oblivion.esm");
+            ModKey k2 = ModKey.Factory("Knights.esm");
+            var compare = ModKey.LoadOrderComparer(modKeys);
+            Assert.True(compare.Compare(k2, k1) > 0);
+        }
+
+        [Fact]
+        public void Comparer_ModKeyList_Unknown()
+        {
+            List<ModKey> modKeys = new List<ModKey>()
+            {
+                ModKey.Factory("Oblivion.esm"),
+                ModKey.Factory("Knights.esm"),
+            };
+            ModKey k1 = ModKey.Factory("MyMod.esm");
+            ModKey k2 = ModKey.Factory("Oblivion.esm");
+            var compare = ModKey.LoadOrderComparer(modKeys);
+            Assert.Throws<ArgumentOutOfRangeException>(() => compare.Compare(k1, k2));
+        }
+        #endregion
+        #endregion
     }
 }

@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.UnitTests
                 new BinaryWriteParameters()
                 {
                     ModKey = BinaryWriteParameters.ModKeyOption.ThrowIfMisaligned,
-                    MastersListContentSync = BinaryWriteParameters.MastersListContentOption.NoCheck,
+                    MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(masterPath);
             Assert.True(reimport.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master));
@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.UnitTests
                 new BinaryWriteParameters()
                 {
                     ModKey = BinaryWriteParameters.ModKeyOption.ThrowIfMisaligned,
-                    MastersListContentSync = BinaryWriteParameters.MastersListContentOption.NoCheck,
+                    MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
                 });
             reimport = OblivionMod.CreateFromBinaryOverlay(childPath);
             Assert.False(reimport.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master));
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.UnitTests
                     new BinaryWriteParameters()
                     {
                         ModKey = BinaryWriteParameters.ModKeyOption.ThrowIfMisaligned,
-                        MastersListContentSync = BinaryWriteParameters.MastersListContentOption.NoCheck,
+                        MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
                     });
             });
         }
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.UnitTests
                     new BinaryWriteParameters()
                     {
                         ModKey = BinaryWriteParameters.ModKeyOption.ThrowIfMisaligned,
-                        MastersListContentSync = BinaryWriteParameters.MastersListContentOption.NoCheck,
+                        MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
                     });
             });
         }
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.UnitTests
                 new BinaryWriteParameters()
                 {
                     ModKey = BinaryWriteParameters.ModKeyOption.CorrectToPath,
-                    MastersListContentSync = BinaryWriteParameters.MastersListContentOption.NoCheck,
+                    MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(masterPath);
             Assert.False(reimport.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master));
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.UnitTests
                 new BinaryWriteParameters()
                 {
                     ModKey = BinaryWriteParameters.ModKeyOption.CorrectToPath,
-                    MastersListContentSync = BinaryWriteParameters.MastersListContentOption.NoCheck,
+                    MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(masterPath);
             Assert.True(reimport.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master));
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.UnitTests
                 new BinaryWriteParameters()
                 {
                     ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
-                    MastersListContentSync = BinaryWriteParameters.MastersListContentOption.Iterate,
+                    MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(modPath);
             Assert.Equal(2, reimport.MasterReferences.Count);
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.UnitTests
                 new BinaryWriteParameters()
                 {
                     ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
-                    MastersListContentSync = BinaryWriteParameters.MastersListContentOption.Iterate,
+                    MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(modPath);
             Assert.Equal(
@@ -181,10 +181,105 @@ namespace Mutagen.Bethesda.UnitTests
                 new BinaryWriteParameters()
                 {
                     ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
-                    MastersListContentSync = BinaryWriteParameters.MastersListContentOption.Iterate,
+                    MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(modPath);
             Assert.Empty(reimport.ModHeader.MasterReferences);
+        }
+        #endregion
+
+        #region Master Order Sync
+        [Fact]
+        public void MasterOrderSync_Typical()
+        {
+            WarmupOblivion.Init();
+            using var folder = new TempFolder();
+            var obliv = ModKey.Factory("Oblivion.esm");
+            var knights = ModKey.Factory("Knights.esm");
+            var other = ModKey.Factory("Other.esp");
+            var mod = new OblivionMod(obliv);
+            var knightsNpc = new Npc(new FormKey(knights, 0x123456));
+            mod.Npcs.RecordCache.Set(knightsNpc);
+            var otherNpc = new Npc(new FormKey(other, 0x123456));
+            mod.Npcs.RecordCache.Set(otherNpc);
+            var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
+            mod.WriteToBinary(modPath,
+                new BinaryWriteParameters()
+                {
+                    ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                    MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
+                });
+            var reimport = OblivionMod.CreateFromBinaryOverlay(modPath);
+            Assert.Equal(
+                new ModKey[]
+                {
+                    knights,
+                    other,
+                },
+                reimport.ModHeader.MasterReferences.Select(m => m.Master));
+        }
+
+        [Fact]
+        public void MasterOrderSync_EsmFirst()
+        {
+            WarmupOblivion.Init();
+            using var folder = new TempFolder();
+            var obliv = ModKey.Factory("Oblivion.esm");
+            var first = ModKey.Factory("First.esp");
+            var second = ModKey.Factory("Second.esp");
+            var mod = new OblivionMod(obliv);
+            var secondNpc = new Npc(new FormKey(second, 0x123456));
+            mod.Npcs.RecordCache.Set(secondNpc);
+            var firstNpc = new Npc(new FormKey(first, 0x123456));
+            mod.Npcs.RecordCache.Set(firstNpc);
+            var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
+            mod.WriteToBinary(modPath,
+                new BinaryWriteParameters()
+                {
+                    ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                    MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
+                    MastersListOrdering = BinaryWriteParameters.MastersListOrderingOption.MastersFirst,
+                });
+            var reimport = OblivionMod.CreateFromBinaryOverlay(modPath);
+            Assert.Equal(
+                new ModKey[]
+                {
+                    first,
+                    second,
+                },
+                reimport.ModHeader.MasterReferences.Select(m => m.Master));
+        }
+
+        [Fact]
+        public void MasterOrderSync_ByLoadOrder()
+        {
+            WarmupOblivion.Init();
+            using var folder = new TempFolder();
+            var obliv = ModKey.Factory("Oblivion.esm");
+            var esm = ModKey.Factory("First.esm");
+            var esp = ModKey.Factory("Second.esp");
+            var mod = new OblivionMod(obliv);
+            var espNpc = new Npc(new FormKey(esp, 0x123456));
+            mod.Npcs.RecordCache.Set(espNpc);
+            var esmNpc = new Npc(new FormKey(esm, 0x123456));
+            mod.Npcs.RecordCache.Set(esmNpc);
+            var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
+            var loadOrder = new ModKey[]
+            {
+                esm,
+                esp,
+            };
+            mod.WriteToBinary(modPath,
+                new BinaryWriteParameters()
+                {
+                    ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                    MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
+                    MastersListOrdering = new BinaryWriteParameters.MastersListOrderingByLoadOrder(loadOrder)
+                });
+            var reimport = OblivionMod.CreateFromBinaryOverlay(modPath);
+            Assert.Equal(
+                loadOrder,
+                reimport.ModHeader.MasterReferences.Select(m => m.Master));
         }
         #endregion
     }

@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Core;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -63,7 +64,7 @@ namespace Mutagen.Bethesda.Internals
                 modKey: modKey);
         }
 
-        #region Master Sync Logic
+        #region Master Content Sync Logic
         private void AddMasterCollectionActions(IModGetter mod)
         {
             switch (_params.MastersListContent)
@@ -93,19 +94,46 @@ namespace Mutagen.Bethesda.Internals
                     throw new NotImplementedException();
             }
         }
+        #endregion
+
+        #region Master Order Sync Logic
+        private void SortMasters(List<ModKey> modKeys)
+        {
+            switch (_params.MastersListOrdering)
+            {
+                case BinaryWriteParameters.MastersListOrderingEnumOption e:
+                    switch (e.Option)
+                    {
+                        case BinaryWriteParameters.MastersListOrderingOption.NoCheck:
+                            return;
+                        case BinaryWriteParameters.MastersListOrderingOption.MastersFirst:
+                            modKeys.Sort(ModKey.AlphabeticalAndMastersFirst);
+                            return;
+                        default:
+                            throw new NotImplementedException();
+                    }
+                case BinaryWriteParameters.MastersListOrderingByLoadOrder lo:
+                    modKeys.Sort(ModKey.LoadOrderComparer(lo.LoadOrder));
+                    return;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+        #endregion
 
         private MasterReferenceReader ConstructWriteMasters(IModGetter mod)
         {
             MasterReferenceReader ret = new MasterReferenceReader(mod.ModKey);
             _modKeys.Remove(mod.ModKey);
             _modKeys.Remove(ModKey.Null);
-            ret.SetTo(_modKeys.Select(m => new MasterReference()
+            var modKeysList = _modKeys.ToList();
+            SortMasters(modKeysList);
+            ret.SetTo(modKeysList.Select(m => new MasterReference()
             {
                 Master = m
             }));
             return ret;
         }
-        #endregion
 
         private void WriteModHeader(
             IModHeaderCommon modHeader,
