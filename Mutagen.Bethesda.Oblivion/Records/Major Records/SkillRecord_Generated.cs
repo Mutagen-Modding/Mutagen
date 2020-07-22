@@ -1938,7 +1938,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Data
         private RangeInt32? _DataLocation;
         public ISkillDataGetter? Data => _DataLocation.HasValue ? SkillDataBinaryOverlay.SkillDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region ApprenticeText
         private int? _ApprenticeTextLocation;

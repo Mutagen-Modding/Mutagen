@@ -1791,7 +1791,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region PreferredPathing
         private RangeInt32? _PreferredPathingLocation;
         public IPreferredPathingGetter? PreferredPathing => _PreferredPathingLocation.HasValue ? PreferredPathingBinaryOverlay.PreferredPathingFactory(new OverlayStream(_data.Slice(_PreferredPathingLocation!.Value.Min), _package), _package) : default;
-        public bool PreferredPathing_IsSet => _PreferredPathingLocation.HasValue;
         #endregion
         #region NVSI
         private int? _NVSILocation;

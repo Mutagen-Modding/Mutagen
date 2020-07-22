@@ -1240,7 +1240,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Sound
         private int? _SoundLocation;
-        public bool Sound_IsSet => _SoundLocation.HasValue;
         public IFormLinkNullable<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Chance

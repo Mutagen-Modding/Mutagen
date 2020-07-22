@@ -7230,11 +7230,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
-        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region Base
         private int? _BaseLocation;
-        public bool Base_IsSet => _BaseLocation.HasValue;
         public IFormLinkNullable<ISkyrimMajorRecordGetter> Base => _BaseLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
         #endregion
         #region BoundHalfExtents
@@ -7244,7 +7242,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Primitive
         private RangeInt32? _PrimitiveLocation;
         public IPlacedPrimitiveGetter? Primitive => _PrimitiveLocation.HasValue ? PlacedPrimitiveBinaryOverlay.PlacedPrimitiveFactory(new OverlayStream(_data.Slice(_PrimitiveLocation!.Value.Min), _package), _package) : default;
-        public bool Primitive_IsSet => _PrimitiveLocation.HasValue;
         #endregion
         #region XORD
         private int? _XORDLocation;
@@ -7278,32 +7275,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLink<IPlacedObjectGetter>> LitWater { get; private set; } = ListExt.Empty<IFormLink<IPlacedObjectGetter>>();
         #region Emittance
         private int? _EmittanceLocation;
-        public bool Emittance_IsSet => _EmittanceLocation.HasValue;
         public IFormLinkNullable<IEmittanceGetter> Emittance => _EmittanceLocation.HasValue ? new FormLinkNullable<IEmittanceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EmittanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEmittanceGetter>.Null;
         #endregion
         #region LightData
         private RangeInt32? _LightDataLocation;
         public ILightDataGetter? LightData => _LightDataLocation.HasValue ? LightDataBinaryOverlay.LightDataFactory(new OverlayStream(_data.Slice(_LightDataLocation!.Value.Min), _package), _package) : default;
-        public bool LightData_IsSet => _LightDataLocation.HasValue;
         #endregion
         #region Alpha
         private RangeInt32? _AlphaLocation;
         public IAlphaGetter? Alpha => _AlphaLocation.HasValue ? AlphaBinaryOverlay.AlphaFactory(new OverlayStream(_data.Slice(_AlphaLocation!.Value.Min), _package), _package) : default;
-        public bool Alpha_IsSet => _AlphaLocation.HasValue;
         #endregion
         #region TeleportDestination
         private RangeInt32? _TeleportDestinationLocation;
         public ITeleportDestinationGetter? TeleportDestination => _TeleportDestinationLocation.HasValue ? TeleportDestinationBinaryOverlay.TeleportDestinationFactory(new OverlayStream(_data.Slice(_TeleportDestinationLocation!.Value.Min), _package), _package) : default;
-        public bool TeleportDestination_IsSet => _TeleportDestinationLocation.HasValue;
         #endregion
         #region TeleportMessageBox
         private int? _TeleportMessageBoxLocation;
-        public bool TeleportMessageBox_IsSet => _TeleportMessageBoxLocation.HasValue;
         public IFormLinkNullable<IMessageGetter> TeleportMessageBox => _TeleportMessageBoxLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TeleportMessageBoxLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
         #endregion
         #region MultiboundReference
         private int? _MultiboundReferenceLocation;
-        public bool MultiboundReference_IsSet => _MultiboundReferenceLocation.HasValue;
         public IFormLinkNullable<IPlacedObjectGetter> MultiboundReference => _MultiboundReferenceLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MultiboundReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region XWCN
@@ -7317,7 +7308,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region WaterVelocity
         private RangeInt32? _WaterVelocityLocation;
         public IWaterVelocityGetter? WaterVelocity => _WaterVelocityLocation.HasValue ? WaterVelocityBinaryOverlay.WaterVelocityFactory(new OverlayStream(_data.Slice(_WaterVelocityLocation!.Value.Min), _package), _package) : default;
-        public bool WaterVelocity_IsSet => _WaterVelocityLocation.HasValue;
         #endregion
         #region XCVL
         private int? _XCVLLocation;
@@ -7325,7 +7315,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region XCZR
         private int? _XCZRLocation;
-        public bool XCZR_IsSet => _XCZRLocation.HasValue;
         public IFormLinkNullable<ILinkedReferenceGetter> XCZR => _XCZRLocation.HasValue ? new FormLinkNullable<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _XCZRLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILinkedReferenceGetter>.Null;
         #endregion
         #region XCZA
@@ -7334,7 +7323,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region XCZC
         private int? _XCZCLocation;
-        public bool XCZC_IsSet => _XCZCLocation.HasValue;
         public IFormLinkNullable<ICellGetter> XCZC => _XCZCLocation.HasValue ? new FormLinkNullable<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _XCZCLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICellGetter>.Null;
         #endregion
         #region Scale
@@ -7343,13 +7331,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region SpawnContainer
         private int? _SpawnContainerLocation;
-        public bool SpawnContainer_IsSet => _SpawnContainerLocation.HasValue;
         public IFormLinkNullable<IPlacedObjectGetter> SpawnContainer => _SpawnContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpawnContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         public IActivateParentsGetter? ActivateParents { get; private set; }
         #region LeveledItemBaseObject
         private int? _LeveledItemBaseObjectLocation;
-        public bool LeveledItemBaseObject_IsSet => _LeveledItemBaseObjectLocation.HasValue;
         public IFormLinkNullable<ILeveledItemGetter> LeveledItemBaseObject => _LeveledItemBaseObjectLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LeveledItemBaseObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
         #endregion
         #region LevelModifier
@@ -7358,7 +7344,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region PersistentLocation
         private int? _PersistentLocationLocation;
-        public bool PersistentLocation_IsSet => _PersistentLocationLocation.HasValue;
         public IFormLinkNullable<ILocationGetter> PersistentLocation => _PersistentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PersistentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
         #endregion
         #region CollisionLayer
@@ -7368,17 +7353,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Lock
         private RangeInt32? _LockLocation;
         public ILockDataGetter? Lock => _LockLocation.HasValue ? LockDataBinaryOverlay.LockDataFactory(new OverlayStream(_data.Slice(_LockLocation!.Value.Min), _package), _package) : default;
-        public bool Lock_IsSet => _LockLocation.HasValue;
         #endregion
         #region EncounterZone
         private int? _EncounterZoneLocation;
-        public bool EncounterZone_IsSet => _EncounterZoneLocation.HasValue;
         public IFormLinkNullable<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
         #endregion
         #region NavigationDoorLink
         private RangeInt32? _NavigationDoorLinkLocation;
         public INavigationDoorLinkGetter? NavigationDoorLink => _NavigationDoorLinkLocation.HasValue ? NavigationDoorLinkBinaryOverlay.NavigationDoorLinkFactory(new OverlayStream(_data.Slice(_NavigationDoorLinkLocation!.Value.Min), _package), _package) : default;
-        public bool NavigationDoorLink_IsSet => _NavigationDoorLinkLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region IgnoredBySandbox
@@ -7396,13 +7378,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LocationReference
         private int? _LocationReferenceLocation;
-        public bool LocationReference_IsSet => _LocationReferenceLocation.HasValue;
         public IFormLinkNullable<ILocationRecordGetter> LocationReference => _LocationReferenceLocation.HasValue ? new FormLinkNullable<ILocationRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LocationReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationRecordGetter>.Null;
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
         public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new OverlayStream(_data.Slice(_EnableParentLocation!.Value.Min), _package), _package) : default;
-        public bool EnableParent_IsSet => _EnableParentLocation.HasValue;
         #endregion
         public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = ListExt.Empty<LinkedReferencesBinaryOverlay>();
         public IPatrolGetter? Patrol { get; private set; }
@@ -7425,7 +7405,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IMapMarkerGetter? MapMarker { get; private set; }
         #region AttachRef
         private int? _AttachRefLocation;
-        public bool AttachRef_IsSet => _AttachRefLocation.HasValue;
         public IFormLinkNullable<IPlacedThingGetter> AttachRef => _AttachRefLocation.HasValue ? new FormLinkNullable<IPlacedThingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttachRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedThingGetter>.Null;
         #endregion
         #region DistantLodData
@@ -7435,7 +7414,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Placement
         private RangeInt32? _PlacementLocation;
         public IPlacementGetter? Placement => _PlacementLocation.HasValue ? PlacementBinaryOverlay.PlacementFactory(new OverlayStream(_data.Slice(_PlacementLocation!.Value.Min), _package), _package) : default;
-        public bool Placement_IsSet => _PlacementLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

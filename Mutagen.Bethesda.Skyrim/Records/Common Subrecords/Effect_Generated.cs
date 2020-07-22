@@ -1500,13 +1500,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region BaseEffect
         private int? _BaseEffectLocation;
-        public bool BaseEffect_IsSet => _BaseEffectLocation.HasValue;
         public IFormLinkNullable<IMagicEffectGetter> BaseEffect => _BaseEffectLocation.HasValue ? new FormLinkNullable<IMagicEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMagicEffectGetter>.Null;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
         public IEffectDataGetter? Data => _DataLocation.HasValue ? EffectDataBinaryOverlay.EffectDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Conditions
         partial void ConditionsCustomParse(

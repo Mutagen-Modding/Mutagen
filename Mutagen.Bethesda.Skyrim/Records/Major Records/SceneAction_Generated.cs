@@ -2562,7 +2562,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLink<IPackageGetter>> Packages { get; private set; } = ListExt.Empty<IFormLink<IPackageGetter>>();
         #region Topic
         private int? _TopicLocation;
-        public bool Topic_IsSet => _TopicLocation.HasValue;
         public IFormLinkNullable<IDialogTopicGetter> Topic => _TopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
         #endregion
         #region HeadtrackActorID

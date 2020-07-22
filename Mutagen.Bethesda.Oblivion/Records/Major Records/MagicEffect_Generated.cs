@@ -1978,7 +1978,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Data
         private RangeInt32? _DataLocation;
         public IMagicEffectDataGetter? Data => _DataLocation.HasValue ? MagicEffectDataBinaryOverlay.MagicEffectDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         public IReadOnlyList<IEDIDLink<IMagicEffectGetter>>? CounterEffects { get; private set; }
         partial void CustomFactoryEnd(

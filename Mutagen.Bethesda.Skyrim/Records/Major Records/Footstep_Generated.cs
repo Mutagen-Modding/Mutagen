@@ -1438,7 +1438,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;
-        public bool ImpactDataSet_IsSet => _ImpactDataSetLocation.HasValue;
         public IFormLink<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region Tag

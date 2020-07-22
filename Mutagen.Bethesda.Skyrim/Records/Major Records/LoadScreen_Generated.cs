@@ -2215,7 +2215,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LoadingScreenNif
         private int? _LoadingScreenNifLocation;
-        public bool LoadingScreenNif_IsSet => _LoadingScreenNifLocation.HasValue;
         public IFormLink<IStaticGetter> LoadingScreenNif => _LoadingScreenNifLocation.HasValue ? new FormLink<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoadingScreenNifLocation.Value, _package.MetaData.Constants)))) : FormLink<IStaticGetter>.Null;
         #endregion
         #region InitialScale

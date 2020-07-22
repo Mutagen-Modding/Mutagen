@@ -1990,12 +1990,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region TextureSet
         private int? _TextureSetLocation;
-        public bool TextureSet_IsSet => _TextureSetLocation.HasValue;
         public IFormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region MaterialType
         private int? _MaterialTypeLocation;
-        public bool MaterialType_IsSet => _MaterialTypeLocation.HasValue;
         public IFormLink<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLink<IMaterialTypeGetter>.Null;
         #endregion
         private int? _HNAMLocation;

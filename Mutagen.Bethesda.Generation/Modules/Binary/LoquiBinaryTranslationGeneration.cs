@@ -425,10 +425,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => _{typeGen.Name} ?? new {loqui.DirectTypeName}({(loqui.ThisConstruction ? "this" : null)});");
             }
-            else if (loqui.Nullable && !loqui.TargetObjectGeneration.IsTypelessStruct())
-            {
-                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
-            }
         }
 
         public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)

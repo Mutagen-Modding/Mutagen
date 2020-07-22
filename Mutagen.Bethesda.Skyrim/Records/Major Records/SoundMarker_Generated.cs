@@ -1662,7 +1662,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region SoundDescriptor
         private int? _SoundDescriptorLocation;
-        public bool SoundDescriptor_IsSet => _SoundDescriptorLocation.HasValue;
         public IFormLinkNullable<ISoundDescriptorGetter> SoundDescriptor => _SoundDescriptorLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundDescriptorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(

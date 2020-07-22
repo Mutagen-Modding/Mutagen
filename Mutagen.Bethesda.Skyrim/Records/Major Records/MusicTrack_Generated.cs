@@ -2431,7 +2431,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region LoopData
         private RangeInt32? _LoopDataLocation;
         public IMusicTrackLoopDataGetter? LoopData => _LoopDataLocation.HasValue ? MusicTrackLoopDataBinaryOverlay.MusicTrackLoopDataFactory(new OverlayStream(_data.Slice(_LoopDataLocation!.Value.Min), _package), _package) : default;
-        public bool LoopData_IsSet => _LoopDataLocation.HasValue;
         #endregion
         public IReadOnlyList<Single>? CuePoints { get; private set; }
         #region Conditions

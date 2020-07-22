@@ -2035,7 +2035,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Lod
         private RangeInt32? _LodLocation;
         public ILodGetter? Lod => _LodLocation.HasValue ? LodBinaryOverlay.LodFactory(new OverlayStream(_data.Slice(_LodLocation!.Value.Min), _package), _package) : default;
-        public bool Lod_IsSet => _LodLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

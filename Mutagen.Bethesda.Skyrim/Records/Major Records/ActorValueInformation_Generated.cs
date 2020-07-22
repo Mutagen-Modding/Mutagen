@@ -1956,7 +1956,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Skill
         private RangeInt32? _SkillLocation;
         public IActorValueSkillGetter? Skill => _SkillLocation.HasValue ? ActorValueSkillBinaryOverlay.ActorValueSkillFactory(new OverlayStream(_data.Slice(_SkillLocation!.Value.Min), _package), _package) : default;
-        public bool Skill_IsSet => _SkillLocation.HasValue;
         #endregion
         public IReadOnlyList<IActorValuePerkNodeGetter> PerkTree { get; private set; } = ListExt.Empty<ActorValuePerkNodeBinaryOverlay>();
         partial void CustomFactoryEnd(

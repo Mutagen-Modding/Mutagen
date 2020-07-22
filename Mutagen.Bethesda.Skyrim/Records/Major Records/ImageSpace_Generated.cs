@@ -1836,22 +1836,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Hdr
         private RangeInt32? _HdrLocation;
         public IImageSpaceHdrGetter? Hdr => _HdrLocation.HasValue ? ImageSpaceHdrBinaryOverlay.ImageSpaceHdrFactory(new OverlayStream(_data.Slice(_HdrLocation!.Value.Min), _package), _package) : default;
-        public bool Hdr_IsSet => _HdrLocation.HasValue;
         #endregion
         #region Cinematic
         private RangeInt32? _CinematicLocation;
         public IImageSpaceCinematicGetter? Cinematic => _CinematicLocation.HasValue ? ImageSpaceCinematicBinaryOverlay.ImageSpaceCinematicFactory(new OverlayStream(_data.Slice(_CinematicLocation!.Value.Min), _package), _package) : default;
-        public bool Cinematic_IsSet => _CinematicLocation.HasValue;
         #endregion
         #region Tint
         private RangeInt32? _TintLocation;
         public IImageSpaceTintGetter? Tint => _TintLocation.HasValue ? ImageSpaceTintBinaryOverlay.ImageSpaceTintFactory(new OverlayStream(_data.Slice(_TintLocation!.Value.Min), _package), _package) : default;
-        public bool Tint_IsSet => _TintLocation.HasValue;
         #endregion
         #region DepthOfField
         private RangeInt32? _DepthOfFieldLocation;
         public IImageSpaceDepthOfFieldGetter? DepthOfField => _DepthOfFieldLocation.HasValue ? ImageSpaceDepthOfFieldBinaryOverlay.ImageSpaceDepthOfFieldFactory(new OverlayStream(_data.Slice(_DepthOfFieldLocation!.Value.Min), _package), _package) : default;
-        public bool DepthOfField_IsSet => _DepthOfFieldLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

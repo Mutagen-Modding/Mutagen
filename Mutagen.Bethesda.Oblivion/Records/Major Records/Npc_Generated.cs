@@ -4194,46 +4194,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Configuration
         private RangeInt32? _ConfigurationLocation;
         public INpcConfigurationGetter? Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new OverlayStream(_data.Slice(_ConfigurationLocation!.Value.Min), _package), _package) : default;
-        public bool Configuration_IsSet => _ConfigurationLocation.HasValue;
         #endregion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
         #region DeathItem
         private int? _DeathItemLocation;
-        public bool DeathItem_IsSet => _DeathItemLocation.HasValue;
         public IFormLinkNullable<IAItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IAItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAItemGetter>.Null;
         #endregion
         #region Race
         private int? _RaceLocation;
-        public bool Race_IsSet => _RaceLocation.HasValue;
         public IFormLinkNullable<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLink<IASpellGetter>> Spells { get; private set; } = ListExt.Empty<IFormLink<IASpellGetter>>();
         #region Script
         private int? _ScriptLocation;
-        public bool Script_IsSet => _ScriptLocation.HasValue;
         public IFormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = ListExt.Empty<ItemEntryBinaryOverlay>();
         #region AIData
         private RangeInt32? _AIDataLocation;
         public IAIDataGetter? AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(new OverlayStream(_data.Slice(_AIDataLocation!.Value.Min), _package), _package) : default;
-        public bool AIData_IsSet => _AIDataLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLink<IAIPackageGetter>> AIPackages { get; private set; } = ListExt.Empty<IFormLink<IAIPackageGetter>>();
         public IReadOnlyList<String>? Animations { get; private set; }
         #region Class
         private int? _ClassLocation;
-        public bool Class_IsSet => _ClassLocation.HasValue;
         public IFormLinkNullable<IClassGetter> Class => _ClassLocation.HasValue ? new FormLinkNullable<IClassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ClassLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClassGetter>.Null;
         #endregion
         #region Stats
         private RangeInt32? _StatsLocation;
         public INpcDataGetter? Stats => _StatsLocation.HasValue ? NpcDataBinaryOverlay.NpcDataFactory(new OverlayStream(_data.Slice(_StatsLocation!.Value.Min), _package), _package) : default;
-        public bool Stats_IsSet => _StatsLocation.HasValue;
         #endregion
         #region Hair
         private int? _HairLocation;
-        public bool Hair_IsSet => _HairLocation.HasValue;
         public IFormLinkNullable<IHairGetter> Hair => _HairLocation.HasValue ? new FormLinkNullable<IHairGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HairLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHairGetter>.Null;
         #endregion
         #region HairLength
@@ -4247,7 +4239,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public bool CombatStyle_IsSet => _CombatStyleLocation.HasValue;
         public IFormLinkNullable<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
         #endregion
         #region FaceGenGeometrySymmetric

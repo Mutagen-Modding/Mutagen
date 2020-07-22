@@ -2723,12 +2723,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Melee
         private RangeInt32? _MeleeLocation;
         public ICombatStyleMeleeGetter? Melee => _MeleeLocation.HasValue ? CombatStyleMeleeBinaryOverlay.CombatStyleMeleeFactory(new OverlayStream(_data.Slice(_MeleeLocation!.Value.Min), _package), _package) : default;
-        public bool Melee_IsSet => _MeleeLocation.HasValue;
         #endregion
         #region CloseRange
         private RangeInt32? _CloseRangeLocation;
         public ICombatStyleCloseRangeGetter? CloseRange => _CloseRangeLocation.HasValue ? CombatStyleCloseRangeBinaryOverlay.CombatStyleCloseRangeFactory(new OverlayStream(_data.Slice(_CloseRangeLocation!.Value.Min), _package), _package) : default;
-        public bool CloseRange_IsSet => _CloseRangeLocation.HasValue;
         #endregion
         #region LongRangeStrafeMult
         private int? _LongRangeStrafeMultLocation;
@@ -2737,7 +2735,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Flight
         private RangeInt32? _FlightLocation;
         public ICombatStyleFlightGetter? Flight => _FlightLocation.HasValue ? CombatStyleFlightBinaryOverlay.CombatStyleFlightFactory(new OverlayStream(_data.Slice(_FlightLocation!.Value.Min), _package), _package) : default;
-        public bool Flight_IsSet => _FlightLocation.HasValue;
         #endregion
         #region Flags
         private int? _FlagsLocation;

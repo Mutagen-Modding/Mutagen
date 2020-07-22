@@ -1334,12 +1334,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Data
         private RangeInt32? _DataLocation;
         public ILeveledSpellEntryDataGetter? Data => _DataLocation.HasValue ? LeveledSpellEntryDataBinaryOverlay.LeveledSpellEntryDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region ExtraData
         private RangeInt32? _ExtraDataLocation;
         public IExtraDataGetter? ExtraData => _ExtraDataLocation.HasValue ? ExtraDataBinaryOverlay.ExtraDataFactory(new OverlayStream(_data.Slice(_ExtraDataLocation!.Value.Min), _package), _package) : default;
-        public bool ExtraData_IsSet => _ExtraDataLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -2883,7 +2883,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
-        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
@@ -2910,7 +2909,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region InteractionKeyword
         private int? _InteractionKeywordLocation;
-        public bool InteractionKeyword_IsSet => _InteractionKeywordLocation.HasValue;
         public IFormLinkNullable<IKeywordGetter> InteractionKeyword => _InteractionKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InteractionKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
         #endregion
         #region Flags2
@@ -2921,11 +2919,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region WorkbenchData
         private RangeInt32? _WorkbenchDataLocation;
         public IWorkbenchDataGetter? WorkbenchData => _WorkbenchDataLocation.HasValue ? WorkbenchDataBinaryOverlay.WorkbenchDataFactory(new OverlayStream(_data.Slice(_WorkbenchDataLocation!.Value.Min), _package), _package) : default;
-        public bool WorkbenchData_IsSet => _WorkbenchDataLocation.HasValue;
         #endregion
         #region AssociatedSpell
         private int? _AssociatedSpellLocation;
-        public bool AssociatedSpell_IsSet => _AssociatedSpellLocation.HasValue;
         public IFormLinkNullable<ISpellGetter> AssociatedSpell => _AssociatedSpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AssociatedSpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
         #endregion
         #region DisabledMarkers

@@ -1157,7 +1157,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Header
         private RangeInt32? _HeaderLocation;
         public IRegionDataHeaderGetter? Header => _HeaderLocation.HasValue ? RegionDataHeaderBinaryOverlay.RegionDataHeaderFactory(new OverlayStream(_data.Slice(_HeaderLocation!.Value.Min), _package), _package) : default;
-        public bool Header_IsSet => _HeaderLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -1972,7 +1972,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Global
         private int? _GlobalLocation;
-        public bool Global_IsSet => _GlobalLocation.HasValue;
         public IFormLinkNullable<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
         #endregion
         public IReadOnlyList<ILeveledNpcEntryGetter>? Entries { get; private set; }

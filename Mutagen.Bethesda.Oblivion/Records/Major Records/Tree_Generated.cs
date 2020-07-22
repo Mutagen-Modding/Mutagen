@@ -1907,12 +1907,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Data
         private RangeInt32? _DataLocation;
         public ITreeDataGetter? Data => _DataLocation.HasValue ? TreeDataBinaryOverlay.TreeDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region BillboardDimensions
         private RangeInt32? _BillboardDimensionsLocation;
         public IDimensionsGetter? BillboardDimensions => _BillboardDimensionsLocation.HasValue ? DimensionsBinaryOverlay.DimensionsFactory(new OverlayStream(_data.Slice(_BillboardDimensionsLocation!.Value.Min), _package), _package) : default;
-        public bool BillboardDimensions_IsSet => _BillboardDimensionsLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

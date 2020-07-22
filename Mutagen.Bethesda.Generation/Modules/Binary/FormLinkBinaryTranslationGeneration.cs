@@ -258,7 +258,6 @@ namespace Mutagen.Bethesda.Generation
             if (data.HasTrigger)
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
-                fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
             }
             FormLinkType linkType = typeGen as FormLinkType;
             

@@ -1963,7 +1963,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Data
         private RangeInt32? _DataLocation;
         public ISoundOutputDataGetter? Data => _DataLocation.HasValue ? SoundOutputDataBinaryOverlay.SoundOutputDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region FNAM
         private int? _FNAMLocation;
@@ -1984,12 +1983,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region OutputChannels
         private RangeInt32? _OutputChannelsLocation;
         public ISoundOutputChannelsGetter? OutputChannels => _OutputChannelsLocation.HasValue ? SoundOutputChannelsBinaryOverlay.SoundOutputChannelsFactory(new OverlayStream(_data.Slice(_OutputChannelsLocation!.Value.Min), _package), _package) : default;
-        public bool OutputChannels_IsSet => _OutputChannelsLocation.HasValue;
         #endregion
         #region Attenuation
         private RangeInt32? _AttenuationLocation;
         public ISoundOutputAttenuationGetter? Attenuation => _AttenuationLocation.HasValue ? SoundOutputAttenuationBinaryOverlay.SoundOutputAttenuationFactory(new OverlayStream(_data.Slice(_AttenuationLocation!.Value.Min), _package), _package) : default;
-        public bool Attenuation_IsSet => _AttenuationLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -6933,12 +6933,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Precipitation
         private int? _PrecipitationLocation;
-        public bool Precipitation_IsSet => _PrecipitationLocation.HasValue;
         public IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
         #endregion
         #region VisualEffect
         private int? _VisualEffectLocation;
-        public bool VisualEffect_IsSet => _VisualEffectLocation.HasValue;
         public IFormLink<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
         #endregion
         #region ONAM
@@ -7206,12 +7204,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ImageSpaces
         private RangeInt32? _ImageSpacesLocation;
         public IWeatherImageSpacesGetter? ImageSpaces => _ImageSpacesLocation.HasValue ? WeatherImageSpacesBinaryOverlay.WeatherImageSpacesFactory(new OverlayStream(_data.Slice(_ImageSpacesLocation!.Value.Min), _package), _package) : default;
-        public bool ImageSpaces_IsSet => _ImageSpacesLocation.HasValue;
         #endregion
         #region VolumetricLighting
         private RangeInt32? _VolumetricLightingLocation;
         public IWeatherVolumetricLightingGetter? VolumetricLighting => _VolumetricLightingLocation.HasValue ? WeatherVolumetricLightingBinaryOverlay.WeatherVolumetricLightingFactory(new OverlayStream(_data.Slice(_VolumetricLightingLocation!.Value.Min), _package), _package) : default;
-        public bool VolumetricLighting_IsSet => _VolumetricLightingLocation.HasValue;
         #endregion
         #region DirectionalAmbientLightingColors
         partial void DirectionalAmbientLightingColorsCustomParse(
@@ -7231,7 +7227,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Aurora { get; private set; }
         #region SunGlareLensFlare
         private int? _SunGlareLensFlareLocation;
-        public bool SunGlareLensFlare_IsSet => _SunGlareLensFlareLocation.HasValue;
         public IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(

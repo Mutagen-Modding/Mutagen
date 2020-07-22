@@ -1819,7 +1819,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region NextQuest
         private int? _NextQuestLocation;
-        public bool NextQuest_IsSet => _NextQuestLocation.HasValue;
         public IFormLinkNullable<IQuestGetter> NextQuest => _NextQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NextQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region SCHR

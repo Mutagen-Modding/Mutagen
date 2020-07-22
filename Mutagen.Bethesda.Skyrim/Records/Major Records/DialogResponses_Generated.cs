@@ -3087,7 +3087,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IDialogResponsesAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? DialogResponsesAdapterBinaryOverlay.DialogResponsesAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
-        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region DATA
         private int? _DATALocation;
@@ -3096,16 +3095,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Flags
         private RangeInt32? _FlagsLocation;
         public IDialogResponseFlagsGetter? Flags => _FlagsLocation.HasValue ? DialogResponseFlagsBinaryOverlay.DialogResponseFlagsFactory(new OverlayStream(_data.Slice(_FlagsLocation!.Value.Min), _package), _package) : default;
-        public bool Flags_IsSet => _FlagsLocation.HasValue;
         #endregion
         #region Topic
         private int? _TopicLocation;
-        public bool Topic_IsSet => _TopicLocation.HasValue;
         public IFormLinkNullable<IDialogTopicGetter> Topic => _TopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
         #endregion
         #region PreviousDialog
         private int? _PreviousDialogLocation;
-        public bool PreviousDialog_IsSet => _PreviousDialogLocation.HasValue;
         public IFormLinkNullable<IDialogResponsesGetter> PreviousDialog => _PreviousDialogLocation.HasValue ? new FormLinkNullable<IDialogResponsesGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviousDialogLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogResponsesGetter>.Null;
         #endregion
         #region FavorLevel
@@ -3115,7 +3111,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLink<IDialogGetter>> LinkTo { get; private set; } = ListExt.Empty<IFormLink<IDialogGetter>>();
         #region ResponseData
         private int? _ResponseDataLocation;
-        public bool ResponseData_IsSet => _ResponseDataLocation.HasValue;
         public IFormLinkNullable<IDialogResponsesGetter> ResponseData => _ResponseDataLocation.HasValue ? new FormLinkNullable<IDialogResponsesGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ResponseDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogResponsesGetter>.Null;
         #endregion
         public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = ListExt.Empty<DialogResponseBinaryOverlay>();
@@ -3134,17 +3129,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Speaker
         private int? _SpeakerLocation;
-        public bool Speaker_IsSet => _SpeakerLocation.HasValue;
         public IFormLinkNullable<INpcGetter> Speaker => _SpeakerLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpeakerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
         #endregion
         #region WalkAwayTopic
         private int? _WalkAwayTopicLocation;
-        public bool WalkAwayTopic_IsSet => _WalkAwayTopicLocation.HasValue;
         public IFormLinkNullable<IDialogTopicGetter> WalkAwayTopic => _WalkAwayTopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WalkAwayTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
         #endregion
         #region AudioOutputOverride
         private int? _AudioOutputOverrideLocation;
-        public bool AudioOutputOverride_IsSet => _AudioOutputOverrideLocation.HasValue;
         public IFormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride => _AudioOutputOverrideLocation.HasValue ? new FormLinkNullable<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AudioOutputOverrideLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundOutputModelGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(

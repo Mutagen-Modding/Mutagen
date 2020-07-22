@@ -2382,7 +2382,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
-        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
@@ -2402,7 +2401,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LoopingSound
         private int? _LoopingSoundLocation;
-        public bool LoopingSound_IsSet => _LoopingSoundLocation.HasValue;
         public IFormLinkNullable<ISoundMarkerGetter> LoopingSound => _LoopingSoundLocation.HasValue ? new FormLinkNullable<ISoundMarkerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundMarkerGetter>.Null;
         #endregion
         #region FNAM
@@ -2411,7 +2409,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region VoiceType
         private int? _VoiceTypeLocation;
-        public bool VoiceType_IsSet => _VoiceTypeLocation.HasValue;
         public IFormLinkNullable<IVoiceTypeGetter> VoiceType => _VoiceTypeLocation.HasValue ? new FormLinkNullable<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VoiceTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IVoiceTypeGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(

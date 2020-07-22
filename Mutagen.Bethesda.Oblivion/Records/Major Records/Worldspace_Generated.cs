@@ -3080,17 +3080,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Parent
         private int? _ParentLocation;
-        public bool Parent_IsSet => _ParentLocation.HasValue;
         public IFormLinkNullable<IWorldspaceGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
         #endregion
         #region Climate
         private int? _ClimateLocation;
-        public bool Climate_IsSet => _ClimateLocation.HasValue;
         public IFormLinkNullable<IClimateGetter> Climate => _ClimateLocation.HasValue ? new FormLinkNullable<IClimateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ClimateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClimateGetter>.Null;
         #endregion
         #region Water
         private int? _WaterLocation;
-        public bool Water_IsSet => _WaterLocation.HasValue;
         public IFormLinkNullable<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
         #endregion
         #region Icon
@@ -3100,7 +3097,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region MapData
         private RangeInt32? _MapDataLocation;
         public IMapDataGetter? MapData => _MapDataLocation.HasValue ? MapDataBinaryOverlay.MapDataFactory(new OverlayStream(_data.Slice(_MapDataLocation!.Value.Min), _package), _package) : default;
-        public bool MapData_IsSet => _MapDataLocation.HasValue;
         #endregion
         #region Flags
         private int? _FlagsLocation;

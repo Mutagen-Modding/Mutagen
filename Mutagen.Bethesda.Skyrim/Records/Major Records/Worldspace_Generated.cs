@@ -4535,7 +4535,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region MaxHeight
         private RangeInt32? _MaxHeightLocation;
         public IWorldspaceMaxHeightGetter? MaxHeight => _MaxHeightLocation.HasValue ? WorldspaceMaxHeightBinaryOverlay.WorldspaceMaxHeightFactory(new OverlayStream(_data.Slice(_MaxHeightLocation!.Value.Min), _package), _package) : default;
-        public bool MaxHeight_IsSet => _MaxHeightLocation.HasValue;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -4547,33 +4546,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region InteriorLighting
         private int? _InteriorLightingLocation;
-        public bool InteriorLighting_IsSet => _InteriorLightingLocation.HasValue;
         public IFormLinkNullable<ILightingTemplateGetter> InteriorLighting => _InteriorLightingLocation.HasValue ? new FormLinkNullable<ILightingTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InteriorLightingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILightingTemplateGetter>.Null;
         #endregion
         #region EncounterZone
         private int? _EncounterZoneLocation;
-        public bool EncounterZone_IsSet => _EncounterZoneLocation.HasValue;
         public IFormLinkNullable<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
         #endregion
         #region Location
         private int? _LocationLocation;
-        public bool Location_IsSet => _LocationLocation.HasValue;
         public IFormLinkNullable<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
         #endregion
         public IWorldspaceParentGetter? Parent { get; private set; }
         #region Climate
         private int? _ClimateLocation;
-        public bool Climate_IsSet => _ClimateLocation.HasValue;
         public IFormLinkNullable<IClimateGetter> Climate => _ClimateLocation.HasValue ? new FormLinkNullable<IClimateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ClimateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClimateGetter>.Null;
         #endregion
         #region Water
         private int? _WaterLocation;
-        public bool Water_IsSet => _WaterLocation.HasValue;
         public IFormLinkNullable<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
         #endregion
         #region LodWater
         private int? _LodWaterLocation;
-        public bool LodWater_IsSet => _LodWaterLocation.HasValue;
         public IFormLinkNullable<IWaterGetter> LodWater => _LodWaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LodWaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
         #endregion
         #region LodWaterHeight
@@ -4583,7 +4576,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region LandDefaults
         private RangeInt32? _LandDefaultsLocation;
         public IWorldspaceLandDefaultsGetter? LandDefaults => _LandDefaultsLocation.HasValue ? WorldspaceLandDefaultsBinaryOverlay.WorldspaceLandDefaultsFactory(new OverlayStream(_data.Slice(_LandDefaultsLocation!.Value.Min), _package), _package) : default;
-        public bool LandDefaults_IsSet => _LandDefaultsLocation.HasValue;
         #endregion
         #region MapImage
         private int? _MapImageLocation;
@@ -4593,7 +4585,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region MapData
         private RangeInt32? _MapDataLocation;
         public IWorldspaceMapGetter? MapData => _MapDataLocation.HasValue ? WorldspaceMapBinaryOverlay.WorldspaceMapFactory(new OverlayStream(_data.Slice(_MapDataLocation!.Value.Min), _package), _package) : default;
-        public bool MapData_IsSet => _MapDataLocation.HasValue;
         #endregion
         #region MapOffset
         private RangeInt32? _MapOffsetLocation;
@@ -4611,7 +4602,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IWorldspaceObjectBoundsGetter? ObjectBounds { get; private set; }
         #region Music
         private int? _MusicLocation;
-        public bool Music_IsSet => _MusicLocation.HasValue;
         public IFormLinkNullable<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
         #endregion
         #region CanopyShadow

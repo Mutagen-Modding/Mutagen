@@ -2218,7 +2218,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Base
         private int? _BaseLocation;
-        public bool Base_IsSet => _BaseLocation.HasValue;
         public IFormLinkNullable<INpcGetter> Base => _BaseLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
         #endregion
         #region XPCIFluff
@@ -2232,21 +2231,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region DistantLODData
         private RangeInt32? _DistantLODDataLocation;
         public IDistantLODDataGetter? DistantLODData => _DistantLODDataLocation.HasValue ? DistantLODDataBinaryOverlay.DistantLODDataFactory(new OverlayStream(_data.Slice(_DistantLODDataLocation!.Value.Min), _package), _package) : default;
-        public bool DistantLODData_IsSet => _DistantLODDataLocation.HasValue;
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
         public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new OverlayStream(_data.Slice(_EnableParentLocation!.Value.Min), _package), _package) : default;
-        public bool EnableParent_IsSet => _EnableParentLocation.HasValue;
         #endregion
         #region MerchantContainer
         private int? _MerchantContainerLocation;
-        public bool MerchantContainer_IsSet => _MerchantContainerLocation.HasValue;
         public IFormLinkNullable<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MerchantContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region Horse
         private int? _HorseLocation;
-        public bool Horse_IsSet => _HorseLocation.HasValue;
         public IFormLinkNullable<IPlacedCreatureGetter> Horse => _HorseLocation.HasValue ? new FormLinkNullable<IPlacedCreatureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HorseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedCreatureGetter>.Null;
         #endregion
         #region RagdollData

@@ -1640,7 +1640,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Idle
         private int? _IdleLocation;
-        public bool Idle_IsSet => _IdleLocation.HasValue;
         public IFormLink<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLink<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLink<IIdleAnimationGetter>.Null;
         #endregion
         #region SCHR

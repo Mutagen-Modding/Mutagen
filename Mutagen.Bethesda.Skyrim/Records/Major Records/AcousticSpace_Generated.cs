@@ -1636,17 +1636,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region AmbientSound
         private int? _AmbientSoundLocation;
-        public bool AmbientSound_IsSet => _AmbientSoundLocation.HasValue;
         public IFormLinkNullable<ISoundDescriptorGetter> AmbientSound => _AmbientSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AmbientSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region UseSoundFromRegion
         private int? _UseSoundFromRegionLocation;
-        public bool UseSoundFromRegion_IsSet => _UseSoundFromRegionLocation.HasValue;
         public IFormLinkNullable<IRegionGetter> UseSoundFromRegion => _UseSoundFromRegionLocation.HasValue ? new FormLinkNullable<IRegionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UseSoundFromRegionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRegionGetter>.Null;
         #endregion
         #region EnvironmentType
         private int? _EnvironmentTypeLocation;
-        public bool EnvironmentType_IsSet => _EnvironmentTypeLocation.HasValue;
         public IFormLinkNullable<IReverbParametersGetter> EnvironmentType => _EnvironmentTypeLocation.HasValue ? new FormLinkNullable<IReverbParametersGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnvironmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IReverbParametersGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(

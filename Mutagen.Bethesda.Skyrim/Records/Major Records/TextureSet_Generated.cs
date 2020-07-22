@@ -2219,7 +2219,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Decal
         private RangeInt32? _DecalLocation;
         public IDecalGetter? Decal => _DecalLocation.HasValue ? DecalBinaryOverlay.DecalFactory(new OverlayStream(_data.Slice(_DecalLocation!.Value.Min), _package), _package) : default;
-        public bool Decal_IsSet => _DecalLocation.HasValue;
         #endregion
         #region Flags
         private int? _FlagsLocation;

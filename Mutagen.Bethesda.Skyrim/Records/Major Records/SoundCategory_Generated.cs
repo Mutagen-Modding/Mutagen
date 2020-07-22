@@ -1693,7 +1693,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Parent
         private int? _ParentLocation;
-        public bool Parent_IsSet => _ParentLocation.HasValue;
         public IFormLinkNullable<ISoundDescriptorGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region StaticVolumeMultiplier

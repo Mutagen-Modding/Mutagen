@@ -1417,7 +1417,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Object
         private int? _ObjectLocation;
-        public bool Object_IsSet => _ObjectLocation.HasValue;
         public IFormLink<ISkyrimMajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
         #endregion
         private int? _ALCALocation;

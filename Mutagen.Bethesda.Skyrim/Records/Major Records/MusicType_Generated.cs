@@ -1768,7 +1768,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Data
         private RangeInt32? _DataLocation;
         public IMusicTypeDataGetter? Data => _DataLocation.HasValue ? MusicTypeDataBinaryOverlay.MusicTypeDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region FadeDuration
         private int? _FadeDurationLocation;

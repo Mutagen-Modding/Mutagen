@@ -1217,7 +1217,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Worldspace
         private int? _WorldspaceLocation;
-        public bool Worldspace_IsSet => _WorldspaceLocation.HasValue;
         public IFormLink<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IWorldspaceGetter>.Null;
         #endregion
         #region Flags

@@ -1621,7 +1621,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region PresetDefault
         private int? _PresetDefaultLocation;
-        public bool PresetDefault_IsSet => _PresetDefaultLocation.HasValue;
         public IFormLinkNullable<IColorRecordGetter> PresetDefault => _PresetDefaultLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PresetDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         public IReadOnlyList<ITintPresetGetter> Presets { get; private set; } = ListExt.Empty<TintPresetBinaryOverlay>();

@@ -2597,18 +2597,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Category
         private int? _CategoryLocation;
-        public bool Category_IsSet => _CategoryLocation.HasValue;
         public IFormLinkNullable<ISoundCategoryGetter> Category => _CategoryLocation.HasValue ? new FormLinkNullable<ISoundCategoryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CategoryLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundCategoryGetter>.Null;
         #endregion
         #region AlternateSoundFor
         private int? _AlternateSoundForLocation;
-        public bool AlternateSoundFor_IsSet => _AlternateSoundForLocation.HasValue;
         public IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor => _AlternateSoundForLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AlternateSoundForLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         public IReadOnlyList<String> SoundFiles { get; private set; } = ListExt.Empty<String>();
         #region OutputModel
         private int? _OutputModelLocation;
-        public bool OutputModel_IsSet => _OutputModelLocation.HasValue;
         public IFormLinkNullable<ISoundOutputModelGetter> OutputModel => _OutputModelLocation.HasValue ? new FormLinkNullable<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OutputModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundOutputModelGetter>.Null;
         #endregion
         #region String
@@ -2626,7 +2623,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region LoopAndRumble
         private RangeInt32? _LoopAndRumbleLocation;
         public ISoundLoopAndRumbleGetter? LoopAndRumble => _LoopAndRumbleLocation.HasValue ? SoundLoopAndRumbleBinaryOverlay.SoundLoopAndRumbleFactory(new OverlayStream(_data.Slice(_LoopAndRumbleLocation!.Value.Min), _package), _package) : default;
-        public bool LoopAndRumble_IsSet => _LoopAndRumbleLocation.HasValue;
         #endregion
         private int? _BNAMLocation;
         public SoundDescriptor.BNAMDataType BNAMDataTypeState { get; private set; }

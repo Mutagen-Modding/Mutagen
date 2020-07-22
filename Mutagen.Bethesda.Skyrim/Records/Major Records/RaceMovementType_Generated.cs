@@ -1284,13 +1284,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region MovementType
         private int? _MovementTypeLocation;
-        public bool MovementType_IsSet => _MovementTypeLocation.HasValue;
         public IFormLinkNullable<IMovementTypeGetter> MovementType => _MovementTypeLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MovementTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region Overrides
         private RangeInt32? _OverridesLocation;
         public ISpeedOverridesGetter? Overrides => _OverridesLocation.HasValue ? SpeedOverridesBinaryOverlay.SpeedOverridesFactory(new OverlayStream(_data.Slice(_OverridesLocation!.Value.Min), _package), _package) : default;
-        public bool Overrides_IsSet => _OverridesLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

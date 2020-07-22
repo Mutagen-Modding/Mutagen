@@ -1510,12 +1510,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Data
         private RangeInt32? _DataLocation;
         public ICombatStyleDataGetter? Data => _DataLocation.HasValue ? CombatStyleDataBinaryOverlay.CombatStyleDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Advanced
         private RangeInt32? _AdvancedLocation;
         public ICombatStyleAdvancedGetter? Advanced => _AdvancedLocation.HasValue ? CombatStyleAdvancedBinaryOverlay.CombatStyleAdvancedFactory(new OverlayStream(_data.Slice(_AdvancedLocation!.Value.Min), _package), _package) : default;
-        public bool Advanced_IsSet => _AdvancedLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

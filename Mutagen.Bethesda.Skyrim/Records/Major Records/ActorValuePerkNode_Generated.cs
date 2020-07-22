@@ -1865,7 +1865,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Perk
         private int? _PerkLocation;
-        public bool Perk_IsSet => _PerkLocation.HasValue;
         public IFormLink<IPerkGetter> Perk => _PerkLocation.HasValue ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PerkLocation.Value, _package.MetaData.Constants)))) : FormLink<IPerkGetter>.Null;
         #endregion
         #region FNAM
@@ -1890,7 +1889,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region AssociatedSkill
         private int? _AssociatedSkillLocation;
-        public bool AssociatedSkill_IsSet => _AssociatedSkillLocation.HasValue;
         public IFormLinkNullable<IActorValueInformationGetter> AssociatedSkill => _AssociatedSkillLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AssociatedSkillLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IActorValueInformationGetter>.Null;
         #endregion
         public IReadOnlyList<UInt32> ConnectionLineToIndices { get; private set; } = ListExt.Empty<UInt32>();

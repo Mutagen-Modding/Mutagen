@@ -2307,7 +2307,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AnimationChangeThresholds
         private RangeInt32? _AnimationChangeThresholdsLocation;
         public IAnimationChangeThresholdsGetter? AnimationChangeThresholds => _AnimationChangeThresholdsLocation.HasValue ? AnimationChangeThresholdsBinaryOverlay.AnimationChangeThresholdsFactory(new OverlayStream(_data.Slice(_AnimationChangeThresholdsLocation!.Value.Min), _package), _package) : default;
-        public bool AnimationChangeThresholds_IsSet => _AnimationChangeThresholdsLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

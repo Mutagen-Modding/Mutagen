@@ -3086,54 +3086,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ExteriorJailMarker
         private int? _ExteriorJailMarkerLocation;
-        public bool ExteriorJailMarker_IsSet => _ExteriorJailMarkerLocation.HasValue;
         public IFormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker => _ExteriorJailMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ExteriorJailMarkerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region FollowerWaitMarker
         private int? _FollowerWaitMarkerLocation;
-        public bool FollowerWaitMarker_IsSet => _FollowerWaitMarkerLocation.HasValue;
         public IFormLinkNullable<IPlacedObjectGetter> FollowerWaitMarker => _FollowerWaitMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FollowerWaitMarkerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region StolenGoodsContainer
         private int? _StolenGoodsContainerLocation;
-        public bool StolenGoodsContainer_IsSet => _StolenGoodsContainerLocation.HasValue;
         public IFormLinkNullable<IPlacedObjectGetter> StolenGoodsContainer => _StolenGoodsContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StolenGoodsContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region PlayerInventoryContainer
         private int? _PlayerInventoryContainerLocation;
-        public bool PlayerInventoryContainer_IsSet => _PlayerInventoryContainerLocation.HasValue;
         public IFormLinkNullable<IPlacedObjectGetter> PlayerInventoryContainer => _PlayerInventoryContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PlayerInventoryContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region SharedCrimeFactionList
         private int? _SharedCrimeFactionListLocation;
-        public bool SharedCrimeFactionList_IsSet => _SharedCrimeFactionListLocation.HasValue;
         public IFormLinkNullable<IFormListGetter> SharedCrimeFactionList => _SharedCrimeFactionListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SharedCrimeFactionListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region JailOutfit
         private int? _JailOutfitLocation;
-        public bool JailOutfit_IsSet => _JailOutfitLocation.HasValue;
         public IFormLinkNullable<IOutfitGetter> JailOutfit => _JailOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _JailOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
         #endregion
         #region CrimeValues
         private RangeInt32? _CrimeValuesLocation;
         public ICrimeValuesGetter? CrimeValues => _CrimeValuesLocation.HasValue ? CrimeValuesBinaryOverlay.CrimeValuesFactory(new OverlayStream(_data.Slice(_CrimeValuesLocation!.Value.Min), _package), _package) : default;
-        public bool CrimeValues_IsSet => _CrimeValuesLocation.HasValue;
         #endregion
         public IReadOnlyList<IRankGetter> Ranks { get; private set; } = ListExt.Empty<RankBinaryOverlay>();
         #region VendorBuySellList
         private int? _VendorBuySellListLocation;
-        public bool VendorBuySellList_IsSet => _VendorBuySellListLocation.HasValue;
         public IFormLinkNullable<IFormListGetter> VendorBuySellList => _VendorBuySellListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VendorBuySellListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region MerchantContainer
         private int? _MerchantContainerLocation;
-        public bool MerchantContainer_IsSet => _MerchantContainerLocation.HasValue;
         public IFormLinkNullable<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MerchantContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region VendorValues
         private RangeInt32? _VendorValuesLocation;
         public IVendorValuesGetter? VendorValues => _VendorValuesLocation.HasValue ? VendorValuesBinaryOverlay.VendorValuesFactory(new OverlayStream(_data.Slice(_VendorValuesLocation!.Value.Min), _package), _package) : default;
-        public bool VendorValues_IsSet => _VendorValuesLocation.HasValue;
         #endregion
         public ILocationTargetRadiusGetter? VendorLocation { get; private set; }
         #region Conditions

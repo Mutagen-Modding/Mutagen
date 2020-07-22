@@ -1765,18 +1765,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter? Model { get; private set; }
         #region Script
         private int? _ScriptLocation;
-        public bool Script_IsSet => _ScriptLocation.HasValue;
         public IFormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region Ingredient
         private int? _IngredientLocation;
-        public bool Ingredient_IsSet => _IngredientLocation.HasValue;
         public IFormLinkNullable<IIngredientGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IIngredientGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IngredientLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIngredientGetter>.Null;
         #endregion
         #region SeasonalIngredientProduction
         private RangeInt32? _SeasonalIngredientProductionLocation;
         public ISeasonalIngredientProductionGetter? SeasonalIngredientProduction => _SeasonalIngredientProductionLocation.HasValue ? SeasonalIngredientProductionBinaryOverlay.SeasonalIngredientProductionFactory(new OverlayStream(_data.Slice(_SeasonalIngredientProductionLocation!.Value.Min), _package), _package) : default;
-        public bool SeasonalIngredientProduction_IsSet => _SeasonalIngredientProductionLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

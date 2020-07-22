@@ -1207,7 +1207,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Header
         private RangeInt32? _HeaderLocation;
         public ILayerHeaderGetter? Header => _HeaderLocation.HasValue ? LayerHeaderBinaryOverlay.LayerHeaderFactory(new OverlayStream(_data.Slice(_HeaderLocation!.Value.Min), _package), _package) : default;
-        public bool Header_IsSet => _HeaderLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -1938,7 +1938,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Sound
         private int? _SoundLocation;
-        public bool Sound_IsSet => _SoundLocation.HasValue;
         public IFormLinkNullable<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Data
@@ -1951,7 +1950,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region RelatedWaters
         private RangeInt32? _RelatedWatersLocation;
         public IRelatedWatersGetter? RelatedWaters => _RelatedWatersLocation.HasValue ? RelatedWatersBinaryOverlay.RelatedWatersFactory(new OverlayStream(_data.Slice(_RelatedWatersLocation!.Value.Min), _package), _package) : default;
-        public bool RelatedWaters_IsSet => _RelatedWatersLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

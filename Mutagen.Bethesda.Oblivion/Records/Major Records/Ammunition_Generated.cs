@@ -1925,7 +1925,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Enchantment
         private int? _EnchantmentLocation;
-        public bool Enchantment_IsSet => _EnchantmentLocation.HasValue;
         public IFormLinkNullable<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormLinkNullable<IEnchantmentGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnchantmentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEnchantmentGetter>.Null;
         #endregion
         #region EnchantmentPoints
@@ -1935,7 +1934,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Data
         private RangeInt32? _DataLocation;
         public IAmmunitionDataGetter? Data => _DataLocation.HasValue ? AmmunitionDataBinaryOverlay.AmmunitionDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

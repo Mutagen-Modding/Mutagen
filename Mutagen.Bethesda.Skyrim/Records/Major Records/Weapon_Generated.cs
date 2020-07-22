@@ -4262,7 +4262,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
-        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
@@ -4277,7 +4276,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IIconsGetter? Icons { get; private set; }
         #region ObjectEffect
         private int? _ObjectEffectLocation;
-        public bool ObjectEffect_IsSet => _ObjectEffectLocation.HasValue;
         public IFormLinkNullable<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectRecordGetter>.Null;
         #endregion
         #region EnchantmentAmount
@@ -4287,27 +4285,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IDestructibleGetter? Destructible { get; private set; }
         #region EquipmentType
         private int? _EquipmentTypeLocation;
-        public bool EquipmentType_IsSet => _EquipmentTypeLocation.HasValue;
         public IFormLinkNullable<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
         #region BlockBashImpact
         private int? _BlockBashImpactLocation;
-        public bool BlockBashImpact_IsSet => _BlockBashImpactLocation.HasValue;
         public IFormLinkNullable<IImpactDataSetGetter> BlockBashImpact => _BlockBashImpactLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BlockBashImpactLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
         #endregion
         #region AlternateBlockMaterial
         private int? _AlternateBlockMaterialLocation;
-        public bool AlternateBlockMaterial_IsSet => _AlternateBlockMaterialLocation.HasValue;
         public IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial => _AlternateBlockMaterialLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AlternateBlockMaterialLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
         #endregion
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public bool PickUpSound_IsSet => _PickUpSoundLocation.HasValue;
         public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public bool PutDownSound_IsSet => _PutDownSoundLocation.HasValue;
         public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
@@ -4322,63 +4315,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;
-        public bool ImpactDataSet_IsSet => _ImpactDataSetLocation.HasValue;
         public IFormLinkNullable<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
         #endregion
         #region FirstPersonModel
         private int? _FirstPersonModelLocation;
-        public bool FirstPersonModel_IsSet => _FirstPersonModelLocation.HasValue;
         public IFormLinkNullable<IStaticGetter> FirstPersonModel => _FirstPersonModelLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FirstPersonModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         #region AttackSound
         private int? _AttackSoundLocation;
-        public bool AttackSound_IsSet => _AttackSoundLocation.HasValue;
         public IFormLinkNullable<ISoundDescriptorGetter> AttackSound => _AttackSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region AttackSound2D
         private int? _AttackSound2DLocation;
-        public bool AttackSound2D_IsSet => _AttackSound2DLocation.HasValue;
         public IFormLinkNullable<ISoundDescriptorGetter> AttackSound2D => _AttackSound2DLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackSound2DLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region AttackLoopSound
         private int? _AttackLoopSoundLocation;
-        public bool AttackLoopSound_IsSet => _AttackLoopSoundLocation.HasValue;
         public IFormLinkNullable<ISoundDescriptorGetter> AttackLoopSound => _AttackLoopSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackLoopSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region AttackFailSound
         private int? _AttackFailSoundLocation;
-        public bool AttackFailSound_IsSet => _AttackFailSoundLocation.HasValue;
         public IFormLinkNullable<ISoundDescriptorGetter> AttackFailSound => _AttackFailSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackFailSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region IdleSound
         private int? _IdleSoundLocation;
-        public bool IdleSound_IsSet => _IdleSoundLocation.HasValue;
         public IFormLinkNullable<ISoundDescriptorGetter> IdleSound => _IdleSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region EquipSound
         private int? _EquipSoundLocation;
-        public bool EquipSound_IsSet => _EquipSoundLocation.HasValue;
         public IFormLinkNullable<ISoundDescriptorGetter> EquipSound => _EquipSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region UnequipSound
         private int? _UnequipSoundLocation;
-        public bool UnequipSound_IsSet => _UnequipSoundLocation.HasValue;
         public IFormLinkNullable<ISoundDescriptorGetter> UnequipSound => _UnequipSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnequipSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region BasicStats
         private RangeInt32? _BasicStatsLocation;
         public IWeaponBasicStatsGetter? BasicStats => _BasicStatsLocation.HasValue ? WeaponBasicStatsBinaryOverlay.WeaponBasicStatsFactory(new OverlayStream(_data.Slice(_BasicStatsLocation!.Value.Min), _package), _package) : default;
-        public bool BasicStats_IsSet => _BasicStatsLocation.HasValue;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
         public IWeaponDataGetter? Data => _DataLocation.HasValue ? WeaponDataBinaryOverlay.WeaponDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Critical
         private RangeInt32? _CriticalLocation;
         public ICriticalDataGetter? Critical => _CriticalLocation.HasValue ? CriticalDataBinaryOverlay.CriticalDataFactory(new OverlayStream(_data.Slice(_CriticalLocation!.Value.Min), _package), _package) : default;
-        public bool Critical_IsSet => _CriticalLocation.HasValue;
         #endregion
         #region DetectionSoundLevel
         private int? _DetectionSoundLevelLocation;
@@ -4386,7 +4367,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Template
         private int? _TemplateLocation;
-        public bool Template_IsSet => _TemplateLocation.HasValue;
         public IFormLinkNullable<IWeaponGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWeaponGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(

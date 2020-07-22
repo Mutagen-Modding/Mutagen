@@ -2546,31 +2546,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Decal
         private RangeInt32? _DecalLocation;
         public IDecalGetter? Decal => _DecalLocation.HasValue ? DecalBinaryOverlay.DecalFactory(new OverlayStream(_data.Slice(_DecalLocation!.Value.Min), _package), _package) : default;
-        public bool Decal_IsSet => _DecalLocation.HasValue;
         #endregion
         #region TextureSet
         private int? _TextureSetLocation;
-        public bool TextureSet_IsSet => _TextureSetLocation.HasValue;
         public IFormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region SecondaryTextureSet
         private int? _SecondaryTextureSetLocation;
-        public bool SecondaryTextureSet_IsSet => _SecondaryTextureSetLocation.HasValue;
         public IFormLinkNullable<ITextureSetGetter> SecondaryTextureSet => _SecondaryTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SecondaryTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region Sound1
         private int? _Sound1Location;
-        public bool Sound1_IsSet => _Sound1Location.HasValue;
         public IFormLinkNullable<ISoundGetter> Sound1 => _Sound1Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound1Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Sound2
         private int? _Sound2Location;
-        public bool Sound2_IsSet => _Sound2Location.HasValue;
         public IFormLinkNullable<ISoundGetter> Sound2 => _Sound2Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound2Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Hazard
         private int? _HazardLocation;
-        public bool Hazard_IsSet => _HazardLocation.HasValue;
         public IFormLinkNullable<IHazardGetter> Hazard => _HazardLocation.HasValue ? new FormLinkNullable<IHazardGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HazardLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHazardGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(

@@ -2585,7 +2585,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
         public IPerkAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PerkAdapterBinaryOverlay.PerkAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
-        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -2633,7 +2632,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region NextPerk
         private int? _NextPerkLocation;
-        public bool NextPerk_IsSet => _NextPerkLocation.HasValue;
         public IFormLinkNullable<IPerkGetter> NextPerk => _NextPerkLocation.HasValue ? new FormLinkNullable<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NextPerkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPerkGetter>.Null;
         #endregion
         #region Effects
