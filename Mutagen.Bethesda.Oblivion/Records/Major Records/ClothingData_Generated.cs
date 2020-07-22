@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ClothingData :
         IClothingData,
         ILoquiObjectSetter<ClothingData>,
-        IEquatable<ClothingData>,
-        IEqualsMask
+        IEquatable<ClothingData>
     {
         #region Ctor
         public ClothingData()
@@ -390,14 +389,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ClothingData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static ClothingData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -424,8 +415,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClothingDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -509,24 +498,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IClothingDataGetter item,
-            ClothingData.Mask<bool?> checkMask)
-        {
-            return ((ClothingDataCommon)((IClothingDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ClothingData.Mask<bool> GetHasBeenSetMask(this IClothingDataGetter item)
-        {
-            var ret = new ClothingData.Mask<bool>(false);
-            ((ClothingDataCommon)((IClothingDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -621,17 +592,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IClothingData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IClothingData item,
             MutagenFrame frame,
@@ -957,21 +917,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IClothingDataGetter item,
-            ClothingData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IClothingDataGetter item,
-            ClothingData.Mask<bool> mask)
-        {
-            mask.Value = true;
-            mask.Weight = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IClothingDataGetter? lhs,
@@ -1173,12 +1118,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IClothingDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ClothingDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1210,8 +1156,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClothingDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ClothingDataBinaryWriteTranslation.Instance;

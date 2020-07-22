@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IKeyInternal,
         ILoquiObjectSetter<Key>,
-        IEquatable<Key>,
-        IEqualsMask
+        IEquatable<Key>
     {
         #region Ctor
         protected Key()
@@ -855,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => KeyCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => KeyCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => KeyCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => KeyCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => KeyCommon.Instance.RemapLinks(this, mapping);
         public Key(FormKey formKey)
@@ -899,14 +898,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Key CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Key CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -933,8 +924,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IKeyGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -958,7 +947,8 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequired,
         IObjectBounded,
         IWeightValue,
-        ILoquiObjectSetter<IKeyInternal>
+        ILoquiObjectSetter<IKeyInternal>,
+        ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -993,7 +983,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IWeightValueGetter,
         ILoquiObject<IKeyGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Key_Registration.Instance;
@@ -1059,24 +1049,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IKeyGetter item,
-            Key.Mask<bool?> checkMask)
-        {
-            return ((KeyCommon)((IKeyGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Key.Mask<bool> GetHasBeenSetMask(this IKeyGetter item)
-        {
-            var ret = new Key.Mask<bool>(false);
-            ((KeyCommon)((IKeyGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1148,17 +1120,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IKeyInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IKeyInternal item,
             MutagenFrame frame,
@@ -1748,51 +1709,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IKeyGetter item,
-            Key.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Icons?.Overall.HasValue ?? false && checkMask.Icons.Overall.Value != (item.Icons != null)) return false;
-            if (checkMask.Icons?.Specific != null && (item.Icons == null || !item.Icons.HasBeenSet(checkMask.Icons.Specific))) return false;
-            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
-            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
-            if (checkMask.PickUpSound.HasValue && checkMask.PickUpSound.Value != (item.PickUpSound.FormKey != null)) return false;
-            if (checkMask.PutDownSound.HasValue && checkMask.PutDownSound.Value != (item.PutDownSound.FormKey != null)) return false;
-            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IKeyGetter item,
-            Key.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.Name = true;
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            var itemIcons = item.Icons;
-            mask.Icons = new MaskItem<bool, Icons.Mask<bool>?>(itemIcons != null, itemIcons?.GetHasBeenSetMask());
-            var itemDestructible = item.Destructible;
-            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
-            mask.PickUpSound = (item.PickUpSound.FormKey != null);
-            mask.PutDownSound = (item.PutDownSound.FormKey != null);
-            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.Value = true;
-            mask.Weight = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static Key_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1934,7 +1850,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
@@ -2613,15 +2529,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IKeyGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => KeyCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => KeyCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => KeyCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => KeyCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => KeyCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => KeyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

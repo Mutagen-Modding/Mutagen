@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Destructible :
         IDestructible,
         ILoquiObjectSetter<Destructible>,
-        IEquatable<Destructible>,
-        IEqualsMask
+        IEquatable<Destructible>
     {
         #region Ctor
         public Destructible()
@@ -479,7 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => DestructibleCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DestructibleCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DestructibleCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructibleCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructibleCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -499,14 +498,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static Destructible CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static Destructible CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -533,8 +524,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDestructibleGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -552,7 +541,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDestructible :
         IDestructibleGetter,
-        ILoquiObjectSetter<IDestructible>
+        ILoquiObjectSetter<IDestructible>,
+        ILinkedFormKeyContainer
     {
         new DestructableData? Data { get; set; }
         new IExtendedList<DestructionStage> Stages { get; }
@@ -561,7 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDestructibleGetter :
         ILoquiObject,
         ILoquiObject<IDestructibleGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -619,24 +609,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IDestructibleGetter item,
-            Destructible.Mask<bool?> checkMask)
-        {
-            return ((DestructibleCommon)((IDestructibleGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Destructible.Mask<bool> GetHasBeenSetMask(this IDestructibleGetter item)
-        {
-            var ret = new Destructible.Mask<bool>(false);
-            ((DestructibleCommon)((IDestructibleGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -731,17 +703,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IDestructible item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IDestructible item,
             MutagenFrame frame,
@@ -1100,25 +1061,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IDestructibleGetter item,
-            Destructible.Mask<bool?> checkMask)
-        {
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IDestructibleGetter item,
-            Destructible.Mask<bool> mask)
-        {
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, DestructableData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            var StagesItem = item.Stages;
-            mask.Stages = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DestructionStage.Mask<bool>?>>?>(true, StagesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, DestructionStage.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IDestructibleGetter? lhs,
@@ -1412,12 +1354,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IDestructibleGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((DestructibleBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1449,15 +1392,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDestructibleGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => DestructibleCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DestructibleCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructibleCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructibleCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DestructibleCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DestructibleBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

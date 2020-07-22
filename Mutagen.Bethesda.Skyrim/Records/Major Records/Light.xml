@@ -8,7 +8,7 @@
     <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -29,7 +29,7 @@
           <Float name="Weight" />
         </Fields>
       </Data>
-      <Float name="FadeValue" recordType="FNAM" hasBeenSet="False" />
+      <Float name="FadeValue" recordType="FNAM" nullable="False" />
       <FormLink name="Sound" refName="SoundDescriptor" recordType="SNAM" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>

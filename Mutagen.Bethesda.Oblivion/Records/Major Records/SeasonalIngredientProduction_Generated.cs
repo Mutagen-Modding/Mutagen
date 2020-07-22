@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class SeasonalIngredientProduction :
         ISeasonalIngredientProduction,
         ILoquiObjectSetter<SeasonalIngredientProduction>,
-        IEquatable<SeasonalIngredientProduction>,
-        IEqualsMask
+        IEquatable<SeasonalIngredientProduction>
     {
         #region Ctor
         public SeasonalIngredientProduction()
@@ -452,14 +451,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static SeasonalIngredientProduction CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static SeasonalIngredientProduction CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -486,8 +477,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISeasonalIngredientProductionGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -575,24 +564,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ISeasonalIngredientProductionGetter item,
-            SeasonalIngredientProduction.Mask<bool?> checkMask)
-        {
-            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SeasonalIngredientProduction.Mask<bool> GetHasBeenSetMask(this ISeasonalIngredientProductionGetter item)
-        {
-            var ret = new SeasonalIngredientProduction.Mask<bool>(false);
-            ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -687,17 +658,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISeasonalIngredientProduction item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISeasonalIngredientProduction item,
             MutagenFrame frame,
@@ -1059,23 +1019,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ISeasonalIngredientProductionGetter item,
-            SeasonalIngredientProduction.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ISeasonalIngredientProductionGetter item,
-            SeasonalIngredientProduction.Mask<bool> mask)
-        {
-            mask.Spring = true;
-            mask.Summer = true;
-            mask.Fall = true;
-            mask.Winter = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ISeasonalIngredientProductionGetter? lhs,
@@ -1291,12 +1234,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this ISeasonalIngredientProductionGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((SeasonalIngredientProductionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1328,8 +1272,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISeasonalIngredientProductionGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SeasonalIngredientProductionBinaryWriteTranslation.Instance;

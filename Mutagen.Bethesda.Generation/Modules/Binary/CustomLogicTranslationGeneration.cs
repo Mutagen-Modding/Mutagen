@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"long finalPos");
                     args.Add($"int offset");
                 }
-                if (typeGen.HasBeenSet && !typeGen.CanBeNullable(getter: true))
+                if (typeGen.Nullable && !typeGen.CanBeNullable(getter: true))
                 {
                     fg.AppendLine($"public bool {typeGen.Name}_IsSet => Get{typeGen.Name}IsSetCustom();");
                 }

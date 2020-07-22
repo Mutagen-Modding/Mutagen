@@ -21,7 +21,7 @@
           <UInt8 name="ScheduleDate" />
           <Int8 name="ScheduleHour" />
           <Int8 name="ScheduleMinute" />
-          <ByteArray name="Unknown3" byteLength="3" hasBeenSet="False" />
+          <ByteArray name="Unknown3" byteLength="3" nullable="False" />
           <Int32 name="ScheduleDurationInMinutes" />
         </Fields>
       </Data>
@@ -30,7 +30,7 @@
       <RefDirect name="IdleAnimations" refName="PackageIdles" />
       <FormLink name="CombatStyle" recordType="CNAM" refName="CombatStyle" />
       <FormLink name="OwnerQuest" recordType="QNAM" refName="Quest" />
-      <FormLink name="PackageTemplate" recordType="PKCU" refName="Package" hasBeenSet="False" binary="Custom" byteLength="8" />
+      <FormLink name="PackageTemplate" recordType="PKCU" refName="Package" nullable="False" binary="Custom" byteLength="8" />
       <Int32 name="DataInputVersion" binary="NoGeneration" byteLength="4" />
       <Dict name="Data" binary="NoGeneration">
         <Key>
@@ -40,7 +40,7 @@
           <RefDirect refName="APackageData" />
         </Value>
       </Dict>
-      <ByteArray name="XnamMarker" recordType="XNAM" binary="Custom" hasBeenSet="False" />
+      <ByteArray name="XnamMarker" recordType="XNAM" binary="Custom" nullable="False" />
       <RefList name="ProcedureTree" refName="PackageBranch" binary="NoGeneration" />
       <RefDirect name="OnBegin" refName="PackageEvent" markerType="POBA" />
       <RefDirect name="OnEnd" refName="PackageEvent" markerType="POEA" />
@@ -49,17 +49,17 @@
   </Object>
   <Object name="PackageIdles" objType="Subrecord" GUID="a26ac911-8b7d-4045-9454-3ab37481a795" ID="394">
     <Fields>
-      <Enum name="Type" enumName="PackageIdles.Types" byteLength="1" hasBeenSet="False" recordType="IDLF" />
-      <Float name="TimerSetting" recordType="IDLT" hasBeenSet="False" binary="Custom" />
-      <List name="Animations" recordType="IDLA" counterRecType="IDLC" counterLength="1" binary="Custom" hasBeenSet="False">
+      <Enum name="Type" enumName="PackageIdles.Types" byteLength="1" nullable="False" recordType="IDLF" />
+      <Float name="TimerSetting" recordType="IDLT" nullable="False" binary="Custom" />
+      <List name="Animations" recordType="IDLA" counterRecType="IDLC" counterLength="1" binary="Custom" nullable="False">
         <FormLink refName="IdleAnimation" />
       </List>
     </Fields>
   </Object>
   <Object name="APackageData" objType="Subrecord" GUID="88e8ac4c-9592-4956-9154-3e8d115ec0f9" ID="374">
     <Fields>
-      <String name="Name" recordType="BNAM" binary="NoGeneration" hasBeenSet="True" />
-      <Enum name="Flags" enumName="APackageData.Flag" recordType="PNAM" hasBeenSet="True" binary="NoGeneration" />
+      <String name="Name" recordType="BNAM" binary="NoGeneration" nullable="True" />
+      <Enum name="Flags" enumName="APackageData.Flag" recordType="PNAM" nullable="True" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="PackageDataBool" objType="Subrecord" baseClass="APackageData" GUID="d00a40a9-2f39-4a0e-afb2-396dfe024205" ID="387">
@@ -79,18 +79,18 @@
   </Object>
   <Object name="PackageDataObjectList" objType="Subrecord" baseClass="APackageData" GUID="7247dd72-3a6a-4aab-a1f1-cc2095011237" ID="395">
     <Fields>
-      <Float name="Data" binary="NoGeneration" hasBeenSet="True" />
+      <Float name="Data" binary="NoGeneration" nullable="True" />
     </Fields>
   </Object>
   <Object name="PackageDataLocation" objType="Subrecord" baseClass="APackageData" GUID="947ddb8a-c1b6-41cc-a7bf-c50b627aa80a" ID="391">
     <Fields>
-      <RefDirect name="Location" refName="LocationTargetRadius" recordType="PLVD" hasBeenSet="False" binary="NoGeneration" />
+      <RefDirect name="Location" refName="LocationTargetRadius" recordType="PLVD" nullable="False" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="PackageDataTarget" objType="Subrecord" baseClass="APackageData" GUID="3fca774e-9f38-4d5c-aa94-e19393aeeeb0" ID="392">
     <Fields>
       <Enum name="Type" enumName="PackageDataTarget.Types" binary="NoGeneration" />
-      <RefDirect name="Target" refName="APackageTarget" recordType="PTDA" binary="NoGeneration" hasBeenSet="False" generateClassMembers="false" />
+      <RefDirect name="Target" refName="APackageTarget" recordType="PTDA" binary="NoGeneration" nullable="False" generateClassMembers="false" />
     </Fields>
   </Object>
   <Object name="PackageDataTopic" objType="Subrecord" baseClass="APackageData" GUID="46e615e7-8460-4870-bbde-eed20364ae44" ID="393">
@@ -146,8 +146,8 @@
   </Object>
   <Object name="PackageBranch" objType="Subrecord" GUID="571810b7-1ca9-4979-8322-cd0124cbca44" ID="383">
     <Fields>
-      <String name="BranchType" recordType="ANAM" hasBeenSet="False" />
-      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binary="Custom" hasBeenSet="False" />
+      <String name="BranchType" recordType="ANAM" nullable="False" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binary="Custom" nullable="False" />
       <RefDirect name="Root" recordType="PRCB" refName="PackageRoot" />
       <String name="ProcedureType" recordType="PNAM" />
       <Enum name="Flags" enumName="PackageBranch.Flag" byteLength="4" recordType="FNAM" />
@@ -174,7 +174,7 @@
       <Enum name="SetInterruptFlags" enumName="Package.InterruptFlag" byteLength="2" />
       <Enum name="ClearInterruptFlags" enumName="Package.InterruptFlag" byteLength="2" />
       <Enum name="PreferredSpeed" enumName="Package.Speed" byteLength="1" />
-      <ByteArray name="Unknown" byteLength="3" hasBeenSet="False" />
+      <ByteArray name="Unknown" byteLength="3" nullable="False" />
     </Fields>
   </Object>
   <Object name="PackageEvent" objType="Subrecord" GUID="097ee8cc-5081-463f-ae70-7e8921899f9e" ID="386">
@@ -190,7 +190,7 @@
   </Object>
   <Object name="PackageAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="b6994042-d407-490d-8387-54e33396f705" ID="352">
     <Fields>
-      <RefDirect name="ScriptFragments" refName="PackageScriptFragments" binary="Custom" hasBeenSet="True" />
+      <RefDirect name="ScriptFragments" refName="PackageScriptFragments" binary="Custom" nullable="True" />
     </Fields>
   </Object>
   <Object name="PackageScriptFragments" objType="Subrecord" GUID="2ec19b11-bd07-4dcc-beb4-826dfc1de531" ID="353">
@@ -198,9 +198,9 @@
       <Int8 name="Unknown" />
       <CustomLogic name="FlagsParse" />
       <String name="FileName" binaryType="PrependLengthUShort" binary="NoGeneration" />
-      <RefDirect name="OnBegin" hasBeenSet="True" binary="NoGeneration" refName="ScriptFragment" />
-      <RefDirect name="OnEnd" hasBeenSet="True" binary="NoGeneration" refName="ScriptFragment" />
-      <RefDirect name="OnChange" hasBeenSet="True" binary="NoGeneration" refName="ScriptFragment" />
+      <RefDirect name="OnBegin" nullable="True" binary="NoGeneration" refName="ScriptFragment" />
+      <RefDirect name="OnEnd" nullable="True" binary="NoGeneration" refName="ScriptFragment" />
+      <RefDirect name="OnChange" nullable="True" binary="NoGeneration" refName="ScriptFragment" />
     </Fields>
   </Object>
 </Loqui>

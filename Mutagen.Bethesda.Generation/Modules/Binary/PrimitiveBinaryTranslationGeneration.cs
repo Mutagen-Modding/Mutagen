@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Generation
 
         protected virtual string ItemWriteAccess(TypeGeneration typeGen, Accessor itemAccessor)
         {
-            return $"{itemAccessor.DirectAccess}";
+            return $"{itemAccessor}";
         }
 
         public virtual string Typename(TypeGeneration typeGen) => typeName;
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Generation
             if (data.HasTrigger || !PreferDirectTranslation)
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Write{(typeGen.HasBeenSet ? "Nullable" : null)}"))
+                    $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
                 {
                     args.Add($"writer: {writerAccessor}");
                     args.Add($"item: {ItemWriteAccess(typeGen, itemAccessor)}");
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                fg.AppendLine($"{writerAccessor.DirectAccess}.Write({itemAccessor.DirectAccess});");
+                fg.AppendLine($"{writerAccessor}.Write({itemAccessor});");
             }
         }
 
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Generation
             }
             if (PreferDirectTranslation && !hasCustom)
             {
-                fg.AppendLine($"{itemAccessor.DirectAccess} = {frameAccessor.DirectAccess}.Read{typeName}();");
+                fg.AppendLine($"{itemAccessor} = {frameAccessor}.Read{typeName}();");
             }
             else
             {
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new ArgsWrapper(fg,
                     $"{outItemAccessor} = {this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
                 {
-                    args.Add(nodeAccessor.DirectAccess);
+                    args.Add(nodeAccessor.Access);
                     if (this.DoErrorMasks)
                     {
                         args.Add($"errorMask: {errorMaskAccessor}");
@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (dataType != null) throw new ArgumentException();
                 dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor, "_package")} : {typeGen.GetDefault(getter: true)};");
+                fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor, "_package")} : {typeGen.GetDefault(getter: true)};");
             }
             else
             {
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (dataType == null)
                 {
-                    if (typeGen.HasBeenSet)
+                    if (typeGen.Nullable)
                     {
                         if (!typeGen.CanBeNullable(getter: true))
                         {

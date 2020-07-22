@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IStaticInternal,
         ILoquiObjectSetter<Static>,
-        IEquatable<Static>,
-        IEqualsMask
+        IEquatable<Static>
     {
         #region Ctor
         protected Static()
@@ -623,7 +622,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => StaticCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => StaticCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => StaticCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StaticCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StaticCommon.Instance.RemapLinks(this, mapping);
         public Static(FormKey formKey)
@@ -667,14 +666,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Static CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Static CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -701,8 +692,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IStaticGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -725,7 +714,8 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionTarget,
         IModeled,
         IObjectBounded,
-        ILoquiObjectSetter<IStaticInternal>
+        ILoquiObjectSetter<IStaticInternal>,
+        ILinkedFormKeyContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
@@ -755,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         ILoquiObject<IStaticGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Static_Registration.Instance;
@@ -817,24 +807,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IStaticGetter item,
-            Static.Mask<bool?> checkMask)
-        {
-            return ((StaticCommon)((IStaticGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Static.Mask<bool> GetHasBeenSetMask(this IStaticGetter item)
-        {
-            var ret = new Static.Mask<bool>(false);
-            ((StaticCommon)((IStaticGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -906,17 +878,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IStaticInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IStaticInternal item,
             MutagenFrame frame,
@@ -1401,38 +1362,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            IStaticGetter item,
-            Static.Mask<bool?> checkMask)
-        {
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Lod?.Overall.HasValue ?? false && checkMask.Lod.Overall.Value != (item.Lod != null)) return false;
-            if (checkMask.Lod?.Specific != null && (item.Lod == null || !item.Lod.HasBeenSet(checkMask.Lod.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IStaticGetter item,
-            Static.Mask<bool> mask)
-        {
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.MaxAngle = true;
-            mask.Material = true;
-            mask.Flags = true;
-            mask.Unused = true;
-            var itemLod = item.Lod;
-            mask.Lod = new MaskItem<bool, Lod.Mask<bool>?>(itemLod != null, itemLod?.GetHasBeenSetMask());
-            mask.DNAMDataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Static_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2055,15 +1984,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IStaticGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => StaticCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => StaticCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StaticCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StaticCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => StaticCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => StaticBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CrimeValues :
         ICrimeValues,
         ILoquiObjectSetter<CrimeValues>,
-        IEquatable<CrimeValues>,
-        IEqualsMask
+        IEquatable<CrimeValues>
     {
         #region Ctor
         public CrimeValues()
@@ -675,14 +674,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static CrimeValues CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static CrimeValues CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -709,8 +700,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICrimeValuesGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -814,24 +803,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ICrimeValuesGetter item,
-            CrimeValues.Mask<bool?> checkMask)
-        {
-            return ((CrimeValuesCommon)((ICrimeValuesGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static CrimeValues.Mask<bool> GetHasBeenSetMask(this ICrimeValuesGetter item)
-        {
-            var ret = new CrimeValues.Mask<bool>(false);
-            ((CrimeValuesCommon)((ICrimeValuesGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ICrimeValuesGetter item,
             ICrimeValuesGetter rhs)
@@ -924,17 +895,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICrimeValues item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICrimeValues item,
             MutagenFrame frame,
@@ -1422,30 +1382,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ICrimeValuesGetter item,
-            CrimeValues.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ICrimeValuesGetter item,
-            CrimeValues.Mask<bool> mask)
-        {
-            mask.Versioning = true;
-            mask.Arrest = true;
-            mask.AttackOnSight = true;
-            mask.Murder = true;
-            mask.Assault = true;
-            mask.Trespass = true;
-            mask.Pickpocket = true;
-            mask.Unknown = true;
-            mask.StealMult = true;
-            mask.Escape = true;
-            mask.Werewolf = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ICrimeValuesGetter? lhs,
@@ -1735,12 +1671,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ICrimeValuesGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((CrimeValuesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1772,8 +1709,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICrimeValuesGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CrimeValuesBinaryWriteTranslation.Instance;

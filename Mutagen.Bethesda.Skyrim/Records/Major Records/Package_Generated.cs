@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IPackageInternal,
         ILoquiObjectSetter<Package>,
-        IEquatable<Package>,
-        IEqualsMask
+        IEquatable<Package>
     {
         #region Ctor
         protected Package()
@@ -1645,7 +1644,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageCommon.Instance.RemapLinks(this, mapping);
         public Package(FormKey formKey)
@@ -1688,14 +1687,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Package CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Package CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1722,8 +1713,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1742,7 +1731,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackage :
         IPackageGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IPackageInternal>
+        ILoquiObjectSetter<IPackageInternal>,
+        ILinkedFormKeyContainer
     {
         new PackageAdapter? VirtualMachineAdapter { get; set; }
         new Package.Flag Flags { get; set; }
@@ -1787,7 +1777,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IPackageGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Package_Registration.Instance;
@@ -1869,24 +1859,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IPackageGetter item,
-            Package.Mask<bool?> checkMask)
-        {
-            return ((PackageCommon)((IPackageGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Package.Mask<bool> GetHasBeenSetMask(this IPackageGetter item)
-        {
-            var ret = new Package.Mask<bool>(false);
-            ((PackageCommon)((IPackageGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IPackageGetter item,
             IPackageGetter rhs)
@@ -1956,17 +1928,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPackageInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPackageInternal item,
             MutagenFrame frame,
@@ -2921,79 +2882,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPackageGetter item,
-            Package.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Unknown4.HasValue && checkMask.Unknown4.Value != (item.Unknown4 != null)) return false;
-            if (checkMask.IdleAnimations?.Overall.HasValue ?? false && checkMask.IdleAnimations.Overall.Value != (item.IdleAnimations != null)) return false;
-            if (checkMask.IdleAnimations?.Specific != null && (item.IdleAnimations == null || !item.IdleAnimations.HasBeenSet(checkMask.IdleAnimations.Specific))) return false;
-            if (checkMask.CombatStyle.HasValue && checkMask.CombatStyle.Value != (item.CombatStyle.FormKey != null)) return false;
-            if (checkMask.OwnerQuest.HasValue && checkMask.OwnerQuest.Value != (item.OwnerQuest.FormKey != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false) return false;
-            if (checkMask.OnBegin?.Overall.HasValue ?? false && checkMask.OnBegin.Overall.Value != (item.OnBegin != null)) return false;
-            if (checkMask.OnBegin?.Specific != null && (item.OnBegin == null || !item.OnBegin.HasBeenSet(checkMask.OnBegin.Specific))) return false;
-            if (checkMask.OnEnd?.Overall.HasValue ?? false && checkMask.OnEnd.Overall.Value != (item.OnEnd != null)) return false;
-            if (checkMask.OnEnd?.Specific != null && (item.OnEnd == null || !item.OnEnd.HasBeenSet(checkMask.OnEnd.Specific))) return false;
-            if (checkMask.OnChange?.Overall.HasValue ?? false && checkMask.OnChange.Overall.Value != (item.OnChange != null)) return false;
-            if (checkMask.OnChange?.Specific != null && (item.OnChange == null || !item.OnChange.HasBeenSet(checkMask.OnChange.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPackageGetter item,
-            Package.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, PackageAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.Flags = true;
-            mask.Type = true;
-            mask.InterruptOverride = true;
-            mask.PreferredSpeed = true;
-            mask.Unknown = true;
-            mask.InteruptFlags = true;
-            mask.Unknown2 = true;
-            mask.ScheduleMonth = true;
-            mask.ScheduleDayOfWeek = true;
-            mask.ScheduleDate = true;
-            mask.ScheduleHour = true;
-            mask.ScheduleMinute = true;
-            mask.Unknown3 = true;
-            mask.ScheduleDurationInMinutes = true;
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Unknown4 = (item.Unknown4 != null);
-            var itemIdleAnimations = item.IdleAnimations;
-            mask.IdleAnimations = new MaskItem<bool, PackageIdles.Mask<bool>?>(itemIdleAnimations != null, itemIdleAnimations?.GetHasBeenSetMask());
-            mask.CombatStyle = (item.CombatStyle.FormKey != null);
-            mask.OwnerQuest = (item.OwnerQuest.FormKey != null);
-            mask.PackageTemplate = true;
-            mask.DataInputVersion = true;
-            mask.Data = new MaskItem<bool, IEnumerable<MaskItemIndexed<SByte, bool, APackageData.Mask<bool>?>>?>(
-                (item.Data != null), item.Data.Select((i) => new MaskItemIndexed<SByte, bool, APackageData.Mask<bool>?>(
-                    i.Key,
-                    true,
-                    i.Value.GetHasBeenSetMask())));
-            mask.XnamMarker = true;
-            var ProcedureTreeItem = item.ProcedureTree;
-            mask.ProcedureTree = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PackageBranch.Mask<bool>?>>?>(true, ProcedureTreeItem.WithIndex().Select((i) => new MaskItemIndexed<bool, PackageBranch.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var itemOnBegin = item.OnBegin;
-            mask.OnBegin = new MaskItem<bool, PackageEvent.Mask<bool>?>(itemOnBegin != null, itemOnBegin?.GetHasBeenSetMask());
-            var itemOnEnd = item.OnEnd;
-            mask.OnEnd = new MaskItem<bool, PackageEvent.Mask<bool>?>(itemOnEnd != null, itemOnEnd?.GetHasBeenSetMask());
-            var itemOnChange = item.OnChange;
-            mask.OnChange = new MaskItem<bool, PackageEvent.Mask<bool>?>(itemOnChange != null, itemOnChange?.GetHasBeenSetMask());
-            mask.PKDTDataTypeState = true;
-            mask.PSDTDataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static Package_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -3177,14 +3065,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -3205,7 +3093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return OwnerQuestKey;
             }
             yield return obj.PackageTemplate.FormKey;
-            foreach (var item in obj.ProcedureTree.WhereCastable<IPackageBranchGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.ProcedureTree.WhereCastable<IPackageBranchGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -4085,15 +3973,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

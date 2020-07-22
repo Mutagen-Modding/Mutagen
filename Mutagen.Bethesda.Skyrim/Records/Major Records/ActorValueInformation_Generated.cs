@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IActorValueInformationInternal,
         ILoquiObjectSetter<ActorValueInformation>,
-        IEquatable<ActorValueInformation>,
-        IEqualsMask
+        IEquatable<ActorValueInformation>
     {
         #region Ctor
         protected ActorValueInformation()
@@ -624,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ActorValueInformationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ActorValueInformationCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ActorValueInformationCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValueInformationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValueInformationCommon.Instance.RemapLinks(this, mapping);
         public ActorValueInformation(FormKey formKey)
@@ -659,14 +658,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new ActorValueInformation CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static ActorValueInformation CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -693,8 +684,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActorValueInformationGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -714,7 +703,8 @@ namespace Mutagen.Bethesda.Skyrim
         IActorValueInformationGetter,
         ISkyrimMajorRecord,
         ITranslatedNamed,
-        ILoquiObjectSetter<IActorValueInformationInternal>
+        ILoquiObjectSetter<IActorValueInformationInternal>,
+        ILinkedFormKeyContainer
     {
         new TranslatedString? Name { get; set; }
         new TranslatedString? Description { get; set; }
@@ -735,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IActorValueInformationGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ActorValueInformation_Registration.Instance;
@@ -791,24 +781,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IActorValueInformationGetter item,
-            ActorValueInformation.Mask<bool?> checkMask)
-        {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ActorValueInformation.Mask<bool> GetHasBeenSetMask(this IActorValueInformationGetter item)
-        {
-            var ret = new ActorValueInformation.Mask<bool>(false);
-            ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -880,17 +852,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IActorValueInformationInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IActorValueInformationInternal item,
             MutagenFrame frame,
@@ -1356,38 +1317,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            IActorValueInformationGetter item,
-            ActorValueInformation.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            if (checkMask.Abbreviation.HasValue && checkMask.Abbreviation.Value != (item.Abbreviation != null)) return false;
-            if (checkMask.CNAM.HasValue && checkMask.CNAM.Value != (item.CNAM != null)) return false;
-            if (checkMask.Skill?.Overall.HasValue ?? false && checkMask.Skill.Overall.Value != (item.Skill != null)) return false;
-            if (checkMask.Skill?.Specific != null && (item.Skill == null || !item.Skill.HasBeenSet(checkMask.Skill.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IActorValueInformationGetter item,
-            ActorValueInformation.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            mask.Description = (item.Description != null);
-            mask.Abbreviation = (item.Abbreviation != null);
-            mask.CNAM = (item.CNAM != null);
-            var itemSkill = item.Skill;
-            mask.Skill = new MaskItem<bool, ActorValueSkill.Mask<bool>?>(itemSkill != null, itemSkill?.GetHasBeenSetMask());
-            var PerkTreeItem = item.PerkTree;
-            mask.PerkTree = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ActorValuePerkNode.Mask<bool>?>>?>(true, PerkTreeItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ActorValuePerkNode.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static ActorValueInformation_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1991,15 +1920,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActorValueInformationGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ActorValueInformationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ActorValueInformationCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValueInformationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValueInformationCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ActorValueInformationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ActorValueInformationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

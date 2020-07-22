@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMusicTrackInternal,
         ILoquiObjectSetter<MusicTrack>,
-        IEquatable<MusicTrack>,
-        IEqualsMask
+        IEquatable<MusicTrack>
     {
         #region Ctor
         protected MusicTrack()
@@ -879,7 +878,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MusicTrackCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MusicTrackCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MusicTrackCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTrackCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTrackCommon.Instance.RemapLinks(this, mapping);
         public MusicTrack(FormKey formKey)
@@ -914,14 +913,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new MusicTrack CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static MusicTrack CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -948,8 +939,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMusicTrackGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -968,7 +957,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMusicTrack :
         IMusicTrackGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IMusicTrackInternal>
+        ILoquiObjectSetter<IMusicTrackInternal>,
+        ILinkedFormKeyContainer
     {
         new MusicTrack.TypeEnum Type { get; set; }
         new Single? Duration { get; set; }
@@ -991,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMusicTrackGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IMusicTrackGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => MusicTrack_Registration.Instance;
@@ -1050,24 +1040,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IMusicTrackGetter item,
-            MusicTrack.Mask<bool?> checkMask)
-        {
-            return ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static MusicTrack.Mask<bool> GetHasBeenSetMask(this IMusicTrackGetter item)
-        {
-            var ret = new MusicTrack.Mask<bool>(false);
-            ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1139,17 +1111,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IMusicTrackInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IMusicTrackInternal item,
             MutagenFrame frame,
@@ -1708,46 +1669,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IMusicTrackGetter item,
-            MusicTrack.Mask<bool?> checkMask)
-        {
-            if (checkMask.Duration.HasValue && checkMask.Duration.Value != (item.Duration != null)) return false;
-            if (checkMask.FadeOut.HasValue && checkMask.FadeOut.Value != (item.FadeOut != null)) return false;
-            if (checkMask.TrackFilename.HasValue && checkMask.TrackFilename.Value != (item.TrackFilename != null)) return false;
-            if (checkMask.FinaleFilename.HasValue && checkMask.FinaleFilename.Value != (item.FinaleFilename != null)) return false;
-            if (checkMask.LoopData?.Overall.HasValue ?? false && checkMask.LoopData.Overall.Value != (item.LoopData != null)) return false;
-            if (checkMask.LoopData?.Specific != null && (item.LoopData == null || !item.LoopData.HasBeenSet(checkMask.LoopData.Specific))) return false;
-            if (checkMask.CuePoints?.Overall.HasValue ?? false && checkMask.CuePoints!.Overall.Value != (item.CuePoints != null)) return false;
-            if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != (item.Conditions != null)) return false;
-            if (checkMask.Tracks?.Overall.HasValue ?? false && checkMask.Tracks!.Overall.Value != (item.Tracks != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IMusicTrackGetter item,
-            MusicTrack.Mask<bool> mask)
-        {
-            mask.Type = true;
-            mask.Duration = (item.Duration != null);
-            mask.FadeOut = (item.FadeOut != null);
-            mask.TrackFilename = (item.TrackFilename != null);
-            mask.FinaleFilename = (item.FinaleFilename != null);
-            var itemLoopData = item.LoopData;
-            mask.LoopData = new MaskItem<bool, MusicTrackLoopData.Mask<bool>?>(itemLoopData != null, itemLoopData?.GetHasBeenSetMask());
-            mask.CuePoints = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.CuePoints != null), default);
-            if (item.Conditions.TryGet(out var ConditionsItem))
-            {
-                mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            mask.Tracks = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Tracks != null), default);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static MusicTrack_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1882,7 +1803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Conditions.TryGet(out var ConditionsItem))
             {
-                foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+                foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                     .SelectMany((f) => f.LinkFormKeys))
                 {
                     yield return item;
@@ -2470,15 +2391,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMusicTrackGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MusicTrackCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MusicTrackCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTrackCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTrackCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MusicTrackCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MusicTrackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

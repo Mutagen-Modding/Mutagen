@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Generation
             if (field is ContainerType contType
                 && contType.SubTypeGeneration is LoquiType contLoqui)
             {
-                var hasBeenSet = contType.SubTypeGeneration.HasBeenSet;
+                var nullable = contType.SubTypeGeneration.Nullable;
                 var subData = contLoqui.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenFieldData(contLoqui)) as MutagenFieldData;
                 await SetRecordTrigger(
                     obj,
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     subData.TriggeringRecordTypes.Add(new RecordType(counterType));
                 }
-                contType.SubTypeGeneration.HasBeenSetProperty.OnNext((hasBeenSet, true));
+                contType.SubTypeGeneration.NullableProperty.OnNext((nullable, true));
             }
             else if (field is DictType dictType)
             {
@@ -394,8 +394,8 @@ namespace Mutagen.Bethesda.Generation
                         data.TriggeringRecordTypes.Add(subData.RecordType.Value);
                         data.RecordType = subData.RecordType;
                         // Don't actually want it to be marked has been set
-                        listType.SubTypeGeneration.HasBeenSetProperty.OnNext((false, true));
-                        listType.HasBeenSetProperty.OnNext((false, true));
+                        listType.SubTypeGeneration.NullableProperty.OnNext((false, true));
+                        listType.NullableProperty.OnNext((false, true));
                         previouslyTurnedOff = true;
                     }
                 }
@@ -403,9 +403,9 @@ namespace Mutagen.Bethesda.Generation
                 var hasCounter = (listType.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counter)
                     && counter != null);
                 if (hasCounter 
-                    && (previouslyTurnedOff || !listType.HasBeenSetProperty.Value.HasBeenSet))
+                    && (previouslyTurnedOff || !listType.NullableProperty.Value.HasBeenSet))
                 {
-                    listType.HasBeenSetProperty.OnNext((true, true));
+                    listType.NullableProperty.OnNext((true, true));
                 }
             }
             else if (field is DictType dictType
@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (!data.MarkerType.HasValue
                     && gendered.MaleMarker.HasValue
-                    && gendered.ItemHasBeenSet)
+                    && gendered.ItemNullable)
                 {
                     data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(gendered.MaleMarker.Value));
                     data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(gendered.FemaleMarker.Value));
@@ -479,20 +479,20 @@ namespace Mutagen.Bethesda.Generation
 
             SetTriggeringRecordAccessors(obj, field, data);
 
-            if (!field.HasBeenSetProperty.Value.HasBeenSet)
+            if (!field.NullableProperty.Value.HasBeenSet)
             {
-                bool hasBeenSettable;
+                bool nullable;
                 switch (field)
                 {
                     case ListType list:
-                        hasBeenSettable = data.RecordType != null 
+                        nullable = data.RecordType != null 
                             || (list.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counter) && counter != null);
                         break;
                     default:
-                        hasBeenSettable = data.HasTrigger;
+                        nullable = data.HasTrigger;
                         break;
                 }
-                field.HasBeenSetProperty.OnNext((hasBeenSettable, true));
+                field.NullableProperty.OnNext((nullable, true));
             }
         }
         
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Generation
                 if (field is SetMarkerType) break;
                 if (field.IsEnumerable && !(field is ByteArrayType)) continue;
                 LoquiType loqui = field as LoquiType;
-                if (!field.HasBeenSet 
+                if (!field.Nullable 
                     && fieldData.Binary != BinaryGenerationType.Custom
                     && !(field is CustomLogic))
                 {

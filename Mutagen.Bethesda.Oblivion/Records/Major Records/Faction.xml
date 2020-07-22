@@ -6,7 +6,7 @@
       <String name="Name" recordType="FULL" />
       <RefList name="Relations" refName="Relation" />
       <Enum name="Flags" recordType="DATA" enumName="Faction.FactionFlag" byteLength="1" />
-      <Float name="CrimeGoldMultiplier" recordType="CNAM" hasBeenSet="True" />
+      <Float name="CrimeGoldMultiplier" recordType="CNAM" nullable="True" />
       <RefList name="Ranks" refName="Rank" />
     </Fields>
     <LinkInterface>IOwner</LinkInterface>

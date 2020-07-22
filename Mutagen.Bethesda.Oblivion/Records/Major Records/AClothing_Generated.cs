@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         IAClothingInternal,
         ILoquiObjectSetter<AClothing>,
-        IEquatable<AClothing>,
-        IEqualsMask
+        IEquatable<AClothing>
     {
         #region Ctor
         protected AClothing()
@@ -751,7 +750,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AClothingCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AClothingCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AClothingCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AClothingCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AClothingCommon.Instance.RemapLinks(this, mapping);
         public AClothing(FormKey formKey)
@@ -788,8 +787,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAClothingGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -809,7 +806,8 @@ namespace Mutagen.Bethesda.Oblivion
         IAClothingGetter,
         IAItem,
         INamed,
-        ILoquiObjectSetter<IAClothingInternal>
+        ILoquiObjectSetter<IAClothingInternal>,
+        ILinkedFormKeyContainer
     {
         new String? Name { get; set; }
         new FormLinkNullable<Script> Script { get; set; }
@@ -835,7 +833,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAItemGetter,
         INamedGetter,
         ILoquiObject<IAClothingGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => AClothing_Registration.Instance;
@@ -896,24 +894,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IAClothingGetter item,
-            AClothing.Mask<bool?> checkMask)
-        {
-            return ((AClothingCommon)((IAClothingGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static AClothing.Mask<bool> GetHasBeenSetMask(this IAClothingGetter item)
-        {
-            var ret = new AClothing.Mask<bool>(false);
-            ((AClothingCommon)((IAClothingGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -985,17 +965,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAClothingInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAClothingInternal item,
             MutagenFrame frame,
@@ -1616,56 +1585,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(FemaleIconItem, "FemaleIcon");
             }
-        }
-        
-        public bool HasBeenSet(
-            IAClothingGetter item,
-            AClothing.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
-            if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != (item.Enchantment.FormKey != null)) return false;
-            if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != (item.EnchantmentPoints != null)) return false;
-            if (checkMask.ClothingFlags?.Overall.HasValue ?? false && checkMask.ClothingFlags.Overall.Value != (item.ClothingFlags != null)) return false;
-            if (checkMask.ClothingFlags?.Specific != null && (item.ClothingFlags == null || !item.ClothingFlags.HasBeenSet(checkMask.ClothingFlags.Specific))) return false;
-            if (checkMask.MaleBipedModel?.Overall.HasValue ?? false && checkMask.MaleBipedModel.Overall.Value != (item.MaleBipedModel != null)) return false;
-            if (checkMask.MaleBipedModel?.Specific != null && (item.MaleBipedModel == null || !item.MaleBipedModel.HasBeenSet(checkMask.MaleBipedModel.Specific))) return false;
-            if (checkMask.MaleWorldModel?.Overall.HasValue ?? false && checkMask.MaleWorldModel.Overall.Value != (item.MaleWorldModel != null)) return false;
-            if (checkMask.MaleWorldModel?.Specific != null && (item.MaleWorldModel == null || !item.MaleWorldModel.HasBeenSet(checkMask.MaleWorldModel.Specific))) return false;
-            if (checkMask.MaleIcon.HasValue && checkMask.MaleIcon.Value != (item.MaleIcon != null)) return false;
-            if (checkMask.FemaleBipedModel?.Overall.HasValue ?? false && checkMask.FemaleBipedModel.Overall.Value != (item.FemaleBipedModel != null)) return false;
-            if (checkMask.FemaleBipedModel?.Specific != null && (item.FemaleBipedModel == null || !item.FemaleBipedModel.HasBeenSet(checkMask.FemaleBipedModel.Specific))) return false;
-            if (checkMask.FemaleWorldModel?.Overall.HasValue ?? false && checkMask.FemaleWorldModel.Overall.Value != (item.FemaleWorldModel != null)) return false;
-            if (checkMask.FemaleWorldModel?.Specific != null && (item.FemaleWorldModel == null || !item.FemaleWorldModel.HasBeenSet(checkMask.FemaleWorldModel.Specific))) return false;
-            if (checkMask.FemaleIcon.HasValue && checkMask.FemaleIcon.Value != (item.FemaleIcon != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IAClothingGetter item,
-            AClothing.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            mask.Script = (item.Script.FormKey != null);
-            mask.Enchantment = (item.Enchantment.FormKey != null);
-            mask.EnchantmentPoints = (item.EnchantmentPoints != null);
-            var itemClothingFlags = item.ClothingFlags;
-            mask.ClothingFlags = new MaskItem<bool, ClothingFlags.Mask<bool>?>(itemClothingFlags != null, itemClothingFlags?.GetHasBeenSetMask());
-            var itemMaleBipedModel = item.MaleBipedModel;
-            mask.MaleBipedModel = new MaskItem<bool, Model.Mask<bool>?>(itemMaleBipedModel != null, itemMaleBipedModel?.GetHasBeenSetMask());
-            var itemMaleWorldModel = item.MaleWorldModel;
-            mask.MaleWorldModel = new MaskItem<bool, Model.Mask<bool>?>(itemMaleWorldModel != null, itemMaleWorldModel?.GetHasBeenSetMask());
-            mask.MaleIcon = (item.MaleIcon != null);
-            var itemFemaleBipedModel = item.FemaleBipedModel;
-            mask.FemaleBipedModel = new MaskItem<bool, Model.Mask<bool>?>(itemFemaleBipedModel != null, itemFemaleBipedModel?.GetHasBeenSetMask());
-            var itemFemaleWorldModel = item.FemaleWorldModel;
-            mask.FemaleWorldModel = new MaskItem<bool, Model.Mask<bool>?>(itemFemaleWorldModel != null, itemFemaleWorldModel?.GetHasBeenSetMask());
-            mask.FemaleIcon = (item.FemaleIcon != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static AClothing_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
@@ -2486,15 +2405,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAClothingGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AClothingCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AClothingCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AClothingCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AClothingCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AClothingCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AClothingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

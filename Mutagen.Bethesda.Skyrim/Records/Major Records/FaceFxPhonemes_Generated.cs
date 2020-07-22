@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class FaceFxPhonemes :
         IFaceFxPhonemes,
         ILoquiObjectSetter<FaceFxPhonemes>,
-        IEquatable<FaceFxPhonemes>,
-        IEqualsMask
+        IEquatable<FaceFxPhonemes>
     {
         #region Ctor
         public FaceFxPhonemes()
@@ -1108,14 +1107,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static FaceFxPhonemes CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static FaceFxPhonemes CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1142,8 +1133,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFaceFxPhonemesGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1259,24 +1248,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IFaceFxPhonemesGetter item,
-            FaceFxPhonemes.Mask<bool?> checkMask)
-        {
-            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static FaceFxPhonemes.Mask<bool> GetHasBeenSetMask(this IFaceFxPhonemesGetter item)
-        {
-            var ret = new FaceFxPhonemes.Mask<bool>(false);
-            ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IFaceFxPhonemesGetter item,
             IFaceFxPhonemesGetter rhs)
@@ -1369,17 +1340,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IFaceFxPhonemes item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IFaceFxPhonemes item,
             MutagenFrame frame,
@@ -2050,84 +2010,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 WItem?.ToString(fg, "W");
             }
-        }
-        
-        public bool HasBeenSet(
-            IFaceFxPhonemesGetter item,
-            FaceFxPhonemes.Mask<bool?> checkMask)
-        {
-            if (checkMask.Aah_LipBigAah?.Overall.HasValue ?? false && checkMask.Aah_LipBigAah.Overall.Value != (item.Aah_LipBigAah != null)) return false;
-            if (checkMask.Aah_LipBigAah?.Specific != null && (item.Aah_LipBigAah == null || !item.Aah_LipBigAah.HasBeenSet(checkMask.Aah_LipBigAah.Specific))) return false;
-            if (checkMask.BigAah_LipDST?.Overall.HasValue ?? false && checkMask.BigAah_LipDST.Overall.Value != (item.BigAah_LipDST != null)) return false;
-            if (checkMask.BigAah_LipDST?.Specific != null && (item.BigAah_LipDST == null || !item.BigAah_LipDST.HasBeenSet(checkMask.BigAah_LipDST.Specific))) return false;
-            if (checkMask.BMP_LipEee?.Overall.HasValue ?? false && checkMask.BMP_LipEee.Overall.Value != (item.BMP_LipEee != null)) return false;
-            if (checkMask.BMP_LipEee?.Specific != null && (item.BMP_LipEee == null || !item.BMP_LipEee.HasBeenSet(checkMask.BMP_LipEee.Specific))) return false;
-            if (checkMask.ChJSh_LipFV?.Overall.HasValue ?? false && checkMask.ChJSh_LipFV.Overall.Value != (item.ChJSh_LipFV != null)) return false;
-            if (checkMask.ChJSh_LipFV?.Specific != null && (item.ChJSh_LipFV == null || !item.ChJSh_LipFV.HasBeenSet(checkMask.ChJSh_LipFV.Specific))) return false;
-            if (checkMask.DST_LipK?.Overall.HasValue ?? false && checkMask.DST_LipK.Overall.Value != (item.DST_LipK != null)) return false;
-            if (checkMask.DST_LipK?.Specific != null && (item.DST_LipK == null || !item.DST_LipK.HasBeenSet(checkMask.DST_LipK.Specific))) return false;
-            if (checkMask.Eee_LipL?.Overall.HasValue ?? false && checkMask.Eee_LipL.Overall.Value != (item.Eee_LipL != null)) return false;
-            if (checkMask.Eee_LipL?.Specific != null && (item.Eee_LipL == null || !item.Eee_LipL.HasBeenSet(checkMask.Eee_LipL.Specific))) return false;
-            if (checkMask.Eh_LipR?.Overall.HasValue ?? false && checkMask.Eh_LipR.Overall.Value != (item.Eh_LipR != null)) return false;
-            if (checkMask.Eh_LipR?.Specific != null && (item.Eh_LipR == null || !item.Eh_LipR.HasBeenSet(checkMask.Eh_LipR.Specific))) return false;
-            if (checkMask.FV_LipTh?.Overall.HasValue ?? false && checkMask.FV_LipTh.Overall.Value != (item.FV_LipTh != null)) return false;
-            if (checkMask.FV_LipTh?.Specific != null && (item.FV_LipTh == null || !item.FV_LipTh.HasBeenSet(checkMask.FV_LipTh.Specific))) return false;
-            if (checkMask.I?.Overall.HasValue ?? false && checkMask.I.Overall.Value != (item.I != null)) return false;
-            if (checkMask.I?.Specific != null && (item.I == null || !item.I.HasBeenSet(checkMask.I.Specific))) return false;
-            if (checkMask.K?.Overall.HasValue ?? false && checkMask.K.Overall.Value != (item.K != null)) return false;
-            if (checkMask.K?.Specific != null && (item.K == null || !item.K.HasBeenSet(checkMask.K.Specific))) return false;
-            if (checkMask.N?.Overall.HasValue ?? false && checkMask.N.Overall.Value != (item.N != null)) return false;
-            if (checkMask.N?.Specific != null && (item.N == null || !item.N.HasBeenSet(checkMask.N.Specific))) return false;
-            if (checkMask.Oh?.Overall.HasValue ?? false && checkMask.Oh.Overall.Value != (item.Oh != null)) return false;
-            if (checkMask.Oh?.Specific != null && (item.Oh == null || !item.Oh.HasBeenSet(checkMask.Oh.Specific))) return false;
-            if (checkMask.OohQ?.Overall.HasValue ?? false && checkMask.OohQ.Overall.Value != (item.OohQ != null)) return false;
-            if (checkMask.OohQ?.Specific != null && (item.OohQ == null || !item.OohQ.HasBeenSet(checkMask.OohQ.Specific))) return false;
-            if (checkMask.R?.Overall.HasValue ?? false && checkMask.R.Overall.Value != (item.R != null)) return false;
-            if (checkMask.R?.Specific != null && (item.R == null || !item.R.HasBeenSet(checkMask.R.Specific))) return false;
-            if (checkMask.Th?.Overall.HasValue ?? false && checkMask.Th.Overall.Value != (item.Th != null)) return false;
-            if (checkMask.Th?.Specific != null && (item.Th == null || !item.Th.HasBeenSet(checkMask.Th.Specific))) return false;
-            if (checkMask.W?.Overall.HasValue ?? false && checkMask.W.Overall.Value != (item.W != null)) return false;
-            if (checkMask.W?.Specific != null && (item.W == null || !item.W.HasBeenSet(checkMask.W.Specific))) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IFaceFxPhonemesGetter item,
-            FaceFxPhonemes.Mask<bool> mask)
-        {
-            mask.ForceNames = true;
-            var itemAah_LipBigAah = item.Aah_LipBigAah;
-            mask.Aah_LipBigAah = new MaskItem<bool, Phoneme.Mask<bool>?>(itemAah_LipBigAah != null, itemAah_LipBigAah?.GetHasBeenSetMask());
-            var itemBigAah_LipDST = item.BigAah_LipDST;
-            mask.BigAah_LipDST = new MaskItem<bool, Phoneme.Mask<bool>?>(itemBigAah_LipDST != null, itemBigAah_LipDST?.GetHasBeenSetMask());
-            var itemBMP_LipEee = item.BMP_LipEee;
-            mask.BMP_LipEee = new MaskItem<bool, Phoneme.Mask<bool>?>(itemBMP_LipEee != null, itemBMP_LipEee?.GetHasBeenSetMask());
-            var itemChJSh_LipFV = item.ChJSh_LipFV;
-            mask.ChJSh_LipFV = new MaskItem<bool, Phoneme.Mask<bool>?>(itemChJSh_LipFV != null, itemChJSh_LipFV?.GetHasBeenSetMask());
-            var itemDST_LipK = item.DST_LipK;
-            mask.DST_LipK = new MaskItem<bool, Phoneme.Mask<bool>?>(itemDST_LipK != null, itemDST_LipK?.GetHasBeenSetMask());
-            var itemEee_LipL = item.Eee_LipL;
-            mask.Eee_LipL = new MaskItem<bool, Phoneme.Mask<bool>?>(itemEee_LipL != null, itemEee_LipL?.GetHasBeenSetMask());
-            var itemEh_LipR = item.Eh_LipR;
-            mask.Eh_LipR = new MaskItem<bool, Phoneme.Mask<bool>?>(itemEh_LipR != null, itemEh_LipR?.GetHasBeenSetMask());
-            var itemFV_LipTh = item.FV_LipTh;
-            mask.FV_LipTh = new MaskItem<bool, Phoneme.Mask<bool>?>(itemFV_LipTh != null, itemFV_LipTh?.GetHasBeenSetMask());
-            var itemI = item.I;
-            mask.I = new MaskItem<bool, Phoneme.Mask<bool>?>(itemI != null, itemI?.GetHasBeenSetMask());
-            var itemK = item.K;
-            mask.K = new MaskItem<bool, Phoneme.Mask<bool>?>(itemK != null, itemK?.GetHasBeenSetMask());
-            var itemN = item.N;
-            mask.N = new MaskItem<bool, Phoneme.Mask<bool>?>(itemN != null, itemN?.GetHasBeenSetMask());
-            var itemOh = item.Oh;
-            mask.Oh = new MaskItem<bool, Phoneme.Mask<bool>?>(itemOh != null, itemOh?.GetHasBeenSetMask());
-            var itemOohQ = item.OohQ;
-            mask.OohQ = new MaskItem<bool, Phoneme.Mask<bool>?>(itemOohQ != null, itemOohQ?.GetHasBeenSetMask());
-            var itemR = item.R;
-            mask.R = new MaskItem<bool, Phoneme.Mask<bool>?>(itemR != null, itemR?.GetHasBeenSetMask());
-            var itemTh = item.Th;
-            mask.Th = new MaskItem<bool, Phoneme.Mask<bool>?>(itemTh != null, itemTh?.GetHasBeenSetMask());
-            var itemW = item.W;
-            mask.W = new MaskItem<bool, Phoneme.Mask<bool>?>(itemW != null, itemW?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -2809,12 +2691,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IFaceFxPhonemesGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((FaceFxPhonemesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -2846,8 +2729,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFaceFxPhonemesGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FaceFxPhonemesBinaryWriteTranslation.Instance;

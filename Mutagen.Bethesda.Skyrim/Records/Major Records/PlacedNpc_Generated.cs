@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IPlacedNpcInternal,
         ILoquiObjectSetter<PlacedNpc>,
-        IEquatable<PlacedNpc>,
-        IEqualsMask
+        IEquatable<PlacedNpc>
     {
         #region Ctor
         protected PlacedNpc()
@@ -1518,7 +1517,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
         public PlacedNpc(FormKey formKey)
@@ -1558,14 +1557,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PlacedNpc CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PlacedNpc CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1592,8 +1583,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedNpcGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1617,7 +1606,8 @@ namespace Mutagen.Bethesda.Skyrim
         IPlaced,
         IPlacedSimple,
         ILocationTargetable,
-        ILoquiObjectSetter<IPlacedNpcInternal>
+        ILoquiObjectSetter<IPlacedNpcInternal>,
+        ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new FormLinkNullable<Npc> Base { get; set; }
@@ -1668,7 +1658,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedSimpleGetter,
         ILocationTargetableGetter,
         ILoquiObject<IPlacedNpcGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedNpc_Registration.Instance;
@@ -1752,24 +1742,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IPlacedNpcGetter item,
-            PlacedNpc.Mask<bool?> checkMask)
-        {
-            return ((PlacedNpcCommon)((IPlacedNpcGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PlacedNpc.Mask<bool> GetHasBeenSetMask(this IPlacedNpcGetter item)
-        {
-            var ret = new PlacedNpc.Mask<bool>(false);
-            ((PlacedNpcCommon)((IPlacedNpcGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IPlacedNpcGetter item,
             IPlacedNpcGetter rhs)
@@ -1839,17 +1811,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPlacedNpcInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPlacedNpcInternal item,
             MutagenFrame frame,
@@ -2774,92 +2735,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPlacedNpcGetter item,
-            PlacedNpc.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Base.HasValue && checkMask.Base.Value != (item.Base.FormKey != null)) return false;
-            if (checkMask.EncounterZone.HasValue && checkMask.EncounterZone.Value != (item.EncounterZone.FormKey != null)) return false;
-            if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != (item.RagdollData != null)) return false;
-            if (checkMask.RagdollBipedData.HasValue && checkMask.RagdollBipedData.Value != (item.RagdollBipedData != null)) return false;
-            if (checkMask.Patrol?.Overall.HasValue ?? false && checkMask.Patrol.Overall.Value != (item.Patrol != null)) return false;
-            if (checkMask.Patrol?.Specific != null && (item.Patrol == null || !item.Patrol.HasBeenSet(checkMask.Patrol.Specific))) return false;
-            if (checkMask.LevelModifier.HasValue && checkMask.LevelModifier.Value != (item.LevelModifier != null)) return false;
-            if (checkMask.MerchantContainer.HasValue && checkMask.MerchantContainer.Value != (item.MerchantContainer.FormKey != null)) return false;
-            if (checkMask.Count.HasValue && checkMask.Count.Value != (item.Count != null)) return false;
-            if (checkMask.Radius.HasValue && checkMask.Radius.Value != (item.Radius != null)) return false;
-            if (checkMask.Health.HasValue && checkMask.Health.Value != (item.Health != null)) return false;
-            if (checkMask.ActivateParents?.Overall.HasValue ?? false && checkMask.ActivateParents.Overall.Value != (item.ActivateParents != null)) return false;
-            if (checkMask.ActivateParents?.Specific != null && (item.ActivateParents == null || !item.ActivateParents.HasBeenSet(checkMask.ActivateParents.Specific))) return false;
-            if (checkMask.LinkedReferenceColor?.Overall.HasValue ?? false && checkMask.LinkedReferenceColor.Overall.Value != (item.LinkedReferenceColor != null)) return false;
-            if (checkMask.LinkedReferenceColor?.Specific != null && (item.LinkedReferenceColor == null || !item.LinkedReferenceColor.HasBeenSet(checkMask.LinkedReferenceColor.Specific))) return false;
-            if (checkMask.PersistentLocation.HasValue && checkMask.PersistentLocation.Value != (item.PersistentLocation.FormKey != null)) return false;
-            if (checkMask.LocationReference.HasValue && checkMask.LocationReference.Value != (item.LocationReference.FormKey != null)) return false;
-            if (checkMask.LocationRefTypes?.Overall.HasValue ?? false && checkMask.LocationRefTypes!.Overall.Value != (item.LocationRefTypes != null)) return false;
-            if (checkMask.HeadTrackingWeight.HasValue && checkMask.HeadTrackingWeight.Value != (item.HeadTrackingWeight != null)) return false;
-            if (checkMask.Horse.HasValue && checkMask.Horse.Value != (item.Horse.FormKey != null)) return false;
-            if (checkMask.FavorCost.HasValue && checkMask.FavorCost.Value != (item.FavorCost != null)) return false;
-            if (checkMask.EnableParent?.Overall.HasValue ?? false && checkMask.EnableParent.Overall.Value != (item.EnableParent != null)) return false;
-            if (checkMask.EnableParent?.Specific != null && (item.EnableParent == null || !item.EnableParent.HasBeenSet(checkMask.EnableParent.Specific))) return false;
-            if (checkMask.Ownership?.Overall.HasValue ?? false && checkMask.Ownership.Overall.Value != (item.Ownership != null)) return false;
-            if (checkMask.Ownership?.Specific != null && (item.Ownership == null || !item.Ownership.HasBeenSet(checkMask.Ownership.Specific))) return false;
-            if (checkMask.Emittance.HasValue && checkMask.Emittance.Value != (item.Emittance.FormKey != null)) return false;
-            if (checkMask.MultiboundReference.HasValue && checkMask.MultiboundReference.Value != (item.MultiboundReference.FormKey != null)) return false;
-            if (checkMask.Scale.HasValue && checkMask.Scale.Value != (item.Scale != null)) return false;
-            if (checkMask.Placement?.Overall.HasValue ?? false && checkMask.Placement.Overall.Value != (item.Placement != null)) return false;
-            if (checkMask.Placement?.Specific != null && (item.Placement == null || !item.Placement.HasBeenSet(checkMask.Placement.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPlacedNpcGetter item,
-            PlacedNpc.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.Base = (item.Base.FormKey != null);
-            mask.EncounterZone = (item.EncounterZone.FormKey != null);
-            mask.RagdollData = (item.RagdollData != null);
-            mask.RagdollBipedData = (item.RagdollBipedData != null);
-            var itemPatrol = item.Patrol;
-            mask.Patrol = new MaskItem<bool, Patrol.Mask<bool>?>(itemPatrol != null, itemPatrol?.GetHasBeenSetMask());
-            mask.LevelModifier = (item.LevelModifier != null);
-            mask.MerchantContainer = (item.MerchantContainer.FormKey != null);
-            mask.Count = (item.Count != null);
-            mask.Radius = (item.Radius != null);
-            mask.Health = (item.Health != null);
-            var LinkedReferencesItem = item.LinkedReferences;
-            mask.LinkedReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LinkedReferences.Mask<bool>?>>?>(true, LinkedReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LinkedReferences.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var itemActivateParents = item.ActivateParents;
-            mask.ActivateParents = new MaskItem<bool, ActivateParents.Mask<bool>?>(itemActivateParents != null, itemActivateParents?.GetHasBeenSetMask());
-            var itemLinkedReferenceColor = item.LinkedReferenceColor;
-            mask.LinkedReferenceColor = new MaskItem<bool, LinkedReferenceColor.Mask<bool>?>(itemLinkedReferenceColor != null, itemLinkedReferenceColor?.GetHasBeenSetMask());
-            mask.PersistentLocation = (item.PersistentLocation.FormKey != null);
-            mask.LocationReference = (item.LocationReference.FormKey != null);
-            mask.IgnoredBySandbox = true;
-            mask.LocationRefTypes = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.LocationRefTypes != null), default);
-            mask.HeadTrackingWeight = (item.HeadTrackingWeight != null);
-            mask.Horse = (item.Horse.FormKey != null);
-            mask.FavorCost = (item.FavorCost != null);
-            var itemEnableParent = item.EnableParent;
-            mask.EnableParent = new MaskItem<bool, EnableParent.Mask<bool>?>(itemEnableParent != null, itemEnableParent?.GetHasBeenSetMask());
-            var itemOwnership = item.Ownership;
-            mask.Ownership = new MaskItem<bool, Ownership.Mask<bool>?>(itemOwnership != null, itemOwnership?.GetHasBeenSetMask());
-            mask.Emittance = (item.Emittance.FormKey != null);
-            mask.MultiboundReference = (item.MultiboundReference.FormKey != null);
-            mask.IgnoredBySandbox2 = true;
-            mask.Scale = (item.Scale != null);
-            var itemPlacement = item.Placement;
-            mask.Placement = new MaskItem<bool, Placement.Mask<bool>?>(itemPlacement != null, itemPlacement?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static PlacedNpc_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -3087,7 +2962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
@@ -4137,15 +4012,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedNpcGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

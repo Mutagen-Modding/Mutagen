@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="DialogView" recordType="DLVW" objType="Record" baseClass="SkyrimMajorRecord" GUID="db6b7dfe-8462-4e7a-be19-c4e855422b07" ID="459">
     <Fields>
-      <FormLink name="Quest" refName="Quest" recordType="QNAM" hasBeenSet="False" />
+      <FormLink name="Quest" refName="Quest" recordType="QNAM" nullable="False" />
       <List name="Branches">
         <FormLink refName="DialogBranch" recordType="BNAM" />
       </List>

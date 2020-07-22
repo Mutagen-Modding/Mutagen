@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ScriptProperty,
         IScriptObjectListProperty,
         ILoquiObjectSetter<ScriptObjectListProperty>,
-        IEquatable<ScriptObjectListProperty>,
-        IEqualsMask
+        IEquatable<ScriptObjectListProperty>
     {
         #region Ctor
         public ScriptObjectListProperty()
@@ -429,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ScriptObjectListPropertyCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ScriptObjectListPropertyCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScriptObjectListPropertyCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectListPropertyCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectListPropertyCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -447,14 +446,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new ScriptObjectListProperty CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static ScriptObjectListProperty CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -481,8 +472,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptObjectListPropertyGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -501,7 +490,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScriptObjectListProperty :
         IScriptObjectListPropertyGetter,
         IScriptProperty,
-        ILoquiObjectSetter<IScriptObjectListProperty>
+        ILoquiObjectSetter<IScriptObjectListProperty>,
+        ILinkedFormKeyContainer
     {
         new IExtendedList<ScriptObjectProperty> Objects { get; }
     }
@@ -509,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScriptObjectListPropertyGetter :
         IScriptPropertyGetter,
         ILoquiObject<IScriptObjectListPropertyGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ScriptObjectListProperty_Registration.Instance;
@@ -560,24 +550,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IScriptObjectListPropertyGetter item,
-            ScriptObjectListProperty.Mask<bool?> checkMask)
-        {
-            return ((ScriptObjectListPropertyCommon)((IScriptObjectListPropertyGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ScriptObjectListProperty.Mask<bool> GetHasBeenSetMask(this IScriptObjectListPropertyGetter item)
-        {
-            var ret = new ScriptObjectListProperty.Mask<bool>(false);
-            ((ScriptObjectListPropertyCommon)((IScriptObjectListPropertyGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -649,17 +621,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IScriptObjectListProperty item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IScriptObjectListProperty item,
             MutagenFrame frame,
@@ -1004,26 +965,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IScriptObjectListPropertyGetter item,
-            ScriptObjectListProperty.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IScriptObjectListPropertyGetter item,
-            ScriptObjectListProperty.Mask<bool> mask)
-        {
-            var ObjectsItem = item.Objects;
-            mask.Objects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ScriptObjectProperty.Mask<bool>?>>?>(true, ObjectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ScriptObjectProperty.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static ScriptObjectListProperty_FieldIndex ConvertFieldIndex(ScriptProperty_FieldIndex index)
         {
             switch (index)
@@ -1334,15 +1275,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptObjectListPropertyGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ScriptObjectListPropertyCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ScriptObjectListPropertyCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectListPropertyCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectListPropertyCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScriptObjectListPropertyCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptObjectListPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

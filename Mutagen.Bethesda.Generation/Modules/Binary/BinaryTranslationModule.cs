@@ -177,7 +177,11 @@ namespace Mutagen.Bethesda.Generation
                 });
             var recTypeConverter = new APILine(
                 "RecordTypeConverter",
-                $"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
+                $"{nameof(RecordTypeConverter)}? recordTypeConverter = null",
+                when: (obj, dir) =>
+                {
+                    return obj.GetObjectType() != ObjectType.Mod;
+                });
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI(
                     majorAPI: new APILine[] { new APILine("MutagenWriter", "MutagenWriter writer") },
@@ -186,7 +190,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         CustomMethodAPI.FactoryPublic(modKey),
                         CustomMethodAPI.FactoryPrivate(modKeyWriter, "modKey"),
-                        CustomMethodAPI.FactoryPrivate(recTypeConverter, "null"),
+                        CustomMethodAPI.FactoryPublic(recTypeConverter),
                         CustomMethodAPI.FactoryPublic(writeParamOptional),
                     }),
                 readerAPI: new MethodAPI(
@@ -197,7 +201,7 @@ namespace Mutagen.Bethesda.Generation
                         CustomMethodAPI.FactoryPublic(gameRelease),
                         CustomMethodAPI.FactoryPublic(modKey),
                         CustomMethodAPI.FactoryPrivate(modKeyWriter, "modKey"),
-                        CustomMethodAPI.FactoryPrivate(recTypeConverter, "null"),
+                        CustomMethodAPI.FactoryPublic(recTypeConverter),
                         CustomMethodAPI.FactoryPublic(writeParamOptional),
                     }));
             this.MinorAPIs.Add(
@@ -209,7 +213,8 @@ namespace Mutagen.Bethesda.Generation
                             CustomMethodAPI.FactoryPublic(gameRelease)
                         },
                         optionalAPI: modKeyOptional
-                            .AndSingle(writeParamOptional)
+                            .AsEnumerable()
+                            .And(writeParamOptional)
                             .And(modAPILines)
                             .And(stringsReadParamOptional)
                             .And(parallel)
@@ -523,7 +528,7 @@ namespace Mutagen.Bethesda.Generation
                             if (!field.IntegrateField) continue;
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
-                        if (field.HasBeenSet)
+                        if (field.Nullable)
                         {
                             fg.AppendLine($"if (frame.Complete) return;");
                         }
@@ -1118,13 +1123,13 @@ namespace Mutagen.Bethesda.Generation
 
         private void GenerateStructStateSubscriptions(ObjectGeneration obj, FileGeneration fg)
         {
-            if (!obj.StructHasBeenSet()) return;
+            if (!obj.StructNullable()) return;
             List<TypeGeneration> affectedFields = new List<TypeGeneration>();
             foreach (var field in obj.IterateFields())
             {
                 var data = field.GetFieldData();
                 if (data.HasTrigger) break;
-                if (field.HasBeenSet)
+                if (field.Nullable)
                 {
                     affectedFields.Add(field);
                     continue;
@@ -1138,7 +1143,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
                 fg.AppendLine($"var dataFrame = {frameAccessor}.SpawnWithLength(contentLength);");
-                if (set.HasBeenSet)
+                if (set.Nullable)
                 {
                     fg.AppendLine($"if (!dataFrame.Complete)");
                     using (new BraceWrapper(fg))
@@ -1597,7 +1602,6 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"record: {accessor}");
                             args.Add("frame: frame");
                             args.Add("importMask: importMask");
-                            args.Add("recordTypeConverter: recordTypeConverter");
                             args.Add($"fillStructs: {TranslationCreateClass(obj)}.Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj))
                             {
@@ -1688,7 +1692,10 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.AddPassArg($"importMask");
                         }
-                        args.AddPassArg($"recordTypeConverter");
+                        else
+                        {
+                            args.AddPassArg($"recordTypeConverter");
+                        }
                     }
                     if (await obj.IsMajorRecord())
                     {
@@ -1829,7 +1836,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"GroupMask? importMask");
                     }
-                    args.Add("RecordTypeConverter? recordTypeConverter");
+                    args.Add($"RecordTypeConverter? recordTypeConverter{(obj.GetObjectType() == ObjectType.Mod ? " = null" : null)}");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -1895,11 +1902,11 @@ namespace Mutagen.Bethesda.Generation
                             var accessor = Accessor.FromType(field, "item");
                             if (field is DataType dataType)
                             {
-                                if (dataType.HasBeenSet)
+                                if (dataType.Nullable)
                                 {
                                     fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
                                 }
-                                using (new BraceWrapper(fg, doIt: dataType.HasBeenSet))
+                                using (new BraceWrapper(fg, doIt: dataType.Nullable))
                                 {
                                     fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
                                     using (new BraceWrapper(fg))
@@ -2122,7 +2129,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectType() == ObjectType.Mod
                     || (await LinkModule.HasLinks(obj, includeBaseClass: false) != LinkModule.LinkCase.No))
                 {
-                    await LinkModule.GenerateInterfaceImplementation(obj, fg);
+                    await LinkModule.GenerateInterfaceImplementation(obj, fg, getter: true);
                 }
 
                 if (await MajorRecordEnumerationModule.HasMajorRecordsInTree(obj, includeBaseClass: false) != MajorRecordEnumerationModule.Case.No)
@@ -2207,7 +2214,7 @@ namespace Mutagen.Bethesda.Generation
                             lengths.PassedLength,
                             lengths.PassedAccessor);
                         if (data.HasVersioning
-                            && !lengths.Field.HasBeenSet)
+                            && !lengths.Field.Nullable)
                         {
                             VersioningModule.AddVersionOffset(fg, lengths.Field, lengths.FieldLength.Value, lastVersionedField, $"_package.FormVersion!.FormVersion!.Value");
                             lastVersionedField = lengths.Field;

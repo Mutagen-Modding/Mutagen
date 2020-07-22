@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class QuestFragmentAlias :
         IQuestFragmentAlias,
         ILoquiObjectSetter<QuestFragmentAlias>,
-        IEquatable<QuestFragmentAlias>,
-        IEqualsMask
+        IEquatable<QuestFragmentAlias>
     {
         #region Ctor
         public QuestFragmentAlias()
@@ -537,7 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => QuestFragmentAliasCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestFragmentAliasCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestFragmentAliasCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -557,14 +556,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static QuestFragmentAlias CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static QuestFragmentAlias CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -591,8 +582,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestFragmentAliasGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -610,7 +599,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IQuestFragmentAlias :
         IQuestFragmentAliasGetter,
-        ILoquiObjectSetter<IQuestFragmentAlias>
+        ILoquiObjectSetter<IQuestFragmentAlias>,
+        ILinkedFormKeyContainer
     {
         new ScriptObjectProperty Property { get; set; }
         new Int16 Version { get; set; }
@@ -621,7 +611,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestFragmentAliasGetter :
         ILoquiObject,
         ILoquiObject<IQuestFragmentAliasGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -681,24 +671,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IQuestFragmentAliasGetter item,
-            QuestFragmentAlias.Mask<bool?> checkMask)
-        {
-            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static QuestFragmentAlias.Mask<bool> GetHasBeenSetMask(this IQuestFragmentAliasGetter item)
-        {
-            var ret = new QuestFragmentAlias.Mask<bool>(false);
-            ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -793,17 +765,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IQuestFragmentAlias item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IQuestFragmentAlias item,
             MutagenFrame frame,
@@ -1180,24 +1141,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IQuestFragmentAliasGetter item,
-            QuestFragmentAlias.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IQuestFragmentAliasGetter item,
-            QuestFragmentAlias.Mask<bool> mask)
-        {
-            mask.Property = new MaskItem<bool, ScriptObjectProperty.Mask<bool>?>(true, item.Property?.GetHasBeenSetMask());
-            mask.Version = true;
-            mask.ObjectFormat = true;
-            var ScriptsItem = item.Scripts;
-            mask.Scripts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ScriptEntry.Mask<bool>?>>?>(true, ScriptsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ScriptEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IQuestFragmentAliasGetter? lhs,
@@ -1237,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Scripts.WhereCastable<IScriptEntryGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Scripts.WhereCastable<IScriptEntryGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -1496,12 +1439,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IQuestFragmentAliasGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((QuestFragmentAliasBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1533,15 +1477,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestFragmentAliasGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => QuestFragmentAliasCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestFragmentAliasCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestFragmentAliasCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestFragmentAliasBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

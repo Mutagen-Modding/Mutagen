@@ -28,8 +28,7 @@ namespace Mutagen.Bethesda
     public partial class MasterReference :
         IMasterReference,
         ILoquiObjectSetter<MasterReference>,
-        IEquatable<MasterReference>,
-        IEqualsMask
+        IEquatable<MasterReference>
     {
         #region Ctor
         public MasterReference()
@@ -389,14 +388,6 @@ namespace Mutagen.Bethesda
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static MasterReference CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static MasterReference CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -423,8 +414,6 @@ namespace Mutagen.Bethesda
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMasterReferenceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -508,24 +497,6 @@ namespace Mutagen.Bethesda
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IMasterReferenceGetter item,
-            MasterReference.Mask<bool?> checkMask)
-        {
-            return ((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static MasterReference.Mask<bool> GetHasBeenSetMask(this IMasterReferenceGetter item)
-        {
-            var ret = new MasterReference.Mask<bool>(false);
-            ((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -620,17 +591,6 @@ namespace Mutagen.Bethesda
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IMasterReference item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IMasterReference item,
             MutagenFrame frame,
@@ -954,21 +914,6 @@ namespace Mutagen.Bethesda.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IMasterReferenceGetter item,
-            MasterReference.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IMasterReferenceGetter item,
-            MasterReference.Mask<bool> mask)
-        {
-            mask.Master = true;
-            mask.FileSize = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IMasterReferenceGetter? lhs,
@@ -1198,12 +1143,13 @@ namespace Mutagen.Bethesda
     {
         public static void WriteToBinary(
             this IMasterReferenceGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((MasterReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1235,8 +1181,6 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMasterReferenceGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MasterReferenceBinaryWriteTranslation.Instance;

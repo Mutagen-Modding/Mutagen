@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         SoundData,
         ISoundDataExtendedInternal,
         ILoquiObjectSetter<SoundDataExtended>,
-        IEquatable<SoundDataExtended>,
-        IEqualsMask
+        IEquatable<SoundDataExtended>
     {
         #region Ctor
         public SoundDataExtended()
@@ -423,14 +422,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new SoundDataExtended CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static SoundDataExtended CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -457,8 +448,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataExtendedInternalGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -555,24 +544,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ISoundDataExtendedInternalGetter item,
-            SoundDataExtended.Mask<bool?> checkMask)
-        {
-            return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SoundDataExtended.Mask<bool> GetHasBeenSetMask(this ISoundDataExtendedInternalGetter item)
-        {
-            var ret = new SoundDataExtended.Mask<bool>(false);
-            ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ISoundDataExtendedInternalGetter item,
             ISoundDataExtendedInternalGetter rhs)
@@ -642,17 +613,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISoundDataExtendedInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISoundDataExtendedInternal item,
             MutagenFrame frame,
@@ -1022,27 +982,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ISoundDataExtendedInternalGetter item,
-            SoundDataExtended.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ISoundDataExtendedInternalGetter item,
-            SoundDataExtended.Mask<bool> mask)
-        {
-            mask.StaticAttenuation = true;
-            mask.StopTime = true;
-            mask.StartTime = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static SoundDataExtended_FieldIndex ConvertFieldIndex(SoundData_FieldIndex index)
         {
             switch (index)
@@ -1410,8 +1349,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataExtendedInternalGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundDataExtendedBinaryWriteTranslation.Instance;

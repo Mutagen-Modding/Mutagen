@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WeatherVolumetricLighting :
         IWeatherVolumetricLighting,
         ILoquiObjectSetter<WeatherVolumetricLighting>,
-        IEquatable<WeatherVolumetricLighting>,
-        IEqualsMask
+        IEquatable<WeatherVolumetricLighting>
     {
         #region Ctor
         public WeatherVolumetricLighting()
@@ -446,7 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => WeatherVolumetricLightingCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WeatherVolumetricLightingCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherVolumetricLightingCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherVolumetricLightingCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherVolumetricLightingCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -466,14 +465,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static WeatherVolumetricLighting CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static WeatherVolumetricLighting CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -500,8 +491,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherVolumetricLightingGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -519,7 +508,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IWeatherVolumetricLighting :
         IWeatherVolumetricLightingGetter,
-        ILoquiObjectSetter<IWeatherVolumetricLighting>
+        ILoquiObjectSetter<IWeatherVolumetricLighting>,
+        ILinkedFormKeyContainer
     {
         new FormLink<VolumetricLighting> Sunrise { get; set; }
         new FormLink<VolumetricLighting> Day { get; set; }
@@ -530,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherVolumetricLightingGetter :
         ILoquiObject,
         ILoquiObject<IWeatherVolumetricLightingGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -590,24 +580,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IWeatherVolumetricLightingGetter item,
-            WeatherVolumetricLighting.Mask<bool?> checkMask)
-        {
-            return ((WeatherVolumetricLightingCommon)((IWeatherVolumetricLightingGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static WeatherVolumetricLighting.Mask<bool> GetHasBeenSetMask(this IWeatherVolumetricLightingGetter item)
-        {
-            var ret = new WeatherVolumetricLighting.Mask<bool>(false);
-            ((WeatherVolumetricLightingCommon)((IWeatherVolumetricLightingGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -702,17 +674,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWeatherVolumetricLighting item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWeatherVolumetricLighting item,
             MutagenFrame frame,
@@ -1074,23 +1035,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IWeatherVolumetricLightingGetter item,
-            WeatherVolumetricLighting.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IWeatherVolumetricLightingGetter item,
-            WeatherVolumetricLighting.Mask<bool> mask)
-        {
-            mask.Sunrise = true;
-            mask.Day = true;
-            mask.Sunset = true;
-            mask.Night = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IWeatherVolumetricLightingGetter? lhs,
@@ -1326,12 +1270,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IWeatherVolumetricLightingGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WeatherVolumetricLightingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1363,15 +1308,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherVolumetricLightingGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => WeatherVolumetricLightingCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WeatherVolumetricLightingCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherVolumetricLightingCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherVolumetricLightingCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherVolumetricLightingCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherVolumetricLightingBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

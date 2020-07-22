@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IArmorInternal,
         ILoquiObjectSetter<Armor>,
-        IEquatable<Armor>,
-        IEqualsMask
+        IEquatable<Armor>
     {
         #region Ctor
         protected Armor()
@@ -1296,7 +1295,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ArmorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ArmorCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ArmorCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorCommon.Instance.RemapLinks(this, mapping);
         public Armor(FormKey formKey)
@@ -1340,14 +1339,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Armor CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Armor CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1374,8 +1365,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IArmorGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1400,7 +1389,8 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IObjectBounded,
         IWeightValue,
-        ILoquiObjectSetter<IArmorInternal>
+        ILoquiObjectSetter<IArmorInternal>,
+        ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1448,7 +1438,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IWeightValueGetter,
         ILoquiObject<IArmorGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Armor_Registration.Instance;
@@ -1527,24 +1517,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IArmorGetter item,
-            Armor.Mask<bool?> checkMask)
-        {
-            return ((ArmorCommon)((IArmorGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Armor.Mask<bool> GetHasBeenSetMask(this IArmorGetter item)
-        {
-            var ret = new Armor.Mask<bool>(false);
-            ((ArmorCommon)((IArmorGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IArmorGetter item,
             IArmorGetter rhs)
@@ -1614,17 +1586,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IArmorInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IArmorInternal item,
             MutagenFrame frame,
@@ -2465,72 +2426,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IArmorGetter item,
-            Armor.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.ObjectEffect.HasValue && checkMask.ObjectEffect.Value != (item.ObjectEffect.FormKey != null)) return false;
-            if (checkMask.EnchantmentAmount.HasValue && checkMask.EnchantmentAmount.Value != (item.EnchantmentAmount != null)) return false;
-            if (checkMask.WorldModel?.Overall ?? false) return false;
-            if (checkMask.BodyTemplate?.Overall.HasValue ?? false && checkMask.BodyTemplate.Overall.Value != (item.BodyTemplate != null)) return false;
-            if (checkMask.BodyTemplate?.Specific != null && (item.BodyTemplate == null || !item.BodyTemplate.HasBeenSet(checkMask.BodyTemplate.Specific))) return false;
-            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
-            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
-            if (checkMask.PickUpSound.HasValue && checkMask.PickUpSound.Value != (item.PickUpSound.FormKey != null)) return false;
-            if (checkMask.PutDownSound.HasValue && checkMask.PutDownSound.Value != (item.PutDownSound.FormKey != null)) return false;
-            if (checkMask.RagdollConstraintTemplate.HasValue && checkMask.RagdollConstraintTemplate.Value != (item.RagdollConstraintTemplate != null)) return false;
-            if (checkMask.EquipmentType.HasValue && checkMask.EquipmentType.Value != (item.EquipmentType.FormKey != null)) return false;
-            if (checkMask.BashImpactDataSet.HasValue && checkMask.BashImpactDataSet.Value != (item.BashImpactDataSet.FormKey != null)) return false;
-            if (checkMask.AlternateBlockMaterial.HasValue && checkMask.AlternateBlockMaterial.Value != (item.AlternateBlockMaterial.FormKey != null)) return false;
-            if (checkMask.Race.HasValue && checkMask.Race.Value != (item.Race.FormKey != null)) return false;
-            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            if (checkMask.TemplateArmor.HasValue && checkMask.TemplateArmor.Value != (item.TemplateArmor.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IArmorGetter item,
-            Armor.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.Name = (item.Name != null);
-            mask.ObjectEffect = (item.ObjectEffect.FormKey != null);
-            mask.EnchantmentAmount = (item.EnchantmentAmount != null);
-            mask.WorldModel = GenderedItem.HasBeenSetMaskHelper(
-                item.WorldModel,
-                (i) => i?.GetHasBeenSetMask());
-            var itemBodyTemplate = item.BodyTemplate;
-            mask.BodyTemplate = new MaskItem<bool, BodyTemplate.Mask<bool>?>(itemBodyTemplate != null, itemBodyTemplate?.GetHasBeenSetMask());
-            var itemDestructible = item.Destructible;
-            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
-            mask.PickUpSound = (item.PickUpSound.FormKey != null);
-            mask.PutDownSound = (item.PutDownSound.FormKey != null);
-            mask.RagdollConstraintTemplate = (item.RagdollConstraintTemplate != null);
-            mask.EquipmentType = (item.EquipmentType.FormKey != null);
-            mask.BashImpactDataSet = (item.BashImpactDataSet.FormKey != null);
-            mask.AlternateBlockMaterial = (item.AlternateBlockMaterial.FormKey != null);
-            mask.Race = (item.Race.FormKey != null);
-            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.Description = (item.Description != null);
-            mask.Armature = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.Value = true;
-            mask.Weight = true;
-            mask.ArmorRating = true;
-            mask.TemplateArmor = (item.TemplateArmor.FormKey != null);
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static Armor_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -2724,7 +2619,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
@@ -3642,15 +3537,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IArmorGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ArmorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ArmorCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ArmorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ArmorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

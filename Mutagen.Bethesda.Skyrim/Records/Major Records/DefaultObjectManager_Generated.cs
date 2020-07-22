@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IDefaultObjectManagerInternal,
         ILoquiObjectSetter<DefaultObjectManager>,
-        IEquatable<DefaultObjectManager>,
-        IEqualsMask
+        IEquatable<DefaultObjectManager>
     {
         #region Ctor
         protected DefaultObjectManager()
@@ -439,7 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => DefaultObjectManagerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DefaultObjectManagerCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DefaultObjectManagerCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DefaultObjectManagerCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DefaultObjectManagerCommon.Instance.RemapLinks(this, mapping);
         public DefaultObjectManager(FormKey formKey)
@@ -474,14 +473,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new DefaultObjectManager CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static DefaultObjectManager CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -508,8 +499,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDefaultObjectManagerGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -528,7 +517,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDefaultObjectManager :
         IDefaultObjectManagerGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IDefaultObjectManagerInternal>
+        ILoquiObjectSetter<IDefaultObjectManagerInternal>,
+        ILinkedFormKeyContainer
     {
         new IExtendedList<DefaultObject>? Objects { get; set; }
     }
@@ -543,7 +533,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDefaultObjectManagerGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IDefaultObjectManagerGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DefaultObjectManager_Registration.Instance;
@@ -594,24 +584,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IDefaultObjectManagerGetter item,
-            DefaultObjectManager.Mask<bool?> checkMask)
-        {
-            return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static DefaultObjectManager.Mask<bool> GetHasBeenSetMask(this IDefaultObjectManagerGetter item)
-        {
-            var ret = new DefaultObjectManager.Mask<bool>(false);
-            ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -683,17 +655,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IDefaultObjectManagerInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IDefaultObjectManagerInternal item,
             MutagenFrame frame,
@@ -1059,29 +1020,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            IDefaultObjectManagerGetter item,
-            DefaultObjectManager.Mask<bool?> checkMask)
-        {
-            if (checkMask.Objects?.Overall.HasValue ?? false && checkMask.Objects!.Overall.Value != (item.Objects != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IDefaultObjectManagerGetter item,
-            DefaultObjectManager.Mask<bool> mask)
-        {
-            if (item.Objects.TryGet(out var ObjectsItem))
-            {
-                mask.Objects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DefaultObject.Mask<bool>?>>?>(true, ObjectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, DefaultObject.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static DefaultObjectManager_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1558,15 +1496,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDefaultObjectManagerGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => DefaultObjectManagerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DefaultObjectManagerCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DefaultObjectManagerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DefaultObjectManagerCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DefaultObjectManagerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DefaultObjectManagerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

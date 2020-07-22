@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         GameSetting,
         IGameSettingStringInternal,
         ILoquiObjectSetter<GameSettingString>,
-        IEquatable<GameSettingString>,
-        IEqualsMask
+        IEquatable<GameSettingString>
     {
         #region Ctor
         protected GameSettingString()
@@ -381,14 +380,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new GameSettingString CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static GameSettingString CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -415,8 +406,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingStringGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -502,24 +491,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IGameSettingStringGetter item,
-            GameSettingString.Mask<bool?> checkMask)
-        {
-            return ((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static GameSettingString.Mask<bool> GetHasBeenSetMask(this IGameSettingStringGetter item)
-        {
-            var ret = new GameSettingString.Mask<bool>(false);
-            ((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IGameSettingStringGetter item,
             IGameSettingStringGetter rhs)
@@ -589,17 +560,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IGameSettingStringInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IGameSettingStringInternal item,
             MutagenFrame frame,
@@ -963,26 +923,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(DataItem, "Data");
             }
-        }
-        
-        public bool HasBeenSet(
-            IGameSettingStringGetter item,
-            GameSettingString.Mask<bool?> checkMask)
-        {
-            if (checkMask.Data.HasValue && checkMask.Data.Value != (item.Data != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IGameSettingStringGetter item,
-            GameSettingString.Mask<bool> mask)
-        {
-            mask.Data = (item.Data != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static GameSettingString_FieldIndex ConvertFieldIndex(GameSetting_FieldIndex index)
@@ -1486,8 +1426,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingStringGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GameSettingStringBinaryWriteTranslation.Instance;

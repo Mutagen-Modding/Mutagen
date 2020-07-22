@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LoadScreenLocation :
         ILoadScreenLocation,
         ILoquiObjectSetter<LoadScreenLocation>,
-        IEquatable<LoadScreenLocation>,
-        IEqualsMask
+        IEquatable<LoadScreenLocation>
     {
         #region Ctor
         public LoadScreenLocation()
@@ -411,7 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LoadScreenLocationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LoadScreenLocationCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LoadScreenLocationCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenLocationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenLocationCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -431,14 +430,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static LoadScreenLocation CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static LoadScreenLocation CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -465,8 +456,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenLocationGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -484,7 +473,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILoadScreenLocation :
         ILoadScreenLocationGetter,
-        ILoquiObjectSetter<ILoadScreenLocation>
+        ILoquiObjectSetter<ILoadScreenLocation>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Place> Direct { get; set; }
         new FormLink<Worldspace> Indirect { get; set; }
@@ -494,7 +484,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILoadScreenLocationGetter :
         ILoquiObject,
         ILoquiObject<ILoadScreenLocationGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -553,24 +543,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILoadScreenLocationGetter item,
-            LoadScreenLocation.Mask<bool?> checkMask)
-        {
-            return ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LoadScreenLocation.Mask<bool> GetHasBeenSetMask(this ILoadScreenLocationGetter item)
-        {
-            var ret = new LoadScreenLocation.Mask<bool>(false);
-            ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -665,17 +637,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILoadScreenLocation item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILoadScreenLocation item,
             MutagenFrame frame,
@@ -1019,22 +980,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ILoadScreenLocationGetter item,
-            LoadScreenLocation.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ILoadScreenLocationGetter item,
-            LoadScreenLocation.Mask<bool> mask)
-        {
-            mask.Direct = true;
-            mask.Indirect = true;
-            mask.GridPoint = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ILoadScreenLocationGetter? lhs,
@@ -1254,12 +1199,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this ILoadScreenLocationGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LoadScreenLocationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1291,15 +1237,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenLocationGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LoadScreenLocationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LoadScreenLocationCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenLocationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenLocationCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LoadScreenLocationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LoadScreenLocationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

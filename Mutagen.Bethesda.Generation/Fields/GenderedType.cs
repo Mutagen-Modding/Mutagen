@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
         public override bool CopyNeedsTryCatch => true;
         public override bool IsEnumerable => true;
         public override bool IsClass => true;
-        public bool ItemHasBeenSet
+        public bool ItemNullable
         {
             get
             {
@@ -37,21 +37,21 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateClear(FileGeneration fg, Accessor accessorPrefix)
         {
-            if (this.HasBeenSet)
+            if (this.Nullable)
             {
-                fg.AppendLine($"{accessorPrefix.DirectAccess} = null;");
+                fg.AppendLine($"{accessorPrefix} = null;");
             }
             else
             {
-                SubTypeGeneration.GenerateClear(fg, $"{accessorPrefix.DirectAccess}.Male");
-                SubTypeGeneration.GenerateClear(fg, $"{accessorPrefix.DirectAccess}.Female");
+                SubTypeGeneration.GenerateClear(fg, $"{accessorPrefix}.Male");
+                SubTypeGeneration.GenerateClear(fg, $"{accessorPrefix}.Female");
             }
         }
 
         public override void GenerateForClass(FileGeneration fg)
         {
-            fg.AppendLine($"public GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; set; }}{(this.HasBeenSet ? null : $" = new GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{(this.ItemHasBeenSet ? "?" : null)}>({this.SubTypeGeneration.GetDefault(getter: false)}, {this.SubTypeGeneration.GetDefault(getter: false)});")}");
-            fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.HasBeenSet ? "?" : null)} {this.ObjectGen.Interface(getter: true, internalInterface: true)}.{this.Name} => this.{this.Name};");
+            fg.AppendLine($"public GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; set; }}{(this.Nullable ? null : $" = new GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{(this.ItemNullable ? "?" : null)}>({this.SubTypeGeneration.GetDefault(getter: false)}, {this.SubTypeGeneration.GetDefault(getter: false)});")}");
+            fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.ObjectGen.Interface(getter: true, internalInterface: true)}.{this.Name} => this.{this.Name};");
         }
 
         public override string GenerateACopy(string rhsAccessor)
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 throw new NotImplementedException();
             }
-            if (this.HasBeenSet)
+            if (this.Nullable)
             {
                 fg.AppendLine($"if (!{rhs}.TryGet(out var rhs{this.Name}item))");
                 using (new BraceWrapper(fg))
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("else");
                 rhs = $"rhs{this.Name}item";
             }
-            using (new BraceWrapper(fg, doIt: this.HasBeenSet))
+            using (new BraceWrapper(fg, doIt: this.Nullable))
             {
                 using (var args = new ArgsWrapper(fg,
                     $"{accessor} = new GenderedItem<{this.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>"))
@@ -115,27 +115,27 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor)
         {
-            fg.AppendLine($"if (!Equals({accessor.DirectAccess}, {rhsAccessor.DirectAccess})) return false;");
+            fg.AppendLine($"if (!Equals({accessor}, {rhsAccessor})) return false;");
         }
 
         public override void GenerateForEqualsMask(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, string retAccessor)
         {
             LoquiType loqui = this.SubTypeGeneration as LoquiType;
 
-            if (this.HasBeenSet || loqui != null)
+            if (this.Nullable || loqui != null)
             {
                 using (var args = new ArgsWrapper(fg,
                     $"ret.{this.Name} = {nameof(GenderedItem)}.{nameof(GenderedItem.EqualityMaskHelper)}"))
                 {
-                    args.Add($"lhs: {accessor.DirectAccess}");
-                    args.Add($"rhs: {rhsAccessor.DirectAccess}");
+                    args.Add($"lhs: {accessor}");
+                    args.Add($"rhs: {rhsAccessor}");
                     if (loqui == null)
                     {
                         args.Add($"maskGetter: (l, r, i) => EqualityComparer<{this.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>.Default.Equals(l, r)");
                     }
                     else
                     {
-                        if (this.ItemHasBeenSet)
+                        if (this.ItemNullable)
                         {
                             args.Add($"maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i)");
                         }
@@ -158,47 +158,21 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override void GenerateForHasBeenSetCheck(FileGeneration fg, Accessor accessor, string checkMaskAccessor)
+        public override void GenerateForNullableCheck(FileGeneration fg, Accessor accessor, string checkMaskAccessor)
         {
-            if (this.HasBeenSet)
+            if (this.Nullable)
             {
                 fg.AppendLine($"if ({checkMaskAccessor}?.Overall ?? false) return false;");
             }
-            else if (this.ItemHasBeenSet)
+            else if (this.ItemNullable)
             {
                 fg.AppendLine($"throw new NotImplementedException();");
             }
         }
 
-        public override void GenerateForHasBeenSetMaskGetter(FileGeneration fg, Accessor accessor, string retAccessor)
-        {
-            bool isLoqui = this.SubTypeGeneration is LoquiType;
-            if (isLoqui)
-            {
-                using (var args = new ArgsWrapper(fg,
-                    $"{retAccessor} = GenderedItem.HasBeenSet{(this.ItemHasBeenSet ? "Mask" : null)}Helper"))
-                {
-                    args.Add($"{accessor}");
-                    args.Add($"(i) => i{this.SubTypeGeneration.NullChar}.GetHasBeenSetMask()");
-                }
-            }
-            else if (this.HasBeenSet)
-            {
-                fg.AppendLine($"{retAccessor} = {accessor} == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);");
-            }
-            else if (this.ItemHasBeenSet)
-            {
-                fg.AppendLine($"{retAccessor} = new GenderedItem<bool>({accessor}.Male != null, {accessor}.Female != null);");
-            }
-            else
-            {
-                fg.AppendLine($"{retAccessor} = new GenderedItem<bool>(true, true);");
-            }
-        }
-
         public override void GenerateForHash(FileGeneration fg, Accessor accessor, string hashResultAccessor)
         {
-            if (this.HasBeenSet)
+            if (this.Nullable)
             {
                 fg.AppendLine($"if ({accessor}.TryGet(out var {this.Name}item))");
                 using (new BraceWrapper(fg))
@@ -216,11 +190,11 @@ namespace Mutagen.Bethesda.Generation
         {
             if (getter)
             {
-                fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; }}");
+                fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; }}");
             }
             else
             {
-                fg.AppendLine($"new GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; set; }}");
+                fg.AppendLine($"new GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; set; }}");
             }
         }
 
@@ -234,14 +208,9 @@ namespace Mutagen.Bethesda.Generation
             throw new NotImplementedException();
         }
 
-        public override void GenerateSetNthHasBeenSet(FileGeneration fg, Accessor identifier, string onIdentifier)
-        {
-            throw new NotImplementedException();
-        }
-
         public override void GenerateToString(FileGeneration fg, string name, Accessor accessor, string fgAccessor)
         {
-            fg.AppendLine($"{accessor}{(this.HasBeenSet ? "?" : null)}.ToString({fgAccessor}, \"{name}\");");
+            fg.AppendLine($"{accessor}{(this.Nullable ? "?" : null)}.ToString({fgAccessor}, \"{name}\");");
         }
 
         public override void GenerateUnsetNth(FileGeneration fg, Accessor identifier)
@@ -287,7 +256,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (MaleMarker.HasValue)
             {
-                this.SubTypeGeneration.HasBeenSetProperty.OnNext((true, true));
+                this.SubTypeGeneration.NullableProperty.OnNext((true, true));
             }
 
             FemaleConversions = RecordTypeConverterModule.GetConverter(node.Element(XName.Get("FemaleTypeOverrides", LoquiGenerator.Namespace)));

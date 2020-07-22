@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IMagicEffectInternal,
         ILoquiObjectSetter<MagicEffect>,
-        IEquatable<MagicEffect>,
-        IEqualsMask
+        IEquatable<MagicEffect>
     {
         #region Ctor
         protected MagicEffect()
@@ -627,7 +626,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
         public MagicEffect(FormKey formKey)
@@ -662,14 +661,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new MagicEffect CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static MagicEffect CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -696,8 +687,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -717,7 +706,8 @@ namespace Mutagen.Bethesda.Oblivion
         IMagicEffectGetter,
         IOblivionMajorRecord,
         INamed,
-        ILoquiObjectSetter<IMagicEffectInternal>
+        ILoquiObjectSetter<IMagicEffectInternal>,
+        ILinkedFormKeyContainer
     {
         new String? Name { get; set; }
         new String? Description { get; set; }
@@ -738,7 +728,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         INamedGetter,
         ILoquiObject<IMagicEffectGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => MagicEffect_Registration.Instance;
@@ -794,24 +784,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IMagicEffectGetter item,
-            MagicEffect.Mask<bool?> checkMask)
-        {
-            return ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static MagicEffect.Mask<bool> GetHasBeenSetMask(this IMagicEffectGetter item)
-        {
-            var ret = new MagicEffect.Mask<bool>(false);
-            ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -883,17 +855,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IMagicEffectInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IMagicEffectInternal item,
             MutagenFrame frame,
@@ -1363,40 +1324,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            IMagicEffectGetter item,
-            MagicEffect.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.CounterEffects?.Overall.HasValue ?? false && checkMask.CounterEffects!.Overall.Value != (item.CounterEffects != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IMagicEffectGetter item,
-            MagicEffect.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            mask.Description = (item.Description != null);
-            mask.Icon = (item.Icon != null);
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, MagicEffectData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            mask.CounterEffects = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.CounterEffects != null), default);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static MagicEffect_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -2018,15 +1945,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

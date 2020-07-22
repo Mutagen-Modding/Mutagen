@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         ISoulGemInternal,
         ILoquiObjectSetter<SoulGem>,
-        IEquatable<SoulGem>,
-        IEqualsMask
+        IEquatable<SoulGem>
     {
         #region Ctor
         protected SoulGem()
@@ -578,7 +577,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SoulGemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SoulGemCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SoulGemCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoulGemCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoulGemCommon.Instance.RemapLinks(this, mapping);
         public SoulGem(FormKey formKey)
@@ -613,14 +612,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new SoulGem CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static SoulGem CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -647,8 +638,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoulGemGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -668,7 +657,8 @@ namespace Mutagen.Bethesda.Oblivion
         ISoulGemGetter,
         IAItem,
         INamed,
-        ILoquiObjectSetter<ISoulGemInternal>
+        ILoquiObjectSetter<ISoulGemInternal>,
+        ILinkedFormKeyContainer
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -690,7 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAItemGetter,
         INamedGetter,
         ILoquiObject<ISoulGemGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SoulGem_Registration.Instance;
@@ -747,24 +737,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ISoulGemGetter item,
-            SoulGem.Mask<bool?> checkMask)
-        {
-            return ((SoulGemCommon)((ISoulGemGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SoulGem.Mask<bool> GetHasBeenSetMask(this ISoulGemGetter item)
-        {
-            var ret = new SoulGem.Mask<bool>(false);
-            ((SoulGemCommon)((ISoulGemGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -836,17 +808,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISoulGemInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISoulGemInternal item,
             MutagenFrame frame,
@@ -1333,42 +1294,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(MaximumCapacityItem, "MaximumCapacity");
             }
-        }
-        
-        public bool HasBeenSet(
-            ISoulGemGetter item,
-            SoulGem.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.ContainedSoul.HasValue && checkMask.ContainedSoul.Value != (item.ContainedSoul != null)) return false;
-            if (checkMask.MaximumCapacity.HasValue && checkMask.MaximumCapacity.Value != (item.MaximumCapacity != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ISoulGemGetter item,
-            SoulGem.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.Icon = (item.Icon != null);
-            mask.Script = (item.Script.FormKey != null);
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, SoulGemData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            mask.ContainedSoul = (item.ContainedSoul != null);
-            mask.MaximumCapacity = (item.MaximumCapacity != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static SoulGem_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
@@ -2047,15 +1972,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoulGemGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SoulGemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SoulGemCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoulGemCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoulGemCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SoulGemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoulGemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

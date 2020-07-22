@@ -4,7 +4,7 @@
     <Fields>
       <FormLink name="Parent" recordType="PNAM" refName="AStoryManagerNode" />
       <FormLink name="PreviousSibling" recordType="SNAM" refName="AStoryManagerNode" />
-      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binary="Custom" hasBeenSet="False" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binary="Custom" nullable="False" />
     </Fields>
   </Object>
   <Object name="StoryManagerBranchNode" recordType="SMBN" baseClass="AStoryManagerNode" objType="Record" GUID="d5eb571d-6f2f-4286-9efa-0a5fab8eddb6" ID="453">
@@ -18,7 +18,7 @@
       <Enum name="Flags" enumName="StoryManagerQuestNode.QuestFlag" byteLength="4" recordType="DNAM" />
       <UInt32 name="MaxConcurrentQuests" recordType="XNAM" />
       <UInt32 name="MaxNumQuestsToRun" recordType="MNAM" />
-      <RefList name="Quests" counterRecType="QNAM" hasBeenSet="False" refName="StoryManagerQuest" />
+      <RefList name="Quests" counterRecType="QNAM" nullable="False" refName="StoryManagerQuest" />
     </Fields>
   </Object>
   <Object name="StoryManagerQuest" objType="Subrecord" GUID="b4d160cb-2899-46b7-b717-a555f48bcba1" ID="457">

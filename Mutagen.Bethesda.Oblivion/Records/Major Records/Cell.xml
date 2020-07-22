@@ -52,15 +52,15 @@
   </Object>
   <Object name="CellLighting" recordType="XCLL" objType="Subrecord" GUID="31acbf65-e6be-4373-9fb4-d0f1ab97c089" ID="138">
     <Fields>
-      <Color name="AmbientColor" hasBeenSet="False" binaryType="Alpha" />
-      <Color name="DirectionalColor" hasBeenSet="False" binaryType="Alpha" />
-      <Color name="FogColor" hasBeenSet="False" binaryType="Alpha" />
-      <Float name="FogNear" hasBeenSet="False" />
-      <Float name="FogFar" hasBeenSet="False" />
-      <Int32 name="DirectionalRotationXY" hasBeenSet="False" />
-      <Int32 name="DirectionalRotationZ" hasBeenSet="False" />
-      <Float name="DirectionalFade" hasBeenSet="False" />
-      <Float name="FogClipDistance" hasBeenSet="False" />
+      <Color name="AmbientColor" nullable="False" binaryType="Alpha" />
+      <Color name="DirectionalColor" nullable="False" binaryType="Alpha" />
+      <Color name="FogColor" nullable="False" binaryType="Alpha" />
+      <Float name="FogNear" nullable="False" />
+      <Float name="FogFar" nullable="False" />
+      <Int32 name="DirectionalRotationXY" nullable="False" />
+      <Int32 name="DirectionalRotationZ" nullable="False" />
+      <Float name="DirectionalFade" nullable="False" />
+      <Float name="FogClipDistance" nullable="False" />
     </Fields>
   </Object>
 </Loqui>

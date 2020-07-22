@@ -6,7 +6,7 @@
     <Interface>IObjectBounded</Interface>
     <Interface>IWeightValue</Interface>
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
@@ -37,7 +37,7 @@
           <FormLink name="HalfCostPerk" refName="Perk" />
         </Fields>
       </Data>
-      <RefList name="Effects" refName="Effect" hasBeenSet="False" />
+      <RefList name="Effects" refName="Effect" nullable="False" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IItem</LinkInterface>

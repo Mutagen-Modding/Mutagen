@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         ANpc,
         ICreatureInternal,
         ILoquiObjectSetter<Creature>,
-        IEquatable<Creature>,
-        IEqualsMask
+        IEquatable<Creature>
     {
         #region Ctor
         protected Creature()
@@ -1723,7 +1722,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CreatureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CreatureCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CreatureCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureCommon.Instance.RemapLinks(this, mapping);
         public Creature(FormKey formKey)
@@ -1758,14 +1757,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Creature CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Creature CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1792,8 +1783,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreatureGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1813,7 +1802,8 @@ namespace Mutagen.Bethesda.Oblivion
         ICreatureGetter,
         IANpc,
         INamed,
-        ILoquiObjectSetter<ICreatureInternal>
+        ILoquiObjectSetter<ICreatureInternal>,
+        ILinkedFormKeyContainer
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -1851,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion
         IANpcGetter,
         INamedGetter,
         ILoquiObject<ICreatureGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Creature_Registration.Instance;
@@ -1926,24 +1916,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ICreatureGetter item,
-            Creature.Mask<bool?> checkMask)
-        {
-            return ((CreatureCommon)((ICreatureGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Creature.Mask<bool> GetHasBeenSetMask(this ICreatureGetter item)
-        {
-            var ret = new Creature.Mask<bool>(false);
-            ((CreatureCommon)((ICreatureGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ICreatureGetter item,
             ICreatureGetter rhs)
@@ -2013,17 +1985,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICreatureInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICreatureInternal item,
             MutagenFrame frame,
@@ -2953,76 +2914,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            ICreatureGetter item,
-            Creature.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Models?.Overall.HasValue ?? false && checkMask.Models!.Overall.Value != (item.Models != null)) return false;
-            if (checkMask.NIFT.HasValue && checkMask.NIFT.Value != (item.NIFT != null)) return false;
-            if (checkMask.Configuration?.Overall.HasValue ?? false && checkMask.Configuration.Overall.Value != (item.Configuration != null)) return false;
-            if (checkMask.Configuration?.Specific != null && (item.Configuration == null || !item.Configuration.HasBeenSet(checkMask.Configuration.Specific))) return false;
-            if (checkMask.DeathItem.HasValue && checkMask.DeathItem.Value != (item.DeathItem.FormKey != null)) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
-            if (checkMask.AIData?.Overall.HasValue ?? false && checkMask.AIData.Overall.Value != (item.AIData != null)) return false;
-            if (checkMask.AIData?.Specific != null && (item.AIData == null || !item.AIData.HasBeenSet(checkMask.AIData.Specific))) return false;
-            if (checkMask.Animations?.Overall.HasValue ?? false && checkMask.Animations!.Overall.Value != (item.Animations != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.AttackReach.HasValue && checkMask.AttackReach.Value != (item.AttackReach != null)) return false;
-            if (checkMask.CombatStyle.HasValue && checkMask.CombatStyle.Value != (item.CombatStyle.FormKey != null)) return false;
-            if (checkMask.TurningSpeed.HasValue && checkMask.TurningSpeed.Value != (item.TurningSpeed != null)) return false;
-            if (checkMask.BaseScale.HasValue && checkMask.BaseScale.Value != (item.BaseScale != null)) return false;
-            if (checkMask.FootWeight.HasValue && checkMask.FootWeight.Value != (item.FootWeight != null)) return false;
-            if (checkMask.BloodSpray.HasValue && checkMask.BloodSpray.Value != (item.BloodSpray != null)) return false;
-            if (checkMask.BloodDecal.HasValue && checkMask.BloodDecal.Value != (item.BloodDecal != null)) return false;
-            if (checkMask.InheritsSoundFrom.HasValue && checkMask.InheritsSoundFrom.Value != (item.InheritsSoundFrom.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ICreatureGetter item,
-            Creature.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            var ItemsItem = item.Items;
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry.Mask<bool>?>>?>(true, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Spells = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.Models = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Models != null), default);
-            mask.NIFT = (item.NIFT != null);
-            var itemConfiguration = item.Configuration;
-            mask.Configuration = new MaskItem<bool, CreatureConfiguration.Mask<bool>?>(itemConfiguration != null, itemConfiguration?.GetHasBeenSetMask());
-            var FactionsItem = item.Factions;
-            mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement.Mask<bool>?>>?>(true, FactionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.DeathItem = (item.DeathItem.FormKey != null);
-            mask.Script = (item.Script.FormKey != null);
-            var itemAIData = item.AIData;
-            mask.AIData = new MaskItem<bool, CreatureAIData.Mask<bool>?>(itemAIData != null, itemAIData?.GetHasBeenSetMask());
-            mask.AIPackages = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.Animations = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Animations != null), default);
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, CreatureData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            mask.AttackReach = (item.AttackReach != null);
-            mask.CombatStyle = (item.CombatStyle.FormKey != null);
-            mask.TurningSpeed = (item.TurningSpeed != null);
-            mask.BaseScale = (item.BaseScale != null);
-            mask.FootWeight = (item.FootWeight != null);
-            mask.BloodSpray = (item.BloodSpray != null);
-            mask.BloodDecal = (item.BloodDecal != null);
-            mask.InheritsSoundFrom = (item.InheritsSoundFrom.FormKey != null);
-            var SoundsItem = item.Sounds;
-            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CreatureSound.Mask<bool>?>>?>(true, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, CreatureSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Creature_FieldIndex ConvertFieldIndex(ANpc_FieldIndex index)
@@ -4359,15 +4250,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreatureGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CreatureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CreatureCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CreatureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

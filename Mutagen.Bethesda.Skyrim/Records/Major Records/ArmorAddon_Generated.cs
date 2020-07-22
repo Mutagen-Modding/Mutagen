@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IArmorAddonInternal,
         ILoquiObjectSetter<ArmorAddon>,
-        IEquatable<ArmorAddon>,
-        IEqualsMask
+        IEquatable<ArmorAddon>
     {
         #region Ctor
         protected ArmorAddon()
@@ -975,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
         public ArmorAddon(FormKey formKey)
@@ -1014,14 +1013,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new ArmorAddon CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static ArmorAddon CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1048,8 +1039,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IArmorAddonGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1068,7 +1057,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArmorAddon :
         IArmorAddonGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IArmorAddonInternal>
+        ILoquiObjectSetter<IArmorAddonInternal>,
+        ILinkedFormKeyContainer
     {
         new BodyTemplate? BodyTemplate { get; set; }
         new FormLinkNullable<Race> Race { get; set; }
@@ -1104,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArmorAddonGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IArmorAddonGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ArmorAddon_Registration.Instance;
@@ -1170,24 +1160,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IArmorAddonGetter item,
-            ArmorAddon.Mask<bool?> checkMask)
-        {
-            return ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ArmorAddon.Mask<bool> GetHasBeenSetMask(this IArmorAddonGetter item)
-        {
-            var ret = new ArmorAddon.Mask<bool>(false);
-            ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1259,17 +1231,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IArmorAddonInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IArmorAddonInternal item,
             MutagenFrame frame,
@@ -1980,54 +1941,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            IArmorAddonGetter item,
-            ArmorAddon.Mask<bool?> checkMask)
-        {
-            if (checkMask.BodyTemplate?.Overall.HasValue ?? false && checkMask.BodyTemplate.Overall.Value != (item.BodyTemplate != null)) return false;
-            if (checkMask.BodyTemplate?.Specific != null && (item.BodyTemplate == null || !item.BodyTemplate.HasBeenSet(checkMask.BodyTemplate.Specific))) return false;
-            if (checkMask.Race.HasValue && checkMask.Race.Value != (item.Race.FormKey != null)) return false;
-            if (checkMask.WorldModel?.Overall ?? false) return false;
-            if (checkMask.FirstPersonModel?.Overall ?? false) return false;
-            if (checkMask.SkinTexture?.Overall ?? false) return false;
-            if (checkMask.TextureSwapList?.Overall ?? false) return false;
-            if (checkMask.FootstepSound.HasValue && checkMask.FootstepSound.Value != (item.FootstepSound.FormKey != null)) return false;
-            if (checkMask.ArtObject.HasValue && checkMask.ArtObject.Value != (item.ArtObject.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IArmorAddonGetter item,
-            ArmorAddon.Mask<bool> mask)
-        {
-            var itemBodyTemplate = item.BodyTemplate;
-            mask.BodyTemplate = new MaskItem<bool, BodyTemplate.Mask<bool>?>(itemBodyTemplate != null, itemBodyTemplate?.GetHasBeenSetMask());
-            mask.Race = (item.Race.FormKey != null);
-            mask.Priority = new GenderedItem<bool>(true, true);
-            mask.WeightSliderEnabled = new GenderedItem<bool>(true, true);
-            mask.Unknown = true;
-            mask.DetectionSoundValue = true;
-            mask.Unknown2 = true;
-            mask.WeaponAdjust = true;
-            mask.WorldModel = GenderedItem.HasBeenSetMaskHelper(
-                item.WorldModel,
-                (i) => i?.GetHasBeenSetMask());
-            mask.FirstPersonModel = GenderedItem.HasBeenSetMaskHelper(
-                item.FirstPersonModel,
-                (i) => i?.GetHasBeenSetMask());
-            mask.SkinTexture = item.SkinTexture == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
-            mask.TextureSwapList = item.TextureSwapList == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
-            mask.AdditionalRaces = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.FootstepSound = (item.FootstepSound.FormKey != null);
-            mask.ArtObject = (item.ArtObject.FormKey != null);
-            mask.DNAMDataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static ArmorAddon_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2881,15 +2794,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IArmorAddonGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ArmorAddonBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

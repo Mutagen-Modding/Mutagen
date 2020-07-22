@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IRoadInternal,
         ILoquiObjectSetter<Road>,
-        IEquatable<Road>,
-        IEqualsMask
+        IEquatable<Road>
     {
         #region Ctor
         protected Road()
@@ -466,14 +465,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Road CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Road CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -500,8 +491,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -587,24 +576,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IRoadGetter item,
-            Road.Mask<bool?> checkMask)
-        {
-            return ((RoadCommon)((IRoadGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Road.Mask<bool> GetHasBeenSetMask(this IRoadGetter item)
-        {
-            var ret = new Road.Mask<bool>(false);
-            ((RoadCommon)((IRoadGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IRoadGetter item,
             IRoadGetter rhs)
@@ -674,17 +645,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IRoadInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IRoadInternal item,
             MutagenFrame frame,
@@ -1049,29 +1009,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            IRoadGetter item,
-            Road.Mask<bool?> checkMask)
-        {
-            if (checkMask.Points?.Overall.HasValue ?? false && checkMask.Points!.Overall.Value != (item.Points != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IRoadGetter item,
-            Road.Mask<bool> mask)
-        {
-            if (item.Points.TryGet(out var PointsItem))
-            {
-                mask.Points = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RoadPoint.Mask<bool>?>>?>(true, PointsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RoadPoint.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Road_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1544,8 +1481,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RoadBinaryWriteTranslation.Instance;

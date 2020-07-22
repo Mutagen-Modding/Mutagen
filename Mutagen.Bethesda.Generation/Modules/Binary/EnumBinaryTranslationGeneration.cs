@@ -40,18 +40,18 @@ namespace Mutagen.Bethesda.Generation
         {
             var eType = typeGen as EnumType;
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
-            var hasBeenSet = typeGen.HasBeenSet && eType.HasBeenSetFallbackInt == null;
+            var nullable = typeGen.Nullable && eType.NullableFallbackInt == null;
             using (var args = new ArgsWrapper(fg,
-                $"{Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Write{(hasBeenSet ? "Nullable" : null)}"))
+                $"{Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Write{(nullable ? "Nullable" : null)}"))
             {
-                args.Add(writerAccessor.DirectAccess);
-                if (eType.HasBeenSetFallbackInt == null)
+                args.Add(writerAccessor.Access);
+                if (eType.NullableFallbackInt == null)
                 {
-                    args.Add($"{itemAccessor.DirectAccess}");
+                    args.Add($"{itemAccessor}");
                 }
                 else
                 {
-                    args.Add($"((int?){itemAccessor.DirectAccess}) ?? {eType.HasBeenSetFallbackInt}");
+                    args.Add($"((int?){itemAccessor}) ?? {eType.NullableFallbackInt}");
                 }
                 args.Add($"length: {eType.ByteLength}");
                 if (this.DoErrorMasks)
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Generation
                     ItemAccessor = itemAccessor,
                     TranslationMaskAccessor = null,
                     IndexAccessor = typeGen.IndexEnumInt,
-                    ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : $".SpawnWithLength({eType.ByteLength})")}".Single(),
+                    ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : $".SpawnWithLength({eType.ByteLength})")}".AsEnumerable(),
                     SkipErrorMask = !this.DoErrorMasks
                 });
         }
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"frame: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
                     if (asyncMode == AsyncMode.Off)
                     {
-                        args.Add($"item: out {outItemAccessor.DirectAccess}");
+                        args.Add($"item: out {outItemAccessor}");
                     }
                     if (this.DoErrorMasks)
                     {
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var eType = typeGen as EnumType;
             var data = typeGen.GetFieldData();
-            var hasBeenSet = typeGen.HasBeenSet && eType.HasBeenSetFallbackInt == null;
+            var nullable = typeGen.Nullable && eType.NullableFallbackInt == null;
             switch (data.BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, passedLengthAccessor);
             }
-            if (eType.HasBeenSetFallbackInt != null)
+            if (eType.NullableFallbackInt != null)
             {
                 fg.AppendLine($"public {eType.TypeName(getter: true)}? {eType.Name}");
                 using (new BraceWrapper(fg))
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"var val = {getType};");
-                        fg.AppendLine($"if (((int)val) == {eType.HasBeenSetFallbackInt}) return null;");
+                        fg.AppendLine($"if (((int)val) == {eType.NullableFallbackInt}) return null;");
                         fg.AppendLine("return val;");
                     }
                 }
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (typeGen.CanBeNullable(getter: true))
                 {
-                    fg.AppendLine($"public {eType.TypeName(getter: true)}{(hasBeenSet ? "?" : null)} {eType.Name} => _{typeGen.Name}Location.HasValue ? {getType} : default({eType.TypeName(getter: true)}{(hasBeenSet ? "?" : null)});");
+                    fg.AppendLine($"public {eType.TypeName(getter: true)}{(nullable ? "?" : null)} {eType.Name} => _{typeGen.Name}Location.HasValue ? {getType} : default({eType.TypeName(getter: true)}{(nullable ? "?" : null)});");
                 }
                 else
                 {

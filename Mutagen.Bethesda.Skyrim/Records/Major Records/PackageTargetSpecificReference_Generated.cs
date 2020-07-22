@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APackageTarget,
         IPackageTargetSpecificReference,
         ILoquiObjectSetter<PackageTargetSpecificReference>,
-        IEquatable<PackageTargetSpecificReference>,
-        IEqualsMask
+        IEquatable<PackageTargetSpecificReference>
     {
         #region Ctor
         public PackageTargetSpecificReference()
@@ -341,7 +340,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PackageTargetSpecificReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PackageTargetSpecificReferenceCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PackageTargetSpecificReferenceCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageTargetSpecificReferenceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageTargetSpecificReferenceCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -359,14 +358,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PackageTargetSpecificReference CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PackageTargetSpecificReference CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -393,8 +384,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageTargetSpecificReferenceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -413,7 +402,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageTargetSpecificReference :
         IPackageTargetSpecificReferenceGetter,
         IAPackageTarget,
-        ILoquiObjectSetter<IPackageTargetSpecificReference>
+        ILoquiObjectSetter<IPackageTargetSpecificReference>,
+        ILinkedFormKeyContainer
     {
         new FormLink<ILinkedReference> Reference { get; set; }
     }
@@ -421,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageTargetSpecificReferenceGetter :
         IAPackageTargetGetter,
         ILoquiObject<IPackageTargetSpecificReferenceGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PackageTargetSpecificReference_Registration.Instance;
@@ -472,24 +462,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPackageTargetSpecificReferenceGetter item,
-            PackageTargetSpecificReference.Mask<bool?> checkMask)
-        {
-            return ((PackageTargetSpecificReferenceCommon)((IPackageTargetSpecificReferenceGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PackageTargetSpecificReference.Mask<bool> GetHasBeenSetMask(this IPackageTargetSpecificReferenceGetter item)
-        {
-            var ret = new PackageTargetSpecificReference.Mask<bool>(false);
-            ((PackageTargetSpecificReferenceCommon)((IPackageTargetSpecificReferenceGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -561,17 +533,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPackageTargetSpecificReference item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPackageTargetSpecificReference item,
             MutagenFrame frame,
@@ -898,25 +859,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPackageTargetSpecificReferenceGetter item,
-            PackageTargetSpecificReference.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPackageTargetSpecificReferenceGetter item,
-            PackageTargetSpecificReference.Mask<bool> mask)
-        {
-            mask.Reference = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static PackageTargetSpecificReference_FieldIndex ConvertFieldIndex(APackageTarget_FieldIndex index)
         {
             switch (index)
@@ -1191,15 +1133,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageTargetSpecificReferenceGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PackageTargetSpecificReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PackageTargetSpecificReferenceCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageTargetSpecificReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageTargetSpecificReferenceCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PackageTargetSpecificReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageTargetSpecificReferenceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

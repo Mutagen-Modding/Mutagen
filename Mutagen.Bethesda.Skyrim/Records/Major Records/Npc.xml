@@ -5,15 +5,15 @@
     <Interface>ITranslatedNamed</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
-      <RefDirect name="Configuration" refName="NpcConfiguration" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <RefDirect name="Configuration" refName="NpcConfiguration" nullable="False" />
       <RefList name="Factions" refName="RankPlacement" />
       <FormLink name="DeathItem" refName="LeveledItem" recordType="INAM" />
       <FormLink name="Voice" refName="VoiceType" recordType="VTCK" />
       <FormLink name="Template" recordType="TPLT" >
         <Interface>INpcSpawn</Interface>
       </FormLink>
-      <FormLink name="Race" refName="Race" recordType="RNAM" hasBeenSet="False" />
+      <FormLink name="Race" refName="Race" recordType="RNAM" nullable="False" />
       <List name="ActorEffect" counterRecType="SPCT" >
         <FormLink refName="ASpell" recordType="SPLO" />
       </List>
@@ -28,14 +28,14 @@
       <FormLink name="CombatOverridePackageList" refName="FormList" recordType="ECOR" />
       <RefList name="Perks" counterRecType="PRKZ" refName="PerkPlacement" />
       <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
-      <RefDirect name="AIData" refName="AIData" hasBeenSet="False" />
+      <RefDirect name="AIData" refName="AIData" nullable="False" />
       <List name="Packages">
         <FormLink refName="Package" recordType="PKID" />
       </List>
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>
-      <FormLink name="Class" refName="Class" recordType="CNAM" hasBeenSet="False" />
+      <FormLink name="Class" refName="Class" recordType="CNAM" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="ShortName" recordType="SHRT" translated="Normal" />
       <CustomLogic name="DataMarker" recordType="DATA" />
@@ -46,10 +46,10 @@
       <FormLink name="HairColor" refName="ColorRecord" recordType="HCLF" />
       <FormLink name="CombatStyle" refName="CombatStyle" recordType="ZNAM" />
       <FormLink name="GiftFilter" refName="FormList" recordType="GNAM" />
-      <UInt16 name="NAM5" recordType="NAM5" hasBeenSet="False" default="0xFF00" />
-      <Float name="Height" recordType="NAM6" hasBeenSet="False" />
-      <Float name="Weight" recordType="NAM7" hasBeenSet="False" />
-      <Enum name="SoundLevel" enumName="SoundLevel" recordType="NAM8" byteLength="4" hasBeenSet="False" />
+      <UInt16 name="NAM5" recordType="NAM5" nullable="False" default="0xFF00" />
+      <Float name="Height" recordType="NAM6" nullable="False" />
+      <Float name="Weight" recordType="NAM7" nullable="False" />
+      <Enum name="SoundLevel" enumName="SoundLevel" recordType="NAM8" byteLength="4" nullable="False" />
       <RefDirect name="Sound" refName="ANpcSoundDefinition" />
       <FormLink name="DefaultOutfit" refName="Outfit" recordType="DOFT" />
       <FormLink name="SleepingOutfit" refName="Outfit" recordType="SOFT" />
@@ -96,14 +96,14 @@
     <Fields>
       <FormLink name="Faction" refName="Faction" />
       <UInt8 name="Rank" />
-      <ByteArray name="Fluff" byteLength="3" hasBeenSet="False" />
+      <ByteArray name="Fluff" byteLength="3" nullable="False" />
     </Fields>
   </Object>
   <Object name="PerkPlacement" objType="Subrecord" recordType="PRKR" GUID="d315cc71-0b9e-4617-86b0-c344d66854ae" ID="206">
     <Fields>
       <FormLink name="Perk" refName="Perk" />
       <UInt8 name="Rank" />
-      <ByteArray name="Fluff" byteLength="3" hasBeenSet="False" />
+      <ByteArray name="Fluff" byteLength="3" nullable="False" />
     </Fields>
   </Object>
   <Object name="AIData" objType="Subrecord" recordType="AIDT" GUID="10ac7ce5-4e83-4006-92a0-9976062da7be" ID="207">
@@ -145,7 +145,7 @@
       <UInt16 name="Unused" />
       <Float name="FarAwayModelDistance" />
       <UInt8 name="GearedUpWeapons" />
-      <ByteArray name="Unused2" byteLength="3" hasBeenSet="False" />
+      <ByteArray name="Unused2" byteLength="3" nullable="False" />
     </Fields>
   </Object>
   <Object name="ANpcSoundDefinition" objType="Subrecord" abstract="true" GUID="fcefa9b8-781d-44ea-b623-abd75e419f5a" ID="210" />

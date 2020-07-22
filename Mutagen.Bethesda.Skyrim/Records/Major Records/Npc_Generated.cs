@@ -33,8 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         INpcInternal,
         ILoquiObjectSetter<Npc>,
-        IEquatable<Npc>,
-        IEqualsMask
+        IEquatable<Npc>
     {
         #region Ctor
         protected Npc()
@@ -2661,7 +2660,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
         public Npc(FormKey formKey)
@@ -2701,14 +2700,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Npc CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Npc CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2735,8 +2726,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -2761,7 +2750,8 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectId,
         IObjectBounded,
         ITranslatedNamed,
-        ILoquiObjectSetter<INpcInternal>
+        ILoquiObjectSetter<INpcInternal>,
+        ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -2830,7 +2820,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         ITranslatedNamedGetter,
         ILoquiObject<INpcGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Npc_Registration.Instance;
@@ -2931,24 +2921,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this INpcGetter item,
-            Npc.Mask<bool?> checkMask)
-        {
-            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Npc.Mask<bool> GetHasBeenSetMask(this INpcGetter item)
-        {
-            var ret = new Npc.Mask<bool>(false);
-            ((NpcCommon)((INpcGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this INpcGetter item,
             INpcGetter rhs)
@@ -3018,17 +2990,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this INpcInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this INpcInternal item,
             MutagenFrame frame,
@@ -4380,121 +4341,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            INpcGetter item,
-            Npc.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.DeathItem.HasValue && checkMask.DeathItem.Value != (item.DeathItem.FormKey != null)) return false;
-            if (checkMask.Voice.HasValue && checkMask.Voice.Value != (item.Voice.FormKey != null)) return false;
-            if (checkMask.Template.HasValue && checkMask.Template.Value != (item.Template.FormKey != null)) return false;
-            if (checkMask.ActorEffect?.Overall.HasValue ?? false && checkMask.ActorEffect!.Overall.Value != (item.ActorEffect != null)) return false;
-            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
-            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
-            if (checkMask.WornArmor.HasValue && checkMask.WornArmor.Value != (item.WornArmor.FormKey != null)) return false;
-            if (checkMask.FarAwayModel.HasValue && checkMask.FarAwayModel.Value != (item.FarAwayModel.FormKey != null)) return false;
-            if (checkMask.AttackRace.HasValue && checkMask.AttackRace.Value != (item.AttackRace.FormKey != null)) return false;
-            if (checkMask.SpectatorOverridePackageList.HasValue && checkMask.SpectatorOverridePackageList.Value != (item.SpectatorOverridePackageList.FormKey != null)) return false;
-            if (checkMask.ObserveDeadBodyOverridePackageList.HasValue && checkMask.ObserveDeadBodyOverridePackageList.Value != (item.ObserveDeadBodyOverridePackageList.FormKey != null)) return false;
-            if (checkMask.GuardWarnOverridePackageList.HasValue && checkMask.GuardWarnOverridePackageList.Value != (item.GuardWarnOverridePackageList.FormKey != null)) return false;
-            if (checkMask.CombatOverridePackageList.HasValue && checkMask.CombatOverridePackageList.Value != (item.CombatOverridePackageList.FormKey != null)) return false;
-            if (checkMask.Perks?.Overall.HasValue ?? false && checkMask.Perks!.Overall.Value != (item.Perks != null)) return false;
-            if (checkMask.Items?.Overall.HasValue ?? false && checkMask.Items!.Overall.Value != (item.Items != null)) return false;
-            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.ShortName.HasValue && checkMask.ShortName.Value != (item.ShortName != null)) return false;
-            if (checkMask.PlayerSkills?.Overall.HasValue ?? false && checkMask.PlayerSkills.Overall.Value != (item.PlayerSkills != null)) return false;
-            if (checkMask.PlayerSkills?.Specific != null && (item.PlayerSkills == null || !item.PlayerSkills.HasBeenSet(checkMask.PlayerSkills.Specific))) return false;
-            if (checkMask.HairColor.HasValue && checkMask.HairColor.Value != (item.HairColor.FormKey != null)) return false;
-            if (checkMask.CombatStyle.HasValue && checkMask.CombatStyle.Value != (item.CombatStyle.FormKey != null)) return false;
-            if (checkMask.GiftFilter.HasValue && checkMask.GiftFilter.Value != (item.GiftFilter.FormKey != null)) return false;
-            if (checkMask.Sound?.Overall.HasValue ?? false && checkMask.Sound.Overall.Value != (item.Sound != null)) return false;
-            if (checkMask.Sound?.Specific != null && (item.Sound == null || !item.Sound.HasBeenSet(checkMask.Sound.Specific))) return false;
-            if (checkMask.DefaultOutfit.HasValue && checkMask.DefaultOutfit.Value != (item.DefaultOutfit.FormKey != null)) return false;
-            if (checkMask.SleepingOutfit.HasValue && checkMask.SleepingOutfit.Value != (item.SleepingOutfit.FormKey != null)) return false;
-            if (checkMask.DefaultPackageList.HasValue && checkMask.DefaultPackageList.Value != (item.DefaultPackageList.FormKey != null)) return false;
-            if (checkMask.CrimeFaction.HasValue && checkMask.CrimeFaction.Value != (item.CrimeFaction.FormKey != null)) return false;
-            if (checkMask.HeadTexture.HasValue && checkMask.HeadTexture.Value != (item.HeadTexture.FormKey != null)) return false;
-            if (checkMask.TextureLighting.HasValue && checkMask.TextureLighting.Value != (item.TextureLighting != null)) return false;
-            if (checkMask.FaceMorph?.Overall.HasValue ?? false && checkMask.FaceMorph.Overall.Value != (item.FaceMorph != null)) return false;
-            if (checkMask.FaceMorph?.Specific != null && (item.FaceMorph == null || !item.FaceMorph.HasBeenSet(checkMask.FaceMorph.Specific))) return false;
-            if (checkMask.FaceParts?.Overall.HasValue ?? false && checkMask.FaceParts.Overall.Value != (item.FaceParts != null)) return false;
-            if (checkMask.FaceParts?.Specific != null && (item.FaceParts == null || !item.FaceParts.HasBeenSet(checkMask.FaceParts.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            INpcGetter item,
-            Npc.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.Configuration = new MaskItem<bool, NpcConfiguration.Mask<bool>?>(true, item.Configuration?.GetHasBeenSetMask());
-            var FactionsItem = item.Factions;
-            mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement.Mask<bool>?>>?>(true, FactionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.DeathItem = (item.DeathItem.FormKey != null);
-            mask.Voice = (item.Voice.FormKey != null);
-            mask.Template = (item.Template.FormKey != null);
-            mask.Race = true;
-            mask.ActorEffect = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.ActorEffect != null), default);
-            var itemDestructible = item.Destructible;
-            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
-            mask.WornArmor = (item.WornArmor.FormKey != null);
-            mask.FarAwayModel = (item.FarAwayModel.FormKey != null);
-            mask.AttackRace = (item.AttackRace.FormKey != null);
-            var AttacksItem = item.Attacks;
-            mask.Attacks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Attack.Mask<bool>?>>?>(true, AttacksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Attack.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.SpectatorOverridePackageList = (item.SpectatorOverridePackageList.FormKey != null);
-            mask.ObserveDeadBodyOverridePackageList = (item.ObserveDeadBodyOverridePackageList.FormKey != null);
-            mask.GuardWarnOverridePackageList = (item.GuardWarnOverridePackageList.FormKey != null);
-            mask.CombatOverridePackageList = (item.CombatOverridePackageList.FormKey != null);
-            if (item.Perks.TryGet(out var PerksItem))
-            {
-                mask.Perks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PerkPlacement.Mask<bool>?>>?>(true, PerksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, PerkPlacement.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Items.TryGet(out var ItemsItem))
-            {
-                mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ContainerEntry.Mask<bool>?>>?>(true, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ContainerEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            mask.AIData = new MaskItem<bool, AIData.Mask<bool>?>(true, item.AIData?.GetHasBeenSetMask());
-            mask.Packages = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.Class = true;
-            mask.Name = (item.Name != null);
-            mask.ShortName = (item.ShortName != null);
-            var itemPlayerSkills = item.PlayerSkills;
-            mask.PlayerSkills = new MaskItem<bool, PlayerSkills.Mask<bool>?>(itemPlayerSkills != null, itemPlayerSkills?.GetHasBeenSetMask());
-            mask.HeadParts = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.HairColor = (item.HairColor.FormKey != null);
-            mask.CombatStyle = (item.CombatStyle.FormKey != null);
-            mask.GiftFilter = (item.GiftFilter.FormKey != null);
-            mask.NAM5 = true;
-            mask.Height = true;
-            mask.Weight = true;
-            mask.SoundLevel = true;
-            var itemSound = item.Sound;
-            mask.Sound = new MaskItem<bool, ANpcSoundDefinition.Mask<bool>?>(itemSound != null, itemSound?.GetHasBeenSetMask());
-            mask.DefaultOutfit = (item.DefaultOutfit.FormKey != null);
-            mask.SleepingOutfit = (item.SleepingOutfit.FormKey != null);
-            mask.DefaultPackageList = (item.DefaultPackageList.FormKey != null);
-            mask.CrimeFaction = (item.CrimeFaction.FormKey != null);
-            mask.HeadTexture = (item.HeadTexture.FormKey != null);
-            mask.TextureLighting = (item.TextureLighting != null);
-            var itemFaceMorph = item.FaceMorph;
-            mask.FaceMorph = new MaskItem<bool, NpcFaceMorph.Mask<bool>?>(itemFaceMorph != null, itemFaceMorph?.GetHasBeenSetMask());
-            var itemFaceParts = item.FaceParts;
-            mask.FaceParts = new MaskItem<bool, NpcFaceParts.Mask<bool>?>(itemFaceParts != null, itemFaceParts?.GetHasBeenSetMask());
-            var TintLayersItem = item.TintLayers;
-            mask.TintLayers = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, TintLayer.Mask<bool>?>>?>(true, TintLayersItem.WithIndex().Select((i) => new MaskItemIndexed<bool, TintLayer.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static Npc_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -4765,7 +4611,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
@@ -4844,7 +4690,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Items.TryGet(out var ItemsItem))
             {
-                foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, ILinkedFormKeyContainer> ()
+                foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, ILinkedFormKeyContainerGetter> ()
                     .SelectMany((f) => f.LinkFormKeys))
                 {
                     yield return item;
@@ -4878,7 +4724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return GiftFilterKey;
             }
-            if (obj.Sound is ILinkedFormKeyContainer SoundlinkCont)
+            if (obj.Sound is ILinkedFormKeyContainerGetter SoundlinkCont)
             {
                 foreach (var item in SoundlinkCont.LinkFormKeys)
                 {
@@ -6451,15 +6297,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

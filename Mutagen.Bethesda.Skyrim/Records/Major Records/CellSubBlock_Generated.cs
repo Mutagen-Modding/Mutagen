@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CellSubBlock :
         ICellSubBlock,
         ILoquiObjectSetter<CellSubBlock>,
-        IEquatable<CellSubBlock>,
-        IEqualsMask
+        IEquatable<CellSubBlock>
     {
         #region Ctor
         public CellSubBlock()
@@ -557,7 +556,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => CellSubBlockCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CellSubBlockCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellSubBlockCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
@@ -589,14 +588,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static CellSubBlock CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static CellSubBlock CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -623,8 +614,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellSubBlockGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -643,7 +632,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICellSubBlock :
         ICellSubBlockGetter,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<ICellSubBlock>
+        ILoquiObjectSetter<ICellSubBlock>,
+        ILinkedFormKeyContainer
     {
         new Int32 BlockNumber { get; set; }
         new GroupTypeEnum GroupType { get; set; }
@@ -656,7 +646,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ICellSubBlockGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -717,24 +707,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ICellSubBlockGetter item,
-            CellSubBlock.Mask<bool?> checkMask)
-        {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static CellSubBlock.Mask<bool> GetHasBeenSetMask(this ICellSubBlockGetter item)
-        {
-            var ret = new CellSubBlock.Mask<bool>(false);
-            ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -892,17 +864,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICellSubBlock item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICellSubBlock item,
             MutagenFrame frame,
@@ -1319,25 +1280,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            ICellSubBlockGetter item,
-            CellSubBlock.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ICellSubBlockGetter item,
-            CellSubBlock.Mask<bool> mask)
-        {
-            mask.BlockNumber = true;
-            mask.GroupType = true;
-            mask.LastModified = true;
-            mask.Unknown = true;
-            var CellsItem = item.Cells;
-            mask.Cells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Cell.Mask<bool>?>>?>(true, CellsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Cell.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1775,12 +1717,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ICellSubBlockGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((CellSubBlockBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1812,15 +1755,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellSubBlockGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => CellSubBlockCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CellSubBlockCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellSubBlockCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

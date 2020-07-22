@@ -2,9 +2,9 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LeveledNpc" recordType="LVLN" baseClass="SkyrimMajorRecord" objType="Record" GUID="4197e9ea-0f51-44d8-867e-f33c9b48f4c4" ID="200" >
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
-      <UInt8 name="ChanceNone" recordType="LVLD" hasBeenSet="False" />
-      <Enum name="Flags" recordType="LVLF" hasBeenSet="False" enumName="LeveledNpc.Flag" byteLength="1" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <UInt8 name="ChanceNone" recordType="LVLD" nullable="False" />
+      <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledNpc.Flag" byteLength="1" />
       <FormLink name="Global" recordType="LVLG" refName="Global" />
       <RefList name="Entries" counterRecType="LLCT" refName="LeveledNpcEntry" counterLength="1" />
       <RefDirect name="Model" refName="Model" />

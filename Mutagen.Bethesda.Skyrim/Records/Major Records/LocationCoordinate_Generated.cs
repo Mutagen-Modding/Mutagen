@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LocationCoordinate :
         ILocationCoordinate,
         ILoquiObjectSetter<LocationCoordinate>,
-        IEquatable<LocationCoordinate>,
-        IEqualsMask
+        IEquatable<LocationCoordinate>
     {
         #region Ctor
         public LocationCoordinate()
@@ -461,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LocationCoordinateCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LocationCoordinateCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCoordinateCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCoordinateCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCoordinateCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -481,14 +480,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static LocationCoordinate CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static LocationCoordinate CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -515,8 +506,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocationCoordinateGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -534,7 +523,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ILocationCoordinate :
         ILocationCoordinateGetter,
-        ILoquiObjectSetter<ILocationCoordinate>
+        ILoquiObjectSetter<ILocationCoordinate>,
+        ILinkedFormKeyContainer
     {
         new FormLink<IComplexLocation> Location { get; set; }
         new IExtendedList<P2Int16> Coordinates { get; }
@@ -543,7 +533,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationCoordinateGetter :
         ILoquiObject,
         ILoquiObject<ILocationCoordinateGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -601,24 +591,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILocationCoordinateGetter item,
-            LocationCoordinate.Mask<bool?> checkMask)
-        {
-            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LocationCoordinate.Mask<bool> GetHasBeenSetMask(this ILocationCoordinateGetter item)
-        {
-            var ret = new LocationCoordinate.Mask<bool>(false);
-            ((LocationCoordinateCommon)((ILocationCoordinateGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -713,17 +685,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILocationCoordinate item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILocationCoordinate item,
             MutagenFrame frame,
@@ -1063,21 +1024,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ILocationCoordinateGetter item,
-            LocationCoordinate.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ILocationCoordinateGetter item,
-            LocationCoordinate.Mask<bool> mask)
-        {
-            mask.Location = true;
-            mask.Coordinates = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ILocationCoordinateGetter? lhs,
@@ -1307,12 +1253,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ILocationCoordinateGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LocationCoordinateBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1344,15 +1291,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocationCoordinateGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LocationCoordinateCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LocationCoordinateCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCoordinateCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCoordinateCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCoordinateCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LocationCoordinateBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

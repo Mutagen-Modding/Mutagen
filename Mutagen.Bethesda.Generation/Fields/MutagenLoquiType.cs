@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                     else
                     {
-                        fg.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{_generic}, {_generic}Getter>()({rhsAccessor.DirectAccess}, null);");
+                        fg.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{_generic}, {_generic}Getter>()({rhsAccessor}, null);");
                     }
                     break;
                 case LoquiRefType.Interface:
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                     else
                     {
-                        fg.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{this.TypeName()}, {this.TypeName(getter: true)}>(r.GetType(), typeof({this.TypeName(getter: true)}))({rhsAccessor.DirectAccess}, null);");
+                        fg.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{this.TypeName()}, {this.TypeName(getter: true)}>(r.GetType(), typeof({this.TypeName(getter: true)}))({rhsAccessor}, null);");
                     }
                     break;
                 default:

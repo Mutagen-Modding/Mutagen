@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PerkPlacement :
         IPerkPlacement,
         ILoquiObjectSetter<PerkPlacement>,
-        IEquatable<PerkPlacement>,
-        IEqualsMask
+        IEquatable<PerkPlacement>
     {
         #region Ctor
         public PerkPlacement()
@@ -417,7 +416,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => PerkPlacementCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PerkPlacementCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PerkPlacementCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkPlacementCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkPlacementCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -437,14 +436,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static PerkPlacement CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static PerkPlacement CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -471,8 +462,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkPlacementGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -490,7 +479,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IPerkPlacement :
         IPerkPlacementGetter,
-        ILoquiObjectSetter<IPerkPlacement>
+        ILoquiObjectSetter<IPerkPlacement>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Perk> Perk { get; set; }
         new Byte Rank { get; set; }
@@ -500,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkPlacementGetter :
         ILoquiObject,
         ILoquiObject<IPerkPlacementGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -559,24 +549,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPerkPlacementGetter item,
-            PerkPlacement.Mask<bool?> checkMask)
-        {
-            return ((PerkPlacementCommon)((IPerkPlacementGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PerkPlacement.Mask<bool> GetHasBeenSetMask(this IPerkPlacementGetter item)
-        {
-            var ret = new PerkPlacement.Mask<bool>(false);
-            ((PerkPlacementCommon)((IPerkPlacementGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -671,17 +643,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPerkPlacement item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPerkPlacement item,
             MutagenFrame frame,
@@ -1025,22 +986,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPerkPlacementGetter item,
-            PerkPlacement.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IPerkPlacementGetter item,
-            PerkPlacement.Mask<bool> mask)
-        {
-            mask.Perk = true;
-            mask.Rank = true;
-            mask.Fluff = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IPerkPlacementGetter? lhs,
@@ -1255,12 +1200,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IPerkPlacementGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PerkPlacementBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1292,15 +1238,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkPlacementGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => PerkPlacementCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PerkPlacementCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkPlacementCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkPlacementCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PerkPlacementCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PerkPlacementBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

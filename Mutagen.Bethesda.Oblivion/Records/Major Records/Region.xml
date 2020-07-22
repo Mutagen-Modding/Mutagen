@@ -58,7 +58,7 @@
       <Float name="SinkVariance" />
       <Float name="SizeVariance" />
       <P3UInt16 name="AngleVariance" />
-      <ByteArray name="Unknown2" hasBeenSet="False" byteLength="6" />
+      <ByteArray name="Unknown2" nullable="False" byteLength="6" />
     </Fields>
   </Object>
   <Object name="RegionMap" objType="Subrecord" baseClass="RegionData" GUID="acca1023-9d99-47c2-82a4-d46ed90b087b" ID="111">

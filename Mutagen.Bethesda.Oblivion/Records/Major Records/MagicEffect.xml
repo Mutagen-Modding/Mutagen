@@ -4,8 +4,8 @@
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
-      <String name="Description" recordType="DESC" hasBeenSet="True" />
-      <String name="Icon" recordType="ICON" hasBeenSet="True" />
+      <String name="Description" recordType="DESC" nullable="True" />
+      <String name="Icon" recordType="ICON" nullable="True" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Data" refName="MagicEffectData" />
       <List name="CounterEffects" recordType="ESCE">
@@ -25,7 +25,7 @@
       <Float name="ProjectileSpeed" />
       <FormLink name="EffectShader" refName="EffectShader" />
       <Break />
-      <RefDirect name="SubData" hasBeenSet="True" refName="MagicEffectSubData" />
+      <RefDirect name="SubData" nullable="True" refName="MagicEffectSubData" />
     </Fields>
   </Object>
   <Object name="MagicEffectSubData" objType="Subrecord" GUID="ebfe4657-51cf-4f56-95c9-8e3eee98fa5a" ID="56">

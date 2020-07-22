@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IPlacedObjectInternal,
         ILoquiObjectSetter<PlacedObject>,
-        IEquatable<PlacedObject>,
-        IEqualsMask
+        IEquatable<PlacedObject>
     {
         #region Ctor
         protected PlacedObject()
@@ -1211,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
         public PlacedObject(FormKey formKey)
@@ -1246,14 +1245,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PlacedObject CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PlacedObject CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1280,8 +1271,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedObjectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1301,7 +1290,8 @@ namespace Mutagen.Bethesda.Oblivion
         IPlacedObjectGetter,
         IOblivionMajorRecord,
         IPlaced,
-        ILoquiObjectSetter<IPlacedObjectInternal>
+        ILoquiObjectSetter<IPlacedObjectInternal>,
+        ILinkedFormKeyContainer
     {
         new FormLinkNullable<OblivionMajorRecord> Base { get; set; }
         new MemorySlice<Byte>? XPCIFluff { get; set; }
@@ -1340,7 +1330,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IPlacedGetter,
         ILoquiObject<IPlacedObjectGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedObject_Registration.Instance;
@@ -1416,24 +1406,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IPlacedObjectGetter item,
-            PlacedObject.Mask<bool?> checkMask)
-        {
-            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PlacedObject.Mask<bool> GetHasBeenSetMask(this IPlacedObjectGetter item)
-        {
-            var ret = new PlacedObject.Mask<bool>(false);
-            ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IPlacedObjectGetter item,
             IPlacedObjectGetter rhs)
@@ -1503,17 +1475,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPlacedObjectInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPlacedObjectInternal item,
             MutagenFrame frame,
@@ -2322,83 +2283,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 LocationItem?.ToString(fg, "Location");
             }
-        }
-        
-        public bool HasBeenSet(
-            IPlacedObjectGetter item,
-            PlacedObject.Mask<bool?> checkMask)
-        {
-            if (checkMask.Base.HasValue && checkMask.Base.Value != (item.Base.FormKey != null)) return false;
-            if (checkMask.XPCIFluff.HasValue && checkMask.XPCIFluff.Value != (item.XPCIFluff != null)) return false;
-            if (checkMask.FULLFluff.HasValue && checkMask.FULLFluff.Value != (item.FULLFluff != null)) return false;
-            if (checkMask.TeleportDestination?.Overall.HasValue ?? false && checkMask.TeleportDestination.Overall.Value != (item.TeleportDestination != null)) return false;
-            if (checkMask.TeleportDestination?.Specific != null && (item.TeleportDestination == null || !item.TeleportDestination.HasBeenSet(checkMask.TeleportDestination.Specific))) return false;
-            if (checkMask.Lock?.Overall.HasValue ?? false && checkMask.Lock.Overall.Value != (item.Lock != null)) return false;
-            if (checkMask.Lock?.Specific != null && (item.Lock == null || !item.Lock.HasBeenSet(checkMask.Lock.Specific))) return false;
-            if (checkMask.Owner.HasValue && checkMask.Owner.Value != (item.Owner.FormKey != null)) return false;
-            if (checkMask.FactionRank.HasValue && checkMask.FactionRank.Value != (item.FactionRank != null)) return false;
-            if (checkMask.GlobalVariable.HasValue && checkMask.GlobalVariable.Value != (item.GlobalVariable.FormKey != null)) return false;
-            if (checkMask.EnableParent?.Overall.HasValue ?? false && checkMask.EnableParent.Overall.Value != (item.EnableParent != null)) return false;
-            if (checkMask.EnableParent?.Specific != null && (item.EnableParent == null || !item.EnableParent.HasBeenSet(checkMask.EnableParent.Specific))) return false;
-            if (checkMask.Target.HasValue && checkMask.Target.Value != (item.Target.FormKey != null)) return false;
-            if (checkMask.SpeedTreeSeed.HasValue && checkMask.SpeedTreeSeed.Value != (item.SpeedTreeSeed != null)) return false;
-            if (checkMask.DistantLODData?.Overall.HasValue ?? false && checkMask.DistantLODData.Overall.Value != (item.DistantLODData != null)) return false;
-            if (checkMask.DistantLODData?.Specific != null && (item.DistantLODData == null || !item.DistantLODData.HasBeenSet(checkMask.DistantLODData.Specific))) return false;
-            if (checkMask.Charge.HasValue && checkMask.Charge.Value != (item.Charge != null)) return false;
-            if (checkMask.Health.HasValue && checkMask.Health.Value != (item.Health != null)) return false;
-            if (checkMask.LevelModifier.HasValue && checkMask.LevelModifier.Value != (item.LevelModifier != null)) return false;
-            if (checkMask.XRTM.HasValue && checkMask.XRTM.Value != (item.XRTM.FormKey != null)) return false;
-            if (checkMask.ActionFlags.HasValue && checkMask.ActionFlags.Value != (item.ActionFlags != null)) return false;
-            if (checkMask.Count.HasValue && checkMask.Count.Value != (item.Count != null)) return false;
-            if (checkMask.MapMarker?.Overall.HasValue ?? false && checkMask.MapMarker.Overall.Value != (item.MapMarker != null)) return false;
-            if (checkMask.MapMarker?.Specific != null && (item.MapMarker == null || !item.MapMarker.HasBeenSet(checkMask.MapMarker.Specific))) return false;
-            if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != (item.RagdollData != null)) return false;
-            if (checkMask.Scale.HasValue && checkMask.Scale.Value != (item.Scale != null)) return false;
-            if (checkMask.ContainedSoul.HasValue && checkMask.ContainedSoul.Value != (item.ContainedSoul.FormKey != null)) return false;
-            if (checkMask.Location?.Overall.HasValue ?? false && checkMask.Location.Overall.Value != (item.Location != null)) return false;
-            if (checkMask.Location?.Specific != null && (item.Location == null || !item.Location.HasBeenSet(checkMask.Location.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPlacedObjectGetter item,
-            PlacedObject.Mask<bool> mask)
-        {
-            mask.Base = (item.Base.FormKey != null);
-            mask.XPCIFluff = (item.XPCIFluff != null);
-            mask.FULLFluff = (item.FULLFluff != null);
-            var itemTeleportDestination = item.TeleportDestination;
-            mask.TeleportDestination = new MaskItem<bool, TeleportDestination.Mask<bool>?>(itemTeleportDestination != null, itemTeleportDestination?.GetHasBeenSetMask());
-            var itemLock = item.Lock;
-            mask.Lock = new MaskItem<bool, LockInformation.Mask<bool>?>(itemLock != null, itemLock?.GetHasBeenSetMask());
-            mask.Owner = (item.Owner.FormKey != null);
-            mask.FactionRank = (item.FactionRank != null);
-            mask.GlobalVariable = (item.GlobalVariable.FormKey != null);
-            var itemEnableParent = item.EnableParent;
-            mask.EnableParent = new MaskItem<bool, EnableParent.Mask<bool>?>(itemEnableParent != null, itemEnableParent?.GetHasBeenSetMask());
-            mask.Target = (item.Target.FormKey != null);
-            mask.SpeedTreeSeed = (item.SpeedTreeSeed != null);
-            var itemDistantLODData = item.DistantLODData;
-            mask.DistantLODData = new MaskItem<bool, DistantLODData.Mask<bool>?>(itemDistantLODData != null, itemDistantLODData?.GetHasBeenSetMask());
-            mask.Charge = (item.Charge != null);
-            mask.Health = (item.Health != null);
-            mask.LevelModifier = (item.LevelModifier != null);
-            mask.XRTM = (item.XRTM.FormKey != null);
-            mask.ActionFlags = (item.ActionFlags != null);
-            mask.Count = (item.Count != null);
-            var itemMapMarker = item.MapMarker;
-            mask.MapMarker = new MaskItem<bool, MapMarker.Mask<bool>?>(itemMapMarker != null, itemMapMarker?.GetHasBeenSetMask());
-            mask.OpenByDefault = true;
-            mask.RagdollData = (item.RagdollData != null);
-            mask.Scale = (item.Scale != null);
-            mask.ContainedSoul = (item.ContainedSoul.FormKey != null);
-            var itemLocation = item.Location;
-            mask.Location = new MaskItem<bool, Location.Mask<bool>?>(itemLocation != null, itemLocation?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static PlacedObject_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -3511,15 +3395,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedObjectGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

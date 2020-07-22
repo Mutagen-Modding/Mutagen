@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         MajorRecord,
         IOblivionMajorRecordInternal,
         ILoquiObjectSetter<OblivionMajorRecord>,
-        IEquatable<OblivionMajorRecord>,
-        IEqualsMask
+        IEquatable<OblivionMajorRecord>
     {
         #region Ctor
         protected OblivionMajorRecord()
@@ -343,7 +342,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => OblivionMajorRecordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => OblivionMajorRecordCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => OblivionMajorRecordCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionMajorRecordCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionMajorRecordCommon.Instance.RemapLinks(this, mapping);
         public OblivionMajorRecord(FormKey formKey)
@@ -392,8 +391,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionMajorRecordGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -413,7 +410,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IMajorRecord,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IOblivionMajorRecordInternal>
+        ILoquiObjectSetter<IOblivionMajorRecordInternal>,
+        ILinkedFormKeyContainer
     {
         new OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags { get; set; }
     }
@@ -429,7 +427,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IOblivionMajorRecordGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => OblivionMajorRecord_Registration.Instance;
@@ -480,24 +478,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IOblivionMajorRecordGetter item,
-            OblivionMajorRecord.Mask<bool?> checkMask)
-        {
-            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static OblivionMajorRecord.Mask<bool> GetHasBeenSetMask(this IOblivionMajorRecordGetter item)
-        {
-            var ret = new OblivionMajorRecord.Mask<bool>(false);
-            ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -632,17 +612,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IOblivionMajorRecordInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IOblivionMajorRecordInternal item,
             MutagenFrame frame,
@@ -987,25 +956,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.OblivionMajorRecordFlags, "OblivionMajorRecordFlags");
             }
-        }
-        
-        public bool HasBeenSet(
-            IOblivionMajorRecordGetter item,
-            OblivionMajorRecord.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IOblivionMajorRecordGetter item,
-            OblivionMajorRecord.Mask<bool> mask)
-        {
-            mask.OblivionMajorRecordFlags = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static OblivionMajorRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
@@ -1353,15 +1303,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionMajorRecordGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => OblivionMajorRecordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => OblivionMajorRecordCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionMajorRecordCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionMajorRecordCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => OblivionMajorRecordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

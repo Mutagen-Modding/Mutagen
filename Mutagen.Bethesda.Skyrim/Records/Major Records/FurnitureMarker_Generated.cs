@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class FurnitureMarker :
         IFurnitureMarker,
         ILoquiObjectSetter<FurnitureMarker>,
-        IEquatable<FurnitureMarker>,
-        IEqualsMask
+        IEquatable<FurnitureMarker>
     {
         #region Ctor
         public FurnitureMarker()
@@ -472,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => FurnitureMarkerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FurnitureMarkerCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FurnitureMarkerCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureMarkerCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureMarkerCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -492,14 +491,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static FurnitureMarker CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static FurnitureMarker CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -526,8 +517,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFurnitureMarkerGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -545,7 +534,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IFurnitureMarker :
         IFurnitureMarkerGetter,
-        ILoquiObjectSetter<IFurnitureMarker>
+        ILoquiObjectSetter<IFurnitureMarker>,
+        ILinkedFormKeyContainer
     {
         new Boolean Enabled { get; set; }
         new EntryPoints? DisabledEntryPoints { get; set; }
@@ -556,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFurnitureMarkerGetter :
         ILoquiObject,
         ILoquiObject<IFurnitureMarkerGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -616,24 +606,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IFurnitureMarkerGetter item,
-            FurnitureMarker.Mask<bool?> checkMask)
-        {
-            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static FurnitureMarker.Mask<bool> GetHasBeenSetMask(this IFurnitureMarkerGetter item)
-        {
-            var ret = new FurnitureMarker.Mask<bool>(false);
-            ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -728,17 +700,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IFurnitureMarker item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IFurnitureMarker item,
             MutagenFrame frame,
@@ -1108,30 +1069,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IFurnitureMarkerGetter item,
-            FurnitureMarker.Mask<bool?> checkMask)
-        {
-            if (checkMask.DisabledEntryPoints?.Overall.HasValue ?? false && checkMask.DisabledEntryPoints.Overall.Value != (item.DisabledEntryPoints != null)) return false;
-            if (checkMask.DisabledEntryPoints?.Specific != null && (item.DisabledEntryPoints == null || !item.DisabledEntryPoints.HasBeenSet(checkMask.DisabledEntryPoints.Specific))) return false;
-            if (checkMask.MarkerKeyword.HasValue && checkMask.MarkerKeyword.Value != (item.MarkerKeyword.FormKey != null)) return false;
-            if (checkMask.EntryPoints?.Overall.HasValue ?? false && checkMask.EntryPoints.Overall.Value != (item.EntryPoints != null)) return false;
-            if (checkMask.EntryPoints?.Specific != null && (item.EntryPoints == null || !item.EntryPoints.HasBeenSet(checkMask.EntryPoints.Specific))) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IFurnitureMarkerGetter item,
-            FurnitureMarker.Mask<bool> mask)
-        {
-            mask.Enabled = true;
-            var itemDisabledEntryPoints = item.DisabledEntryPoints;
-            mask.DisabledEntryPoints = new MaskItem<bool, EntryPoints.Mask<bool>?>(itemDisabledEntryPoints != null, itemDisabledEntryPoints?.GetHasBeenSetMask());
-            mask.MarkerKeyword = (item.MarkerKeyword.FormKey != null);
-            var itemEntryPoints = item.EntryPoints;
-            mask.EntryPoints = new MaskItem<bool, EntryPoints.Mask<bool>?>(itemEntryPoints != null, itemEntryPoints?.GetHasBeenSetMask());
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IFurnitureMarkerGetter? lhs,
@@ -1415,12 +1352,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IFurnitureMarkerGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((FurnitureMarkerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1452,15 +1390,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFurnitureMarkerGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => FurnitureMarkerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FurnitureMarkerCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureMarkerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureMarkerCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FurnitureMarkerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FurnitureMarkerBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

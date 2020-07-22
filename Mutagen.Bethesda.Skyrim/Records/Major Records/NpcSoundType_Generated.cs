@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class NpcSoundType :
         INpcSoundType,
         ILoquiObjectSetter<NpcSoundType>,
-        IEquatable<NpcSoundType>,
-        IEqualsMask
+        IEquatable<NpcSoundType>
     {
         #region Ctor
         public NpcSoundType()
@@ -465,7 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => NpcSoundTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => NpcSoundTypeCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcSoundTypeCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypeCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypeCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -485,14 +484,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static NpcSoundType CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static NpcSoundType CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -519,8 +510,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcSoundTypeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -538,7 +527,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface INpcSoundType :
         INpcSoundTypeGetter,
-        ILoquiObjectSetter<INpcSoundType>
+        ILoquiObjectSetter<INpcSoundType>,
+        ILinkedFormKeyContainer
     {
         new NpcSoundType.SoundType? Type { get; set; }
         new IExtendedList<NpcSound> Sounds { get; }
@@ -547,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpcSoundTypeGetter :
         ILoquiObject,
         ILoquiObject<INpcSoundTypeGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -605,24 +595,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this INpcSoundTypeGetter item,
-            NpcSoundType.Mask<bool?> checkMask)
-        {
-            return ((NpcSoundTypeCommon)((INpcSoundTypeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static NpcSoundType.Mask<bool> GetHasBeenSetMask(this INpcSoundTypeGetter item)
-        {
-            var ret = new NpcSoundType.Mask<bool>(false);
-            ((NpcSoundTypeCommon)((INpcSoundTypeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -717,17 +689,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this INpcSoundType item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this INpcSoundType item,
             MutagenFrame frame,
@@ -1083,23 +1044,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            INpcSoundTypeGetter item,
-            NpcSoundType.Mask<bool?> checkMask)
-        {
-            if (checkMask.Type.HasValue && checkMask.Type.Value != (item.Type != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            INpcSoundTypeGetter item,
-            NpcSoundType.Mask<bool> mask)
-        {
-            mask.Type = (item.Type != null);
-            var SoundsItem = item.Sounds;
-            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, NpcSound.Mask<bool>?>>?>(true, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, NpcSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             INpcSoundTypeGetter? lhs,
@@ -1370,12 +1314,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this INpcSoundTypeGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((NpcSoundTypeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1407,15 +1352,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcSoundTypeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => NpcSoundTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => NpcSoundTypeCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypeCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcSoundTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcSoundTypeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

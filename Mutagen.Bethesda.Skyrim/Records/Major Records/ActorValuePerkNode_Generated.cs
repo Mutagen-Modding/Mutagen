@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ActorValuePerkNode :
         IActorValuePerkNode,
         ILoquiObjectSetter<ActorValuePerkNode>,
-        IEquatable<ActorValuePerkNode>,
-        IEqualsMask
+        IEquatable<ActorValuePerkNode>
     {
         #region Ctor
         public ActorValuePerkNode()
@@ -699,7 +698,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ActorValuePerkNodeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ActorValuePerkNodeCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ActorValuePerkNodeCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValuePerkNodeCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValuePerkNodeCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -719,14 +718,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ActorValuePerkNode CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static ActorValuePerkNode CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -753,8 +744,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActorValuePerkNodeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -772,7 +761,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IActorValuePerkNode :
         IActorValuePerkNodeGetter,
-        ILoquiObjectSetter<IActorValuePerkNode>
+        ILoquiObjectSetter<IActorValuePerkNode>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Perk> Perk { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
@@ -788,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IActorValuePerkNodeGetter :
         ILoquiObject,
         ILoquiObject<IActorValuePerkNodeGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -853,24 +843,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IActorValuePerkNodeGetter item,
-            ActorValuePerkNode.Mask<bool?> checkMask)
-        {
-            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ActorValuePerkNode.Mask<bool> GetHasBeenSetMask(this IActorValuePerkNodeGetter item)
-        {
-            var ret = new ActorValuePerkNode.Mask<bool>(false);
-            ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -965,17 +937,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IActorValuePerkNode item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IActorValuePerkNode item,
             MutagenFrame frame,
@@ -1450,35 +1411,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IActorValuePerkNodeGetter item,
-            ActorValuePerkNode.Mask<bool?> checkMask)
-        {
-            if (checkMask.FNAM.HasValue && checkMask.FNAM.Value != (item.FNAM != null)) return false;
-            if (checkMask.PerkGridX.HasValue && checkMask.PerkGridX.Value != (item.PerkGridX != null)) return false;
-            if (checkMask.PerkGridY.HasValue && checkMask.PerkGridY.Value != (item.PerkGridY != null)) return false;
-            if (checkMask.HorizontalPosition.HasValue && checkMask.HorizontalPosition.Value != (item.HorizontalPosition != null)) return false;
-            if (checkMask.VerticalPosition.HasValue && checkMask.VerticalPosition.Value != (item.VerticalPosition != null)) return false;
-            if (checkMask.AssociatedSkill.HasValue && checkMask.AssociatedSkill.Value != (item.AssociatedSkill.FormKey != null)) return false;
-            if (checkMask.Index.HasValue && checkMask.Index.Value != (item.Index != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IActorValuePerkNodeGetter item,
-            ActorValuePerkNode.Mask<bool> mask)
-        {
-            mask.Perk = true;
-            mask.FNAM = (item.FNAM != null);
-            mask.PerkGridX = (item.PerkGridX != null);
-            mask.PerkGridY = (item.PerkGridY != null);
-            mask.HorizontalPosition = (item.HorizontalPosition != null);
-            mask.VerticalPosition = (item.VerticalPosition != null);
-            mask.AssociatedSkill = (item.AssociatedSkill.FormKey != null);
-            mask.ConnectionLineToIndices = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.Index = (item.Index != null);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IActorValuePerkNodeGetter? lhs,
@@ -1874,12 +1806,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IActorValuePerkNodeGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ActorValuePerkNodeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1911,15 +1844,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActorValuePerkNodeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ActorValuePerkNodeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ActorValuePerkNodeCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValuePerkNodeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValuePerkNodeCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ActorValuePerkNodeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ActorValuePerkNodeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

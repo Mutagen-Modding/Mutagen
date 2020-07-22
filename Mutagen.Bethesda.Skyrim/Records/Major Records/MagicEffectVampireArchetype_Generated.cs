@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         MagicEffectArchetype,
         IMagicEffectVampireArchetypeInternal,
         ILoquiObjectSetter<MagicEffectVampireArchetype>,
-        IEquatable<MagicEffectVampireArchetype>,
-        IEqualsMask
+        IEquatable<MagicEffectVampireArchetype>
     {
 
         #region To String
@@ -301,14 +300,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new MagicEffectVampireArchetype CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static MagicEffectVampireArchetype CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -335,8 +326,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectVampireArchetypeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -420,24 +409,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IMagicEffectVampireArchetypeGetter item,
-            MagicEffectVampireArchetype.Mask<bool?> checkMask)
-        {
-            return ((MagicEffectVampireArchetypeCommon)((IMagicEffectVampireArchetypeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static MagicEffectVampireArchetype.Mask<bool> GetHasBeenSetMask(this IMagicEffectVampireArchetypeGetter item)
-        {
-            var ret = new MagicEffectVampireArchetype.Mask<bool>(false);
-            ((MagicEffectVampireArchetypeCommon)((IMagicEffectVampireArchetypeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IMagicEffectVampireArchetypeGetter item,
             IMagicEffectVampireArchetypeGetter rhs)
@@ -507,17 +478,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IMagicEffectVampireArchetypeInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IMagicEffectVampireArchetypeInternal item,
             MutagenFrame frame,
@@ -823,24 +783,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
         }
         
-        public bool HasBeenSet(
-            IMagicEffectVampireArchetypeGetter item,
-            MagicEffectVampireArchetype.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IMagicEffectVampireArchetypeGetter item,
-            MagicEffectVampireArchetype.Mask<bool> mask)
-        {
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static MagicEffectVampireArchetype_FieldIndex ConvertFieldIndex(MagicEffectArchetype_FieldIndex index)
         {
             switch (index)
@@ -1109,8 +1051,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectVampireArchetypeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectVampireArchetypeBinaryWriteTranslation.Instance;

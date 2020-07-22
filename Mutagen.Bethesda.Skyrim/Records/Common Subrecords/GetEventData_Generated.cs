@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ConditionData,
         IGetEventData,
         ILoquiObjectSetter<GetEventData>,
-        IEquatable<GetEventData>,
-        IEqualsMask
+        IEquatable<GetEventData>
     {
         #region Ctor
         public GetEventData()
@@ -529,7 +528,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => GetEventDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => GetEventDataCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => GetEventDataCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetEventDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetEventDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -547,14 +546,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new GetEventData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static GetEventData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -581,8 +572,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGetEventDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -601,7 +590,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IGetEventData :
         IGetEventDataGetter,
         IConditionData,
-        ILoquiObjectSetter<IGetEventData>
+        ILoquiObjectSetter<IGetEventData>,
+        ILinkedFormKeyContainer
     {
         new UInt16 Unknown2 { get; set; }
         new UInt16 EventFunction { get; set; }
@@ -615,7 +605,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IGetEventDataGetter :
         IConditionDataGetter,
         ILoquiObject<IGetEventDataGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => GetEventData_Registration.Instance;
@@ -672,24 +662,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IGetEventDataGetter item,
-            GetEventData.Mask<bool?> checkMask)
-        {
-            return ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static GetEventData.Mask<bool> GetHasBeenSetMask(this IGetEventDataGetter item)
-        {
-            var ret = new GetEventData.Mask<bool>(false);
-            ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -761,17 +733,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IGetEventData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IGetEventData item,
             MutagenFrame frame,
@@ -1205,31 +1166,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IGetEventDataGetter item,
-            GetEventData.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IGetEventDataGetter item,
-            GetEventData.Mask<bool> mask)
-        {
-            mask.Unknown2 = true;
-            mask.EventFunction = true;
-            mask.EventMember = true;
-            mask.Parameter3 = true;
-            mask.RunOnType = true;
-            mask.Reference = true;
-            mask.Unknown3 = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static GetEventData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
         {
             switch (index)
@@ -1552,15 +1488,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGetEventDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => GetEventDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => GetEventDataCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetEventDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetEventDataCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => GetEventDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GetEventDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

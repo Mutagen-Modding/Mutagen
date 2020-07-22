@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         OwnerTarget,
         IFactionOwner,
         ILoquiObjectSetter<FactionOwner>,
-        IEquatable<FactionOwner>,
-        IEqualsMask
+        IEquatable<FactionOwner>
     {
         #region Ctor
         public FactionOwner()
@@ -371,7 +370,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FactionOwnerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FactionOwnerCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FactionOwnerCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionOwnerCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionOwnerCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -389,14 +388,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new FactionOwner CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static FactionOwner CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -423,8 +414,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionOwnerGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -443,7 +432,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFactionOwner :
         IFactionOwnerGetter,
         IOwnerTarget,
-        ILoquiObjectSetter<IFactionOwner>
+        ILoquiObjectSetter<IFactionOwner>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Faction> Faction { get; set; }
         new Int32 RequiredRank { get; set; }
@@ -452,7 +442,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFactionOwnerGetter :
         IOwnerTargetGetter,
         ILoquiObject<IFactionOwnerGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => FactionOwner_Registration.Instance;
@@ -504,24 +494,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IFactionOwnerGetter item,
-            FactionOwner.Mask<bool?> checkMask)
-        {
-            return ((FactionOwnerCommon)((IFactionOwnerGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static FactionOwner.Mask<bool> GetHasBeenSetMask(this IFactionOwnerGetter item)
-        {
-            var ret = new FactionOwner.Mask<bool>(false);
-            ((FactionOwnerCommon)((IFactionOwnerGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -593,17 +565,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IFactionOwner item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IFactionOwner item,
             MutagenFrame frame,
@@ -947,26 +908,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IFactionOwnerGetter item,
-            FactionOwner.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IFactionOwnerGetter item,
-            FactionOwner.Mask<bool> mask)
-        {
-            mask.Faction = true;
-            mask.RequiredRank = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static FactionOwner_FieldIndex ConvertFieldIndex(OwnerTarget_FieldIndex index)
         {
             switch (index)
@@ -1241,15 +1182,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionOwnerGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FactionOwnerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FactionOwnerCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionOwnerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionOwnerCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FactionOwnerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FactionOwnerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -3,9 +3,9 @@
   <Object name="LeveledItem" recordType="LVLI" baseClass="SkyrimMajorRecord" objType="Record" GUID="dbc7006d-3752-43d0-9e4f-95268f3353ab" ID="166">
     <Interface>IObjectBounded</Interface>
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
-      <UInt8 name="ChanceNone" recordType="LVLD" hasBeenSet="False" />
-      <Enum name="Flags" recordType="LVLF" hasBeenSet="False" enumName="LeveledItem.Flag" byteLength="1" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <UInt8 name="ChanceNone" recordType="LVLD" nullable="False" />
+      <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledItem.Flag" byteLength="1" />
       <FormLink name="Global" recordType="LVLG" refName="Global" />
       <RefList name="Entries" counterRecType="LLCT" refName="LeveledItemEntry" counterLength="1" />
     </Fields>

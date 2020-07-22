@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Generation
                     break;
             }
             fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = {locationAccessor} + _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
-            if (dataType.HasBeenSet)
+            if (dataType.Nullable)
             {
                 fg.AppendLine($"this.{dataType.StateName} = {objGen.ObjectName}.{dataType.EnumName}.Has;");
             }

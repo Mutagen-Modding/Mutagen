@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CellLighting :
         ICellLighting,
         ILoquiObjectSetter<CellLighting>,
-        IEquatable<CellLighting>,
-        IEqualsMask
+        IEquatable<CellLighting>
     {
         #region Ctor
         public CellLighting()
@@ -1078,14 +1077,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static CellLighting CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static CellLighting CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1112,8 +1103,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellLightingGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1245,24 +1234,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ICellLightingGetter item,
-            CellLighting.Mask<bool?> checkMask)
-        {
-            return ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static CellLighting.Mask<bool> GetHasBeenSetMask(this ICellLightingGetter item)
-        {
-            var ret = new CellLighting.Mask<bool>(false);
-            ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ICellLightingGetter item,
             ICellLightingGetter rhs)
@@ -1355,17 +1326,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICellLighting item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICellLighting item,
             MutagenFrame frame,
@@ -2087,43 +2047,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ICellLightingGetter item,
-            CellLighting.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ICellLightingGetter item,
-            CellLighting.Mask<bool> mask)
-        {
-            mask.Versioning = true;
-            mask.AmbientColor = true;
-            mask.DirectionalColor = true;
-            mask.FogNearColor = true;
-            mask.FogNear = true;
-            mask.FogFar = true;
-            mask.DirectionalRotationXY = true;
-            mask.DirectionalRotationZ = true;
-            mask.DirectionalFade = true;
-            mask.FogClipDistance = true;
-            mask.FogPower = true;
-            mask.AmbientDirectionalXPlus = true;
-            mask.AmbientDirectionalXMinus = true;
-            mask.AmbientDirectionalYPlus = true;
-            mask.AmbientDirectionalYMinus = true;
-            mask.AmbientDirectionalZPlus = true;
-            mask.AmbientDirectionalZMinus = true;
-            mask.AmbientSpecular = true;
-            mask.AmbientScale = true;
-            mask.FogFarColor = true;
-            mask.FogMax = true;
-            mask.LightFadeBegin = true;
-            mask.LightFadeEnd = true;
-            mask.Inherits = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ICellLightingGetter? lhs,
@@ -2549,12 +2472,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ICellLightingGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((CellLightingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -2586,8 +2510,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellLightingGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CellLightingBinaryWriteTranslation.Instance;

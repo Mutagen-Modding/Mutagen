@@ -8,7 +8,7 @@
     <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
@@ -31,7 +31,7 @@
           <Enum name="Flags" enumName="Ingredient.Flag" byteLength="4" />
         </Fields>
       </Data>
-      <RefList name="Effects" refName="Effect" hasBeenSet="False" />
+      <RefList name="Effects" refName="Effect" nullable="False" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>

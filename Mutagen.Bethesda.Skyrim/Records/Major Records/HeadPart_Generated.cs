@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IHeadPartInternal,
         ILoquiObjectSetter<HeadPart>,
-        IEquatable<HeadPart>,
-        IEqualsMask
+        IEquatable<HeadPart>
     {
         #region Ctor
         protected HeadPart()
@@ -797,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
         public HeadPart(FormKey formKey)
@@ -837,14 +836,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new HeadPart CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static HeadPart CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -871,8 +862,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHeadPartGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -893,7 +882,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ITranslatedNamed,
         IModeled,
-        ILoquiObjectSetter<IHeadPartInternal>
+        ILoquiObjectSetter<IHeadPartInternal>,
+        ILinkedFormKeyContainer
     {
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
@@ -922,7 +912,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IModeledGetter,
         ILoquiObject<IHeadPartGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => HeadPart_Registration.Instance;
@@ -985,24 +975,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IHeadPartGetter item,
-            HeadPart.Mask<bool?> checkMask)
-        {
-            return ((HeadPartCommon)((IHeadPartGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static HeadPart.Mask<bool> GetHasBeenSetMask(this IHeadPartGetter item)
-        {
-            var ret = new HeadPart.Mask<bool>(false);
-            ((HeadPartCommon)((IHeadPartGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1074,17 +1046,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IHeadPartInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IHeadPartInternal item,
             MutagenFrame frame,
@@ -1622,42 +1583,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(ValidRacesItem, "ValidRaces");
             }
-        }
-        
-        public bool HasBeenSet(
-            IHeadPartGetter item,
-            HeadPart.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Type.HasValue && checkMask.Type.Value != (item.Type != null)) return false;
-            if (checkMask.TextureSet.HasValue && checkMask.TextureSet.Value != (item.TextureSet.FormKey != null)) return false;
-            if (checkMask.Color.HasValue && checkMask.Color.Value != (item.Color.FormKey != null)) return false;
-            if (checkMask.ValidRaces.HasValue && checkMask.ValidRaces.Value != (item.ValidRaces.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IHeadPartGetter item,
-            HeadPart.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.Flags = true;
-            mask.Type = (item.Type != null);
-            mask.ExtraParts = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            var PartsItem = item.Parts;
-            mask.Parts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Part.Mask<bool>?>>?>(true, PartsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Part.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.TextureSet = (item.TextureSet.FormKey != null);
-            mask.Color = (item.Color.FormKey != null);
-            mask.ValidRaces = (item.ValidRaces.FormKey != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static HeadPart_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2351,15 +2276,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHeadPartGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => HeadPartBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

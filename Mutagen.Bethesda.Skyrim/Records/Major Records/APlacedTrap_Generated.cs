@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IAPlacedTrapInternal,
         ILoquiObjectSetter<APlacedTrap>,
-        IEquatable<APlacedTrap>,
-        IEqualsMask
+        IEquatable<APlacedTrap>
     {
         #region Ctor
         protected APlacedTrap()
@@ -1291,7 +1290,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => APlacedTrapCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => APlacedTrapCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => APlacedTrapCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedTrapCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedTrapCommon.Instance.RemapLinks(this, mapping);
         public APlacedTrap(FormKey formKey)
@@ -1333,8 +1332,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAPlacedTrapGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1356,7 +1353,8 @@ namespace Mutagen.Bethesda.Skyrim
         IPlaced,
         IPlacedThing,
         ILinkedReference,
-        ILoquiObjectSetter<IAPlacedTrapInternal>
+        ILoquiObjectSetter<IAPlacedTrapInternal>,
+        ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new FormLinkNullable<EncounterZone> EncounterZone { get; set; }
@@ -1394,7 +1392,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedThingGetter,
         ILinkedReferenceGetter,
         ILoquiObject<IAPlacedTrapGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => APlacedTrap_Registration.Instance;
@@ -1467,24 +1465,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IAPlacedTrapGetter item,
-            APlacedTrap.Mask<bool?> checkMask)
-        {
-            return ((APlacedTrapCommon)((IAPlacedTrapGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static APlacedTrap.Mask<bool> GetHasBeenSetMask(this IAPlacedTrapGetter item)
-        {
-            var ret = new APlacedTrap.Mask<bool>(false);
-            ((APlacedTrapCommon)((IAPlacedTrapGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IAPlacedTrapGetter item,
             IAPlacedTrapGetter rhs)
@@ -1554,17 +1534,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAPlacedTrapInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAPlacedTrapInternal item,
             MutagenFrame frame,
@@ -2337,68 +2306,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IAPlacedTrapGetter item,
-            APlacedTrap.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.EncounterZone.HasValue && checkMask.EncounterZone.Value != (item.EncounterZone.FormKey != null)) return false;
-            if (checkMask.Ownership?.Overall.HasValue ?? false && checkMask.Ownership.Overall.Value != (item.Ownership != null)) return false;
-            if (checkMask.Ownership?.Specific != null && (item.Ownership == null || !item.Ownership.HasBeenSet(checkMask.Ownership.Specific))) return false;
-            if (checkMask.HeadTrackingWeight.HasValue && checkMask.HeadTrackingWeight.Value != (item.HeadTrackingWeight != null)) return false;
-            if (checkMask.FavorCost.HasValue && checkMask.FavorCost.Value != (item.FavorCost != null)) return false;
-            if (checkMask.ActivateParents?.Overall.HasValue ?? false && checkMask.ActivateParents.Overall.Value != (item.ActivateParents != null)) return false;
-            if (checkMask.ActivateParents?.Specific != null && (item.ActivateParents == null || !item.ActivateParents.HasBeenSet(checkMask.ActivateParents.Specific))) return false;
-            if (checkMask.EnableParent?.Overall.HasValue ?? false && checkMask.EnableParent.Overall.Value != (item.EnableParent != null)) return false;
-            if (checkMask.EnableParent?.Specific != null && (item.EnableParent == null || !item.EnableParent.HasBeenSet(checkMask.EnableParent.Specific))) return false;
-            if (checkMask.Emittance.HasValue && checkMask.Emittance.Value != (item.Emittance.FormKey != null)) return false;
-            if (checkMask.MultiBoundReference.HasValue && checkMask.MultiBoundReference.Value != (item.MultiBoundReference.FormKey != null)) return false;
-            if (checkMask.IgnoredBySandbox.HasValue && checkMask.IgnoredBySandbox.Value != (item.IgnoredBySandbox != null)) return false;
-            if (checkMask.LocationRefTypes?.Overall.HasValue ?? false && checkMask.LocationRefTypes!.Overall.Value != (item.LocationRefTypes != null)) return false;
-            if (checkMask.LocationReference.HasValue && checkMask.LocationReference.Value != (item.LocationReference.FormKey != null)) return false;
-            if (checkMask.DistantLodData?.Overall.HasValue ?? false && checkMask.DistantLodData!.Overall.Value != (item.DistantLodData != null)) return false;
-            if (checkMask.Scale.HasValue && checkMask.Scale.Value != (item.Scale != null)) return false;
-            if (checkMask.Placement?.Overall.HasValue ?? false && checkMask.Placement.Overall.Value != (item.Placement != null)) return false;
-            if (checkMask.Placement?.Specific != null && (item.Placement == null || !item.Placement.HasBeenSet(checkMask.Placement.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IAPlacedTrapGetter item,
-            APlacedTrap.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.EncounterZone = (item.EncounterZone.FormKey != null);
-            var itemOwnership = item.Ownership;
-            mask.Ownership = new MaskItem<bool, Ownership.Mask<bool>?>(itemOwnership != null, itemOwnership?.GetHasBeenSetMask());
-            mask.HeadTrackingWeight = (item.HeadTrackingWeight != null);
-            mask.FavorCost = (item.FavorCost != null);
-            var ReflectionsItem = item.Reflections;
-            mask.Reflections = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WaterReflection.Mask<bool>?>>?>(true, ReflectionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WaterReflection.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var LinkedReferencesItem = item.LinkedReferences;
-            mask.LinkedReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LinkedReferences.Mask<bool>?>>?>(true, LinkedReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LinkedReferences.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var itemActivateParents = item.ActivateParents;
-            mask.ActivateParents = new MaskItem<bool, ActivateParents.Mask<bool>?>(itemActivateParents != null, itemActivateParents?.GetHasBeenSetMask());
-            var itemEnableParent = item.EnableParent;
-            mask.EnableParent = new MaskItem<bool, EnableParent.Mask<bool>?>(itemEnableParent != null, itemEnableParent?.GetHasBeenSetMask());
-            mask.Emittance = (item.Emittance.FormKey != null);
-            mask.MultiBoundReference = (item.MultiBoundReference.FormKey != null);
-            mask.IgnoredBySandbox = (item.IgnoredBySandbox != null);
-            mask.LocationRefTypes = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.LocationRefTypes != null), default);
-            mask.LocationReference = (item.LocationReference.FormKey != null);
-            mask.DistantLodData = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.DistantLodData != null), default);
-            mask.Scale = (item.Scale != null);
-            var itemPlacement = item.Placement;
-            mask.Placement = new MaskItem<bool, Placement.Mask<bool>?>(itemPlacement != null, itemPlacement?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static APlacedTrap_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -2571,7 +2478,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
@@ -3450,15 +3357,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAPlacedTrapGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => APlacedTrapCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => APlacedTrapCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedTrapCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedTrapCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => APlacedTrapCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => APlacedTrapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

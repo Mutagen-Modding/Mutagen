@@ -4,7 +4,7 @@
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <RefDirect name="Model" refName="Model" />
       <Enum name="Type" enumName="ArtObject.TypeEnum" byteLength="4" recordType="DNAM" />
     </Fields>

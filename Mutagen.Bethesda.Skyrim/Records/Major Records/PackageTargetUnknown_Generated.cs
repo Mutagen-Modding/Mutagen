@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APackageTarget,
         IPackageTargetUnknown,
         ILoquiObjectSetter<PackageTargetUnknown>,
-        IEquatable<PackageTargetUnknown>,
-        IEqualsMask
+        IEquatable<PackageTargetUnknown>
     {
         #region Ctor
         public PackageTargetUnknown()
@@ -348,14 +347,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PackageTargetUnknown CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PackageTargetUnknown CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -382,8 +373,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageTargetUnknownGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -462,24 +451,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IPackageTargetUnknownGetter item,
-            PackageTargetUnknown.Mask<bool?> checkMask)
-        {
-            return ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PackageTargetUnknown.Mask<bool> GetHasBeenSetMask(this IPackageTargetUnknownGetter item)
-        {
-            var ret = new PackageTargetUnknown.Mask<bool>(false);
-            ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IPackageTargetUnknownGetter item,
             IPackageTargetUnknownGetter rhs)
@@ -549,17 +520,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPackageTargetUnknown item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPackageTargetUnknown item,
             MutagenFrame frame,
@@ -886,25 +846,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPackageTargetUnknownGetter item,
-            PackageTargetUnknown.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPackageTargetUnknownGetter item,
-            PackageTargetUnknown.Mask<bool> mask)
-        {
-            mask.Data = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static PackageTargetUnknown_FieldIndex ConvertFieldIndex(APackageTarget_FieldIndex index)
         {
             switch (index)
@@ -1174,8 +1115,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageTargetUnknownGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageTargetUnknownBinaryWriteTranslation.Instance;

@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class AmbientColors :
         IAmbientColors,
         ILoquiObjectSetter<AmbientColors>,
-        IEquatable<AmbientColors>,
-        IEqualsMask
+        IEquatable<AmbientColors>
     {
         #region Ctor
         public AmbientColors()
@@ -612,14 +611,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static AmbientColors CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static AmbientColors CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -646,8 +637,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmbientColorsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -749,24 +738,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IAmbientColorsGetter item,
-            AmbientColors.Mask<bool?> checkMask)
-        {
-            return ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static AmbientColors.Mask<bool> GetHasBeenSetMask(this IAmbientColorsGetter item)
-        {
-            var ret = new AmbientColors.Mask<bool>(false);
-            ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IAmbientColorsGetter item,
             IAmbientColorsGetter rhs)
@@ -859,17 +830,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAmbientColors item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAmbientColors item,
             MutagenFrame frame,
@@ -1317,28 +1277,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IAmbientColorsGetter item,
-            AmbientColors.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IAmbientColorsGetter item,
-            AmbientColors.Mask<bool> mask)
-        {
-            mask.Versioning = true;
-            mask.DirectionalXPlus = true;
-            mask.DirectionalXMinus = true;
-            mask.DirectionalYPlus = true;
-            mask.DirectionalYMinus = true;
-            mask.DirectionalZPlus = true;
-            mask.DirectionalZMinus = true;
-            mask.Specular = true;
-            mask.Scale = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IAmbientColorsGetter? lhs,
@@ -1611,12 +1549,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IAmbientColorsGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AmbientColorsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1648,8 +1587,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmbientColorsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AmbientColorsBinaryWriteTranslation.Instance;

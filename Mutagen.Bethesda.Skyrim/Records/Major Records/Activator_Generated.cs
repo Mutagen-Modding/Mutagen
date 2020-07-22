@@ -33,8 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IActivatorInternal,
         ILoquiObjectSetter<Activator>,
-        IEquatable<Activator>,
-        IEqualsMask
+        IEquatable<Activator>
     {
         #region Ctor
         protected Activator()
@@ -883,7 +882,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ActivatorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ActivatorCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ActivatorCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivatorCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivatorCommon.Instance.RemapLinks(this, mapping);
         public Activator(FormKey formKey)
@@ -923,14 +922,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Activator CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Activator CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -957,8 +948,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActivatorGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -981,7 +970,8 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IModeled,
         IObjectBounded,
-        ILoquiObjectSetter<IActivatorInternal>
+        ILoquiObjectSetter<IActivatorInternal>,
+        ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1016,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         ILoquiObject<IActivatorGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Activator_Registration.Instance;
@@ -1083,24 +1073,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IActivatorGetter item,
-            Activator.Mask<bool?> checkMask)
-        {
-            return ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Activator.Mask<bool> GetHasBeenSetMask(this IActivatorGetter item)
-        {
-            var ret = new Activator.Mask<bool>(false);
-            ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1172,17 +1144,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IActivatorInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IActivatorInternal item,
             MutagenFrame frame,
@@ -1791,55 +1752,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IActivatorGetter item,
-            Activator.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
-            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
-            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.MarkerColor.HasValue && checkMask.MarkerColor.Value != (item.MarkerColor != null)) return false;
-            if (checkMask.LoopingSound.HasValue && checkMask.LoopingSound.Value != (item.LoopingSound.FormKey != null)) return false;
-            if (checkMask.ActivationSound.HasValue && checkMask.ActivationSound.Value != (item.ActivationSound.FormKey != null)) return false;
-            if (checkMask.WaterType.HasValue && checkMask.WaterType.Value != (item.WaterType.FormKey != null)) return false;
-            if (checkMask.ActivateTextOverride.HasValue && checkMask.ActivateTextOverride.Value != (item.ActivateTextOverride != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.InteractionKeyword.HasValue && checkMask.InteractionKeyword.Value != (item.InteractionKeyword.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IActivatorGetter item,
-            Activator.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.Name = (item.Name != null);
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            var itemDestructible = item.Destructible;
-            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
-            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.MarkerColor = (item.MarkerColor != null);
-            mask.LoopingSound = (item.LoopingSound.FormKey != null);
-            mask.ActivationSound = (item.ActivationSound.FormKey != null);
-            mask.WaterType = (item.WaterType.FormKey != null);
-            mask.ActivateTextOverride = (item.ActivateTextOverride != null);
-            mask.Flags = (item.Flags != null);
-            mask.InteractionKeyword = (item.InteractionKeyword.FormKey != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static Activator_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1998,7 +1910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
@@ -2689,15 +2601,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActivatorGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ActivatorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ActivatorCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivatorCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivatorCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ActivatorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ActivatorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

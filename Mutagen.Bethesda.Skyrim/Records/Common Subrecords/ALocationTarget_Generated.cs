@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class ALocationTarget :
         IALocationTarget,
         ILoquiObjectSetter<ALocationTarget>,
-        IEquatable<ALocationTarget>,
-        IEqualsMask
+        IEquatable<ALocationTarget>
     {
         #region Ctor
         public ALocationTarget()
@@ -307,7 +306,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual IEnumerable<FormKey> LinkFormKeys => ALocationTargetCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ALocationTargetCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ALocationTargetCommon.Instance.GetLinkFormKeys(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ALocationTargetCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ALocationTargetCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -329,8 +328,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IALocationTargetGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -348,14 +345,15 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IALocationTarget :
         IALocationTargetGetter,
-        ILoquiObjectSetter<IALocationTarget>
+        ILoquiObjectSetter<IALocationTarget>,
+        ILinkedFormKeyContainer
     {
     }
 
     public partial interface IALocationTargetGetter :
         ILoquiObject,
         ILoquiObject<IALocationTargetGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -411,24 +409,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IALocationTargetGetter item,
-            ALocationTarget.Mask<bool?> checkMask)
-        {
-            return ((ALocationTargetCommon)((IALocationTargetGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ALocationTarget.Mask<bool> GetHasBeenSetMask(this IALocationTargetGetter item)
-        {
-            var ret = new ALocationTarget.Mask<bool>(false);
-            ((ALocationTargetCommon)((IALocationTargetGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -523,17 +503,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IALocationTarget item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IALocationTarget item,
             MutagenFrame frame,
@@ -809,19 +778,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
         
-        public bool HasBeenSet(
-            IALocationTargetGetter item,
-            ALocationTarget.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IALocationTargetGetter item,
-            ALocationTarget.Mask<bool> mask)
-        {
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IALocationTargetGetter? lhs,
@@ -984,12 +940,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IALocationTargetGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ALocationTargetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1021,15 +978,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IALocationTargetGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual IEnumerable<FormKey> LinkFormKeys => ALocationTargetCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ALocationTargetCommon.Instance.GetLinkFormKeys(this);
-        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ALocationTargetCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ALocationTargetCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ALocationTargetCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ALocationTargetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

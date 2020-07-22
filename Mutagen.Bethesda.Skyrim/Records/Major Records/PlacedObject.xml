@@ -138,16 +138,16 @@
       <P3Float name="Offset" />
       <Int32 name="Unknown" />
       <P3Float name="Angle" />
-      <ByteArray name="Unknown2" byteLength="20" hasBeenSet="False" />
+      <ByteArray name="Unknown2" byteLength="20" nullable="False" />
     </Fields>
   </Object>
   <Object name="LockData" objType="Subrecord" recordType="XLOC" GUID="ea95a628-10ee-4a0d-911d-af0719cd5ee2" ID="309">
     <Fields>
       <Enum name="Level" enumName="LockLevel" byteLength="1" />
-      <ByteArray name="Unused" byteLength="3" hasBeenSet="False" />
+      <ByteArray name="Unused" byteLength="3" nullable="False" />
       <FormLink name="Key" refName="Key" />
       <Enum name="Flags" enumName="LockData.Flag" byteLength="1" />
-      <ByteArray name="Unused2" byteLength="11" hasBeenSet="False" />
+      <ByteArray name="Unused2" byteLength="11" nullable="False" />
     </Fields>
   </Object>
   <Object name="NavigationDoorLink" objType="Subrecord" recordType="XNDP" GUID="3dfc5897-6afc-4b57-9d2a-1946257205ed" ID="310">
@@ -161,9 +161,9 @@
   <Object name="MapMarker" objType="Subrecord" GUID="20f60842-6b59-4470-979e-93cd7fe472a3" ID="316">
     <Interface>ITranslatedNamedRequired</Interface>
     <Fields>
-      <Enum name="Flags" enumName="MapMarker.Flag" byteLength="1" hasBeenSet="False" recordType="FNAM" />
-      <String name="Name" recordType="FULL" hasBeenSet="True" translated="Normal" />
-      <Enum name="Type" enumName="MapMarker.MarkerType" byteLength="2" hasBeenSet="False" recordType="TNAM" />
+      <Enum name="Flags" enumName="MapMarker.Flag" byteLength="1" nullable="False" recordType="FNAM" />
+      <String name="Name" recordType="FULL" nullable="True" translated="Normal" />
+      <Enum name="Type" enumName="MapMarker.MarkerType" byteLength="2" nullable="False" recordType="TNAM" />
     </Fields>
   </Object>
 </Loqui>

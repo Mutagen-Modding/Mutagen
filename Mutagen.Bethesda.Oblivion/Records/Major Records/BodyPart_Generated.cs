@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class BodyPart :
         IBodyPart,
         ILoquiObjectSetter<BodyPart>,
-        IEquatable<BodyPart>,
-        IEqualsMask
+        IEquatable<BodyPart>
     {
         #region Ctor
         public BodyPart()
@@ -390,14 +389,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static BodyPart CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static BodyPart CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -424,8 +415,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyPartGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -509,24 +498,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IBodyPartGetter item,
-            BodyPart.Mask<bool?> checkMask)
-        {
-            return ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static BodyPart.Mask<bool> GetHasBeenSetMask(this IBodyPartGetter item)
-        {
-            var ret = new BodyPart.Mask<bool>(false);
-            ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -621,17 +592,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IBodyPart item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IBodyPart item,
             MutagenFrame frame,
@@ -968,23 +928,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IBodyPartGetter item,
-            BodyPart.Mask<bool?> checkMask)
-        {
-            if (checkMask.Index.HasValue && checkMask.Index.Value != (item.Index != null)) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IBodyPartGetter item,
-            BodyPart.Mask<bool> mask)
-        {
-            mask.Index = (item.Index != null);
-            mask.Icon = (item.Icon != null);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IBodyPartGetter? lhs,
@@ -1225,12 +1168,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IBodyPartGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((BodyPartBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1262,8 +1206,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyPartGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BodyPartBinaryWriteTranslation.Instance;

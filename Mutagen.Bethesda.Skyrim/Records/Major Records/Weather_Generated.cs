@@ -33,8 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IWeatherInternal,
         ILoquiObjectSetter<Weather>,
-        IEquatable<Weather>,
-        IEqualsMask
+        IEquatable<Weather>
     {
         #region Ctor
         protected Weather()
@@ -2924,7 +2923,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
         public Weather(FormKey formKey)
@@ -2973,14 +2972,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Weather CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Weather CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -3007,8 +2998,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -3027,7 +3016,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeather :
         IWeatherGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IWeatherInternal>
+        ILoquiObjectSetter<IWeatherInternal>,
+        ILinkedFormKeyContainer
     {
         new String?[] CloudTextures { get; }
         new MemorySlice<Byte>? DNAM { get; set; }
@@ -3104,7 +3094,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IWeatherGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Weather_Registration.Instance;
@@ -3219,24 +3209,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IWeatherGetter item,
-            Weather.Mask<bool?> checkMask)
-        {
-            return ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Weather.Mask<bool> GetHasBeenSetMask(this IWeatherGetter item)
-        {
-            var ret = new Weather.Mask<bool>(false);
-            ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IWeatherGetter item,
             IWeatherGetter rhs)
@@ -3306,17 +3278,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWeatherInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWeatherInternal item,
             MutagenFrame frame,
@@ -4880,111 +4841,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            IWeatherGetter item,
-            Weather.Mask<bool?> checkMask)
-        {
-            if (checkMask.DNAM.HasValue && checkMask.DNAM.Value != (item.DNAM != null)) return false;
-            if (checkMask.CNAM.HasValue && checkMask.CNAM.Value != (item.CNAM != null)) return false;
-            if (checkMask.ANAM.HasValue && checkMask.ANAM.Value != (item.ANAM != null)) return false;
-            if (checkMask.BNAM.HasValue && checkMask.BNAM.Value != (item.BNAM != null)) return false;
-            if (checkMask.LNAM.HasValue && checkMask.LNAM.Value != (item.LNAM != null)) return false;
-            if (checkMask.Precipitation.HasValue && checkMask.Precipitation.Value != (item.Precipitation.FormKey != null)) return false;
-            if (checkMask.ONAM.HasValue && checkMask.ONAM.Value != (item.ONAM != null)) return false;
-            if (checkMask.ImageSpaces?.Overall.HasValue ?? false && checkMask.ImageSpaces.Overall.Value != (item.ImageSpaces != null)) return false;
-            if (checkMask.ImageSpaces?.Specific != null && (item.ImageSpaces == null || !item.ImageSpaces.HasBeenSet(checkMask.ImageSpaces.Specific))) return false;
-            if (checkMask.VolumetricLighting?.Overall.HasValue ?? false && checkMask.VolumetricLighting.Overall.Value != (item.VolumetricLighting != null)) return false;
-            if (checkMask.VolumetricLighting?.Specific != null && (item.VolumetricLighting == null || !item.VolumetricLighting.HasBeenSet(checkMask.VolumetricLighting.Specific))) return false;
-            if (checkMask.DirectionalAmbientLightingColors?.Overall.HasValue ?? false && checkMask.DirectionalAmbientLightingColors.Overall.Value != (item.DirectionalAmbientLightingColors != null)) return false;
-            if (checkMask.DirectionalAmbientLightingColors?.Specific != null && (item.DirectionalAmbientLightingColors == null || !item.DirectionalAmbientLightingColors.HasBeenSet(checkMask.DirectionalAmbientLightingColors.Specific))) return false;
-            if (checkMask.NAM2.HasValue && checkMask.NAM2.Value != (item.NAM2 != null)) return false;
-            if (checkMask.NAM3.HasValue && checkMask.NAM3.Value != (item.NAM3 != null)) return false;
-            if (checkMask.Aurora?.Overall.HasValue ?? false && checkMask.Aurora.Overall.Value != (item.Aurora != null)) return false;
-            if (checkMask.Aurora?.Specific != null && (item.Aurora == null || !item.Aurora.HasBeenSet(checkMask.Aurora.Specific))) return false;
-            if (checkMask.SunGlareLensFlare.HasValue && checkMask.SunGlareLensFlare.Value != (item.SunGlareLensFlare.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IWeatherGetter item,
-            Weather.Mask<bool> mask)
-        {
-            mask.CloudTextures = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.DNAM = (item.DNAM != null);
-            mask.CNAM = (item.CNAM != null);
-            mask.ANAM = (item.ANAM != null);
-            mask.BNAM = (item.BNAM != null);
-            mask.LNAM = (item.LNAM != null);
-            mask.Precipitation = (item.Precipitation.FormKey != null);
-            mask.VisualEffect = true;
-            mask.ONAM = (item.ONAM != null);
-            var CloudsItem = item.Clouds;
-            mask.Clouds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CloudLayer.Mask<bool>?>>?>(true, CloudsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, CloudLayer.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.SkyUpperColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.SkyUpperColor?.GetHasBeenSetMask());
-            mask.FogNearColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.FogNearColor?.GetHasBeenSetMask());
-            mask.UnknownColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.UnknownColor?.GetHasBeenSetMask());
-            mask.AmbientColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.AmbientColor?.GetHasBeenSetMask());
-            mask.SunlightColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.SunlightColor?.GetHasBeenSetMask());
-            mask.SunColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.SunColor?.GetHasBeenSetMask());
-            mask.StarsColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.StarsColor?.GetHasBeenSetMask());
-            mask.SkyLowerColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.SkyLowerColor?.GetHasBeenSetMask());
-            mask.HorizonColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.HorizonColor?.GetHasBeenSetMask());
-            mask.EffectLightingColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.EffectLightingColor?.GetHasBeenSetMask());
-            mask.CloudLodDiffuseColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.CloudLodDiffuseColor?.GetHasBeenSetMask());
-            mask.CloudLodAmbientColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.CloudLodAmbientColor?.GetHasBeenSetMask());
-            mask.FogFarColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.FogFarColor?.GetHasBeenSetMask());
-            mask.SkyStaticsColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.SkyStaticsColor?.GetHasBeenSetMask());
-            mask.WaterMultiplierColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.WaterMultiplierColor?.GetHasBeenSetMask());
-            mask.SunGlareColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.SunGlareColor?.GetHasBeenSetMask());
-            mask.MoonGlareColor = new MaskItem<bool, WeatherColor.Mask<bool>?>(true, item.MoonGlareColor?.GetHasBeenSetMask());
-            mask.FogDistanceDayNear = true;
-            mask.FogDistanceDayFar = true;
-            mask.FogDistanceNightNear = true;
-            mask.FogDistanceNightFar = true;
-            mask.FogDistanceDayPower = true;
-            mask.FogDistanceNightPower = true;
-            mask.FogDistanceDayMax = true;
-            mask.FogDistanceNightMax = true;
-            mask.WindSpeed = true;
-            mask.Unknown = true;
-            mask.TransDelta = true;
-            mask.SunGlare = true;
-            mask.SunDamage = true;
-            mask.PrecipitationBeginFadeIn = true;
-            mask.PrecipitationEndFadeOut = true;
-            mask.ThunderLightningBeginFadeIn = true;
-            mask.ThunderLightningEndFadeOut = true;
-            mask.ThunderLightningFrequency = true;
-            mask.Flags = true;
-            mask.LightningColor = true;
-            mask.VisualEffectBegin = true;
-            mask.VisualEffectEnd = true;
-            mask.WindDirection = true;
-            mask.WindDirectionRange = true;
-            var SoundsItem = item.Sounds;
-            mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherSound.Mask<bool>?>>?>(true, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.SkyStatics = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            var itemImageSpaces = item.ImageSpaces;
-            mask.ImageSpaces = new MaskItem<bool, WeatherImageSpaces.Mask<bool>?>(itemImageSpaces != null, itemImageSpaces?.GetHasBeenSetMask());
-            var itemVolumetricLighting = item.VolumetricLighting;
-            mask.VolumetricLighting = new MaskItem<bool, WeatherVolumetricLighting.Mask<bool>?>(itemVolumetricLighting != null, itemVolumetricLighting?.GetHasBeenSetMask());
-            var itemDirectionalAmbientLightingColors = item.DirectionalAmbientLightingColors;
-            mask.DirectionalAmbientLightingColors = new MaskItem<bool, WeatherAmbientColorSet.Mask<bool>?>(itemDirectionalAmbientLightingColors != null, itemDirectionalAmbientLightingColors?.GetHasBeenSetMask());
-            mask.NAM2 = (item.NAM2 != null);
-            mask.NAM3 = (item.NAM3 != null);
-            var itemAurora = item.Aurora;
-            mask.Aurora = new MaskItem<bool, Model.Mask<bool>?>(itemAurora != null, itemAurora?.GetHasBeenSetMask());
-            mask.SunGlareLensFlare = (item.SunGlareLensFlare.FormKey != null);
-            mask.NAM0DataTypeState = true;
-            mask.FNAMDataTypeState = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Weather_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -7032,15 +6888,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

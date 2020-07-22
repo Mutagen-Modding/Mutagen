@@ -69,23 +69,23 @@ namespace Mutagen.Bethesda.Generation
             var loquiGen = typeGen as LoquiType;
             bool isGroup = objGen.GetObjectType() == ObjectType.Mod
                 && loquiGen.TargetObjectGeneration.GetObjectData().ObjectType == ObjectType.Group;
-            if (typeGen.HasBeenSet)
+            if (typeGen.Nullable)
             {
-                fg.AppendLine($"if ({itemAccessor.DirectAccess}.TryGet(out var {typeGen.Name}Item))");
+                fg.AppendLine($"if ({itemAccessor}.TryGet(out var {typeGen.Name}Item))");
                 itemAccessor = $"{typeGen.Name}Item";
             }
             else
             {
                 // We want to cache retrievals, in case it's a wrapper being written 
-                fg.AppendLine($"var {typeGen.Name}Item = {itemAccessor.DirectAccess};");
+                fg.AppendLine($"var {typeGen.Name}Item = {itemAccessor};");
                 itemAccessor = $"{typeGen.Name}Item";
             }
-            using (new BraceWrapper(fg, doIt: typeGen.HasBeenSet))
+            using (new BraceWrapper(fg, doIt: typeGen.Nullable))
             {
                 if (isGroup)
                 {
                     var dictGroup = loquiGen.TargetObjectGeneration.Name == "Group";
-                    fg.AppendLine($"if ({itemAccessor.PropertyOrDirectAccess}.{(dictGroup ? "RecordCache" : "Records")}.Count > 0)");
+                    fg.AppendLine($"if ({itemAccessor}.{(dictGroup ? "RecordCache" : "Records")}.Count > 0)");
                 }
                 using (new BraceWrapper(fg, doIt: isGroup))
                 {
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Generation
                 if (loqui.Singleton)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"{Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{itemAccessor.DirectAccess}.{this.Module.CopyInFromPrefix}{ModNickname}"))
+                        $"{Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{itemAccessor}.{this.Module.CopyInFromPrefix}{ModNickname}"))
                     {
                         args.Add($"frame: {frameAccessor}");
                         args.Add($"recordTypeConverter: null");
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)}; // Skip header");
                     }
                     using (var args = new ArgsWrapper(fg,
-                        $"{itemAccessor.DirectAccess} = {loqui.TargetObjectGeneration.Namespace}.{loqui.TypeNameInternal(getter: false, internalInterface: true)}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
+                        $"{itemAccessor} = {loqui.TargetObjectGeneration.Namespace}.{loqui.TypeNameInternal(getter: false, internalInterface: true)}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
                     {
                         args.Add($"frame: {frameAccessor}");
                         if (data?.RecordTypeConverter != null
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda.Generation
                 recConverter = $"{objGen.RegistrationName}.{loqui.Name}Converter";
             }
 
-            var isRequiredRecord = !loqui.HasBeenSet && data.HasTrigger;
+            var isRequiredRecord = !loqui.Nullable && data.HasTrigger;
             if (dataType == null)
             {
                 if (loqui.GetFieldData()?.HasTrigger ?? false)
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)}? _{typeGen.Name};");
                         }
-                        else if (loqui.HasBeenSet)
+                        else if (loqui.Nullable)
                         {
                             fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)}? {typeGen.Name} {{ get; private set; }}");
                         }
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => _{typeGen.Name} ?? new {loqui.DirectTypeName}({(loqui.ThisConstruction ? "this" : null)});");
             }
-            else if (loqui.HasBeenSet && !loqui.TargetObjectGeneration.IsTypelessStruct())
+            else if (loqui.Nullable && !loqui.TargetObjectGeneration.IsTypelessStruct())
             {
                 fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
             }
@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Generation
             var sum = 0;
             foreach (var item in loqui.TargetObjectGeneration.IterateFields(includeBaseClass: true))
             {
-                if (item.HasBeenSet) return null;
+                if (item.Nullable) return null;
                 if (!this.Module.TryGetTypeGeneration(item.GetType(), out var gen)) continue;
                 var len = await gen.ExpectedLength(loqui.TargetObjectGeneration, item);
                 if (len == null) return null;
@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Generation
                     int objectSum = 0;
                     foreach (var item in inheritingObj.IterateFields(includeBaseClass: true))
                     {
-                        if (item.HasBeenSet) return null;
+                        if (item.Nullable) return null;
                         if (!this.Module.TryGetTypeGeneration(item.GetType(), out var gen)) continue;
                         var len = await gen.ExpectedLength(inheritingObj, item);
                         if (len == null) return null;
@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Generation
 
             string accessor;
             if (loqui.Singleton
-                || !loqui.HasBeenSet)
+                || !loqui.Nullable)
             {
                 accessor = $"_{typeGen.Name}";
             }

@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IAStoryManagerNodeInternal,
         ILoquiObjectSetter<AStoryManagerNode>,
-        IEquatable<AStoryManagerNode>,
-        IEqualsMask
+        IEquatable<AStoryManagerNode>
     {
         #region Ctor
         protected AStoryManagerNode()
@@ -504,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AStoryManagerNodeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AStoryManagerNodeCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AStoryManagerNodeCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AStoryManagerNodeCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AStoryManagerNodeCommon.Instance.RemapLinks(this, mapping);
         public AStoryManagerNode(FormKey formKey)
@@ -541,8 +540,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAStoryManagerNodeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -561,7 +558,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAStoryManagerNode :
         IAStoryManagerNodeGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IAStoryManagerNodeInternal>
+        ILoquiObjectSetter<IAStoryManagerNodeInternal>,
+        ILinkedFormKeyContainer
     {
         new FormLinkNullable<AStoryManagerNode> Parent { get; set; }
         new FormLinkNullable<AStoryManagerNode> PreviousSibling { get; set; }
@@ -578,7 +576,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAStoryManagerNodeGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IAStoryManagerNodeGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => AStoryManagerNode_Registration.Instance;
@@ -631,24 +629,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IAStoryManagerNodeGetter item,
-            AStoryManagerNode.Mask<bool?> checkMask)
-        {
-            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static AStoryManagerNode.Mask<bool> GetHasBeenSetMask(this IAStoryManagerNodeGetter item)
-        {
-            var ret = new AStoryManagerNode.Mask<bool>(false);
-            ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -720,17 +700,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAStoryManagerNodeInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAStoryManagerNodeInternal item,
             MutagenFrame frame,
@@ -1147,30 +1116,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IAStoryManagerNodeGetter item,
-            AStoryManagerNode.Mask<bool?> checkMask)
-        {
-            if (checkMask.Parent.HasValue && checkMask.Parent.Value != (item.Parent.FormKey != null)) return false;
-            if (checkMask.PreviousSibling.HasValue && checkMask.PreviousSibling.Value != (item.PreviousSibling.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IAStoryManagerNodeGetter item,
-            AStoryManagerNode.Mask<bool> mask)
-        {
-            mask.Parent = (item.Parent.FormKey != null);
-            mask.PreviousSibling = (item.PreviousSibling.FormKey != null);
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static AStoryManagerNode_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1290,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return PreviousSiblingKey;
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -1672,15 +1617,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAStoryManagerNodeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AStoryManagerNodeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AStoryManagerNodeCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AStoryManagerNodeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AStoryManagerNodeCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AStoryManagerNodeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AStoryManagerNodeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

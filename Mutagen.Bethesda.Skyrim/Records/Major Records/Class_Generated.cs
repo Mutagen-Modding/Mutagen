@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IClassInternal,
         ILoquiObjectSetter<Class>,
-        IEquatable<Class>,
-        IEqualsMask
+        IEquatable<Class>
     {
         #region Ctor
         protected Class()
@@ -946,14 +945,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Class CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Class CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -980,8 +971,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1093,24 +1082,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IClassGetter item,
-            Class.Mask<bool?> checkMask)
-        {
-            return ((ClassCommon)((IClassGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Class.Mask<bool> GetHasBeenSetMask(this IClassGetter item)
-        {
-            var ret = new Class.Mask<bool>(false);
-            ((ClassCommon)((IClassGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IClassGetter item,
             IClassGetter rhs)
@@ -1180,17 +1151,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IClassInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IClassInternal item,
             MutagenFrame frame,
@@ -1776,40 +1736,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IClassGetter item,
-            Class.Mask<bool?> checkMask)
-        {
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
-            if (checkMask.Teaches.HasValue && checkMask.Teaches.Value != (item.Teaches != null)) return false;
-            if (checkMask.SkillWeights?.Overall.HasValue ?? false) return false;
-            if (checkMask.StatWeights?.Overall.HasValue ?? false) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IClassGetter item,
-            Class.Mask<bool> mask)
-        {
-            mask.Name = true;
-            mask.Description = true;
-            mask.Icon = (item.Icon != null);
-            mask.Unknown = true;
-            mask.Teaches = (item.Teaches != null);
-            mask.MaxTrainingLevel = true;
-            mask.SkillWeights = new MaskItem<bool, IEnumerable<KeyValuePair<Skill, bool>>?>(item.SkillWeights != null, null);
-            mask.BleedoutDefault = true;
-            mask.VoicePoints = true;
-            mask.StatWeights = new MaskItem<bool, IEnumerable<KeyValuePair<BasicStat, bool>>?>(item.StatWeights != null, null);
-            mask.Unknown2 = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static Class_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -2391,8 +2317,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClassBinaryWriteTranslation.Instance;

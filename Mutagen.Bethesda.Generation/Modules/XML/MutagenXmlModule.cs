@@ -47,9 +47,9 @@ namespace Mutagen.Bethesda.Generation
                     if (!generator.ShouldGenerateWrite(field)) return;
 
                     List<string> conditions = new List<string>();
-                    if (field.HasBeenSet)
+                    if (field.Nullable)
                     {
-                        conditions.Add($"{field.HasBeenSetAccessor(getter: true, accessor: Accessor.FromType(field, "item"))}");
+                        conditions.Add($"{field.NullableAccessor(getter: true, accessor: Accessor.FromType(field, "item"))}");
                     }
                     if (this.TranslationMaskParameter)
                     {
@@ -90,11 +90,11 @@ namespace Mutagen.Bethesda.Generation
 
                     if (field is DataType dataType)
                     {
-                        if (dataType.HasBeenSet)
+                        if (dataType.Nullable)
                         {
                             fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
                         }
-                        using (new BraceWrapper(fg, doIt: dataType.HasBeenSet))
+                        using (new BraceWrapper(fg, doIt: dataType.Nullable))
                         {
                             bool isInRange = false;
                             int encounteredBreakIndex = 0;
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Generation
 
         private void HandleDataTypeParsing(ObjectGeneration obj, FileGeneration fg, DataType set, DataType.DataTypeIteration subField, ref bool isInRange)
         {
-            if (subField.FieldIndex == 0 && set.HasBeenSet)
+            if (subField.FieldIndex == 0 && set.Nullable)
             {
                 fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Has;");
             }
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             if (field is DataType set)
                             {
-                                if (set.HasBeenSet)
+                                if (set.Nullable)
                                 {
                                     fg.AppendLine($"case \"Has{set.EnumName}\":");
                                     using (new DepthWrapper(fg))

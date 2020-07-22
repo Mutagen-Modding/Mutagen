@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SoundOutputChannel :
         ISoundOutputChannel,
         ILoquiObjectSetter<SoundOutputChannel>,
-        IEquatable<SoundOutputChannel>,
-        IEqualsMask
+        IEquatable<SoundOutputChannel>
     {
         #region Ctor
         public SoundOutputChannel()
@@ -572,14 +571,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static SoundOutputChannel CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static SoundOutputChannel CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -606,8 +597,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundOutputChannelGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -705,24 +694,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ISoundOutputChannelGetter item,
-            SoundOutputChannel.Mask<bool?> checkMask)
-        {
-            return ((SoundOutputChannelCommon)((ISoundOutputChannelGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SoundOutputChannel.Mask<bool> GetHasBeenSetMask(this ISoundOutputChannelGetter item)
-        {
-            var ret = new SoundOutputChannel.Mask<bool>(false);
-            ((SoundOutputChannelCommon)((ISoundOutputChannelGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ISoundOutputChannelGetter item,
             ISoundOutputChannelGetter rhs)
@@ -815,17 +786,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISoundOutputChannel item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISoundOutputChannel item,
             MutagenFrame frame,
@@ -1255,27 +1215,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ISoundOutputChannelGetter item,
-            SoundOutputChannel.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ISoundOutputChannelGetter item,
-            SoundOutputChannel.Mask<bool> mask)
-        {
-            mask.L = true;
-            mask.R = true;
-            mask.C = true;
-            mask.LFE = true;
-            mask.RL = true;
-            mask.RR = true;
-            mask.BL = true;
-            mask.BR = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ISoundOutputChannelGetter? lhs,
@@ -1517,12 +1456,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ISoundOutputChannelGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((SoundOutputChannelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1554,8 +1494,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundOutputChannelGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SoundOutputChannelBinaryWriteTranslation.Instance;

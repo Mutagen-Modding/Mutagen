@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         AVirtualMachineAdapter,
         IQuestAdapter,
         ILoquiObjectSetter<QuestAdapter>,
-        IEquatable<QuestAdapter>,
-        IEqualsMask
+        IEquatable<QuestAdapter>
     {
         #region Ctor
         public QuestAdapter()
@@ -648,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => QuestAdapterCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestAdapterCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestAdapterCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -666,14 +665,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new QuestAdapter CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static QuestAdapter CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -700,8 +691,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestAdapterGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -720,7 +709,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestAdapter :
         IQuestAdapterGetter,
         IAVirtualMachineAdapter,
-        ILoquiObjectSetter<IQuestAdapter>
+        ILoquiObjectSetter<IQuestAdapter>,
+        ILinkedFormKeyContainer
     {
         new QuestAdapter.VersioningBreaks Versioning { get; set; }
         new Byte Unknown { get; set; }
@@ -732,7 +722,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestAdapterGetter :
         IAVirtualMachineAdapterGetter,
         ILoquiObject<IQuestAdapterGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => QuestAdapter_Registration.Instance;
@@ -787,24 +777,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IQuestAdapterGetter item,
-            QuestAdapter.Mask<bool?> checkMask)
-        {
-            return ((QuestAdapterCommon)((IQuestAdapterGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static QuestAdapter.Mask<bool> GetHasBeenSetMask(this IQuestAdapterGetter item)
-        {
-            var ret = new QuestAdapter.Mask<bool>(false);
-            ((QuestAdapterCommon)((IQuestAdapterGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -876,17 +848,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IQuestAdapter item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IQuestAdapter item,
             MutagenFrame frame,
@@ -1327,31 +1288,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IQuestAdapterGetter item,
-            QuestAdapter.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IQuestAdapterGetter item,
-            QuestAdapter.Mask<bool> mask)
-        {
-            mask.Versioning = true;
-            mask.Unknown = true;
-            mask.FileName = true;
-            var FragmentsItem = item.Fragments;
-            mask.Fragments = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, QuestScriptFragment.Mask<bool>?>>?>(true, FragmentsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, QuestScriptFragment.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var AliasesItem = item.Aliases;
-            mask.Aliases = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, QuestFragmentAlias.Mask<bool>?>>?>(true, AliasesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, QuestFragmentAlias.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static QuestAdapter_FieldIndex ConvertFieldIndex(AVirtualMachineAdapter_FieldIndex index)
         {
             switch (index)
@@ -1424,7 +1360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Aliases.WhereCastable<IQuestFragmentAliasGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Aliases.WhereCastable<IQuestFragmentAliasGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -1801,15 +1737,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestAdapterGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => QuestAdapterCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => QuestAdapterCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestAdapterCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => QuestAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

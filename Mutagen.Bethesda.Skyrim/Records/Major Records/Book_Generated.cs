@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IBookInternal,
         ILoquiObjectSetter<Book>,
-        IEquatable<Book>,
-        IEqualsMask
+        IEquatable<Book>
     {
         #region Ctor
         protected Book()
@@ -1094,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookCommon.Instance.RemapLinks(this, mapping);
         public Book(FormKey formKey)
@@ -1133,14 +1132,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Book CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Book CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1167,8 +1158,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBookGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1194,7 +1183,8 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         IObjectBounded,
         IWeightValue,
-        ILoquiObjectSetter<IBookInternal>
+        ILoquiObjectSetter<IBookInternal>,
+        ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1234,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IWeightValueGetter,
         ILoquiObject<IBookGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Book_Registration.Instance;
@@ -1303,24 +1293,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IBookGetter item,
-            Book.Mask<bool?> checkMask)
-        {
-            return ((BookCommon)((IBookGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Book.Mask<bool> GetHasBeenSetMask(this IBookGetter item)
-        {
-            var ret = new Book.Mask<bool>(false);
-            ((BookCommon)((IBookGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1392,17 +1364,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IBookInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IBookInternal item,
             MutagenFrame frame,
@@ -2126,64 +2087,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IBookGetter item,
-            Book.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Icons?.Overall.HasValue ?? false && checkMask.Icons.Overall.Value != (item.Icons != null)) return false;
-            if (checkMask.Icons?.Specific != null && (item.Icons == null || !item.Icons.HasBeenSet(checkMask.Icons.Specific))) return false;
-            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
-            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
-            if (checkMask.PickUpSound.HasValue && checkMask.PickUpSound.Value != (item.PickUpSound.FormKey != null)) return false;
-            if (checkMask.PutDownSound.HasValue && checkMask.PutDownSound.Value != (item.PutDownSound.FormKey != null)) return false;
-            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.Teaches?.Overall.HasValue ?? false && checkMask.Teaches.Overall.Value != (item.Teaches != null)) return false;
-            if (checkMask.Teaches?.Specific != null && (item.Teaches == null || !item.Teaches.HasBeenSet(checkMask.Teaches.Specific))) return false;
-            if (checkMask.InventoryArt.HasValue && checkMask.InventoryArt.Value != (item.InventoryArt.FormKey != null)) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IBookGetter item,
-            Book.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.Name = (item.Name != null);
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            var itemIcons = item.Icons;
-            mask.Icons = new MaskItem<bool, Icons.Mask<bool>?>(itemIcons != null, itemIcons?.GetHasBeenSetMask());
-            mask.BookText = true;
-            var itemDestructible = item.Destructible;
-            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
-            mask.PickUpSound = (item.PickUpSound.FormKey != null);
-            mask.PutDownSound = (item.PutDownSound.FormKey != null);
-            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.Flags = true;
-            mask.Type = true;
-            mask.Unused = true;
-            var itemTeaches = item.Teaches;
-            mask.Teaches = new MaskItem<bool, BookTeachTarget.Mask<bool>?>(itemTeaches != null, itemTeaches?.GetHasBeenSetMask());
-            mask.Value = true;
-            mask.Weight = true;
-            mask.InventoryArt = (item.InventoryArt.FormKey != null);
-            mask.Description = (item.Description != null);
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static Book_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -2351,7 +2254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
@@ -2387,7 +2290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Teaches is ILinkedFormKeyContainer TeacheslinkCont)
+            if (obj.Teaches is ILinkedFormKeyContainerGetter TeacheslinkCont)
             {
                 foreach (var item in TeacheslinkCont.LinkFormKeys)
                 {
@@ -3186,15 +3089,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBookGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => BookBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

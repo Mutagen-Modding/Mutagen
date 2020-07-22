@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class MagicEffectSound :
         IMagicEffectSound,
         ILoquiObjectSetter<MagicEffectSound>,
-        IEquatable<MagicEffectSound>,
-        IEqualsMask
+        IEquatable<MagicEffectSound>
     {
         #region Ctor
         public MagicEffectSound()
@@ -377,7 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => MagicEffectSoundCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MagicEffectSoundCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectSoundCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSoundCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSoundCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -397,14 +396,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static MagicEffectSound CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static MagicEffectSound CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -431,8 +422,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectSoundGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -450,7 +439,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IMagicEffectSound :
         IMagicEffectSoundGetter,
-        ILoquiObjectSetter<IMagicEffectSound>
+        ILoquiObjectSetter<IMagicEffectSound>,
+        ILinkedFormKeyContainer
     {
         new MagicEffect.SoundType Type { get; set; }
         new FormLink<SoundDescriptor> Sound { get; set; }
@@ -459,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMagicEffectSoundGetter :
         ILoquiObject,
         ILoquiObject<IMagicEffectSoundGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -517,24 +507,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IMagicEffectSoundGetter item,
-            MagicEffectSound.Mask<bool?> checkMask)
-        {
-            return ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static MagicEffectSound.Mask<bool> GetHasBeenSetMask(this IMagicEffectSoundGetter item)
-        {
-            var ret = new MagicEffectSound.Mask<bool>(false);
-            ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -629,17 +601,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IMagicEffectSound item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IMagicEffectSound item,
             MutagenFrame frame,
@@ -961,21 +922,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IMagicEffectSoundGetter item,
-            MagicEffectSound.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IMagicEffectSoundGetter item,
-            MagicEffectSound.Mask<bool> mask)
-        {
-            mask.Type = true;
-            mask.Sound = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IMagicEffectSoundGetter? lhs,
@@ -1177,12 +1123,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IMagicEffectSoundGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((MagicEffectSoundBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1214,15 +1161,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectSoundGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => MagicEffectSoundCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MagicEffectSoundCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSoundCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSoundCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectSoundCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MagicEffectSoundBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

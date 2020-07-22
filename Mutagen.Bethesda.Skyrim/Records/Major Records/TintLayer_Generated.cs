@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class TintLayer :
         ITintLayer,
         ILoquiObjectSetter<TintLayer>,
-        IEquatable<TintLayer>,
-        IEqualsMask
+        IEquatable<TintLayer>
     {
         #region Ctor
         public TintLayer()
@@ -457,14 +456,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static TintLayer CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static TintLayer CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -491,8 +482,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITintLayerGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -580,24 +569,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ITintLayerGetter item,
-            TintLayer.Mask<bool?> checkMask)
-        {
-            return ((TintLayerCommon)((ITintLayerGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static TintLayer.Mask<bool> GetHasBeenSetMask(this ITintLayerGetter item)
-        {
-            var ret = new TintLayer.Mask<bool>(false);
-            ((TintLayerCommon)((ITintLayerGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -692,17 +663,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ITintLayer item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ITintLayer item,
             MutagenFrame frame,
@@ -1079,27 +1039,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ITintLayerGetter item,
-            TintLayer.Mask<bool?> checkMask)
-        {
-            if (checkMask.Index.HasValue && checkMask.Index.Value != (item.Index != null)) return false;
-            if (checkMask.Color.HasValue && checkMask.Color.Value != (item.Color != null)) return false;
-            if (checkMask.InterpolationValue.HasValue && checkMask.InterpolationValue.Value != (item.InterpolationValue != null)) return false;
-            if (checkMask.Preset.HasValue && checkMask.Preset.Value != (item.Preset != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ITintLayerGetter item,
-            TintLayer.Mask<bool> mask)
-        {
-            mask.Index = (item.Index != null);
-            mask.Color = (item.Color != null);
-            mask.InterpolationValue = (item.InterpolationValue != null);
-            mask.Preset = (item.Preset != null);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ITintLayerGetter? lhs,
@@ -1381,12 +1320,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ITintLayerGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((TintLayerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1418,8 +1358,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITintLayerGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TintLayerBinaryWriteTranslation.Instance;

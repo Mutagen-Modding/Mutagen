@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class BodyPart :
         IBodyPart,
         ILoquiObjectSetter<BodyPart>,
-        IEquatable<BodyPart>,
-        IEqualsMask
+        IEquatable<BodyPart>
     {
         #region Ctor
         public BodyPart()
@@ -1359,7 +1358,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => BodyPartCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => BodyPartCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => BodyPartCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartCommon.Instance.RemapLinks(this, mapping);
         [Flags]
@@ -1383,14 +1382,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static BodyPart CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static BodyPart CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1417,8 +1408,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyPartGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1437,7 +1426,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IBodyPart :
         IBodyPartGetter,
         ITranslatedNamedRequired,
-        ILoquiObjectSetter<IBodyPart>
+        ILoquiObjectSetter<IBodyPart>,
+        ILinkedFormKeyContainer
     {
         new TranslatedString Name { get; set; }
         new String? PoseMatching { get; set; }
@@ -1478,7 +1468,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         ITranslatedNamedRequiredGetter,
         ILoquiObject<IBodyPartGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1567,24 +1557,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IBodyPartGetter item,
-            BodyPart.Mask<bool?> checkMask)
-        {
-            return ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static BodyPart.Mask<bool> GetHasBeenSetMask(this IBodyPartGetter item)
-        {
-            var ret = new BodyPart.Mask<bool>(false);
-            ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1679,17 +1651,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IBodyPart item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IBodyPart item,
             MutagenFrame frame,
@@ -2573,54 +2534,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IBodyPartGetter item,
-            BodyPart.Mask<bool?> checkMask)
-        {
-            if (checkMask.PoseMatching.HasValue && checkMask.PoseMatching.Value != (item.PoseMatching != null)) return false;
-            if (checkMask.TextureFilesHashes.HasValue && checkMask.TextureFilesHashes.Value != (item.TextureFilesHashes != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IBodyPartGetter item,
-            BodyPart.Mask<bool> mask)
-        {
-            mask.Name = true;
-            mask.PoseMatching = (item.PoseMatching != null);
-            mask.PartNode = true;
-            mask.VatsTarget = true;
-            mask.IkStartNode = true;
-            mask.DamageMult = true;
-            mask.Flags = true;
-            mask.Type = true;
-            mask.HealthPercent = true;
-            mask.ActorValue = true;
-            mask.ToHitChance = true;
-            mask.ExplodableExplosionChance = true;
-            mask.ExplodableDebrisCount = true;
-            mask.ExplodableDebris = true;
-            mask.ExplodableExplosion = true;
-            mask.TrackingMaxAngle = true;
-            mask.ExplodableDebrisScale = true;
-            mask.SeverableDebrisCount = true;
-            mask.SeverableDebris = true;
-            mask.SeverableExplosion = true;
-            mask.SeverableDebrisScale = true;
-            mask.GorePositioning = true;
-            mask.GoreRotation = true;
-            mask.SeverableImpactData = true;
-            mask.ExplodableImpactData = true;
-            mask.SeverableDecalCount = true;
-            mask.ExplodableDecalCount = true;
-            mask.Unknown = true;
-            mask.LimbReplacementScale = true;
-            mask.LimbReplacementModel = true;
-            mask.GoreTargetBone = true;
-            mask.TextureFilesHashes = (item.TextureFilesHashes != null);
-            mask.BPNDDataTypeState = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IBodyPartGetter? lhs,
@@ -3251,12 +3164,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IBodyPartGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((BodyPartBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -3288,15 +3202,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyPartGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => BodyPartCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => BodyPartCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => BodyPartCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BodyPartBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

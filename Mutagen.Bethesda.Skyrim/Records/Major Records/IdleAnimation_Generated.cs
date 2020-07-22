@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IIdleAnimationInternal,
         ILoquiObjectSetter<IdleAnimation>,
-        IEquatable<IdleAnimation>,
-        IEqualsMask
+        IEquatable<IdleAnimation>
     {
         #region Ctor
         protected IdleAnimation()
@@ -806,7 +805,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
         public IdleAnimation(FormKey formKey)
@@ -845,14 +844,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new IdleAnimation CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static IdleAnimation CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -879,8 +870,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIdleAnimationGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -900,7 +889,8 @@ namespace Mutagen.Bethesda.Skyrim
         IIdleAnimationGetter,
         ISkyrimMajorRecord,
         IIdleRelation,
-        ILoquiObjectSetter<IIdleAnimationInternal>
+        ILoquiObjectSetter<IIdleAnimationInternal>,
+        ILinkedFormKeyContainer
     {
         new IExtendedList<Condition> Conditions { get; }
         new String? Filename { get; set; }
@@ -925,7 +915,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IIdleRelationGetter,
         ILoquiObject<IIdleAnimationGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
@@ -985,24 +975,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IIdleAnimationGetter item,
-            IdleAnimation.Mask<bool?> checkMask)
-        {
-            return ((IdleAnimationCommon)((IIdleAnimationGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static IdleAnimation.Mask<bool> GetHasBeenSetMask(this IIdleAnimationGetter item)
-        {
-            var ret = new IdleAnimation.Mask<bool>(false);
-            ((IdleAnimationCommon)((IIdleAnimationGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1074,17 +1046,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IIdleAnimationInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IIdleAnimationInternal item,
             MutagenFrame frame,
@@ -1634,37 +1595,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IIdleAnimationGetter item,
-            IdleAnimation.Mask<bool?> checkMask)
-        {
-            if (checkMask.Filename.HasValue && checkMask.Filename.Value != (item.Filename != null)) return false;
-            if (checkMask.AnimationEvent.HasValue && checkMask.AnimationEvent.Value != (item.AnimationEvent != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IIdleAnimationGetter item,
-            IdleAnimation.Mask<bool> mask)
-        {
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Filename = (item.Filename != null);
-            mask.AnimationEvent = (item.AnimationEvent != null);
-            mask.RelatedIdles = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.LoopingSecondsMin = true;
-            mask.LoopingSecondsMax = true;
-            mask.Flags = true;
-            mask.AnimationGroupSection = true;
-            mask.ReplayDelay = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static IdleAnimation_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1790,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -2289,15 +2219,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIdleAnimationGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IdleAnimationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

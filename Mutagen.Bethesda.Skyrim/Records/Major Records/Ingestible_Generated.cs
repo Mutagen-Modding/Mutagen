@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IIngestibleInternal,
         ILoquiObjectSetter<Ingestible>,
-        IEquatable<Ingestible>,
-        IEqualsMask
+        IEquatable<Ingestible>
     {
         #region Ctor
         protected Ingestible()
@@ -1122,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => IngestibleCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => IngestibleCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => IngestibleCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IngestibleCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IngestibleCommon.Instance.RemapLinks(this, mapping);
         public Ingestible(FormKey formKey)
@@ -1166,14 +1165,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Ingestible CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Ingestible CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1200,8 +1191,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIngestibleGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1225,7 +1214,8 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectId,
         IObjectBounded,
         IWeightValue,
-        ILoquiObjectSetter<IIngestibleInternal>
+        ILoquiObjectSetter<IIngestibleInternal>,
+        ILinkedFormKeyContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1266,7 +1256,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IWeightValueGetter,
         ILoquiObject<IIngestibleGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Ingestible_Registration.Instance;
@@ -1340,24 +1330,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IIngestibleGetter item,
-            Ingestible.Mask<bool?> checkMask)
-        {
-            return ((IngestibleCommon)((IIngestibleGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Ingestible.Mask<bool> GetHasBeenSetMask(this IIngestibleGetter item)
-        {
-            var ret = new Ingestible.Mask<bool>(false);
-            ((IngestibleCommon)((IIngestibleGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IIngestibleGetter item,
             IIngestibleGetter rhs)
@@ -1427,17 +1399,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IIngestibleInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IIngestibleInternal item,
             MutagenFrame frame,
@@ -2148,58 +2109,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.ENITDataTypeState, "ENITDataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            IIngestibleGetter item,
-            Ingestible.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
-            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
-            if (checkMask.Icons?.Overall.HasValue ?? false && checkMask.Icons.Overall.Value != (item.Icons != null)) return false;
-            if (checkMask.Icons?.Specific != null && (item.Icons == null || !item.Icons.HasBeenSet(checkMask.Icons.Specific))) return false;
-            if (checkMask.PickUpSound.HasValue && checkMask.PickUpSound.Value != (item.PickUpSound.FormKey != null)) return false;
-            if (checkMask.PutDownSound.HasValue && checkMask.PutDownSound.Value != (item.PutDownSound.FormKey != null)) return false;
-            if (checkMask.EquipmentType.HasValue && checkMask.EquipmentType.Value != (item.EquipmentType.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IIngestibleGetter item,
-            Ingestible.Mask<bool> mask)
-        {
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.Name = (item.Name != null);
-            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.Description = (item.Description != null);
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            var itemDestructible = item.Destructible;
-            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
-            var itemIcons = item.Icons;
-            mask.Icons = new MaskItem<bool, Icons.Mask<bool>?>(itemIcons != null, itemIcons?.GetHasBeenSetMask());
-            mask.PickUpSound = (item.PickUpSound.FormKey != null);
-            mask.PutDownSound = (item.PutDownSound.FormKey != null);
-            mask.EquipmentType = (item.EquipmentType.FormKey != null);
-            mask.Weight = true;
-            mask.Value = true;
-            mask.Flags = true;
-            mask.Addiction = true;
-            mask.AddictionChance = true;
-            mask.ConsumeSound = true;
-            var EffectsItem = item.Effects;
-            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.ENITDataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Ingestible_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -3130,15 +3039,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIngestibleGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => IngestibleCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => IngestibleCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IngestibleCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IngestibleCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => IngestibleCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IngestibleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

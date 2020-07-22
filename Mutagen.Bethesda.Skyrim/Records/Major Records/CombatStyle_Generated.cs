@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ICombatStyleInternal,
         ILoquiObjectSetter<CombatStyle>,
-        IEquatable<CombatStyle>,
-        IEqualsMask
+        IEquatable<CombatStyle>
     {
         #region Ctor
         protected CombatStyle()
@@ -1030,14 +1029,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new CombatStyle CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static CombatStyle CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1064,8 +1055,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1191,24 +1180,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ICombatStyleGetter item,
-            CombatStyle.Mask<bool?> checkMask)
-        {
-            return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static CombatStyle.Mask<bool> GetHasBeenSetMask(this ICombatStyleGetter item)
-        {
-            var ret = new CombatStyle.Mask<bool>(false);
-            ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ICombatStyleGetter item,
             ICombatStyleGetter rhs)
@@ -1278,17 +1249,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICombatStyleInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICombatStyleInternal item,
             MutagenFrame frame,
@@ -1943,53 +1903,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.CSGDDataTypeState, "CSGDDataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            ICombatStyleGetter item,
-            CombatStyle.Mask<bool?> checkMask)
-        {
-            if (checkMask.CSMD.HasValue && checkMask.CSMD.Value != (item.CSMD != null)) return false;
-            if (checkMask.Melee?.Overall.HasValue ?? false && checkMask.Melee.Overall.Value != (item.Melee != null)) return false;
-            if (checkMask.Melee?.Specific != null && (item.Melee == null || !item.Melee.HasBeenSet(checkMask.Melee.Specific))) return false;
-            if (checkMask.CloseRange?.Overall.HasValue ?? false && checkMask.CloseRange.Overall.Value != (item.CloseRange != null)) return false;
-            if (checkMask.CloseRange?.Specific != null && (item.CloseRange == null || !item.CloseRange.HasBeenSet(checkMask.CloseRange.Specific))) return false;
-            if (checkMask.LongRangeStrafeMult.HasValue && checkMask.LongRangeStrafeMult.Value != (item.LongRangeStrafeMult != null)) return false;
-            if (checkMask.Flight?.Overall.HasValue ?? false && checkMask.Flight.Overall.Value != (item.Flight != null)) return false;
-            if (checkMask.Flight?.Specific != null && (item.Flight == null || !item.Flight.HasBeenSet(checkMask.Flight.Specific))) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ICombatStyleGetter item,
-            CombatStyle.Mask<bool> mask)
-        {
-            mask.OffensiveMult = true;
-            mask.DefensiveMult = true;
-            mask.GroupOffensiveMult = true;
-            mask.EquipmentScoreMultMelee = true;
-            mask.EquipmentScoreMultMagic = true;
-            mask.EquipmentScoreMultRanged = true;
-            mask.EquipmentScoreMultShout = true;
-            mask.EquipmentScoreMultUnarmed = true;
-            mask.EquipmentScoreMultStaff = true;
-            mask.AvoidThreatChance = true;
-            mask.CSMD = (item.CSMD != null);
-            var itemMelee = item.Melee;
-            mask.Melee = new MaskItem<bool, CombatStyleMelee.Mask<bool>?>(itemMelee != null, itemMelee?.GetHasBeenSetMask());
-            var itemCloseRange = item.CloseRange;
-            mask.CloseRange = new MaskItem<bool, CombatStyleCloseRange.Mask<bool>?>(itemCloseRange != null, itemCloseRange?.GetHasBeenSetMask());
-            mask.LongRangeStrafeMult = (item.LongRangeStrafeMult != null);
-            var itemFlight = item.Flight;
-            mask.Flight = new MaskItem<bool, CombatStyleFlight.Mask<bool>?>(itemFlight != null, itemFlight?.GetHasBeenSetMask());
-            mask.Flags = (item.Flags != null);
-            mask.CSGDDataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static CombatStyle_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2737,8 +2650,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;

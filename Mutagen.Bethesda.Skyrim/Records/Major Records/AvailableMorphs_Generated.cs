@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class AvailableMorphs :
         IAvailableMorphs,
         ILoquiObjectSetter<AvailableMorphs>,
-        IEquatable<AvailableMorphs>,
-        IEqualsMask
+        IEquatable<AvailableMorphs>
     {
         #region Ctor
         public AvailableMorphs()
@@ -517,14 +516,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static AvailableMorphs CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static AvailableMorphs CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -551,8 +542,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAvailableMorphsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -640,24 +629,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IAvailableMorphsGetter item,
-            AvailableMorphs.Mask<bool?> checkMask)
-        {
-            return ((AvailableMorphsCommon)((IAvailableMorphsGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static AvailableMorphs.Mask<bool> GetHasBeenSetMask(this IAvailableMorphsGetter item)
-        {
-            var ret = new AvailableMorphs.Mask<bool>(false);
-            ((AvailableMorphsCommon)((IAvailableMorphsGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -752,17 +723,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAvailableMorphs item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAvailableMorphs item,
             MutagenFrame frame,
@@ -1142,35 +1102,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IAvailableMorphsGetter item,
-            AvailableMorphs.Mask<bool?> checkMask)
-        {
-            if (checkMask.Nose?.Overall.HasValue ?? false && checkMask.Nose.Overall.Value != (item.Nose != null)) return false;
-            if (checkMask.Nose?.Specific != null && (item.Nose == null || !item.Nose.HasBeenSet(checkMask.Nose.Specific))) return false;
-            if (checkMask.Brow?.Overall.HasValue ?? false && checkMask.Brow.Overall.Value != (item.Brow != null)) return false;
-            if (checkMask.Brow?.Specific != null && (item.Brow == null || !item.Brow.HasBeenSet(checkMask.Brow.Specific))) return false;
-            if (checkMask.Eye?.Overall.HasValue ?? false && checkMask.Eye.Overall.Value != (item.Eye != null)) return false;
-            if (checkMask.Eye?.Specific != null && (item.Eye == null || !item.Eye.HasBeenSet(checkMask.Eye.Specific))) return false;
-            if (checkMask.Lip?.Overall.HasValue ?? false && checkMask.Lip.Overall.Value != (item.Lip != null)) return false;
-            if (checkMask.Lip?.Specific != null && (item.Lip == null || !item.Lip.HasBeenSet(checkMask.Lip.Specific))) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IAvailableMorphsGetter item,
-            AvailableMorphs.Mask<bool> mask)
-        {
-            var itemNose = item.Nose;
-            mask.Nose = new MaskItem<bool, Morph.Mask<bool>?>(itemNose != null, itemNose?.GetHasBeenSetMask());
-            var itemBrow = item.Brow;
-            mask.Brow = new MaskItem<bool, Morph.Mask<bool>?>(itemBrow != null, itemBrow?.GetHasBeenSetMask());
-            var itemEye = item.Eye;
-            mask.Eye = new MaskItem<bool, Morph.Mask<bool>?>(itemEye != null, itemEye?.GetHasBeenSetMask());
-            var itemLip = item.Lip;
-            mask.Lip = new MaskItem<bool, Morph.Mask<bool>?>(itemLip != null, itemLip?.GetHasBeenSetMask());
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IAvailableMorphsGetter? lhs,
@@ -1528,12 +1459,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IAvailableMorphsGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AvailableMorphsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1565,8 +1497,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAvailableMorphsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AvailableMorphsBinaryWriteTranslation.Instance;

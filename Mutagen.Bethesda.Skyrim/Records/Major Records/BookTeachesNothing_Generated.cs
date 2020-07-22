@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         BookTeachTarget,
         IBookTeachesNothing,
         ILoquiObjectSetter<BookTeachesNothing>,
-        IEquatable<BookTeachesNothing>,
-        IEqualsMask
+        IEquatable<BookTeachesNothing>
     {
         #region Ctor
         public BookTeachesNothing()
@@ -340,14 +339,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new BookTeachesNothing CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static BookTeachesNothing CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -374,8 +365,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBookTeachesNothingGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -454,24 +443,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IBookTeachesNothingGetter item,
-            BookTeachesNothing.Mask<bool?> checkMask)
-        {
-            return ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static BookTeachesNothing.Mask<bool> GetHasBeenSetMask(this IBookTeachesNothingGetter item)
-        {
-            var ret = new BookTeachesNothing.Mask<bool>(false);
-            ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IBookTeachesNothingGetter item,
             IBookTeachesNothingGetter rhs)
@@ -541,17 +512,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IBookTeachesNothing item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IBookTeachesNothing item,
             MutagenFrame frame,
@@ -877,25 +837,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IBookTeachesNothingGetter item,
-            BookTeachesNothing.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IBookTeachesNothingGetter item,
-            BookTeachesNothing.Mask<bool> mask)
-        {
-            mask.RawContent = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static BookTeachesNothing_FieldIndex ConvertFieldIndex(BookTeachTarget_FieldIndex index)
         {
             switch (index)
@@ -1157,8 +1098,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBookTeachesNothingGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => BookTeachesNothingBinaryWriteTranslation.Instance;

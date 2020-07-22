@@ -10,11 +10,11 @@
   <Object name="BodyPart" objType="Subrecord" GUID="8a2f315d-0fc0-40ef-abc2-ee949928ba76" ID="432">
     <Interface>ITranslatedNamedRequired</Interface>
     <Fields>
-      <String name="Name" recordType="BPTN" translated="Normal" hasBeenSet="False" />
+      <String name="Name" recordType="BPTN" translated="Normal" nullable="False" />
       <String name="PoseMatching" recordType="PNAM" />
-      <String name="PartNode" recordType="BPNN" hasBeenSet="False" />
-      <String name="VatsTarget" recordType="BPNT" hasBeenSet="False" />
-      <String name="IkStartNode" recordType="BPNI" hasBeenSet="False" />
+      <String name="PartNode" recordType="BPNN" nullable="False" />
+      <String name="VatsTarget" recordType="BPNT" nullable="False" />
+      <String name="IkStartNode" recordType="BPNI" nullable="False" />
       <Data recordType="BPND">
         <Fields>
           <Float name="DamageMult" />
@@ -43,8 +43,8 @@
           <Float name="LimbReplacementScale" />
         </Fields>
       </Data>
-      <String name="LimbReplacementModel" recordType="NAM1" hasBeenSet="False" />
-      <String name="GoreTargetBone" recordType="NAM4" hasBeenSet="False" />
+      <String name="LimbReplacementModel" recordType="NAM1" nullable="False" />
+      <String name="GoreTargetBone" recordType="NAM4" nullable="False" />
       <ByteArray name="TextureFilesHashes" recordType="NAM5" />
     </Fields>
   </Object>

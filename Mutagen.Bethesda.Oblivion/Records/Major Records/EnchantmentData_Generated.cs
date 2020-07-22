@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class EnchantmentData :
         IEnchantmentData,
         ILoquiObjectSetter<EnchantmentData>,
-        IEquatable<EnchantmentData>,
-        IEqualsMask
+        IEquatable<EnchantmentData>
     {
         #region Ctor
         public EnchantmentData()
@@ -452,14 +451,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static EnchantmentData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static EnchantmentData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -486,8 +477,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnchantmentDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -575,24 +564,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IEnchantmentDataGetter item,
-            EnchantmentData.Mask<bool?> checkMask)
-        {
-            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static EnchantmentData.Mask<bool> GetHasBeenSetMask(this IEnchantmentDataGetter item)
-        {
-            var ret = new EnchantmentData.Mask<bool>(false);
-            ((EnchantmentDataCommon)((IEnchantmentDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -687,17 +658,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IEnchantmentData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IEnchantmentData item,
             MutagenFrame frame,
@@ -1059,23 +1019,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IEnchantmentDataGetter item,
-            EnchantmentData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IEnchantmentDataGetter item,
-            EnchantmentData.Mask<bool> mask)
-        {
-            mask.Type = true;
-            mask.ChargeAmount = true;
-            mask.EnchantCost = true;
-            mask.Flags = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IEnchantmentDataGetter? lhs,
@@ -1297,12 +1240,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IEnchantmentDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((EnchantmentDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1334,8 +1278,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnchantmentDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EnchantmentDataBinaryWriteTranslation.Instance;

@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Generation
                 $"{this.Namespace}ByteArrayBinaryTranslation.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
-                args.Add($"item: {itemAccessor.DirectAccess}");
+                args.Add($"item: {itemAccessor}");
                 if (this.DoErrorMasks)
                 {
                     args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Generation
                     MaskAccessor = errorMaskAccessor,
                     ItemAccessor = itemAccessor,
                     IndexAccessor = typeGen.IndexEnumInt,
-                    ExtraArgs = $"frame: {framePass}".Single(),
+                    ExtraArgs = $"frame: {framePass}".AsEnumerable(),
                     SkipErrorMask = !this.DoErrorMasks
                 });
         }
@@ -119,14 +119,14 @@ namespace Mutagen.Bethesda.Generation
                 $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.Namespace}ByteArrayBinaryTranslation.Instance.Parse",
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
             {
-                args.Add(nodeAccessor.DirectAccess);
+                args.Add(nodeAccessor.Access);
                 if (this.DoErrorMasks)
                 {
                     args.Add($"errorMask: out {errorMaskAccessor}");
                 }
                 if (asyncMode == AsyncMode.Off)
                 {
-                    args.Add($"item: out {outItemAccessor.DirectAccess}");
+                    args.Add($"item: out {outItemAccessor}");
                 }
                 if (data.HasTrigger)
                 {
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Generation
                 if (data.OverflowRecordType.HasValue)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.ReadByteArrayWithOverflow)}"))
+                        $"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.ReadByteArrayWithOverflow)}"))
                     {
                         args.Add(dataAccessor.ToString());
                         args.Add($"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}");
@@ -188,30 +188,30 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(_data, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}) : {(typeGen.HasBeenSet ? $"default(ReadOnlyMemorySlice<byte>?)" : "UtilityTranslation.Zeros.Slice(0, 0)")};");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(_data, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}) : {(typeGen.Nullable ? $"default(ReadOnlyMemorySlice<byte>?)" : "UtilityTranslation.Zeros.Slice(0, 0)")};");
                 }
             }
             else
             {
                 if (dataType == null)
                 {
-                    if (typeGen.HasBeenSet)
+                    if (typeGen.Nullable)
                     {
-                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {dataAccessor}.Length >= {(currentPosition + (await this.ExpectedLength(objGen, typeGen)).Value)} ? {dataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, {data.Length.Value}).ToArray() : default(ReadOnlyMemorySlice<byte>?);");
+                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {dataAccessor}.Length >= {(currentPosition + (await this.ExpectedLength(objGen, typeGen)).Value)} ? {dataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, {data.Length.Value}).ToArray() : default(ReadOnlyMemorySlice<byte>?);");
                     }
                     else if (data.Length.HasValue)
                     {
-                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {dataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{data.Length.Value:X}).ToArray();");
+                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {dataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{data.Length.Value:X}).ToArray();");
                     }
                     else
                     {
-                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {dataAccessor}.Span{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}.ToArray();");
+                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {dataAccessor}.Span{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}.ToArray();");
                     }
                 }
                 else
                 {
                     DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, passedLengthAccessor);
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {dataAccessor}.Span.Slice(_{typeGen.Name}Location, {(await this.ExpectedLength(objGen, typeGen)).Value}).ToArray() : default(ReadOnlyMemorySlice<byte>{(typeGen.HasBeenSet ? "?" : null)});");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {dataAccessor}.Span.Slice(_{typeGen.Name}Location, {(await this.ExpectedLength(objGen, typeGen)).Value}).ToArray() : default(ReadOnlyMemorySlice<byte>{(typeGen.Nullable ? "?" : null)});");
                 }
             }
         }

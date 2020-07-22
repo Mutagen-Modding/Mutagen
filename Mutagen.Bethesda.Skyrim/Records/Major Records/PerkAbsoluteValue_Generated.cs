@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkAbsoluteValue,
         ILoquiObjectSetter<PerkAbsoluteValue>,
-        IEquatable<PerkAbsoluteValue>,
-        IEqualsMask
+        IEquatable<PerkAbsoluteValue>
     {
         #region Ctor
         public PerkAbsoluteValue()
@@ -363,14 +362,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PerkAbsoluteValue CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PerkAbsoluteValue CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -397,8 +388,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkAbsoluteValueGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -477,24 +466,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IPerkAbsoluteValueGetter item,
-            PerkAbsoluteValue.Mask<bool?> checkMask)
-        {
-            return ((PerkAbsoluteValueCommon)((IPerkAbsoluteValueGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PerkAbsoluteValue.Mask<bool> GetHasBeenSetMask(this IPerkAbsoluteValueGetter item)
-        {
-            var ret = new PerkAbsoluteValue.Mask<bool>(false);
-            ((PerkAbsoluteValueCommon)((IPerkAbsoluteValueGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IPerkAbsoluteValueGetter item,
             IPerkAbsoluteValueGetter rhs)
@@ -564,17 +535,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPerkAbsoluteValue item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPerkAbsoluteValue item,
             MutagenFrame frame,
@@ -924,25 +884,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPerkAbsoluteValueGetter item,
-            PerkAbsoluteValue.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPerkAbsoluteValueGetter item,
-            PerkAbsoluteValue.Mask<bool> mask)
-        {
-            mask.Negative = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static PerkAbsoluteValue_FieldIndex ConvertFieldIndex(APerkEntryPointEffect_FieldIndex index)
         {
             switch (index)
@@ -1282,8 +1223,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkAbsoluteValueGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkAbsoluteValueBinaryWriteTranslation.Instance;

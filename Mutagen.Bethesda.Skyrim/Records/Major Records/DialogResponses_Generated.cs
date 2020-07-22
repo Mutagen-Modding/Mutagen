@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IDialogResponsesInternal,
         ILoquiObjectSetter<DialogResponses>,
-        IEquatable<DialogResponses>,
-        IEqualsMask
+        IEquatable<DialogResponses>
     {
         #region Ctor
         protected DialogResponses()
@@ -1187,7 +1186,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => DialogResponsesCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DialogResponsesCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogResponsesCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesCommon.Instance.RemapLinks(this, mapping);
         public DialogResponses(FormKey formKey)
@@ -1227,14 +1226,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new DialogResponses CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static DialogResponses CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1261,8 +1252,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponsesGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1282,7 +1271,8 @@ namespace Mutagen.Bethesda.Skyrim
         IDialogResponsesGetter,
         ISkyrimMajorRecord,
         IDialog,
-        ILoquiObjectSetter<IDialogResponsesInternal>
+        ILoquiObjectSetter<IDialogResponsesInternal>,
+        ILinkedFormKeyContainer
     {
         new DialogResponsesAdapter? VirtualMachineAdapter { get; set; }
         new MemorySlice<Byte>? DATA { get; set; }
@@ -1316,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IDialogGetter,
         ILoquiObject<IDialogResponsesGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DialogResponses_Registration.Instance;
@@ -1385,24 +1375,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IDialogResponsesGetter item,
-            DialogResponses.Mask<bool?> checkMask)
-        {
-            return ((DialogResponsesCommon)((IDialogResponsesGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static DialogResponses.Mask<bool> GetHasBeenSetMask(this IDialogResponsesGetter item)
-        {
-            var ret = new DialogResponses.Mask<bool>(false);
-            ((DialogResponsesCommon)((IDialogResponsesGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1474,17 +1446,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IDialogResponsesInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IDialogResponsesInternal item,
             MutagenFrame frame,
@@ -2175,57 +2136,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IDialogResponsesGetter item,
-            DialogResponses.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.DATA.HasValue && checkMask.DATA.Value != (item.DATA != null)) return false;
-            if (checkMask.Flags?.Overall.HasValue ?? false && checkMask.Flags.Overall.Value != (item.Flags != null)) return false;
-            if (checkMask.Flags?.Specific != null && (item.Flags == null || !item.Flags.HasBeenSet(checkMask.Flags.Specific))) return false;
-            if (checkMask.Topic.HasValue && checkMask.Topic.Value != (item.Topic.FormKey != null)) return false;
-            if (checkMask.PreviousDialog.HasValue && checkMask.PreviousDialog.Value != (item.PreviousDialog.FormKey != null)) return false;
-            if (checkMask.FavorLevel.HasValue && checkMask.FavorLevel.Value != (item.FavorLevel != null)) return false;
-            if (checkMask.ResponseData.HasValue && checkMask.ResponseData.Value != (item.ResponseData.FormKey != null)) return false;
-            if (checkMask.Prompt.HasValue && checkMask.Prompt.Value != (item.Prompt != null)) return false;
-            if (checkMask.Speaker.HasValue && checkMask.Speaker.Value != (item.Speaker.FormKey != null)) return false;
-            if (checkMask.WalkAwayTopic.HasValue && checkMask.WalkAwayTopic.Value != (item.WalkAwayTopic.FormKey != null)) return false;
-            if (checkMask.AudioOutputOverride.HasValue && checkMask.AudioOutputOverride.Value != (item.AudioOutputOverride.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IDialogResponsesGetter item,
-            DialogResponses.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, DialogResponsesAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.DATA = (item.DATA != null);
-            var itemFlags = item.Flags;
-            mask.Flags = new MaskItem<bool, DialogResponseFlags.Mask<bool>?>(itemFlags != null, itemFlags?.GetHasBeenSetMask());
-            mask.Topic = (item.Topic.FormKey != null);
-            mask.PreviousDialog = (item.PreviousDialog.FormKey != null);
-            mask.FavorLevel = (item.FavorLevel != null);
-            mask.LinkTo = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            mask.ResponseData = (item.ResponseData.FormKey != null);
-            var ResponsesItem = item.Responses;
-            mask.Responses = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DialogResponse.Mask<bool>?>>?>(true, ResponsesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, DialogResponse.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var UnknownDataItem = item.UnknownData;
-            mask.UnknownData = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DialogResponsesUnknownData.Mask<bool>?>>?>(true, UnknownDataItem.WithIndex().Select((i) => new MaskItemIndexed<bool, DialogResponsesUnknownData.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Prompt = (item.Prompt != null);
-            mask.Speaker = (item.Speaker.FormKey != null);
-            mask.WalkAwayTopic = (item.WalkAwayTopic.FormKey != null);
-            mask.AudioOutputOverride = (item.AudioOutputOverride.FormKey != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static DialogResponses_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -2388,7 +2298,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
@@ -2415,7 +2325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -3156,15 +3066,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponsesGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => DialogResponsesCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DialogResponsesCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogResponsesCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogResponsesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

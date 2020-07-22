@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IWorldspaceInternal,
         ILoquiObjectSetter<Worldspace>,
-        IEquatable<Worldspace>,
-        IEqualsMask
+        IEquatable<Worldspace>
     {
         #region Ctor
         protected Worldspace()
@@ -1620,7 +1619,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
         public Worldspace(FormKey formKey)
@@ -1672,14 +1671,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Worldspace CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Worldspace CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1706,8 +1697,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1729,7 +1718,8 @@ namespace Mutagen.Bethesda.Skyrim
         IComplexLocation,
         ITranslatedNamed,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IWorldspaceInternal>
+        ILoquiObjectSetter<IWorldspaceInternal>,
+        ILinkedFormKeyContainer
     {
         new IExtendedList<WorldspaceGridReference> LargeReferences { get; }
         new WorldspaceMaxHeight? MaxHeight { get; set; }
@@ -1781,7 +1771,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IWorldspaceGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Worldspace_Registration.Instance;
@@ -1866,24 +1856,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IWorldspaceGetter item,
-            Worldspace.Mask<bool?> checkMask)
-        {
-            return ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Worldspace.Mask<bool> GetHasBeenSetMask(this IWorldspaceGetter item)
-        {
-            var ret = new Worldspace.Mask<bool>(false);
-            ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -2018,17 +1990,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWorldspaceInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWorldspaceInternal item,
             MutagenFrame frame,
@@ -3030,96 +2991,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            IWorldspaceGetter item,
-            Worldspace.Mask<bool?> checkMask)
-        {
-            if (checkMask.MaxHeight?.Overall.HasValue ?? false && checkMask.MaxHeight.Overall.Value != (item.MaxHeight != null)) return false;
-            if (checkMask.MaxHeight?.Specific != null && (item.MaxHeight == null || !item.MaxHeight.HasBeenSet(checkMask.MaxHeight.Specific))) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.FixedDimensionsCenterCell.HasValue && checkMask.FixedDimensionsCenterCell.Value != (item.FixedDimensionsCenterCell != null)) return false;
-            if (checkMask.InteriorLighting.HasValue && checkMask.InteriorLighting.Value != (item.InteriorLighting.FormKey != null)) return false;
-            if (checkMask.EncounterZone.HasValue && checkMask.EncounterZone.Value != (item.EncounterZone.FormKey != null)) return false;
-            if (checkMask.Location.HasValue && checkMask.Location.Value != (item.Location.FormKey != null)) return false;
-            if (checkMask.Parent?.Overall.HasValue ?? false && checkMask.Parent.Overall.Value != (item.Parent != null)) return false;
-            if (checkMask.Parent?.Specific != null && (item.Parent == null || !item.Parent.HasBeenSet(checkMask.Parent.Specific))) return false;
-            if (checkMask.Climate.HasValue && checkMask.Climate.Value != (item.Climate.FormKey != null)) return false;
-            if (checkMask.Water.HasValue && checkMask.Water.Value != (item.Water.FormKey != null)) return false;
-            if (checkMask.LodWater.HasValue && checkMask.LodWater.Value != (item.LodWater.FormKey != null)) return false;
-            if (checkMask.LodWaterHeight.HasValue && checkMask.LodWaterHeight.Value != (item.LodWaterHeight != null)) return false;
-            if (checkMask.LandDefaults?.Overall.HasValue ?? false && checkMask.LandDefaults.Overall.Value != (item.LandDefaults != null)) return false;
-            if (checkMask.LandDefaults?.Specific != null && (item.LandDefaults == null || !item.LandDefaults.HasBeenSet(checkMask.LandDefaults.Specific))) return false;
-            if (checkMask.MapImage.HasValue && checkMask.MapImage.Value != (item.MapImage != null)) return false;
-            if (checkMask.CloudModel?.Overall.HasValue ?? false && checkMask.CloudModel.Overall.Value != (item.CloudModel != null)) return false;
-            if (checkMask.CloudModel?.Specific != null && (item.CloudModel == null || !item.CloudModel.HasBeenSet(checkMask.CloudModel.Specific))) return false;
-            if (checkMask.MapData?.Overall.HasValue ?? false && checkMask.MapData.Overall.Value != (item.MapData != null)) return false;
-            if (checkMask.MapData?.Specific != null && (item.MapData == null || !item.MapData.HasBeenSet(checkMask.MapData.Specific))) return false;
-            if (checkMask.DistantLodMultiplier.HasValue && checkMask.DistantLodMultiplier.Value != (item.DistantLodMultiplier != null)) return false;
-            if (checkMask.ObjectBounds?.Overall.HasValue ?? false && checkMask.ObjectBounds.Overall.Value != (item.ObjectBounds != null)) return false;
-            if (checkMask.ObjectBounds?.Specific != null && (item.ObjectBounds == null || !item.ObjectBounds.HasBeenSet(checkMask.ObjectBounds.Specific))) return false;
-            if (checkMask.Music.HasValue && checkMask.Music.Value != (item.Music.FormKey != null)) return false;
-            if (checkMask.CanopyShadow.HasValue && checkMask.CanopyShadow.Value != (item.CanopyShadow != null)) return false;
-            if (checkMask.WaterNoiseTexture.HasValue && checkMask.WaterNoiseTexture.Value != (item.WaterNoiseTexture != null)) return false;
-            if (checkMask.HdLodDiffuseTexture.HasValue && checkMask.HdLodDiffuseTexture.Value != (item.HdLodDiffuseTexture != null)) return false;
-            if (checkMask.HdLodNormalTexture.HasValue && checkMask.HdLodNormalTexture.Value != (item.HdLodNormalTexture != null)) return false;
-            if (checkMask.WaterEnvironmentMap.HasValue && checkMask.WaterEnvironmentMap.Value != (item.WaterEnvironmentMap != null)) return false;
-            if (checkMask.OffsetData.HasValue && checkMask.OffsetData.Value != (item.OffsetData != null)) return false;
-            if (checkMask.TopCell?.Overall.HasValue ?? false && checkMask.TopCell.Overall.Value != (item.TopCell != null)) return false;
-            if (checkMask.TopCell?.Specific != null && (item.TopCell == null || !item.TopCell.HasBeenSet(checkMask.TopCell.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IWorldspaceGetter item,
-            Worldspace.Mask<bool> mask)
-        {
-            var LargeReferencesItem = item.LargeReferences;
-            mask.LargeReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceGridReference.Mask<bool>?>>?>(true, LargeReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceGridReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var itemMaxHeight = item.MaxHeight;
-            mask.MaxHeight = new MaskItem<bool, WorldspaceMaxHeight.Mask<bool>?>(itemMaxHeight != null, itemMaxHeight?.GetHasBeenSetMask());
-            mask.Name = (item.Name != null);
-            mask.FixedDimensionsCenterCell = (item.FixedDimensionsCenterCell != null);
-            mask.InteriorLighting = (item.InteriorLighting.FormKey != null);
-            mask.EncounterZone = (item.EncounterZone.FormKey != null);
-            mask.Location = (item.Location.FormKey != null);
-            var itemParent = item.Parent;
-            mask.Parent = new MaskItem<bool, WorldspaceParent.Mask<bool>?>(itemParent != null, itemParent?.GetHasBeenSetMask());
-            mask.Climate = (item.Climate.FormKey != null);
-            mask.Water = (item.Water.FormKey != null);
-            mask.LodWater = (item.LodWater.FormKey != null);
-            mask.LodWaterHeight = (item.LodWaterHeight != null);
-            var itemLandDefaults = item.LandDefaults;
-            mask.LandDefaults = new MaskItem<bool, WorldspaceLandDefaults.Mask<bool>?>(itemLandDefaults != null, itemLandDefaults?.GetHasBeenSetMask());
-            mask.MapImage = (item.MapImage != null);
-            var itemCloudModel = item.CloudModel;
-            mask.CloudModel = new MaskItem<bool, Model.Mask<bool>?>(itemCloudModel != null, itemCloudModel?.GetHasBeenSetMask());
-            var itemMapData = item.MapData;
-            mask.MapData = new MaskItem<bool, WorldspaceMap.Mask<bool>?>(itemMapData != null, itemMapData?.GetHasBeenSetMask());
-            mask.MapOffset = new MaskItem<bool, WorldspaceMapOffset.Mask<bool>?>(true, item.MapOffset?.GetHasBeenSetMask());
-            mask.DistantLodMultiplier = (item.DistantLodMultiplier != null);
-            mask.Flags = true;
-            var itemObjectBounds = item.ObjectBounds;
-            mask.ObjectBounds = new MaskItem<bool, WorldspaceObjectBounds.Mask<bool>?>(itemObjectBounds != null, itemObjectBounds?.GetHasBeenSetMask());
-            mask.Music = (item.Music.FormKey != null);
-            mask.CanopyShadow = (item.CanopyShadow != null);
-            mask.WaterNoiseTexture = (item.WaterNoiseTexture != null);
-            mask.HdLodDiffuseTexture = (item.HdLodDiffuseTexture != null);
-            mask.HdLodNormalTexture = (item.HdLodNormalTexture != null);
-            mask.WaterEnvironmentMap = (item.WaterEnvironmentMap != null);
-            mask.OffsetData = (item.OffsetData != null);
-            var itemTopCell = item.TopCell;
-            mask.TopCell = new MaskItem<bool, Cell.Mask<bool>?>(itemTopCell != null, itemTopCell?.GetHasBeenSetMask());
-            mask.SubCellsTimestamp = true;
-            mask.SubCellsUnknown = true;
-            var SubCellsItem = item.SubCells;
-            mask.SubCells = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>>?>(true, SubCellsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WorldspaceBlock.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Worldspace_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -4636,15 +4507,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

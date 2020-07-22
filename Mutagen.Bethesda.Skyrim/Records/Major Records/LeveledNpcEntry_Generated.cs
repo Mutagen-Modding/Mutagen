@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LeveledNpcEntry :
         ILeveledNpcEntry,
         ILoquiObjectSetter<LeveledNpcEntry>,
-        IEquatable<LeveledNpcEntry>,
-        IEqualsMask
+        IEquatable<LeveledNpcEntry>
     {
         #region Ctor
         public LeveledNpcEntry()
@@ -408,7 +407,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LeveledNpcEntryCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledNpcEntryCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledNpcEntryCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcEntryCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcEntryCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -428,14 +427,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static LeveledNpcEntry CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static LeveledNpcEntry CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -462,8 +453,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledNpcEntryGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -481,7 +470,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ILeveledNpcEntry :
         ILeveledNpcEntryGetter,
-        ILoquiObjectSetter<ILeveledNpcEntry>
+        ILoquiObjectSetter<ILeveledNpcEntry>,
+        ILinkedFormKeyContainer
     {
         new LeveledNpcEntryData? Data { get; set; }
         new ExtraData? ExtraData { get; set; }
@@ -490,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILeveledNpcEntryGetter :
         ILoquiObject,
         ILoquiObject<ILeveledNpcEntryGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -548,24 +538,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILeveledNpcEntryGetter item,
-            LeveledNpcEntry.Mask<bool?> checkMask)
-        {
-            return ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LeveledNpcEntry.Mask<bool> GetHasBeenSetMask(this ILeveledNpcEntryGetter item)
-        {
-            var ret = new LeveledNpcEntry.Mask<bool>(false);
-            ((LeveledNpcEntryCommon)((ILeveledNpcEntryGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -660,17 +632,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILeveledNpcEntry item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILeveledNpcEntry item,
             MutagenFrame frame,
@@ -1015,27 +976,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ILeveledNpcEntryGetter item,
-            LeveledNpcEntry.Mask<bool?> checkMask)
-        {
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.ExtraData?.Overall.HasValue ?? false && checkMask.ExtraData.Overall.Value != (item.ExtraData != null)) return false;
-            if (checkMask.ExtraData?.Specific != null && (item.ExtraData == null || !item.ExtraData.HasBeenSet(checkMask.ExtraData.Specific))) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ILeveledNpcEntryGetter item,
-            LeveledNpcEntry.Mask<bool> mask)
-        {
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, LeveledNpcEntryData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            var itemExtraData = item.ExtraData;
-            mask.ExtraData = new MaskItem<bool, ExtraData.Mask<bool>?>(itemExtraData != null, itemExtraData?.GetHasBeenSetMask());
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ILeveledNpcEntryGetter? lhs,
@@ -1080,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.ExtraData is ILinkedFormKeyContainer ExtraDatalinkCont)
+            if (obj.ExtraData is ILinkedFormKeyContainerGetter ExtraDatalinkCont)
             {
                 foreach (var item in ExtraDatalinkCont.LinkFormKeys)
                 {
@@ -1334,12 +1274,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ILeveledNpcEntryGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LeveledNpcEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1371,15 +1312,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledNpcEntryGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LeveledNpcEntryCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledNpcEntryCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcEntryCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcEntryCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledNpcEntryCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LeveledNpcEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

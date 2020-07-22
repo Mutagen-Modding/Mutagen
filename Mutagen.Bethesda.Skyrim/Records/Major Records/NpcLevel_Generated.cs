@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANpcLevel,
         INpcLevel,
         ILoquiObjectSetter<NpcLevel>,
-        IEquatable<NpcLevel>,
-        IEqualsMask
+        IEquatable<NpcLevel>
     {
         #region Ctor
         public NpcLevel()
@@ -340,14 +339,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new NpcLevel CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static NpcLevel CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -374,8 +365,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcLevelGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -454,24 +443,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this INpcLevelGetter item,
-            NpcLevel.Mask<bool?> checkMask)
-        {
-            return ((NpcLevelCommon)((INpcLevelGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static NpcLevel.Mask<bool> GetHasBeenSetMask(this INpcLevelGetter item)
-        {
-            var ret = new NpcLevel.Mask<bool>(false);
-            ((NpcLevelCommon)((INpcLevelGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this INpcLevelGetter item,
             INpcLevelGetter rhs)
@@ -541,17 +512,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this INpcLevel item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this INpcLevel item,
             MutagenFrame frame,
@@ -877,25 +837,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            INpcLevelGetter item,
-            NpcLevel.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            INpcLevelGetter item,
-            NpcLevel.Mask<bool> mask)
-        {
-            mask.Level = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static NpcLevel_FieldIndex ConvertFieldIndex(ANpcLevel_FieldIndex index)
         {
             switch (index)
@@ -1153,8 +1094,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcLevelGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcLevelBinaryWriteTranslation.Instance;

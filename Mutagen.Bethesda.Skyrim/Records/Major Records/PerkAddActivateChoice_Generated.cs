@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkAddActivateChoice,
         ILoquiObjectSetter<PerkAddActivateChoice>,
-        IEquatable<PerkAddActivateChoice>,
-        IEqualsMask
+        IEquatable<PerkAddActivateChoice>
     {
         #region Ctor
         public PerkAddActivateChoice()
@@ -427,7 +426,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PerkAddActivateChoiceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PerkAddActivateChoiceCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PerkAddActivateChoiceCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkAddActivateChoiceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkAddActivateChoiceCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -445,14 +444,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PerkAddActivateChoice CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PerkAddActivateChoice CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -479,8 +470,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkAddActivateChoiceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -499,7 +488,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkAddActivateChoice :
         IPerkAddActivateChoiceGetter,
         IAPerkEntryPointEffect,
-        ILoquiObjectSetter<IPerkAddActivateChoice>
+        ILoquiObjectSetter<IPerkAddActivateChoice>,
+        ILinkedFormKeyContainer
     {
         new FormLinkNullable<Spell> Spell { get; set; }
         new TranslatedString? ButtonLabel { get; set; }
@@ -509,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkAddActivateChoiceGetter :
         IAPerkEntryPointEffectGetter,
         ILoquiObject<IPerkAddActivateChoiceGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkAddActivateChoice_Registration.Instance;
@@ -562,24 +552,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPerkAddActivateChoiceGetter item,
-            PerkAddActivateChoice.Mask<bool?> checkMask)
-        {
-            return ((PerkAddActivateChoiceCommon)((IPerkAddActivateChoiceGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PerkAddActivateChoice.Mask<bool> GetHasBeenSetMask(this IPerkAddActivateChoiceGetter item)
-        {
-            var ret = new PerkAddActivateChoice.Mask<bool>(false);
-            ((PerkAddActivateChoiceCommon)((IPerkAddActivateChoiceGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -651,17 +623,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPerkAddActivateChoice item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPerkAddActivateChoice item,
             MutagenFrame frame,
@@ -1048,29 +1009,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Flags?.ToString(fg, "Flags");
             }
-        }
-        
-        public bool HasBeenSet(
-            IPerkAddActivateChoiceGetter item,
-            PerkAddActivateChoice.Mask<bool?> checkMask)
-        {
-            if (checkMask.Spell.HasValue && checkMask.Spell.Value != (item.Spell.FormKey != null)) return false;
-            if (checkMask.ButtonLabel.HasValue && checkMask.ButtonLabel.Value != (item.ButtonLabel != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPerkAddActivateChoiceGetter item,
-            PerkAddActivateChoice.Mask<bool> mask)
-        {
-            mask.Spell = (item.Spell.FormKey != null);
-            mask.ButtonLabel = (item.ButtonLabel != null);
-            mask.Flags = new MaskItem<bool, PerkScriptFlag.Mask<bool>?>(true, item.Flags?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static PerkAddActivateChoice_FieldIndex ConvertFieldIndex(APerkEntryPointEffect_FieldIndex index)
@@ -1516,15 +1454,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkAddActivateChoiceGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PerkAddActivateChoiceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PerkAddActivateChoiceCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkAddActivateChoiceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkAddActivateChoiceCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PerkAddActivateChoiceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkAddActivateChoiceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

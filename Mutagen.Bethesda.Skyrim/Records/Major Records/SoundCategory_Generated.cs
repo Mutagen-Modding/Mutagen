@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ISoundCategoryInternal,
         ILoquiObjectSetter<SoundCategory>,
-        IEquatable<SoundCategory>,
-        IEqualsMask
+        IEquatable<SoundCategory>
     {
         #region Ctor
         protected SoundCategory()
@@ -486,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SoundCategoryCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SoundCategoryCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SoundCategoryCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundCategoryCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundCategoryCommon.Instance.RemapLinks(this, mapping);
         public SoundCategory(FormKey formKey)
@@ -521,14 +520,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new SoundCategory CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static SoundCategory CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -555,8 +546,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundCategoryGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -576,7 +565,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISoundCategoryGetter,
         ISkyrimMajorRecord,
         ITranslatedNamed,
-        ILoquiObjectSetter<ISoundCategoryInternal>
+        ILoquiObjectSetter<ISoundCategoryInternal>,
+        ILinkedFormKeyContainer
     {
         new TranslatedString? Name { get; set; }
         new SoundCategory.Flag? Flags { get; set; }
@@ -596,7 +586,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ITranslatedNamedGetter,
         ILoquiObject<ISoundCategoryGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SoundCategory_Registration.Instance;
@@ -651,24 +641,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ISoundCategoryGetter item,
-            SoundCategory.Mask<bool?> checkMask)
-        {
-            return ((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SoundCategory.Mask<bool> GetHasBeenSetMask(this ISoundCategoryGetter item)
-        {
-            var ret = new SoundCategory.Mask<bool>(false);
-            ((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -740,17 +712,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISoundCategoryInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISoundCategoryInternal item,
             MutagenFrame frame,
@@ -1175,34 +1136,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(DefaultMenuVolumeItem, "DefaultMenuVolume");
             }
-        }
-        
-        public bool HasBeenSet(
-            ISoundCategoryGetter item,
-            SoundCategory.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.Parent.HasValue && checkMask.Parent.Value != (item.Parent.FormKey != null)) return false;
-            if (checkMask.StaticVolumeMultiplier.HasValue && checkMask.StaticVolumeMultiplier.Value != (item.StaticVolumeMultiplier != null)) return false;
-            if (checkMask.DefaultMenuVolume.HasValue && checkMask.DefaultMenuVolume.Value != (item.DefaultMenuVolume != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ISoundCategoryGetter item,
-            SoundCategory.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            mask.Flags = (item.Flags != null);
-            mask.Parent = (item.Parent.FormKey != null);
-            mask.StaticVolumeMultiplier = (item.StaticVolumeMultiplier != null);
-            mask.DefaultMenuVolume = (item.DefaultMenuVolume != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static SoundCategory_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1733,15 +1666,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundCategoryGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SoundCategoryCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SoundCategoryCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundCategoryCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundCategoryCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SoundCategoryCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundCategoryBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

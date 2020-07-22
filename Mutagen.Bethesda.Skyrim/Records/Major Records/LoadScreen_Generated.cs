@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ILoadScreenInternal,
         ILoquiObjectSetter<LoadScreen>,
-        IEquatable<LoadScreen>,
-        IEqualsMask
+        IEquatable<LoadScreen>
     {
         #region Ctor
         protected LoadScreen()
@@ -729,7 +728,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LoadScreenCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LoadScreenCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LoadScreenCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenCommon.Instance.RemapLinks(this, mapping);
         public LoadScreen(FormKey formKey)
@@ -769,14 +768,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new LoadScreen CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static LoadScreen CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -803,8 +794,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -824,7 +813,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoadScreenGetter,
         ISkyrimMajorRecord,
         IHasIcons,
-        ILoquiObjectSetter<ILoadScreenInternal>
+        ILoquiObjectSetter<ILoadScreenInternal>,
+        ILinkedFormKeyContainer
     {
         new Icons? Icons { get; set; }
         new TranslatedString Description { get; set; }
@@ -852,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IHasIconsGetter,
         ILoquiObject<ILoadScreenGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LoadScreen_Registration.Instance;
@@ -915,24 +905,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILoadScreenGetter item,
-            LoadScreen.Mask<bool?> checkMask)
-        {
-            return ((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LoadScreen.Mask<bool> GetHasBeenSetMask(this ILoadScreenGetter item)
-        {
-            var ret = new LoadScreen.Mask<bool>(false);
-            ((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1004,17 +976,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILoadScreenInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILoadScreenInternal item,
             MutagenFrame frame,
@@ -1541,44 +1502,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ILoadScreenGetter item,
-            LoadScreen.Mask<bool?> checkMask)
-        {
-            if (checkMask.Icons?.Overall.HasValue ?? false && checkMask.Icons.Overall.Value != (item.Icons != null)) return false;
-            if (checkMask.Icons?.Specific != null && (item.Icons == null || !item.Icons.HasBeenSet(checkMask.Icons.Specific))) return false;
-            if (checkMask.InitialScale.HasValue && checkMask.InitialScale.Value != (item.InitialScale != null)) return false;
-            if (checkMask.InitialRotation.HasValue && checkMask.InitialRotation.Value != (item.InitialRotation != null)) return false;
-            if (checkMask.RotationOffsetConstraints?.Overall.HasValue ?? false && checkMask.RotationOffsetConstraints.Overall.Value != (item.RotationOffsetConstraints != null)) return false;
-            if (checkMask.RotationOffsetConstraints?.Specific != null && (item.RotationOffsetConstraints == null || !item.RotationOffsetConstraints.HasBeenSet(checkMask.RotationOffsetConstraints.Specific))) return false;
-            if (checkMask.InitialTranslationOffset.HasValue && checkMask.InitialTranslationOffset.Value != (item.InitialTranslationOffset != null)) return false;
-            if (checkMask.CameraPath.HasValue && checkMask.CameraPath.Value != (item.CameraPath != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ILoadScreenGetter item,
-            LoadScreen.Mask<bool> mask)
-        {
-            var itemIcons = item.Icons;
-            mask.Icons = new MaskItem<bool, Icons.Mask<bool>?>(itemIcons != null, itemIcons?.GetHasBeenSetMask());
-            mask.Description = true;
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.LoadingScreenNif = true;
-            mask.InitialScale = (item.InitialScale != null);
-            mask.InitialRotation = (item.InitialRotation != null);
-            var itemRotationOffsetConstraints = item.RotationOffsetConstraints;
-            mask.RotationOffsetConstraints = new MaskItem<bool, Int16MinMax.Mask<bool>?>(itemRotationOffsetConstraints != null, itemRotationOffsetConstraints?.GetHasBeenSetMask());
-            mask.InitialTranslationOffset = (item.InitialTranslationOffset != null);
-            mask.CameraPath = (item.CameraPath != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static LoadScreen_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1714,7 +1637,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -2259,15 +2182,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LoadScreenCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LoadScreenCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LoadScreenCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LoadScreenBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

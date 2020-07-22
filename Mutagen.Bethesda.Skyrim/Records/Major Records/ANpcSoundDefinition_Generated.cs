@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class ANpcSoundDefinition :
         IANpcSoundDefinition,
         ILoquiObjectSetter<ANpcSoundDefinition>,
-        IEquatable<ANpcSoundDefinition>,
-        IEqualsMask
+        IEquatable<ANpcSoundDefinition>
     {
         #region Ctor
         public ANpcSoundDefinition()
@@ -307,7 +306,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual IEnumerable<FormKey> LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSoundDefinitionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSoundDefinitionCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -329,8 +328,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IANpcSoundDefinitionGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -348,14 +345,15 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IANpcSoundDefinition :
         IANpcSoundDefinitionGetter,
-        ILoquiObjectSetter<IANpcSoundDefinition>
+        ILoquiObjectSetter<IANpcSoundDefinition>,
+        ILinkedFormKeyContainer
     {
     }
 
     public partial interface IANpcSoundDefinitionGetter :
         ILoquiObject,
         ILoquiObject<IANpcSoundDefinitionGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -411,24 +409,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IANpcSoundDefinitionGetter item,
-            ANpcSoundDefinition.Mask<bool?> checkMask)
-        {
-            return ((ANpcSoundDefinitionCommon)((IANpcSoundDefinitionGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ANpcSoundDefinition.Mask<bool> GetHasBeenSetMask(this IANpcSoundDefinitionGetter item)
-        {
-            var ret = new ANpcSoundDefinition.Mask<bool>(false);
-            ((ANpcSoundDefinitionCommon)((IANpcSoundDefinitionGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -523,17 +503,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IANpcSoundDefinition item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IANpcSoundDefinition item,
             MutagenFrame frame,
@@ -823,19 +792,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
         
-        public bool HasBeenSet(
-            IANpcSoundDefinitionGetter item,
-            ANpcSoundDefinition.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IANpcSoundDefinitionGetter item,
-            ANpcSoundDefinition.Mask<bool> mask)
-        {
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IANpcSoundDefinitionGetter? lhs,
@@ -998,12 +954,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IANpcSoundDefinitionGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ANpcSoundDefinitionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1035,15 +992,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IANpcSoundDefinitionGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual IEnumerable<FormKey> LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
-        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSoundDefinitionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSoundDefinitionCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ANpcSoundDefinitionBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

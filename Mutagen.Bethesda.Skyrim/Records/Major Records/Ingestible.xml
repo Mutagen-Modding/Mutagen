@@ -4,7 +4,7 @@
     <Interface>IObjectBounded</Interface>
     <Interface>IWeightValue</Interface>
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
@@ -16,7 +16,7 @@
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
       <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
-      <Float name="Weight" recordType="DATA" hasBeenSet="False" />
+      <Float name="Weight" recordType="DATA" nullable="False" />
       <Data recordType="ENIT" >
         <Fields>
           <UInt32 name="Value" />
@@ -26,7 +26,7 @@
           <FormLink name="ConsumeSound" refName="SoundDescriptor" />
         </Fields>
       </Data>
-      <RefList name="Effects" refName="Effect" hasBeenSet="False" />
+      <RefList name="Effects" refName="Effect" nullable="False" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>

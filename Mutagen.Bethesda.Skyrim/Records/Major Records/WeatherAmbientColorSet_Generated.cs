@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WeatherAmbientColorSet :
         IWeatherAmbientColorSet,
         ILoquiObjectSetter<WeatherAmbientColorSet>,
-        IEquatable<WeatherAmbientColorSet>,
-        IEqualsMask
+        IEquatable<WeatherAmbientColorSet>
     {
         #region Ctor
         public WeatherAmbientColorSet()
@@ -493,14 +492,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static WeatherAmbientColorSet CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static WeatherAmbientColorSet CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -527,8 +518,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherAmbientColorSetGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -616,24 +605,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IWeatherAmbientColorSetGetter item,
-            WeatherAmbientColorSet.Mask<bool?> checkMask)
-        {
-            return ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static WeatherAmbientColorSet.Mask<bool> GetHasBeenSetMask(this IWeatherAmbientColorSetGetter item)
-        {
-            var ret = new WeatherAmbientColorSet.Mask<bool>(false);
-            ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -728,17 +699,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWeatherAmbientColorSet item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWeatherAmbientColorSet item,
             MutagenFrame frame,
@@ -1100,23 +1060,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IWeatherAmbientColorSetGetter item,
-            WeatherAmbientColorSet.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IWeatherAmbientColorSetGetter item,
-            WeatherAmbientColorSet.Mask<bool> mask)
-        {
-            mask.Sunrise = new MaskItem<bool, AmbientColors.Mask<bool>?>(true, item.Sunrise?.GetHasBeenSetMask());
-            mask.Day = new MaskItem<bool, AmbientColors.Mask<bool>?>(true, item.Day?.GetHasBeenSetMask());
-            mask.Sunset = new MaskItem<bool, AmbientColors.Mask<bool>?>(true, item.Sunset?.GetHasBeenSetMask());
-            mask.Night = new MaskItem<bool, AmbientColors.Mask<bool>?>(true, item.Night?.GetHasBeenSetMask());
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IWeatherAmbientColorSetGetter? lhs,
@@ -1396,12 +1339,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IWeatherAmbientColorSetGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WeatherAmbientColorSetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1433,8 +1377,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherAmbientColorSetGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherAmbientColorSetBinaryWriteTranslation.Instance;

@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IIdleMarkerInternal,
         ILoquiObjectSetter<IdleMarker>,
-        IEquatable<IdleMarker>,
-        IEqualsMask
+        IEquatable<IdleMarker>
     {
         #region Ctor
         protected IdleMarker()
@@ -590,7 +589,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => IdleMarkerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => IdleMarkerCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => IdleMarkerCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleMarkerCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleMarkerCommon.Instance.RemapLinks(this, mapping);
         public IdleMarker(FormKey formKey)
@@ -630,14 +629,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new IdleMarker CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static IdleMarker CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -664,8 +655,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIdleMarkerGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -686,7 +675,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IObjectId,
         IObjectBounded,
-        ILoquiObjectSetter<IIdleMarkerInternal>
+        ILoquiObjectSetter<IIdleMarkerInternal>,
+        ILinkedFormKeyContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new IdleMarker.Flag? Flags { get; set; }
@@ -711,7 +701,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         IObjectBoundedGetter,
         ILoquiObject<IIdleMarkerGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => IdleMarker_Registration.Instance;
@@ -770,24 +760,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IIdleMarkerGetter item,
-            IdleMarker.Mask<bool?> checkMask)
-        {
-            return ((IdleMarkerCommon)((IIdleMarkerGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static IdleMarker.Mask<bool> GetHasBeenSetMask(this IIdleMarkerGetter item)
-        {
-            var ret = new IdleMarker.Mask<bool>(false);
-            ((IdleMarkerCommon)((IIdleMarkerGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -859,17 +831,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IIdleMarkerInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IIdleMarkerInternal item,
             MutagenFrame frame,
@@ -1316,35 +1277,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-        }
-        
-        public bool HasBeenSet(
-            IIdleMarkerGetter item,
-            IdleMarker.Mask<bool?> checkMask)
-        {
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.IdleTimer.HasValue && checkMask.IdleTimer.Value != (item.IdleTimer != null)) return false;
-            if (checkMask.Animations?.Overall.HasValue ?? false && checkMask.Animations!.Overall.Value != (item.Animations != null)) return false;
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IIdleMarkerGetter item,
-            IdleMarker.Mask<bool> mask)
-        {
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.Flags = (item.Flags != null);
-            mask.IdleTimer = (item.IdleTimer != null);
-            mask.Animations = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Animations != null), default);
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static IdleMarker_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1973,15 +1905,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIdleMarkerGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => IdleMarkerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => IdleMarkerCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleMarkerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleMarkerCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => IdleMarkerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IdleMarkerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

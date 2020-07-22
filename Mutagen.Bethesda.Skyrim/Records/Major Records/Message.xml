@@ -3,11 +3,11 @@
   <Object name="Message" recordType="MESG" objType="Record" baseClass="SkyrimMajorRecord" GUID="924feeb5-b9e9-4526-9caa-89a233a69240" ID="306">
     <Interface>ITranslatedNamed</Interface>
     <Fields>
-      <String name="Description" recordType="DESC" translated="DL" hasBeenSet="False" />
+      <String name="Description" recordType="DESC" translated="DL" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <ByteArray name="INAM" recordType="INAM" hasBeenSet="False" />
+      <ByteArray name="INAM" recordType="INAM" nullable="False" />
       <FormLink name="Quest" recordType="QNAM" refName="Quest" />
-      <Enum name="Flags" enumName="Message.Flag" byteLength="4" recordType="DNAM" hasBeenSet="False" />
+      <Enum name="Flags" enumName="Message.Flag" byteLength="4" recordType="DNAM" nullable="False" />
       <UInt32 name="DisplayTime" recordType="TNAM" />
       <RefList name="MenuButtons" refName="MessageButton" />
     </Fields>

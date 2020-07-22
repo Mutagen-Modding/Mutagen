@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         BaseLayer,
         IAlphaLayer,
         ILoquiObjectSetter<AlphaLayer>,
-        IEquatable<AlphaLayer>,
-        IEqualsMask
+        IEquatable<AlphaLayer>
     {
         #region Ctor
         public AlphaLayer()
@@ -360,14 +359,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new AlphaLayer CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static AlphaLayer CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -394,8 +385,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAlphaLayerGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -474,24 +463,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IAlphaLayerGetter item,
-            AlphaLayer.Mask<bool?> checkMask)
-        {
-            return ((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static AlphaLayer.Mask<bool> GetHasBeenSetMask(this IAlphaLayerGetter item)
-        {
-            var ret = new AlphaLayer.Mask<bool>(false);
-            ((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IAlphaLayerGetter item,
             IAlphaLayerGetter rhs)
@@ -561,17 +532,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAlphaLayer item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAlphaLayer item,
             MutagenFrame frame,
@@ -905,26 +865,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IAlphaLayerGetter item,
-            AlphaLayer.Mask<bool?> checkMask)
-        {
-            if (checkMask.AlphaLayerData.HasValue && checkMask.AlphaLayerData.Value != (item.AlphaLayerData != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IAlphaLayerGetter item,
-            AlphaLayer.Mask<bool> mask)
-        {
-            mask.AlphaLayerData = (item.AlphaLayerData != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static AlphaLayer_FieldIndex ConvertFieldIndex(BaseLayer_FieldIndex index)
         {
             switch (index)
@@ -1230,8 +1170,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAlphaLayerGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AlphaLayerBinaryWriteTranslation.Instance;

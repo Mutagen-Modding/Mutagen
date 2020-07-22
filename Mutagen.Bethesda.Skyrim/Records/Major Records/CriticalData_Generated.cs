@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CriticalData :
         ICriticalData,
         ILoquiObjectSetter<CriticalData>,
-        IEquatable<CriticalData>,
-        IEqualsMask
+        IEquatable<CriticalData>
     {
         #region Ctor
         public CriticalData()
@@ -572,7 +571,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => CriticalDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CriticalDataCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CriticalDataCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CriticalDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CriticalDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -592,14 +591,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static CriticalData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static CriticalData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -626,8 +617,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICriticalDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -645,7 +634,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ICriticalData :
         ICriticalDataGetter,
-        ILoquiObjectSetter<ICriticalData>
+        ILoquiObjectSetter<ICriticalData>,
+        ILinkedFormKeyContainer
     {
         new UInt16 Damage { get; set; }
         new Int16 Unused { get; set; }
@@ -660,7 +650,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICriticalDataGetter :
         ILoquiObject,
         ILoquiObject<ICriticalDataGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -724,24 +714,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ICriticalDataGetter item,
-            CriticalData.Mask<bool?> checkMask)
-        {
-            return ((CriticalDataCommon)((ICriticalDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static CriticalData.Mask<bool> GetHasBeenSetMask(this ICriticalDataGetter item)
-        {
-            var ret = new CriticalData.Mask<bool>(false);
-            ((CriticalDataCommon)((ICriticalDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -836,17 +808,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICriticalData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICriticalData item,
             MutagenFrame frame,
@@ -1280,27 +1241,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ICriticalDataGetter item,
-            CriticalData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ICriticalDataGetter item,
-            CriticalData.Mask<bool> mask)
-        {
-            mask.Damage = true;
-            mask.Unused = true;
-            mask.PercentMult = true;
-            mask.Flags = true;
-            mask.Unused2 = true;
-            mask.Unused3 = true;
-            mask.Effect = true;
-            mask.Unused4 = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ICriticalDataGetter? lhs,
@@ -1572,12 +1512,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ICriticalDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((CriticalDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1609,15 +1550,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICriticalDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => CriticalDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CriticalDataCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CriticalDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CriticalDataCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CriticalDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CriticalDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

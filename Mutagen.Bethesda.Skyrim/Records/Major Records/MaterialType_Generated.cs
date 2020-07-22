@@ -33,8 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMaterialTypeInternal,
         ILoquiObjectSetter<MaterialType>,
-        IEquatable<MaterialType>,
-        IEqualsMask
+        IEquatable<MaterialType>
     {
         #region Ctor
         protected MaterialType()
@@ -520,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
         public MaterialType(FormKey formKey)
@@ -555,14 +554,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new MaterialType CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static MaterialType CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -589,8 +580,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMaterialTypeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -609,7 +598,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMaterialType :
         IMaterialTypeGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IMaterialTypeInternal>
+        ILoquiObjectSetter<IMaterialTypeInternal>,
+        ILinkedFormKeyContainer
     {
         new FormLinkNullable<MaterialType> Parent { get; set; }
         new String? Name { get; set; }
@@ -629,7 +619,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMaterialTypeGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IMaterialTypeGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => MaterialType_Registration.Instance;
@@ -685,24 +675,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IMaterialTypeGetter item,
-            MaterialType.Mask<bool?> checkMask)
-        {
-            return ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static MaterialType.Mask<bool> GetHasBeenSetMask(this IMaterialTypeGetter item)
-        {
-            var ret = new MaterialType.Mask<bool>(false);
-            ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -774,17 +746,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IMaterialTypeInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IMaterialTypeInternal item,
             MutagenFrame frame,
@@ -1228,36 +1189,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(HavokImpactDataSetItem, "HavokImpactDataSet");
             }
-        }
-        
-        public bool HasBeenSet(
-            IMaterialTypeGetter item,
-            MaterialType.Mask<bool?> checkMask)
-        {
-            if (checkMask.Parent.HasValue && checkMask.Parent.Value != (item.Parent.FormKey != null)) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.HavokDisplayColor.HasValue && checkMask.HavokDisplayColor.Value != (item.HavokDisplayColor != null)) return false;
-            if (checkMask.Buoyancy.HasValue && checkMask.Buoyancy.Value != (item.Buoyancy != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.HavokImpactDataSet.HasValue && checkMask.HavokImpactDataSet.Value != (item.HavokImpactDataSet.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IMaterialTypeGetter item,
-            MaterialType.Mask<bool> mask)
-        {
-            mask.Parent = (item.Parent.FormKey != null);
-            mask.Name = (item.Name != null);
-            mask.HavokDisplayColor = (item.HavokDisplayColor != null);
-            mask.Buoyancy = (item.Buoyancy != null);
-            mask.Flags = (item.Flags != null);
-            mask.HavokImpactDataSet = (item.HavokImpactDataSet.FormKey != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static MaterialType_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1802,15 +1733,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMaterialTypeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MaterialTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         ANavigationMesh,
         ICellNavigationMeshInternal,
         ILoquiObjectSetter<CellNavigationMesh>,
-        IEquatable<CellNavigationMesh>,
-        IEqualsMask
+        IEquatable<CellNavigationMesh>
     {
         #region Ctor
         protected CellNavigationMesh()
@@ -374,7 +373,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CellNavigationMeshCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CellNavigationMeshCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellNavigationMeshCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellNavigationMeshCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellNavigationMeshCommon.Instance.RemapLinks(this, mapping);
         public CellNavigationMesh(FormKey formKey)
@@ -409,14 +408,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new CellNavigationMesh CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static CellNavigationMesh CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -443,8 +434,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellNavigationMeshGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -463,7 +452,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICellNavigationMesh :
         ICellNavigationMeshGetter,
         IANavigationMesh,
-        ILoquiObjectSetter<ICellNavigationMeshInternal>
+        ILoquiObjectSetter<ICellNavigationMeshInternal>,
+        ILinkedFormKeyContainer
     {
         new CellNavigationMeshData? Data { get; set; }
     }
@@ -478,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICellNavigationMeshGetter :
         IANavigationMeshGetter,
         ILoquiObject<ICellNavigationMeshGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => CellNavigationMesh_Registration.Instance;
@@ -529,24 +519,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ICellNavigationMeshGetter item,
-            CellNavigationMesh.Mask<bool?> checkMask)
-        {
-            return ((CellNavigationMeshCommon)((ICellNavigationMeshGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static CellNavigationMesh.Mask<bool> GetHasBeenSetMask(this ICellNavigationMeshGetter item)
-        {
-            var ret = new CellNavigationMesh.Mask<bool>(false);
-            ((CellNavigationMeshCommon)((ICellNavigationMeshGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -618,17 +590,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICellNavigationMeshInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICellNavigationMeshInternal item,
             MutagenFrame frame,
@@ -1000,28 +961,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 DataItem?.ToString(fg, "Data");
             }
-        }
-        
-        public bool HasBeenSet(
-            ICellNavigationMeshGetter item,
-            CellNavigationMesh.Mask<bool?> checkMask)
-        {
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ICellNavigationMeshGetter item,
-            CellNavigationMesh.Mask<bool> mask)
-        {
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, CellNavigationMeshData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static CellNavigationMesh_FieldIndex ConvertFieldIndex(ANavigationMesh_FieldIndex index)
@@ -1526,15 +1465,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellNavigationMeshGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CellNavigationMeshCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CellNavigationMeshCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellNavigationMeshCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellNavigationMeshCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellNavigationMeshCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CellNavigationMeshBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WorldspaceSubBlock :
         IWorldspaceSubBlock,
         ILoquiObjectSetter<WorldspaceSubBlock>,
-        IEquatable<WorldspaceSubBlock>,
-        IEqualsMask
+        IEquatable<WorldspaceSubBlock>
     {
         #region Ctor
         public WorldspaceSubBlock()
@@ -588,7 +587,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSubBlockCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSubBlockCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
@@ -620,14 +619,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static WorldspaceSubBlock CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static WorldspaceSubBlock CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -654,8 +645,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceSubBlockGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -674,7 +663,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWorldspaceSubBlock :
         IWorldspaceSubBlockGetter,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IWorldspaceSubBlock>
+        ILoquiObjectSetter<IWorldspaceSubBlock>,
+        ILinkedFormKeyContainer
     {
         new Int16 BlockNumberY { get; set; }
         new Int16 BlockNumberX { get; set; }
@@ -688,7 +678,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IWorldspaceSubBlockGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -750,24 +740,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IWorldspaceSubBlockGetter item,
-            WorldspaceSubBlock.Mask<bool?> checkMask)
-        {
-            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static WorldspaceSubBlock.Mask<bool> GetHasBeenSetMask(this IWorldspaceSubBlockGetter item)
-        {
-            var ret = new WorldspaceSubBlock.Mask<bool>(false);
-            ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -925,17 +897,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWorldspaceSubBlock item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWorldspaceSubBlock item,
             MutagenFrame frame,
@@ -1370,26 +1331,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            IWorldspaceSubBlockGetter item,
-            WorldspaceSubBlock.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IWorldspaceSubBlockGetter item,
-            WorldspaceSubBlock.Mask<bool> mask)
-        {
-            mask.BlockNumberY = true;
-            mask.BlockNumberX = true;
-            mask.GroupType = true;
-            mask.LastModified = true;
-            mask.Unknown = true;
-            var ItemsItem = item.Items;
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Cell.Mask<bool>?>>?>(true, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Cell.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1835,12 +1776,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IWorldspaceSubBlockGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WorldspaceSubBlockBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1872,15 +1814,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceSubBlockGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSubBlockCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSubBlockCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

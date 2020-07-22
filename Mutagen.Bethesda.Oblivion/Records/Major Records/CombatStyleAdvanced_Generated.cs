@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class CombatStyleAdvanced :
         ICombatStyleAdvanced,
         ILoquiObjectSetter<CombatStyleAdvanced>,
-        IEquatable<CombatStyleAdvanced>,
-        IEqualsMask
+        IEquatable<CombatStyleAdvanced>
     {
         #region Ctor
         public CombatStyleAdvanced()
@@ -979,14 +978,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static CombatStyleAdvanced CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static CombatStyleAdvanced CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1013,8 +1004,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleAdvancedGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1138,24 +1127,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ICombatStyleAdvancedGetter item,
-            CombatStyleAdvanced.Mask<bool?> checkMask)
-        {
-            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static CombatStyleAdvanced.Mask<bool> GetHasBeenSetMask(this ICombatStyleAdvancedGetter item)
-        {
-            var ret = new CombatStyleAdvanced.Mask<bool>(false);
-            ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ICombatStyleAdvancedGetter item,
             ICombatStyleAdvancedGetter rhs)
@@ -1248,17 +1219,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICombatStyleAdvanced item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICombatStyleAdvanced item,
             MutagenFrame frame,
@@ -1926,40 +1886,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ICombatStyleAdvancedGetter item,
-            CombatStyleAdvanced.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ICombatStyleAdvancedGetter item,
-            CombatStyleAdvanced.Mask<bool> mask)
-        {
-            mask.DodgeFatigueModMult = true;
-            mask.DodgeFatigueModBase = true;
-            mask.EncumbSpeedModBase = true;
-            mask.EncumbSpeedModMult = true;
-            mask.DodgeWhileUnderAttackMult = true;
-            mask.DodgeNotUnderAttackMult = true;
-            mask.DodgeBackWhileUnderAttackMult = true;
-            mask.DodgeBackNotUnderAttackMult = true;
-            mask.DodgeForwardWhileUnderAttackMult = true;
-            mask.DodgeForwardNotUnderAttackMult = true;
-            mask.BlockSkillModifierMult = true;
-            mask.BlockSkillModifierBase = true;
-            mask.BlockWhileUnderAttackMult = true;
-            mask.BlockNotUnderAttackMult = true;
-            mask.AttackSkillModifierMult = true;
-            mask.AttackSkillModifierBase = true;
-            mask.AttackWhileUnderAttackMult = true;
-            mask.AttackNotUnderAttackMult = true;
-            mask.AttackDuringBlockMult = true;
-            mask.PowerAttackFatigueModBase = true;
-            mask.PowerAttackFatigueModMult = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ICombatStyleAdvancedGetter? lhs,
@@ -2353,12 +2279,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this ICombatStyleAdvancedGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((CombatStyleAdvancedBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -2390,8 +2317,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleAdvancedGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CombatStyleAdvancedBinaryWriteTranslation.Instance;

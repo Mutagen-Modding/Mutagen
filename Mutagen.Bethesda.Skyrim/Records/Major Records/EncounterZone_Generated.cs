@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IEncounterZoneInternal,
         ILoquiObjectSetter<EncounterZone>,
-        IEquatable<EncounterZone>,
-        IEqualsMask
+        IEquatable<EncounterZone>
     {
         #region Ctor
         protected EncounterZone()
@@ -582,7 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
         public EncounterZone(FormKey formKey)
@@ -622,14 +621,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new EncounterZone CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static EncounterZone CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -656,8 +647,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEncounterZoneGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -676,7 +665,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEncounterZone :
         IEncounterZoneGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IEncounterZoneInternal>
+        ILoquiObjectSetter<IEncounterZoneInternal>,
+        ILinkedFormKeyContainer
     {
         new FormLink<IOwner> Owner { get; set; }
         new FormLink<Location> Location { get; set; }
@@ -697,7 +687,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEncounterZoneGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IEncounterZoneGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => EncounterZone_Registration.Instance;
@@ -754,24 +744,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IEncounterZoneGetter item,
-            EncounterZone.Mask<bool?> checkMask)
-        {
-            return ((EncounterZoneCommon)((IEncounterZoneGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static EncounterZone.Mask<bool> GetHasBeenSetMask(this IEncounterZoneGetter item)
-        {
-            var ret = new EncounterZone.Mask<bool>(false);
-            ((EncounterZoneCommon)((IEncounterZoneGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -843,17 +815,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IEncounterZoneInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IEncounterZoneInternal item,
             MutagenFrame frame,
@@ -1309,31 +1270,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            IEncounterZoneGetter item,
-            EncounterZone.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IEncounterZoneGetter item,
-            EncounterZone.Mask<bool> mask)
-        {
-            mask.Owner = true;
-            mask.Location = true;
-            mask.Rank = true;
-            mask.MinLevel = true;
-            mask.Flags = true;
-            mask.MaxLevel = true;
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static EncounterZone_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1840,15 +1776,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEncounterZoneGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EncounterZoneBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

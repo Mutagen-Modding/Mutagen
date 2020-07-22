@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IDialogBranchInternal,
         ILoquiObjectSetter<DialogBranch>,
-        IEquatable<DialogBranch>,
-        IEqualsMask
+        IEquatable<DialogBranch>
     {
         #region Ctor
         protected DialogBranch()
@@ -453,7 +452,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => DialogBranchCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DialogBranchCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogBranchCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogBranchCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogBranchCommon.Instance.RemapLinks(this, mapping);
         public DialogBranch(FormKey formKey)
@@ -488,14 +487,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new DialogBranch CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static DialogBranch CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -522,8 +513,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogBranchGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -542,7 +531,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDialogBranch :
         IDialogBranchGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IDialogBranchInternal>
+        ILoquiObjectSetter<IDialogBranchInternal>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Quest> Quest { get; set; }
         new Int32? TNAM { get; set; }
@@ -560,7 +550,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDialogBranchGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IDialogBranchGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DialogBranch_Registration.Instance;
@@ -614,24 +604,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IDialogBranchGetter item,
-            DialogBranch.Mask<bool?> checkMask)
-        {
-            return ((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static DialogBranch.Mask<bool> GetHasBeenSetMask(this IDialogBranchGetter item)
-        {
-            var ret = new DialogBranch.Mask<bool>(false);
-            ((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -703,17 +675,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IDialogBranchInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IDialogBranchInternal item,
             MutagenFrame frame,
@@ -1118,31 +1079,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(StartingTopicItem, "StartingTopic");
             }
-        }
-        
-        public bool HasBeenSet(
-            IDialogBranchGetter item,
-            DialogBranch.Mask<bool?> checkMask)
-        {
-            if (checkMask.TNAM.HasValue && checkMask.TNAM.Value != (item.TNAM != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.StartingTopic.HasValue && checkMask.StartingTopic.Value != (item.StartingTopic.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IDialogBranchGetter item,
-            DialogBranch.Mask<bool> mask)
-        {
-            mask.Quest = true;
-            mask.TNAM = (item.TNAM != null);
-            mask.Flags = (item.Flags != null);
-            mask.StartingTopic = (item.StartingTopic.FormKey != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static DialogBranch_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1639,15 +1575,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogBranchGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => DialogBranchCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DialogBranchCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogBranchCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogBranchCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogBranchCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogBranchBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

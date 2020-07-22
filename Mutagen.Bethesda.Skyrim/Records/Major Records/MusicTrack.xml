@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MusicTrack" recordType="MUST" objType="Record" baseClass="SkyrimMajorRecord" GUID="be0b125f-644b-4d58-bcd9-94649f4fa209" ID="450">
     <Fields>
-      <Enum name="Type" recordType="CNAM" enumName="MusicTrack.TypeEnum" byteLength="4" hasBeenSet="False" />
+      <Enum name="Type" recordType="CNAM" enumName="MusicTrack.TypeEnum" byteLength="4" nullable="False" />
       <Float name="Duration" recordType="FLTV" />
       <Float name="FadeOut" recordType="DNAM" />
       <String name="TrackFilename" recordType="ANAM" />

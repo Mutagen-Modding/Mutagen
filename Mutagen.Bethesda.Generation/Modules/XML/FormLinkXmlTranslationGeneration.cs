@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Generation
             switch (type.FormIDType)
             {
                 case FormLinkType.FormIDTypeEnum.Normal:
-                    return $"{itemAccessor.PropertyOrDirectAccess}.FormKey";
+                    return $"{itemAccessor}.FormKey";
                 case FormLinkType.FormIDTypeEnum.EDIDChars:
-                    return $"{itemAccessor.PropertyOrDirectAccess}.EDID";
+                    return $"{itemAccessor}.EDID";
                 default:
                     throw new NotImplementedException();
             }
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Generation
             MaskGenerationUtility.WrapErrorFieldIndexPush(fg,
                 () =>
                 {
-                    if (itemAccessor.DirectIsAssignment)
+                    if (itemAccessor.IsAssignment)
                     {
                         using (var args = new ArgsWrapper(fg,
                             $"{itemAccessor} = {(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType")}XmlTranslation.Instance.Parse"))

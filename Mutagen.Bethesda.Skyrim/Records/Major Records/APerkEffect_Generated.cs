@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class APerkEffect :
         IAPerkEffect,
         ILoquiObjectSetter<APerkEffect>,
-        IEquatable<APerkEffect>,
-        IEqualsMask
+        IEquatable<APerkEffect>
     {
         #region Ctor
         public APerkEffect()
@@ -526,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual IEnumerable<FormKey> LinkFormKeys => APerkEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => APerkEffectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => APerkEffectCommon.Instance.GetLinkFormKeys(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEffectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEffectCommon.Instance.RemapLinks(this, mapping);
         [Flags]
@@ -552,8 +551,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAPerkEffectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -571,7 +568,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IAPerkEffect :
         IAPerkEffectGetter,
-        ILoquiObjectSetter<IAPerkEffect>
+        ILoquiObjectSetter<IAPerkEffect>,
+        ILinkedFormKeyContainer
     {
         new Byte Rank { get; set; }
         new Byte Priority { get; set; }
@@ -582,7 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAPerkEffectGetter :
         ILoquiObject,
         ILoquiObject<IAPerkEffectGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -642,24 +640,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IAPerkEffectGetter item,
-            APerkEffect.Mask<bool?> checkMask)
-        {
-            return ((APerkEffectCommon)((IAPerkEffectGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static APerkEffect.Mask<bool> GetHasBeenSetMask(this IAPerkEffectGetter item)
-        {
-            var ret = new APerkEffect.Mask<bool>(false);
-            ((APerkEffectCommon)((IAPerkEffectGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -754,17 +734,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAPerkEffect item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAPerkEffect item,
             MutagenFrame frame,
@@ -1137,24 +1106,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IAPerkEffectGetter item,
-            APerkEffect.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IAPerkEffectGetter item,
-            APerkEffect.Mask<bool> mask)
-        {
-            mask.Rank = true;
-            mask.Priority = true;
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, PerkCondition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, PerkCondition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.PRKEDataTypeState = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IAPerkEffectGetter? lhs,
@@ -1190,7 +1141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IAPerkEffectGetter obj)
         {
-            foreach (var item in obj.Conditions.WhereCastable<IPerkConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Conditions.WhereCastable<IPerkConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -1425,12 +1376,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IAPerkEffectGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((APerkEffectBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1462,15 +1414,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAPerkEffectGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual IEnumerable<FormKey> LinkFormKeys => APerkEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => APerkEffectCommon.Instance.GetLinkFormKeys(this);
-        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEffectCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => APerkEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => APerkEffectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

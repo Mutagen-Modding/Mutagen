@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SkyrimModHeader :
         ISkyrimModHeader,
         ILoquiObjectSetter<SkyrimModHeader>,
-        IEquatable<SkyrimModHeader>,
-        IEqualsMask
+        IEquatable<SkyrimModHeader>
     {
         #region Ctor
         public SkyrimModHeader()
@@ -955,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => SkyrimModHeaderCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SkyrimModHeaderCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SkyrimModHeaderCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -975,14 +974,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static SkyrimModHeader CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static SkyrimModHeader CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1009,8 +1000,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModHeaderGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1028,7 +1017,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ISkyrimModHeader :
         ISkyrimModHeaderGetter,
-        ILoquiObjectSetter<ISkyrimModHeader>
+        ILoquiObjectSetter<ISkyrimModHeader>,
+        ILinkedFormKeyContainer
     {
         new SkyrimModHeader.HeaderFlag Flags { get; set; }
         new UInt32 FormID { get; set; }
@@ -1049,7 +1039,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISkyrimModHeaderGetter :
         ILoquiObject,
         ILoquiObject<ISkyrimModHeaderGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1119,24 +1109,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ISkyrimModHeaderGetter item,
-            SkyrimModHeader.Mask<bool?> checkMask)
-        {
-            return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SkyrimModHeader.Mask<bool> GetHasBeenSetMask(this ISkyrimModHeaderGetter item)
-        {
-            var ret = new SkyrimModHeader.Mask<bool>(false);
-            ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1231,17 +1203,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISkyrimModHeader item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISkyrimModHeader item,
             MutagenFrame frame,
@@ -1827,41 +1788,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ISkyrimModHeaderGetter item,
-            SkyrimModHeader.Mask<bool?> checkMask)
-        {
-            if (checkMask.TypeOffsets.HasValue && checkMask.TypeOffsets.Value != (item.TypeOffsets != null)) return false;
-            if (checkMask.Deleted.HasValue && checkMask.Deleted.Value != (item.Deleted != null)) return false;
-            if (checkMask.Author.HasValue && checkMask.Author.Value != (item.Author != null)) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            if (checkMask.OverriddenForms?.Overall.HasValue ?? false && checkMask.OverriddenForms!.Overall.Value != (item.OverriddenForms != null)) return false;
-            if (checkMask.INTV.HasValue && checkMask.INTV.Value != (item.INTV != null)) return false;
-            if (checkMask.INCC.HasValue && checkMask.INCC.Value != (item.INCC != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ISkyrimModHeaderGetter item,
-            SkyrimModHeader.Mask<bool> mask)
-        {
-            mask.Flags = true;
-            mask.FormID = true;
-            mask.Version = true;
-            mask.FormVersion = true;
-            mask.Version2 = true;
-            mask.Stats = new MaskItem<bool, ModStats.Mask<bool>?>(true, item.Stats?.GetHasBeenSetMask());
-            mask.TypeOffsets = (item.TypeOffsets != null);
-            mask.Deleted = (item.Deleted != null);
-            mask.Author = (item.Author != null);
-            mask.Description = (item.Description != null);
-            var MasterReferencesItem = item.MasterReferences;
-            mask.MasterReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MasterReference.Mask<bool>?>>?>(true, MasterReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, MasterReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.OverriddenForms = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.OverriddenForms != null), default);
-            mask.INTV = (item.INTV != null);
-            mask.INCC = (item.INCC != null);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ISkyrimModHeaderGetter? lhs,
@@ -2393,12 +2319,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ISkyrimModHeaderGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((SkyrimModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -2430,15 +2357,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModHeaderGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => SkyrimModHeaderCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SkyrimModHeaderCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SkyrimModHeaderCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SkyrimModHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -272,7 +272,6 @@ namespace Mutagen.Bethesda
             TMod record,
             MutagenFrame frame,
             TImportMask importMask,
-            RecordTypeConverter? recordTypeConverter,
             RecordStructFill<TMod> fillStructs,
             ModRecordTypeFill<TMod, TImportMask> fillTyped)
             where TMod : IMod
@@ -284,7 +283,7 @@ namespace Mutagen.Bethesda
                 importMask: importMask,
                 nextRecordType: modHeader.RecordType,
                 contentLength: checked((int)modHeader.ContentLength),
-                recordTypeConverter: recordTypeConverter);
+                recordTypeConverter: null);
             frame.Reader.MetaData.MasterReferences = new MasterReferenceReader(record.ModKey, record.MasterReferences);
             while (!frame.Complete)
             {
@@ -306,7 +305,7 @@ namespace Mutagen.Bethesda
                     importMask: importMask,
                     nextRecordType: groupHeader.ContainedRecordType,
                     contentLength: len,
-                    recordTypeConverter: recordTypeConverter);
+                    recordTypeConverter: null);
                 if (!parsed.KeepParsing) break;
                 if (frame.Position < finalPos)
                 {

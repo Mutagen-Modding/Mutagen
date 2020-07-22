@@ -55,12 +55,7 @@ namespace Mutagen.Bethesda.Generation
             throw new NotImplementedException();
         }
 
-        public override void GenerateForHasBeenSetCheck(FileGeneration fg, Accessor accessor, string checkMaskAccessor)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void GenerateForHasBeenSetMaskGetter(FileGeneration fg, Accessor accessor, string retAccessor)
+        public override void GenerateForNullableCheck(FileGeneration fg, Accessor accessor, string checkMaskAccessor)
         {
             throw new NotImplementedException();
         }
@@ -81,11 +76,6 @@ namespace Mutagen.Bethesda.Generation
         }
 
         public override void GenerateSetNth(FileGeneration fg, Accessor accessor, Accessor rhs, bool internalUse)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void GenerateSetNthHasBeenSet(FileGeneration fg, Accessor identifier, string onIdentifier)
         {
             throw new NotImplementedException();
         }

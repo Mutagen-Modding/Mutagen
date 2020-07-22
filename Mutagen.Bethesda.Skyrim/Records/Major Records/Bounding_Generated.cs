@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Bounding :
         IBounding,
         ILoquiObjectSetter<Bounding>,
-        IEquatable<Bounding>,
-        IEqualsMask
+        IEquatable<Bounding>
     {
         #region Ctor
         public Bounding()
@@ -541,14 +540,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static Bounding CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static Bounding CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -575,8 +566,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBoundingGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -672,24 +661,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IBoundingGetter item,
-            Bounding.Mask<bool?> checkMask)
-        {
-            return ((BoundingCommon)((IBoundingGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Bounding.Mask<bool> GetHasBeenSetMask(this IBoundingGetter item)
-        {
-            var ret = new Bounding.Mask<bool>(false);
-            ((BoundingCommon)((IBoundingGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IBoundingGetter item,
             IBoundingGetter rhs)
@@ -782,17 +753,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IBounding item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IBounding item,
             MutagenFrame frame,
@@ -1204,26 +1164,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IBoundingGetter item,
-            Bounding.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IBoundingGetter item,
-            Bounding.Mask<bool> mask)
-        {
-            mask.Width = true;
-            mask.Height = true;
-            mask.Position = true;
-            mask.RotationQ1 = true;
-            mask.RotationQ2 = true;
-            mask.RotationQ3 = true;
-            mask.RotationQ4 = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IBoundingGetter? lhs,
@@ -1471,12 +1411,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IBoundingGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((BoundingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1508,8 +1449,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBoundingGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BoundingBinaryWriteTranslation.Instance;

@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ScriptFields :
         IScriptFields,
         ILoquiObjectSetter<ScriptFields>,
-        IEquatable<ScriptFields>,
-        IEqualsMask
+        IEquatable<ScriptFields>
     {
         #region Ctor
         public ScriptFields()
@@ -654,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ScriptFieldsCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ScriptFieldsCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScriptFieldsCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptFieldsCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptFieldsCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -674,14 +673,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static ScriptFields CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static ScriptFields CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -708,8 +699,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptFieldsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -727,7 +716,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IScriptFields :
         IScriptFieldsGetter,
-        ILoquiObjectSetter<IScriptFields>
+        ILoquiObjectSetter<IScriptFields>,
+        ILinkedFormKeyContainer
     {
         new ScriptMetaSummary MetadataSummary { get; }
         new MemorySlice<Byte>? CompiledScript { get; set; }
@@ -739,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IScriptFieldsGetter :
         ILoquiObject,
         ILoquiObject<IScriptFieldsGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -800,24 +790,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IScriptFieldsGetter item,
-            ScriptFields.Mask<bool?> checkMask)
-        {
-            return ((ScriptFieldsCommon)((IScriptFieldsGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ScriptFields.Mask<bool> GetHasBeenSetMask(this IScriptFieldsGetter item)
-        {
-            var ret = new ScriptFields.Mask<bool>(false);
-            ((ScriptFieldsCommon)((IScriptFieldsGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -912,17 +884,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IScriptFields item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IScriptFields item,
             MutagenFrame frame,
@@ -1350,28 +1311,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IScriptFieldsGetter item,
-            ScriptFields.Mask<bool?> checkMask)
-        {
-            if (checkMask.CompiledScript.HasValue && checkMask.CompiledScript.Value != (item.CompiledScript != null)) return false;
-            if (checkMask.SourceCode.HasValue && checkMask.SourceCode.Value != (item.SourceCode != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IScriptFieldsGetter item,
-            ScriptFields.Mask<bool> mask)
-        {
-            mask.MetadataSummary = new MaskItem<bool, ScriptMetaSummary.Mask<bool>?>(true, item.MetadataSummary?.GetHasBeenSetMask());
-            mask.CompiledScript = (item.CompiledScript != null);
-            mask.SourceCode = (item.SourceCode != null);
-            var LocalVariablesItem = item.LocalVariables;
-            mask.LocalVariables = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocalVariable.Mask<bool>?>>?>(true, LocalVariablesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LocalVariable.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var ReferencesItem = item.References;
-            mask.References = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, AScriptReference.Mask<bool>?>>?>(true, ReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, AScriptReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IScriptFieldsGetter? lhs,
@@ -1415,7 +1354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IScriptFieldsGetter obj)
         {
-            foreach (var item in obj.References.WhereCastable<IAScriptReferenceGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.References.WhereCastable<IAScriptReferenceGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -1799,12 +1738,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IScriptFieldsGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((ScriptFieldsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1836,15 +1776,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptFieldsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => ScriptFieldsCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ScriptFieldsCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptFieldsCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptFieldsCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScriptFieldsCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScriptFieldsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

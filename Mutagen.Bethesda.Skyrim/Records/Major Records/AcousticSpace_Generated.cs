@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IAcousticSpaceInternal,
         ILoquiObjectSetter<AcousticSpace>,
-        IEquatable<AcousticSpace>,
-        IEqualsMask
+        IEquatable<AcousticSpace>
     {
         #region Ctor
         protected AcousticSpace()
@@ -461,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
         public AcousticSpace(FormKey formKey)
@@ -496,14 +495,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new AcousticSpace CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static AcousticSpace CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -530,8 +521,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAcousticSpaceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -551,7 +540,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAcousticSpaceGetter,
         ISkyrimMajorRecord,
         IObjectBounded,
-        ILoquiObjectSetter<IAcousticSpaceInternal>
+        ILoquiObjectSetter<IAcousticSpaceInternal>,
+        ILinkedFormKeyContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new FormLinkNullable<SoundDescriptor> AmbientSound { get; set; }
@@ -570,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IObjectBoundedGetter,
         ILoquiObject<IAcousticSpaceGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => AcousticSpace_Registration.Instance;
@@ -624,24 +614,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IAcousticSpaceGetter item,
-            AcousticSpace.Mask<bool?> checkMask)
-        {
-            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static AcousticSpace.Mask<bool> GetHasBeenSetMask(this IAcousticSpaceGetter item)
-        {
-            var ret = new AcousticSpace.Mask<bool>(false);
-            ((AcousticSpaceCommon)((IAcousticSpaceGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -713,17 +685,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAcousticSpaceInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAcousticSpaceInternal item,
             MutagenFrame frame,
@@ -1129,31 +1090,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(EnvironmentTypeItem, "EnvironmentType");
             }
-        }
-        
-        public bool HasBeenSet(
-            IAcousticSpaceGetter item,
-            AcousticSpace.Mask<bool?> checkMask)
-        {
-            if (checkMask.AmbientSound.HasValue && checkMask.AmbientSound.Value != (item.AmbientSound.FormKey != null)) return false;
-            if (checkMask.UseSoundFromRegion.HasValue && checkMask.UseSoundFromRegion.Value != (item.UseSoundFromRegion.FormKey != null)) return false;
-            if (checkMask.EnvironmentType.HasValue && checkMask.EnvironmentType.Value != (item.EnvironmentType.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IAcousticSpaceGetter item,
-            AcousticSpace.Mask<bool> mask)
-        {
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.AmbientSound = (item.AmbientSound.FormKey != null);
-            mask.UseSoundFromRegion = (item.UseSoundFromRegion.FormKey != null);
-            mask.EnvironmentType = (item.EnvironmentType.FormKey != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static AcousticSpace_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1676,15 +1612,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAcousticSpaceGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AcousticSpaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

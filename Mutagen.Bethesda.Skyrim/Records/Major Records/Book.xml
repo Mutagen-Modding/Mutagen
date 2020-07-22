@@ -8,11 +8,11 @@
     <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Icons" refName="Icons" />
-      <String name="BookText" recordType="DESC" hasBeenSet="False" translated="DL" />
+      <String name="BookText" recordType="DESC" nullable="False" translated="DL" />
       <RefDirect name="Destructible" refName="Destructible" />
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
@@ -24,7 +24,7 @@
           <Enum name="Flags" enumName="Book.Flag" byteLength="1" binary="Custom" />
           <Enum name="Type" enumName="Book.BookType" byteLength="1" />
           <UInt16 name="Unused" />
-          <RefDirect name="Teaches" objType="Subrecord" hasBeenSet="True" refName="BookTeachTarget" binary="Custom" byteLength="4" />
+          <RefDirect name="Teaches" objType="Subrecord" nullable="True" refName="BookTeachTarget" binary="Custom" byteLength="4" />
           <UInt32 name="Value" />
           <Float name="Weight" />
         </Fields>
@@ -38,7 +38,7 @@
   <Object name="BookTeachTarget" abstract="true" objType="Subrecord" GUID="a95689cb-bc18-4276-b852-755a8d728d04" ID="156" />
   <Object name="BookSkill" objType="Subrecord" baseClass="BookTeachTarget" GUID="4b9c1ac7-82ca-47b8-af25-dae58cb74d14" ID="157">
     <Fields>
-      <Enum name="Skill" enumName="Skill" byteLength="4" hasBeenSet="True" hasBeenSetBinaryFallback="-1" />
+      <Enum name="Skill" enumName="Skill" byteLength="4" nullable="True" nullableBinaryFallback="-1" />
     </Fields>
   </Object>
   <Object name="BookSpell" objType="Subrecord" baseClass="BookTeachTarget" GUID="fef00688-7772-4c2a-894c-7748d1688013" ID="158">

@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ISoundMarkerInternal,
         ILoquiObjectSetter<SoundMarker>,
-        IEquatable<SoundMarker>,
-        IEqualsMask
+        IEquatable<SoundMarker>
     {
         #region Ctor
         protected SoundMarker()
@@ -473,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SoundMarkerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SoundMarkerCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SoundMarkerCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundMarkerCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundMarkerCommon.Instance.RemapLinks(this, mapping);
         public SoundMarker(FormKey formKey)
@@ -508,14 +507,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new SoundMarker CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static SoundMarker CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -542,8 +533,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundMarkerGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -565,7 +554,8 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectId,
         ISound,
         IObjectBounded,
-        ILoquiObjectSetter<ISoundMarkerInternal>
+        ILoquiObjectSetter<ISoundMarkerInternal>,
+        ILinkedFormKeyContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
@@ -586,7 +576,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISoundGetter,
         IObjectBoundedGetter,
         ILoquiObject<ISoundMarkerGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SoundMarker_Registration.Instance;
@@ -640,24 +630,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ISoundMarkerGetter item,
-            SoundMarker.Mask<bool?> checkMask)
-        {
-            return ((SoundMarkerCommon)((ISoundMarkerGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SoundMarker.Mask<bool> GetHasBeenSetMask(this ISoundMarkerGetter item)
-        {
-            var ret = new SoundMarker.Mask<bool>(false);
-            ((SoundMarkerCommon)((ISoundMarkerGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -729,17 +701,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISoundMarkerInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISoundMarkerInternal item,
             MutagenFrame frame,
@@ -1145,31 +1106,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(SoundDescriptorItem, "SoundDescriptor");
             }
-        }
-        
-        public bool HasBeenSet(
-            ISoundMarkerGetter item,
-            SoundMarker.Mask<bool?> checkMask)
-        {
-            if (checkMask.FNAM.HasValue && checkMask.FNAM.Value != (item.FNAM != null)) return false;
-            if (checkMask.SNDD.HasValue && checkMask.SNDD.Value != (item.SNDD != null)) return false;
-            if (checkMask.SoundDescriptor.HasValue && checkMask.SoundDescriptor.Value != (item.SoundDescriptor.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ISoundMarkerGetter item,
-            SoundMarker.Mask<bool> mask)
-        {
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.FNAM = (item.FNAM != null);
-            mask.SNDD = (item.SNDD != null);
-            mask.SoundDescriptor = (item.SoundDescriptor.FormKey != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static SoundMarker_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1694,15 +1630,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundMarkerGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SoundMarkerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SoundMarkerCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundMarkerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundMarkerCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SoundMarkerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundMarkerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

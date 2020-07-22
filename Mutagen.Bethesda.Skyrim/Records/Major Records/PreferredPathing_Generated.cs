@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class PreferredPathing :
         IPreferredPathing,
         ILoquiObjectSetter<PreferredPathing>,
-        IEquatable<PreferredPathing>,
-        IEqualsMask
+        IEquatable<PreferredPathing>
     {
         #region Ctor
         public PreferredPathing()
@@ -551,7 +550,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => PreferredPathingCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PreferredPathingCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PreferredPathingCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -571,14 +570,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static PreferredPathing CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static PreferredPathing CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -605,8 +596,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPreferredPathingGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -624,7 +613,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IPreferredPathing :
         IPreferredPathingGetter,
-        ILoquiObjectSetter<IPreferredPathing>
+        ILoquiObjectSetter<IPreferredPathing>,
+        ILinkedFormKeyContainer
     {
         new IExtendedList<NavmeshSet> NavmeshSets { get; }
         new IExtendedList<NavmeshNode> NavmeshTree { get; }
@@ -633,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPreferredPathingGetter :
         ILoquiObject,
         ILoquiObject<IPreferredPathingGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -691,24 +681,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPreferredPathingGetter item,
-            PreferredPathing.Mask<bool?> checkMask)
-        {
-            return ((PreferredPathingCommon)((IPreferredPathingGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PreferredPathing.Mask<bool> GetHasBeenSetMask(this IPreferredPathingGetter item)
-        {
-            var ret = new PreferredPathing.Mask<bool>(false);
-            ((PreferredPathingCommon)((IPreferredPathingGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -803,17 +775,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPreferredPathing item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPreferredPathing item,
             MutagenFrame frame,
@@ -1173,23 +1134,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPreferredPathingGetter item,
-            PreferredPathing.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IPreferredPathingGetter item,
-            PreferredPathing.Mask<bool> mask)
-        {
-            var NavmeshSetsItem = item.NavmeshSets;
-            mask.NavmeshSets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, NavmeshSet.Mask<bool>?>>?>(true, NavmeshSetsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, NavmeshSet.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            var NavmeshTreeItem = item.NavmeshTree;
-            mask.NavmeshTree = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, NavmeshNode.Mask<bool>?>>?>(true, NavmeshTreeItem.WithIndex().Select((i) => new MaskItemIndexed<bool, NavmeshNode.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IPreferredPathingGetter? lhs,
@@ -1467,12 +1411,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IPreferredPathingGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PreferredPathingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1504,15 +1449,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPreferredPathingGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => PreferredPathingCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PreferredPathingCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PreferredPathingCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PreferredPathingBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

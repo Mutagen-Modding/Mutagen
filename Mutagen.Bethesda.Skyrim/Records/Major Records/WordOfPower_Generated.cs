@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IWordOfPowerInternal,
         ILoquiObjectSetter<WordOfPower>,
-        IEquatable<WordOfPower>,
-        IEqualsMask
+        IEquatable<WordOfPower>
     {
         #region Ctor
         protected WordOfPower()
@@ -414,14 +413,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new WordOfPower CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static WordOfPower CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -448,8 +439,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWordOfPowerGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -539,24 +528,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IWordOfPowerGetter item,
-            WordOfPower.Mask<bool?> checkMask)
-        {
-            return ((WordOfPowerCommon)((IWordOfPowerGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static WordOfPower.Mask<bool> GetHasBeenSetMask(this IWordOfPowerGetter item)
-        {
-            var ret = new WordOfPower.Mask<bool>(false);
-            ((WordOfPowerCommon)((IWordOfPowerGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IWordOfPowerGetter item,
             IWordOfPowerGetter rhs)
@@ -626,17 +597,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWordOfPowerInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWordOfPowerInternal item,
             MutagenFrame frame,
@@ -1003,27 +963,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Translation, "Translation");
             }
-        }
-        
-        public bool HasBeenSet(
-            IWordOfPowerGetter item,
-            WordOfPower.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IWordOfPowerGetter item,
-            WordOfPower.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            mask.Translation = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static WordOfPower_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1482,8 +1421,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWordOfPowerGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WordOfPowerBinaryWriteTranslation.Instance;

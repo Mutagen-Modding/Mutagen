@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WorldspaceMaxHeight :
         IWorldspaceMaxHeight,
         ILoquiObjectSetter<WorldspaceMaxHeight>,
-        IEquatable<WorldspaceMaxHeight>,
-        IEqualsMask
+        IEquatable<WorldspaceMaxHeight>
     {
         #region Ctor
         public WorldspaceMaxHeight()
@@ -429,14 +428,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static WorldspaceMaxHeight CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static WorldspaceMaxHeight CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -463,8 +454,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceMaxHeightGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -550,24 +539,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IWorldspaceMaxHeightGetter item,
-            WorldspaceMaxHeight.Mask<bool?> checkMask)
-        {
-            return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static WorldspaceMaxHeight.Mask<bool> GetHasBeenSetMask(this IWorldspaceMaxHeightGetter item)
-        {
-            var ret = new WorldspaceMaxHeight.Mask<bool>(false);
-            ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -662,17 +633,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWorldspaceMaxHeight item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWorldspaceMaxHeight item,
             MutagenFrame frame,
@@ -1016,22 +976,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IWorldspaceMaxHeightGetter item,
-            WorldspaceMaxHeight.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IWorldspaceMaxHeightGetter item,
-            WorldspaceMaxHeight.Mask<bool> mask)
-        {
-            mask.Min = true;
-            mask.Max = true;
-            mask.CellData = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IWorldspaceMaxHeightGetter? lhs,
@@ -1245,12 +1189,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IWorldspaceMaxHeightGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WorldspaceMaxHeightBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1282,8 +1227,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceMaxHeightGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WorldspaceMaxHeightBinaryWriteTranslation.Instance;

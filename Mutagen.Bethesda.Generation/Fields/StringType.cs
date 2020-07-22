@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (this.Translated.HasValue)
             {
-                if (this.HasBeenSet)
+                if (this.Nullable)
                 {
                     return $"default({nameof(TranslatedString)}?)";
                 }
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateClear(FileGeneration fg, Accessor identifier)
         {
             if (this.Translated.HasValue
-                && !this.HasBeenSet)
+                && !this.Nullable)
             {
                 fg.AppendLine($"{identifier}.Clear();");
             }

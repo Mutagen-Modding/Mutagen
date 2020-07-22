@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         ISkillRecordInternal,
         ILoquiObjectSetter<SkillRecord>,
-        IEquatable<SkillRecord>,
-        IEqualsMask
+        IEquatable<SkillRecord>
     {
         #region Ctor
         protected SkillRecord()
@@ -626,14 +625,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new SkillRecord CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static SkillRecord CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -660,8 +651,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillRecordGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -761,24 +750,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ISkillRecordGetter item,
-            SkillRecord.Mask<bool?> checkMask)
-        {
-            return ((SkillRecordCommon)((ISkillRecordGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SkillRecord.Mask<bool> GetHasBeenSetMask(this ISkillRecordGetter item)
-        {
-            var ret = new SkillRecord.Mask<bool>(false);
-            ((SkillRecordCommon)((ISkillRecordGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ISkillRecordGetter item,
             ISkillRecordGetter rhs)
@@ -848,17 +819,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISkillRecordInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISkillRecordInternal item,
             MutagenFrame frame,
@@ -1344,42 +1304,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(MasterTextItem, "MasterText");
             }
-        }
-        
-        public bool HasBeenSet(
-            ISkillRecordGetter item,
-            SkillRecord.Mask<bool?> checkMask)
-        {
-            if (checkMask.Skill.HasValue && checkMask.Skill.Value != (item.Skill != null)) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.ApprenticeText.HasValue && checkMask.ApprenticeText.Value != (item.ApprenticeText != null)) return false;
-            if (checkMask.JourneymanText.HasValue && checkMask.JourneymanText.Value != (item.JourneymanText != null)) return false;
-            if (checkMask.ExpertText.HasValue && checkMask.ExpertText.Value != (item.ExpertText != null)) return false;
-            if (checkMask.MasterText.HasValue && checkMask.MasterText.Value != (item.MasterText != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ISkillRecordGetter item,
-            SkillRecord.Mask<bool> mask)
-        {
-            mask.Skill = (item.Skill != null);
-            mask.Description = (item.Description != null);
-            mask.Icon = (item.Icon != null);
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, SkillData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            mask.ApprenticeText = (item.ApprenticeText != null);
-            mask.JourneymanText = (item.JourneymanText != null);
-            mask.ExpertText = (item.ExpertText != null);
-            mask.MasterText = (item.MasterText != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static SkillRecord_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1986,8 +1910,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillRecordGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SkillRecordBinaryWriteTranslation.Instance;

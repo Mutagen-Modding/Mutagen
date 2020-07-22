@@ -6,7 +6,7 @@
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
-      <Enum name="Flags" enumName="HeadPart.Flag" byteLength="1" recordType="DATA" hasBeenSet="False" />
+      <Enum name="Flags" enumName="HeadPart.Flag" byteLength="1" recordType="DATA" nullable="False" />
       <Enum name="Type" enumName="HeadPart.TypeEnum" byteLength="4" recordType="PNAM" />
       <List name="ExtraParts">
         <FormLink refName="HeadPart" recordType="HNAM" />

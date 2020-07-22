@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class HeadPartReference :
         IHeadPartReference,
         ILoquiObjectSetter<HeadPartReference>,
-        IEquatable<HeadPartReference>,
-        IEqualsMask
+        IEquatable<HeadPartReference>
     {
         #region Ctor
         public HeadPartReference()
@@ -379,7 +378,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => HeadPartReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => HeadPartReferenceCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => HeadPartReferenceCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartReferenceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartReferenceCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -399,14 +398,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static HeadPartReference CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static HeadPartReference CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -433,8 +424,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHeadPartReferenceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -452,7 +441,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IHeadPartReference :
         IHeadPartReferenceGetter,
-        ILoquiObjectSetter<IHeadPartReference>
+        ILoquiObjectSetter<IHeadPartReference>,
+        ILinkedFormKeyContainer
     {
         new Int32? Number { get; set; }
         new FormLinkNullable<HeadPart> Head { get; set; }
@@ -461,7 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IHeadPartReferenceGetter :
         ILoquiObject,
         ILoquiObject<IHeadPartReferenceGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -519,24 +509,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IHeadPartReferenceGetter item,
-            HeadPartReference.Mask<bool?> checkMask)
-        {
-            return ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static HeadPartReference.Mask<bool> GetHasBeenSetMask(this IHeadPartReferenceGetter item)
-        {
-            var ret = new HeadPartReference.Mask<bool>(false);
-            ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -631,17 +603,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IHeadPartReference item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IHeadPartReference item,
             MutagenFrame frame,
@@ -978,23 +939,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IHeadPartReferenceGetter item,
-            HeadPartReference.Mask<bool?> checkMask)
-        {
-            if (checkMask.Number.HasValue && checkMask.Number.Value != (item.Number != null)) return false;
-            if (checkMask.Head.HasValue && checkMask.Head.Value != (item.Head.FormKey != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IHeadPartReferenceGetter item,
-            HeadPartReference.Mask<bool> mask)
-        {
-            mask.Number = (item.Number != null);
-            mask.Head = (item.Head.FormKey != null);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IHeadPartReferenceGetter? lhs,
@@ -1237,12 +1181,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IHeadPartReferenceGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((HeadPartReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1274,15 +1219,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHeadPartReferenceGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => HeadPartReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => HeadPartReferenceCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartReferenceCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => HeadPartReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HeadPartReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

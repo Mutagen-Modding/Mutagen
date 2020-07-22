@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMessageInternal,
         ILoquiObjectSetter<Message>,
-        IEquatable<Message>,
-        IEqualsMask
+        IEquatable<Message>
     {
         #region Ctor
         protected Message()
@@ -639,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MessageCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MessageCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MessageCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageCommon.Instance.RemapLinks(this, mapping);
         public Message(FormKey formKey)
@@ -674,14 +673,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Message CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Message CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -708,8 +699,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMessageGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -729,7 +718,8 @@ namespace Mutagen.Bethesda.Skyrim
         IMessageGetter,
         ISkyrimMajorRecord,
         ITranslatedNamed,
-        ILoquiObjectSetter<IMessageInternal>
+        ILoquiObjectSetter<IMessageInternal>,
+        ILinkedFormKeyContainer
     {
         new TranslatedString Description { get; set; }
         new TranslatedString? Name { get; set; }
@@ -751,7 +741,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IMessageGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Message_Registration.Instance;
@@ -808,24 +798,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IMessageGetter item,
-            Message.Mask<bool?> checkMask)
-        {
-            return ((MessageCommon)((IMessageGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Message.Mask<bool> GetHasBeenSetMask(this IMessageGetter item)
-        {
-            var ret = new Message.Mask<bool>(false);
-            ((MessageCommon)((IMessageGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -897,17 +869,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IMessageInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IMessageInternal item,
             MutagenFrame frame,
@@ -1387,35 +1348,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IMessageGetter item,
-            Message.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Quest.HasValue && checkMask.Quest.Value != (item.Quest.FormKey != null)) return false;
-            if (checkMask.DisplayTime.HasValue && checkMask.DisplayTime.Value != (item.DisplayTime != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IMessageGetter item,
-            Message.Mask<bool> mask)
-        {
-            mask.Description = true;
-            mask.Name = (item.Name != null);
-            mask.INAM = true;
-            mask.Quest = (item.Quest.FormKey != null);
-            mask.Flags = true;
-            mask.DisplayTime = (item.DisplayTime != null);
-            var MenuButtonsItem = item.MenuButtons;
-            mask.MenuButtons = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MessageButton.Mask<bool>?>>?>(true, MenuButtonsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, MessageButton.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static Message_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1542,7 +1474,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return QuestKey;
             }
-            foreach (var item in obj.MenuButtons.WhereCastable<IMessageButtonGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.MenuButtons.WhereCastable<IMessageButtonGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -2002,15 +1934,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMessageGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MessageCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MessageCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MessageCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MessageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

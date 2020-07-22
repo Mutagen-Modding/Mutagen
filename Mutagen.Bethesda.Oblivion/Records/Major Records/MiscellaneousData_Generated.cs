@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class MiscellaneousData :
         IMiscellaneousData,
         ILoquiObjectSetter<MiscellaneousData>,
-        IEquatable<MiscellaneousData>,
-        IEqualsMask
+        IEquatable<MiscellaneousData>
     {
         #region Ctor
         public MiscellaneousData()
@@ -390,14 +389,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static MiscellaneousData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static MiscellaneousData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -424,8 +415,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMiscellaneousDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -509,24 +498,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IMiscellaneousDataGetter item,
-            MiscellaneousData.Mask<bool?> checkMask)
-        {
-            return ((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static MiscellaneousData.Mask<bool> GetHasBeenSetMask(this IMiscellaneousDataGetter item)
-        {
-            var ret = new MiscellaneousData.Mask<bool>(false);
-            ((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -621,17 +592,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IMiscellaneousData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IMiscellaneousData item,
             MutagenFrame frame,
@@ -957,21 +917,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IMiscellaneousDataGetter item,
-            MiscellaneousData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IMiscellaneousDataGetter item,
-            MiscellaneousData.Mask<bool> mask)
-        {
-            mask.Value = true;
-            mask.Weight = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IMiscellaneousDataGetter? lhs,
@@ -1173,12 +1118,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IMiscellaneousDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((MiscellaneousDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1210,8 +1156,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMiscellaneousDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MiscellaneousDataBinaryWriteTranslation.Instance;

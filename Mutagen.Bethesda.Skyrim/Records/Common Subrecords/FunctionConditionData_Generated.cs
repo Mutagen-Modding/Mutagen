@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ConditionData,
         IFunctionConditionData,
         ILoquiObjectSetter<FunctionConditionData>,
-        IEquatable<FunctionConditionData>,
-        IEqualsMask
+        IEquatable<FunctionConditionData>
     {
         #region Ctor
         public FunctionConditionData()
@@ -657,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FunctionConditionDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FunctionConditionDataCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FunctionConditionDataCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FunctionConditionDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FunctionConditionDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -675,14 +674,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new FunctionConditionData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static FunctionConditionData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -709,8 +700,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFunctionConditionDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -729,7 +718,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFunctionConditionData :
         IFunctionConditionDataGetter,
         IConditionData,
-        ILoquiObjectSetter<IFunctionConditionData>
+        ILoquiObjectSetter<IFunctionConditionData>,
+        ILinkedFormKeyContainer
     {
         new UInt16 Function { get; set; }
         new UInt16 Unknown2 { get; set; }
@@ -747,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFunctionConditionDataGetter :
         IConditionDataGetter,
         ILoquiObject<IFunctionConditionDataGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => FunctionConditionData_Registration.Instance;
@@ -808,24 +798,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IFunctionConditionDataGetter item,
-            FunctionConditionData.Mask<bool?> checkMask)
-        {
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static FunctionConditionData.Mask<bool> GetHasBeenSetMask(this IFunctionConditionDataGetter item)
-        {
-            var ret = new FunctionConditionData.Mask<bool>(false);
-            ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -897,17 +869,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IFunctionConditionData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IFunctionConditionData item,
             MutagenFrame frame,
@@ -1415,37 +1376,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IFunctionConditionDataGetter item,
-            FunctionConditionData.Mask<bool?> checkMask)
-        {
-            if (checkMask.ParameterOneString.HasValue && checkMask.ParameterOneString.Value != (item.ParameterOneString != null)) return false;
-            if (checkMask.ParameterTwoString.HasValue && checkMask.ParameterTwoString.Value != (item.ParameterTwoString != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IFunctionConditionDataGetter item,
-            FunctionConditionData.Mask<bool> mask)
-        {
-            mask.Function = true;
-            mask.Unknown2 = true;
-            mask.ParameterOneRecord = true;
-            mask.ParameterOneNumber = true;
-            mask.ParameterOneString = (item.ParameterOneString != null);
-            mask.ParameterTwoRecord = true;
-            mask.ParameterTwoNumber = true;
-            mask.ParameterTwoString = (item.ParameterTwoString != null);
-            mask.Unknown3 = true;
-            mask.Unknown4 = true;
-            mask.Unknown5 = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static FunctionConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
         {
             switch (index)
@@ -1800,15 +1730,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFunctionConditionDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FunctionConditionDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FunctionConditionDataCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FunctionConditionDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FunctionConditionDataCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FunctionConditionDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FunctionConditionDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

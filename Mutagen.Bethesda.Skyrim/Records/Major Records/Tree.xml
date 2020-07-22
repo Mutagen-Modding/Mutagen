@@ -7,7 +7,7 @@
     <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <RefDirect name="Model" refName="Model" />
       <FormLink name="Ingredient" recordType="PFIG">
         <Interface>IHarvestTarget</Interface>
@@ -19,7 +19,7 @@
         <Fields>
           <Float name="TrunkFlexibility" />
           <Float name="BranchFlexibility" />
-          <ByteArray name="Unknown" hasBeenSet="False" byteLength="32" />
+          <ByteArray name="Unknown" nullable="False" byteLength="32" />
           <Float name="LeafAmplitude" />
           <Float name="LeafFrequency" />
         </Fields>

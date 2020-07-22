@@ -451,11 +451,11 @@ namespace Mutagen.Bethesda.Generation
                                 || await HasMajorRecords(loqui, includeBaseClass: true) != Case.No)
                             {
                                 var subFg = new FileGeneration();
-                                var fieldAccessor = loqui.HasBeenSet ? $"{loqui.Name}item" : $"{accessor}.{loqui.Name}";
+                                var fieldAccessor = loqui.Nullable ? $"{loqui.Name}item" : $"{accessor}.{loqui.Name}";
                                 await LoquiTypeHandler(subFg, fieldAccessor, loqui, generic: null, checkType: false);
                                 if (subFg.Count == 0) continue;
                                 if (loqui.Singleton
-                                    || !loqui.HasBeenSet)
+                                    || !loqui.Nullable)
                                 {
                                     fieldFg.AppendLines(subFg);
                                 }
@@ -479,14 +479,14 @@ namespace Mutagen.Bethesda.Generation
                                 switch (await HasMajorRecords(contLoqui, includeBaseClass: true))
                                 {
                                     case Case.Yes:
-                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.HasBeenSet ? ".TryIterate()" : null)})");
+                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".TryIterate()" : null)})");
                                         using (new BraceWrapper(fieldFg))
                                         {
                                             await LoquiTypeHandler(fieldFg, $"subItem", contLoqui, generic: null, checkType: false);
                                         }
                                         break;
                                     case Case.Maybe:
-                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.HasBeenSet ? ".TryIterate()" : null)}.WhereCastable<{contLoqui.TypeName(getter: false)}, {(getter ? nameof(IMajorRecordGetterEnumerable) : nameof(IMajorRecordEnumerable))}>())");
+                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".TryIterate()" : null)}.WhereCastable<{contLoqui.TypeName(getter: false)}, {(getter ? nameof(IMajorRecordGetterEnumerable) : nameof(IMajorRecordEnumerable))}>())");
                                         using (new BraceWrapper(fieldFg))
                                         {
                                             await LoquiTypeHandler(fieldFg, $"subItem", contLoqui, generic: null, checkType: false);
@@ -531,11 +531,11 @@ namespace Mutagen.Bethesda.Generation
 
                         if (fieldFg.Count > 0)
                         {
-                            if (field.HasBeenSet)
+                            if (field.Nullable)
                             {
-                                fg.AppendLine($"if ({field.HasBeenSetAccessor(getter: true, Accessor.FromType(field, accessor.ToString()))})");
+                                fg.AppendLine($"if ({field.NullableAccessor(getter: true, Accessor.FromType(field, accessor.ToString()))})");
                             }
-                            using (new BraceWrapper(fg, doIt: field.HasBeenSet))
+                            using (new BraceWrapper(fg, doIt: field.Nullable))
                             {
                                 fg.AppendLines(fieldFg);
                             }
@@ -860,7 +860,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (field is LoquiType loqui)
             {
-                var fieldAccessor = loqui.HasBeenSet ? $"{nickname}{loqui.Name}item" : $"{accessor}.{loqui.Name}";
+                var fieldAccessor = loqui.Nullable ? $"{nickname}{loqui.Name}item" : $"{accessor}.{loqui.Name}";
                 if (loqui.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
                 {
                     fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecords(type))");
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Generation
                 await LoquiTypeHandler(subFg, fieldAccessor, loqui, generic: "TMajor", checkType: false);
                 if (subFg.Count == 0) return;
                 if (loqui.Singleton
-                    || !loqui.HasBeenSet)
+                    || !loqui.Nullable)
                 {
                     fieldGen.AppendLines(subFg);
                 }
@@ -919,14 +919,14 @@ namespace Mutagen.Bethesda.Generation
                         switch (await HasMajorRecords(contLoqui, includeBaseClass: true))
                         {
                             case Case.Yes:
-                                fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.HasBeenSet ? ".TryIterate()" : null)})");
+                                fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".TryIterate()" : null)})");
                                 using (new BraceWrapper(fieldGen))
                                 {
                                     await LoquiTypeHandler(fieldGen, $"subItem", contLoqui, generic: "TMajor", checkType: true);
                                 }
                                 break;
                             case Case.Maybe:
-                                fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.HasBeenSet ? ".TryIterate()" : null)}.Where(i => i.GetType() == type))");
+                                fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.Nullable ? ".TryIterate()" : null)}.Where(i => i.GetType() == type))");
                                 using (new BraceWrapper(fieldGen))
                                 {
                                     await LoquiTypeHandler(fieldGen, $"subItem", contLoqui, generic: "TMajor", checkType: true);

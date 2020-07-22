@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IASpellInternal,
         ILoquiObjectSetter<ASpell>,
-        IEquatable<ASpell>,
-        IEqualsMask
+        IEquatable<ASpell>
     {
         #region Ctor
         protected ASpell()
@@ -307,7 +306,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ASpellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ASpellCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ASpellCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ASpellCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ASpellCommon.Instance.RemapLinks(this, mapping);
         public ASpell(FormKey formKey)
@@ -344,8 +343,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IASpellGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -364,7 +361,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IASpell :
         IASpellGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IASpellInternal>
+        ILoquiObjectSetter<IASpellInternal>,
+        ILinkedFormKeyContainer
     {
     }
 
@@ -378,7 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IASpellGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IASpellGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ASpell_Registration.Instance;
@@ -428,24 +426,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IASpellGetter item,
-            ASpell.Mask<bool?> checkMask)
-        {
-            return ((ASpellCommon)((IASpellGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ASpell.Mask<bool> GetHasBeenSetMask(this IASpellGetter item)
-        {
-            var ret = new ASpell.Mask<bool>(false);
-            ((ASpellCommon)((IASpellGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -517,17 +497,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IASpellInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IASpellInternal item,
             MutagenFrame frame,
@@ -858,24 +827,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-        }
-        
-        public bool HasBeenSet(
-            IASpellGetter item,
-            ASpell.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IASpellGetter item,
-            ASpell.Mask<bool> mask)
-        {
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static ASpell_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1236,15 +1187,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IASpellGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ASpellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ASpellCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ASpellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ASpellCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ASpellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ASpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

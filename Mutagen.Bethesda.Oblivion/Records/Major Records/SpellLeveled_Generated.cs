@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         Spell,
         ISpellLeveledInternal,
         ILoquiObjectSetter<SpellLeveled>,
-        IEquatable<SpellLeveled>,
-        IEqualsMask
+        IEquatable<SpellLeveled>
     {
         #region Ctor
         protected SpellLeveled()
@@ -337,14 +336,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new SpellLeveled CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static SpellLeveled CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -371,8 +362,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellLeveledGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -456,24 +445,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ISpellLeveledGetter item,
-            SpellLeveled.Mask<bool?> checkMask)
-        {
-            return ((SpellLeveledCommon)((ISpellLeveledGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SpellLeveled.Mask<bool> GetHasBeenSetMask(this ISpellLeveledGetter item)
-        {
-            var ret = new SpellLeveled.Mask<bool>(false);
-            ((SpellLeveledCommon)((ISpellLeveledGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ISpellLeveledGetter item,
             ISpellLeveledGetter rhs)
@@ -543,17 +514,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISpellLeveledInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISpellLeveledInternal item,
             MutagenFrame frame,
@@ -910,24 +870,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-        }
-        
-        public bool HasBeenSet(
-            ISpellLeveledGetter item,
-            SpellLeveled.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ISpellLeveledGetter item,
-            SpellLeveled.Mask<bool> mask)
-        {
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static SpellLeveled_FieldIndex ConvertFieldIndex(Spell_FieldIndex index)
@@ -1447,8 +1389,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellLeveledGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SpellLeveledBinaryWriteTranslation.Instance;

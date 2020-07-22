@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ALocationTarget,
         ILocationKeyword,
         ILoquiObjectSetter<LocationKeyword>,
-        IEquatable<LocationKeyword>,
-        IEqualsMask
+        IEquatable<LocationKeyword>
     {
         #region Ctor
         public LocationKeyword()
@@ -333,7 +332,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LocationKeywordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LocationKeywordCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationKeywordCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationKeywordCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationKeywordCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -351,14 +350,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new LocationKeyword CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static LocationKeyword CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -385,8 +376,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocationKeywordGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -405,7 +394,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationKeyword :
         ILocationKeywordGetter,
         IALocationTarget,
-        ILoquiObjectSetter<ILocationKeyword>
+        ILoquiObjectSetter<ILocationKeyword>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Keyword> Link { get; set; }
     }
@@ -413,7 +403,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationKeywordGetter :
         IALocationTargetGetter,
         ILoquiObject<ILocationKeywordGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LocationKeyword_Registration.Instance;
@@ -464,24 +454,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILocationKeywordGetter item,
-            LocationKeyword.Mask<bool?> checkMask)
-        {
-            return ((LocationKeywordCommon)((ILocationKeywordGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LocationKeyword.Mask<bool> GetHasBeenSetMask(this ILocationKeywordGetter item)
-        {
-            var ret = new LocationKeyword.Mask<bool>(false);
-            ((LocationKeywordCommon)((ILocationKeywordGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -553,17 +525,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILocationKeyword item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILocationKeyword item,
             MutagenFrame frame,
@@ -889,25 +850,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ILocationKeywordGetter item,
-            LocationKeyword.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ILocationKeywordGetter item,
-            LocationKeyword.Mask<bool> mask)
-        {
-            mask.Link = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static LocationKeyword_FieldIndex ConvertFieldIndex(ALocationTarget_FieldIndex index)
         {
             switch (index)
@@ -1174,15 +1116,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocationKeywordGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LocationKeywordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LocationKeywordCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationKeywordCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationKeywordCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationKeywordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LocationKeywordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

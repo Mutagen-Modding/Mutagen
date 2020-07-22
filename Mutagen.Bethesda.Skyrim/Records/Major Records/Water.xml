@@ -7,7 +7,7 @@
       <List name="UnusedNoisemaps" >
         <String recordType="NNAM" />
       </List>
-      <UInt8 name="Opacity" hasBeenSet="False" recordType="ANAM" />
+      <UInt8 name="Opacity" nullable="False" recordType="ANAM" />
       <Enum name="Flags" enumName="Water.Flag" byteLength="1" recordType="FNAM" />
       <ByteArray name="MNAM" recordType="MNAM" />
       <FormLink name="Material" refName="MaterialType" recordType="TNAM" />
@@ -17,7 +17,7 @@
       <UInt16 name="DamagePerSecond" recordType="DATA" />
       <Data recordType="DNAM" >
         <Fields>
-          <ByteArray name="Unknown" byteLength="16" hasBeenSet="False" />
+          <ByteArray name="Unknown" byteLength="16" nullable="False" />
           <Float name="SpecularSunPower" />
           <Float name="WaterReflectivity" />
           <Float name="WaterFresnel" />
@@ -27,7 +27,7 @@
           <Color name="ShallowColor" binaryType="Alpha" />
           <Color name="DeepColor" binaryType="Alpha" />
           <Color name="ReflectionColor" binaryType="Alpha" />
-          <ByteArray name="Unknown3" byteLength="20" hasBeenSet="False" />
+          <ByteArray name="Unknown3" byteLength="20" nullable="False" />
           <Float name="DisplacementStartingSize" />
           <Float name="DisplacementFoce" />
           <Float name="DisplacementVelocity" />
@@ -41,7 +41,7 @@
           <Float name="NoiseLayerOneWindSpeed" />
           <Float name="NoiseLayerTwoWindSpeed" />
           <Float name="NoiseLayerThreeWindSpeed" />
-          <ByteArray name="Unknown5" byteLength="8" hasBeenSet="False" />
+          <ByteArray name="Unknown5" byteLength="8" nullable="False" />
           <Float name="FogAboveWaterAmount" />
           <Int32 name="Unknown6" />
           <Float name="FogUnderWaterAmount" />

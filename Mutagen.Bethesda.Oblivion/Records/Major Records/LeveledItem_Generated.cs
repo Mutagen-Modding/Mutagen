@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         ILeveledItemInternal,
         ILoquiObjectSetter<LeveledItem>,
-        IEquatable<LeveledItem>,
-        IEqualsMask
+        IEquatable<LeveledItem>
     {
         #region Ctor
         protected LeveledItem()
@@ -503,7 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
         public LeveledItem(FormKey formKey)
@@ -538,14 +537,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new LeveledItem CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static LeveledItem CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -572,8 +563,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledItemGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -592,7 +581,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledItem :
         ILeveledItemGetter,
         IAItem,
-        ILoquiObjectSetter<ILeveledItemInternal>
+        ILoquiObjectSetter<ILeveledItemInternal>,
+        ILinkedFormKeyContainer
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
@@ -609,7 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledItemGetter :
         IAItemGetter,
         ILoquiObject<ILeveledItemGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;
@@ -662,24 +652,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILeveledItemGetter item,
-            LeveledItem.Mask<bool?> checkMask)
-        {
-            return ((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LeveledItem.Mask<bool> GetHasBeenSetMask(this ILeveledItemGetter item)
-        {
-            var ret = new LeveledItem.Mask<bool>(false);
-            ((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -751,17 +723,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILeveledItemInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILeveledItemInternal item,
             MutagenFrame frame,
@@ -1181,30 +1142,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            ILeveledItemGetter item,
-            LeveledItem.Mask<bool?> checkMask)
-        {
-            if (checkMask.ChanceNone.HasValue && checkMask.ChanceNone.Value != (item.ChanceNone != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ILeveledItemGetter item,
-            LeveledItem.Mask<bool> mask)
-        {
-            mask.ChanceNone = (item.ChanceNone != null);
-            mask.Flags = (item.Flags != null);
-            var EntriesItem = item.Entries;
-            mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>>?>(true, EntriesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static LeveledItem_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
@@ -1803,15 +1740,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledItemGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

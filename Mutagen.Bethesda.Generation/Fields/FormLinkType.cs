@@ -19,15 +19,13 @@ namespace Mutagen.Bethesda.Generation
             EDIDChars
         }
 
-        public override string ProtectedProperty => base.Property;
         public override string ProtectedName => base.ProtectedName;
         private FormIDType _rawFormID;
         public MutagenLoquiType LoquiType { get; private set; }
         public FormIDTypeEnum FormIDType;
-        public override bool HasProperty => false;
         public override bool IsEnumerable => false;
 
-        public override string TypeName(bool getter, bool needsCovariance = false) => $"{(getter || needsCovariance ? "I" : null)}{ClassTypeString}Link{(this.HasBeenSet ? "Nullable" : string.Empty)}<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>";
+        public override string TypeName(bool getter, bool needsCovariance = false) => $"{(getter || needsCovariance ? "I" : null)}{ClassTypeString}Link{(this.Nullable ? "Nullable" : string.Empty)}<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>";
         public override Type Type(bool getter) => typeof(FormID);
         public string ClassTypeString
         {
@@ -61,7 +59,7 @@ namespace Mutagen.Bethesda.Generation
         }
         public string DirectTypeName(bool getter, bool internalInterface = false)
         {
-            return $"{ClassTypeString}Link{(this.HasBeenSet ? "Nullable" : string.Empty)}<{LoquiType.TypeNameInternal(getter: getter, internalInterface: internalInterface)}>";
+            return $"{ClassTypeString}Link{(this.Nullable ? "Nullable" : string.Empty)}<{LoquiType.TypeNameInternal(getter: getter, internalInterface: internalInterface)}>";
         }
 
         public override async Task Load(XElement node, bool requireName = true)
@@ -78,8 +76,8 @@ namespace Mutagen.Bethesda.Generation
             _rawFormID.SetObjectGeneration(this.ObjectGen, false);
             this.NotifyingProperty.Subscribe(i => LoquiType.NotifyingProperty.OnNext(i));
             this.NotifyingProperty.Subscribe(i => _rawFormID.NotifyingProperty.OnNext(i));
-            this.HasBeenSetProperty.Subscribe(i => LoquiType.HasBeenSetProperty.OnNext(i));
-            this.HasBeenSetProperty.Subscribe(i => _rawFormID.HasBeenSetProperty.OnNext(i));
+            this.NullableProperty.Subscribe(i => LoquiType.NullableProperty.OnNext(i));
+            this.NullableProperty.Subscribe(i => _rawFormID.NullableProperty.OnNext(i));
             this.FormIDType = node.GetAttribute<FormIDTypeEnum>("type", defaultVal: FormIDTypeEnum.Normal);
             this.Singleton = true;
             this.SetPermission = PermissionLevel.@private;
@@ -87,7 +85,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override string GenerateEqualsSnippet(Accessor accessor, Accessor rhsAccessor, bool negate = false)
         {
-            return $"{(negate ? "!" : null)}object.Equals({accessor.DirectAccess}, {rhsAccessor.DirectAccess})";
+            return $"{(negate ? "!" : null)}object.Equals({accessor}, {rhsAccessor})";
         }
 
         public override string EqualsMaskAccessor(string accessor) => accessor;
@@ -113,7 +111,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor)
         {
-            fg.AppendLine($"if (!{accessor.PropertyOrDirectAccess}.Equals({rhsAccessor.PropertyOrDirectAccess})) return false;");
+            fg.AppendLine($"if (!{accessor}.Equals({rhsAccessor})) return false;");
         }
 
         public override void GenerateForCopy(FileGeneration fg, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool deepCopy)
@@ -121,20 +119,20 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"if ({(deepCopy ? this.GetTranslationIfAccessor(copyMaskAccessor) : this.SkipCheck(copyMaskAccessor, deepCopy))})");
             using (new BraceWrapper(fg))
             {
-                if (this.HasBeenSet)
+                if (this.Nullable)
                 {
-                    fg.AppendLine($"{accessor.PropertyOrDirectAccess} = {rhs}.{FormIDTypeString};");
+                    fg.AppendLine($"{accessor} = {rhs}.{FormIDTypeString};");
                 }
                 else
                 {
                     if (deepCopy)
                     {
-                        fg.AppendLine($"{accessor.PropertyOrDirectAccess} = {rhs}.{FormIDTypeString};");
+                        fg.AppendLine($"{accessor} = {rhs}.{FormIDTypeString};");
                     }
                     else
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"{accessor.PropertyOrDirectAccess}.SetLink"))
+                            $"{accessor}.SetLink"))
                         {
                             args.Add($"value: {rhs}");
                         }
@@ -154,16 +152,16 @@ namespace Mutagen.Bethesda.Generation
             if (!this.IntegrateField) return;
             if (!this.ReadOnly)
             {
-                if (this.HasBeenSet)
+                if (this.Nullable)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"{identifier.PropertyOrDirectAccess}.Unset"))
+                        $"{identifier}.Unset"))
                     {
                     }
                 }
                 else
                 {
-                    fg.AppendLine($"{identifier.DirectAccess} = default({LoquiType.TypeName(getter: false)});");
+                    fg.AppendLine($"{identifier} = default({LoquiType.TypeName(getter: false)});");
                 }
             }
             fg.AppendLine("break;");
@@ -172,7 +170,7 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateClear(FileGeneration fg, Accessor identifier)
         {
             if (this.ReadOnly || !this.IntegrateField) return;
-            fg.AppendLine($"{identifier.PropertyOrDirectAccess} = {DirectTypeName(getter: false)}.Null;");
+            fg.AppendLine($"{identifier} = {DirectTypeName(getter: false)}.Null;");
         }
 
         public override void GenerateCopySetToConverter(FileGeneration fg)
@@ -201,9 +199,9 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override string HasBeenSetAccessor(bool getter, Accessor accessor = null)
+        public override string NullableAccessor(bool getter, Accessor accessor = null)
         {
-            return $"({accessor?.DirectAccess ?? $"this.{this.Name}"}.{FormIDTypeString} != null)";
+            return $"({accessor?.Access ?? $"this.{this.Name}"}.{FormIDTypeString} != null)";
         }
 
         public override string GetDuplicate(Accessor accessor)
@@ -213,7 +211,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override string GetDefault(bool getter)
         {
-            if (this.HasBeenSet) return $"FormLinkNullable<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>.Null";
+            if (this.Nullable) return $"FormLinkNullable<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>.Null";
             return $"FormLink<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>.Null";
         }
     }

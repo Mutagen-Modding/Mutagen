@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class AIPackageTarget :
         IAIPackageTarget,
         ILoquiObjectSetter<AIPackageTarget>,
-        IEquatable<AIPackageTarget>,
-        IEqualsMask
+        IEquatable<AIPackageTarget>
     {
         #region Ctor
         public AIPackageTarget()
@@ -421,14 +420,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static AIPackageTarget CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static AIPackageTarget CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -455,8 +446,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageTargetGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -542,24 +531,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IAIPackageTargetGetter item,
-            AIPackageTarget.Mask<bool?> checkMask)
-        {
-            return ((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static AIPackageTarget.Mask<bool> GetHasBeenSetMask(this IAIPackageTargetGetter item)
-        {
-            var ret = new AIPackageTarget.Mask<bool>(false);
-            ((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -654,17 +625,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAIPackageTarget item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAIPackageTarget item,
             MutagenFrame frame,
@@ -1008,22 +968,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IAIPackageTargetGetter item,
-            AIPackageTarget.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IAIPackageTargetGetter item,
-            AIPackageTarget.Mask<bool> mask)
-        {
-            mask.ObjectType = true;
-            mask.Object = true;
-            mask.Count = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IAIPackageTargetGetter? lhs,
@@ -1234,12 +1178,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IAIPackageTargetGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AIPackageTargetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1271,8 +1216,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageTargetGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AIPackageTargetBinaryWriteTranslation.Instance;

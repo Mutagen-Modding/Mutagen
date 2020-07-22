@@ -28,8 +28,7 @@ namespace Mutagen.Bethesda
     public abstract partial class MajorRecord :
         IMajorRecordInternal,
         ILoquiObjectSetter<MajorRecord>,
-        IEquatable<MajorRecord>,
-        IEqualsMask
+        IEquatable<MajorRecord>
     {
         #region Ctor
         protected MajorRecord()
@@ -439,7 +438,7 @@ namespace Mutagen.Bethesda
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual IEnumerable<FormKey> LinkFormKeys => MajorRecordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MajorRecordCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MajorRecordCommon.Instance.GetLinkFormKeys(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordCommon.Instance.RemapLinks(this, mapping);
         public MajorRecord(FormKey formKey)
@@ -490,8 +489,6 @@ namespace Mutagen.Bethesda
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMajorRecordGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -510,7 +507,8 @@ namespace Mutagen.Bethesda
     public partial interface IMajorRecord :
         IMajorRecordGetter,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IMajorRecordInternal>
+        ILoquiObjectSetter<IMajorRecordInternal>,
+        ILinkedFormKeyContainer
     {
         new Int32 MajorRecordFlagsRaw { get; set; }
         new UInt32 VersionControl { get; set; }
@@ -528,7 +526,7 @@ namespace Mutagen.Bethesda
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IMajorRecordGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -588,24 +586,6 @@ namespace Mutagen.Bethesda
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IMajorRecordGetter item,
-            MajorRecord.Mask<bool?> checkMask)
-        {
-            return ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static MajorRecord.Mask<bool> GetHasBeenSetMask(this IMajorRecordGetter item)
-        {
-            var ret = new MajorRecord.Mask<bool>(false);
-            ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -773,17 +753,6 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IMajorRecordInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IMajorRecordInternal item,
             MutagenFrame frame,
@@ -1159,24 +1128,6 @@ namespace Mutagen.Bethesda.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IMajorRecordGetter item,
-            MajorRecord.Mask<bool?> checkMask)
-        {
-            if (checkMask.EditorID.HasValue && checkMask.EditorID.Value != (item.EditorID != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IMajorRecordGetter item,
-            MajorRecord.Mask<bool> mask)
-        {
-            mask.MajorRecordFlagsRaw = true;
-            mask.FormKey = true;
-            mask.VersionControl = true;
-            mask.EditorID = (item.EditorID != null);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IMajorRecordGetter? lhs,
@@ -1485,12 +1436,13 @@ namespace Mutagen.Bethesda
     {
         public static void WriteToBinary(
             this IMajorRecordGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((MajorRecordBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1522,15 +1474,11 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMajorRecordGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual IEnumerable<FormKey> LinkFormKeys => MajorRecordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MajorRecordCommon.Instance.GetLinkFormKeys(this);
-        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MajorRecordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

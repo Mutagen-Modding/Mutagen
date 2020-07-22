@@ -4,7 +4,7 @@
     <Interface>ITranslatedNamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
-      <String name="Description" recordType="DESC" hasBeenSet="False" translated="DL" />
+      <String name="Description" recordType="DESC" nullable="False" translated="DL" />
       <List name="ActorEffect" counterRecType="SPCT">
         <FormLink refName="ASpell" recordType="SPLO" />
       </List>
@@ -83,7 +83,7 @@
       <List name="MovementTypeNames">
         <String recordType="MTNM" binaryType="Plain" />
       </List>
-      <Gendered name="Voices" recordType="VTCK" hasBeenSet="False" >
+      <Gendered name="Voices" recordType="VTCK" nullable="False" >
         <Fields>
           <FormLink refName="VoiceType" />
         </Fields>
@@ -100,11 +100,11 @@
       </Gendered>
       <!-- ToDo: Need to remove and turn into derivative field -->
       <UInt16 name="NumberOfTintsInList" recordType="TINL" />
-      <Float name="FacegenMainClamp" recordType="PNAM" hasBeenSet="False" />
-      <Float name="FacegenFaceClamp" recordType="UNAM" hasBeenSet="False" />
+      <Float name="FacegenMainClamp" recordType="PNAM" nullable="False" />
+      <Float name="FacegenFaceClamp" recordType="UNAM" nullable="False" />
       <FormLink name="AttackRace" recordType="ATKR" refName="Race" />
       <RefList name="Attacks" refName="Attack" />
-      <Gendered name="BodyData" markerType="NAM1" maleMarker="MNAM" femaleMarker="FNAM" hasBeenSet="False" >
+      <Gendered name="BodyData" markerType="NAM1" maleMarker="MNAM" femaleMarker="FNAM" nullable="False" >
         <Fields>
           <RefDirect refName="BodyData" />
         </Fields>
@@ -117,7 +117,7 @@
       </List>
       <FormLink name="BodyPartData" refName="BodyPartData" recordType="GNAM" />
       <CustomLogic name="ExtraNAM2" />
-      <Gendered name="BehaviorGraph" markerType="NAM3" maleMarker="MNAM" femaleMarker="FNAM" hasBeenSet="False" >
+      <Gendered name="BehaviorGraph" markerType="NAM3" maleMarker="MNAM" femaleMarker="FNAM" nullable="False" >
         <Fields>
           <RefDirect refName="Model" />
         </Fields>
@@ -203,22 +203,22 @@
   <Object name="FaceFxPhonemes" objType="Subrecord" GUID="b965bdb9-1d8c-4efe-8cfa-2f35cd13370a" ID="70">
     <Fields>
       <Bool name="ForceNames" binary="NoGeneration" />
-      <RefDirect name="Aah_LipBigAah" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
-      <RefDirect name="BigAah_LipDST" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
-      <RefDirect name="BMP_LipEee" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
-      <RefDirect name="ChJSh_LipFV" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
-      <RefDirect name="DST_LipK" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
-      <RefDirect name="Eee_LipL" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
-      <RefDirect name="Eh_LipR" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
-      <RefDirect name="FV_LipTh" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
-      <RefDirect name="I" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
-      <RefDirect name="K" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
-      <RefDirect name="N" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
-      <RefDirect name="Oh" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
-      <RefDirect name="OohQ" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
-      <RefDirect name="R" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
-      <RefDirect name="Th" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
-      <RefDirect name="W" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="Aah_LipBigAah" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="BigAah_LipDST" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="BMP_LipEee" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="ChJSh_LipFV" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="DST_LipK" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="Eee_LipL" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="Eh_LipR" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="FV_LipTh" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="I" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="K" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="N" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="Oh" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="OohQ" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="R" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="Th" nullable="True" refName="Phoneme" binary="NoGeneration" />
+      <RefDirect name="W" nullable="True" refName="Phoneme" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="Phoneme" objType="Subrecord" GUID="de2d7619-85dc-497e-b8a2-b955f9340a93" ID="71">
@@ -297,15 +297,15 @@
   <Object name="AvailableMorphs" objType="Subrecord" GUID="43c181c2-3ab3-4a0c-82ce-3eb86e48d09b" ID="74">
     <Fields>
       <CustomLogic name="Parse" recordType="MPAI" />
-      <RefDirect name="Nose" refName="Morph" hasBeenSet="True" binary="NoGeneration" />
-      <RefDirect name="Brow" refName="Morph" hasBeenSet="True" binary="NoGeneration" />
-      <RefDirect name="Eye" refName="Morph" hasBeenSet="True" binary="NoGeneration" />
-      <RefDirect name="Lip" refName="Morph" hasBeenSet="True" binary="NoGeneration" />
+      <RefDirect name="Nose" refName="Morph" nullable="True" binary="NoGeneration" />
+      <RefDirect name="Brow" refName="Morph" nullable="True" binary="NoGeneration" />
+      <RefDirect name="Eye" refName="Morph" nullable="True" binary="NoGeneration" />
+      <RefDirect name="Lip" refName="Morph" nullable="True" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="Morph" objType="Subrecord" GUID="db314c60-7ba5-4df9-8229-527af27db99a" ID="84">
     <Fields>
-      <ByteArray name="Data" byteLength="32" hasBeenSet="False" />
+      <ByteArray name="Data" byteLength="32" nullable="False" />
     </Fields>
   </Object>
   <Object name="TintAssets" objType="Subrecord" GUID="2a4a72e5-c74d-4afd-9783-e4947dc83f79" ID="76">

@@ -3,10 +3,10 @@
   <Object name="CameraPath" objType="Record" recordType="CPTH" baseClass="SkyrimMajorRecord" GUID="181b38f0-80c5-4352-98e0-16b822f6ad83" ID="438">
     <Fields>
       <RefList name="Conditions" refName="Condition" binary="Custom" />
-      <List name="RelatedPaths" recordType="ANAM" hasBeenSet="False">
+      <List name="RelatedPaths" recordType="ANAM" nullable="False">
         <FormLink refName="CameraPath" />
       </List>
-      <Enum name="Zoom" enumName="CameraPath.ZoomType" byteLength="1" hasBeenSet="False" binary="Custom" recordType="DATA" />
+      <Enum name="Zoom" enumName="CameraPath.ZoomType" byteLength="1" nullable="False" binary="Custom" recordType="DATA" />
       <Bool name="ZoomMustHaveCameraShots" binary="NoGeneration" />
       <List name="Shots">
         <FormLink recordType="SNAM" refName="CameraShot" />

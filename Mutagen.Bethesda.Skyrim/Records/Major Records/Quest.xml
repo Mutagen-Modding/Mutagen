@@ -82,7 +82,7 @@
   </Object>
   <Object name="QuestObjective" objType="Subrecord" GUID="f9edb5c0-0f4d-4d98-b7ba-462d08c9820d" ID="365">
     <Fields>
-      <UInt16 name="Index" recordType="QOBJ" hasBeenSet="False" />
+      <UInt16 name="Index" recordType="QOBJ" nullable="False" />
       <Enum name="Flags" enumName="QuestObjective.Flag" recordType="FNAM" byteLength="4" />
       <String name="DisplayText" recordType="NNAM" translated="Normal" />
       <RefList name="Targets" refName="QuestObjectiveTarget" />
@@ -160,14 +160,14 @@
   </Object>
   <Object name="CreateReferenceToObject" objType="Subrecord" GUID="e41a23e7-3945-4c1a-b550-a51f7d5de2ba" ID="370">
     <Fields>
-      <FormLink name="Object" refName="SkyrimMajorRecord" recordType="ALCO" hasBeenSet="False" />
+      <FormLink name="Object" refName="SkyrimMajorRecord" recordType="ALCO" nullable="False" />
       <Data recordType="ALCA">
         <Fields>
           <Int16 name="AliasIndex" />
           <Enum name="Create" enumName="CreateReferenceToObject.CreateEnum" byteLength="2" />
         </Fields>
       </Data>
-      <Enum name="Level" enumName="Level" byteLength="4" recordType="ALCL" hasBeenSet="False" />
+      <Enum name="Level" enumName="Level" byteLength="4" recordType="ALCL" nullable="False" />
     </Fields>
   </Object>
   <Object name="FindMatchingRefNearAlias" objType="Subrecord" GUID="f5e4d3aa-8dc5-4459-a604-a180731efc42" ID="371">

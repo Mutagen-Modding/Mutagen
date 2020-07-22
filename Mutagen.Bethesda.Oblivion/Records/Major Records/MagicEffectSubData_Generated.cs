@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class MagicEffectSubData :
         IMagicEffectSubData,
         ILoquiObjectSetter<MagicEffectSubData>,
-        IEquatable<MagicEffectSubData>,
-        IEqualsMask
+        IEquatable<MagicEffectSubData>
     {
         #region Ctor
         public MagicEffectSubData()
@@ -540,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => MagicEffectSubDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MagicEffectSubDataCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectSubDataCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSubDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSubDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -560,14 +559,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static MagicEffectSubData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static MagicEffectSubData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -594,8 +585,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectSubDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -613,7 +602,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IMagicEffectSubData :
         IMagicEffectSubDataGetter,
-        ILoquiObjectSetter<IMagicEffectSubData>
+        ILoquiObjectSetter<IMagicEffectSubData>,
+        ILinkedFormKeyContainer
     {
         new FormLink<EffectShader> EnchantEffect { get; set; }
         new FormLink<Sound> CastingSound { get; set; }
@@ -627,7 +617,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IMagicEffectSubDataGetter :
         ILoquiObject,
         ILoquiObject<IMagicEffectSubDataGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -690,24 +680,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IMagicEffectSubDataGetter item,
-            MagicEffectSubData.Mask<bool?> checkMask)
-        {
-            return ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static MagicEffectSubData.Mask<bool> GetHasBeenSetMask(this IMagicEffectSubDataGetter item)
-        {
-            var ret = new MagicEffectSubData.Mask<bool>(false);
-            ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -802,17 +774,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IMagicEffectSubData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IMagicEffectSubData item,
             MutagenFrame frame,
@@ -1224,26 +1185,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IMagicEffectSubDataGetter item,
-            MagicEffectSubData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IMagicEffectSubDataGetter item,
-            MagicEffectSubData.Mask<bool> mask)
-        {
-            mask.EnchantEffect = true;
-            mask.CastingSound = true;
-            mask.BoltSound = true;
-            mask.HitSound = true;
-            mask.AreaSound = true;
-            mask.ConstantEffectEnchantmentFactor = true;
-            mask.ConstantEffectBarterFactor = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IMagicEffectSubDataGetter? lhs,
@@ -1506,12 +1447,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IMagicEffectSubDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((MagicEffectSubDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1543,15 +1485,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectSubDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => MagicEffectSubDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MagicEffectSubDataCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSubDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSubDataCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectSubDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MagicEffectSubDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

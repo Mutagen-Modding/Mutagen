@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMagicEffectInternal,
         ILoquiObjectSetter<MagicEffect>,
-        IEquatable<MagicEffect>,
-        IEqualsMask
+        IEquatable<MagicEffect>
     {
         #region Ctor
         protected MagicEffect()
@@ -2154,7 +2153,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
         public MagicEffect(FormKey formKey)
@@ -2193,14 +2192,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new MagicEffect CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static MagicEffect CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2227,8 +2218,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -2248,7 +2237,8 @@ namespace Mutagen.Bethesda.Skyrim
         IMagicEffectGetter,
         ISkyrimMajorRecord,
         ITranslatedNamed,
-        ILoquiObjectSetter<IMagicEffectInternal>
+        ILoquiObjectSetter<IMagicEffectInternal>,
+        ILinkedFormKeyContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new TranslatedString? Name { get; set; }
@@ -2309,7 +2299,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IMagicEffectGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => MagicEffect_Registration.Instance;
@@ -2407,24 +2397,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IMagicEffectGetter item,
-            MagicEffect.Mask<bool?> checkMask)
-        {
-            return ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static MagicEffect.Mask<bool> GetHasBeenSetMask(this IMagicEffectGetter item)
-        {
-            var ret = new MagicEffect.Mask<bool>(false);
-            ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IMagicEffectGetter item,
             IMagicEffectGetter rhs)
@@ -2494,17 +2466,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IMagicEffectInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IMagicEffectInternal item,
             MutagenFrame frame,
@@ -3744,82 +3705,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IMagicEffectGetter item,
-            MagicEffect.Mask<bool?> checkMask)
-        {
-            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
-            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.MenuDisplayObject.HasValue && checkMask.MenuDisplayObject.Value != (item.MenuDisplayObject.FormKey != null)) return false;
-            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.Sounds?.Overall.HasValue ?? false && checkMask.Sounds!.Overall.Value != (item.Sounds != null)) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IMagicEffectGetter item,
-            MagicEffect.Mask<bool> mask)
-        {
-            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
-            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.Name = (item.Name != null);
-            mask.MenuDisplayObject = (item.MenuDisplayObject.FormKey != null);
-            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.Flags = true;
-            mask.BaseCost = true;
-            mask.MagicSkill = true;
-            mask.ResistValue = true;
-            mask.CounterEffectCount = true;
-            mask.Unknown1 = true;
-            mask.CastingLight = true;
-            mask.TaperWeight = true;
-            mask.HitShader = true;
-            mask.EnchantShader = true;
-            mask.MinimumSkillLevel = true;
-            mask.SpellmakingArea = true;
-            mask.SpellmakingCastingTime = true;
-            mask.TaperCurve = true;
-            mask.TaperDuration = true;
-            mask.SecondActorValueWeight = true;
-            mask.Archetype = new MaskItem<bool, MagicEffectArchetype.Mask<bool>?>(true, item.Archetype?.GetHasBeenSetMask());
-            mask.Projectile = true;
-            mask.Explosion = true;
-            mask.CastType = true;
-            mask.TargetType = true;
-            mask.SecondActorValue = true;
-            mask.CastingArt = true;
-            mask.HitEffectArt = true;
-            mask.ImpactData = true;
-            mask.SkillUsageMultiplier = true;
-            mask.DualCastArt = true;
-            mask.DualCastScale = true;
-            mask.EnchantArt = true;
-            mask.Unknown2 = true;
-            mask.Unknown3 = true;
-            mask.EquipAbility = true;
-            mask.ImageSpaceModifier = true;
-            mask.PerkToApply = true;
-            mask.CastingSoundLevel = true;
-            mask.ScriptEffectAIScore = true;
-            mask.ScriptEffectAIDelayTime = true;
-            mask.CounterEffects = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-            if (item.Sounds.TryGet(out var SoundsItem))
-            {
-                mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MagicEffectSound.Mask<bool>?>>?>(true, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, MagicEffectSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            mask.Description = (item.Description != null);
-            var ConditionsItem = item.Conditions;
-            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.DATADataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static MagicEffect_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -4023,7 +3908,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
@@ -4067,7 +3952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -5078,15 +4963,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

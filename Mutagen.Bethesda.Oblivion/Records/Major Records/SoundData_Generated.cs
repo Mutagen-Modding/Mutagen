@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class SoundData :
         ISoundDataInternal,
         ILoquiObjectSetter<SoundData>,
-        IEquatable<SoundData>,
-        IEqualsMask
+        IEquatable<SoundData>
     {
         #region Ctor
         public SoundData()
@@ -442,14 +441,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static SoundData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static SoundData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -476,8 +467,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataInternalGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -578,24 +567,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ISoundDataInternalGetter item,
-            SoundData.Mask<bool?> checkMask)
-        {
-            return ((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SoundData.Mask<bool> GetHasBeenSetMask(this ISoundDataInternalGetter item)
-        {
-            var ret = new SoundData.Mask<bool>(false);
-            ((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ISoundDataInternalGetter item,
             ISoundDataInternalGetter rhs)
@@ -688,17 +659,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISoundDataInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISoundDataInternal item,
             MutagenFrame frame,
@@ -1071,23 +1031,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ISoundDataInternalGetter item,
-            SoundData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ISoundDataInternalGetter item,
-            SoundData.Mask<bool> mask)
-        {
-            mask.MinimumAttenuationDistance = true;
-            mask.MaximumAttenuationDistance = true;
-            mask.FrequencyAdjustment = true;
-            mask.Flags = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ISoundDataInternalGetter? lhs,
@@ -1365,12 +1308,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this ISoundDataInternalGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((SoundDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1402,8 +1346,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataInternalGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => SoundDataBinaryWriteTranslation.Instance;

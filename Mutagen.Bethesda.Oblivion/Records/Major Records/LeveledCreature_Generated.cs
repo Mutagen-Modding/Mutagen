@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         ANpcSpawn,
         ILeveledCreatureInternal,
         ILoquiObjectSetter<LeveledCreature>,
-        IEquatable<LeveledCreature>,
-        IEqualsMask
+        IEquatable<LeveledCreature>
     {
         #region Ctor
         protected LeveledCreature()
@@ -569,7 +568,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LeveledCreatureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledCreatureCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledCreatureCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledCreatureCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledCreatureCommon.Instance.RemapLinks(this, mapping);
         public LeveledCreature(FormKey formKey)
@@ -604,14 +603,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new LeveledCreature CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static LeveledCreature CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -638,8 +629,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledCreatureGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -658,7 +647,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledCreature :
         ILeveledCreatureGetter,
         IANpcSpawn,
-        ILoquiObjectSetter<ILeveledCreatureInternal>
+        ILoquiObjectSetter<ILeveledCreatureInternal>,
+        ILinkedFormKeyContainer
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
@@ -677,7 +667,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledCreatureGetter :
         IANpcSpawnGetter,
         ILoquiObject<ILeveledCreatureGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LeveledCreature_Registration.Instance;
@@ -732,24 +722,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILeveledCreatureGetter item,
-            LeveledCreature.Mask<bool?> checkMask)
-        {
-            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LeveledCreature.Mask<bool> GetHasBeenSetMask(this ILeveledCreatureGetter item)
-        {
-            var ret = new LeveledCreature.Mask<bool>(false);
-            ((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -821,17 +793,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILeveledCreatureInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILeveledCreatureInternal item,
             MutagenFrame frame,
@@ -1289,34 +1250,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(TemplateItem, "Template");
             }
-        }
-        
-        public bool HasBeenSet(
-            ILeveledCreatureGetter item,
-            LeveledCreature.Mask<bool?> checkMask)
-        {
-            if (checkMask.ChanceNone.HasValue && checkMask.ChanceNone.Value != (item.ChanceNone != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
-            if (checkMask.Template.HasValue && checkMask.Template.Value != (item.Template.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ILeveledCreatureGetter item,
-            LeveledCreature.Mask<bool> mask)
-        {
-            mask.ChanceNone = (item.ChanceNone != null);
-            mask.Flags = (item.Flags != null);
-            var EntriesItem = item.Entries;
-            mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>>?>(true, EntriesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Script = (item.Script.FormKey != null);
-            mask.Template = (item.Template.FormKey != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static LeveledCreature_FieldIndex ConvertFieldIndex(ANpcSpawn_FieldIndex index)
@@ -1938,15 +1871,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledCreatureGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LeveledCreatureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledCreatureCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledCreatureCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledCreatureCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledCreatureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledCreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

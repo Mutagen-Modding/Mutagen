@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
         RegionData,
         IRegionGrasses,
         ILoquiObjectSetter<RegionGrasses>,
-        IEquatable<RegionGrasses>,
-        IEqualsMask
+        IEquatable<RegionGrasses>
     {
         #region Ctor
         public RegionGrasses()
@@ -424,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RegionGrassesCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionGrassesCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionGrassesCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassesCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassesCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -442,14 +441,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new RegionGrasses CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static RegionGrasses CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -476,8 +467,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionGrassesGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -496,7 +485,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionGrasses :
         IRegionGrassesGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionGrasses>
+        ILoquiObjectSetter<IRegionGrasses>,
+        ILinkedFormKeyContainer
     {
         new IExtendedList<IFormLink<Grass>>? Grasses { get; set; }
     }
@@ -504,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionGrassesGetter :
         IRegionDataGetter,
         ILoquiObject<IRegionGrassesGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => RegionGrasses_Registration.Instance;
@@ -555,24 +545,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IRegionGrassesGetter item,
-            RegionGrasses.Mask<bool?> checkMask)
-        {
-            return ((RegionGrassesCommon)((IRegionGrassesGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static RegionGrasses.Mask<bool> GetHasBeenSetMask(this IRegionGrassesGetter item)
-        {
-            var ret = new RegionGrasses.Mask<bool>(false);
-            ((RegionGrassesCommon)((IRegionGrassesGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -644,17 +616,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IRegionGrasses item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IRegionGrasses item,
             MutagenFrame frame,
@@ -1001,26 +962,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IRegionGrassesGetter item,
-            RegionGrasses.Mask<bool?> checkMask)
-        {
-            if (checkMask.Grasses?.Overall.HasValue ?? false && checkMask.Grasses!.Overall.Value != (item.Grasses != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IRegionGrassesGetter item,
-            RegionGrasses.Mask<bool> mask)
-        {
-            mask.Grasses = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Grasses != null), default);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static RegionGrasses_FieldIndex ConvertFieldIndex(RegionData_FieldIndex index)
         {
             switch (index)
@@ -1361,15 +1302,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionGrassesGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RegionGrassesCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionGrassesCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassesCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassesCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionGrassesCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionGrassesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

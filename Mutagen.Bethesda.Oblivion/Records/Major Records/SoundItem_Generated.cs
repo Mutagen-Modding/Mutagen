@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class SoundItem :
         ISoundItem,
         ILoquiObjectSetter<SoundItem>,
-        IEquatable<SoundItem>,
-        IEqualsMask
+        IEquatable<SoundItem>
     {
         #region Ctor
         public SoundItem()
@@ -379,7 +378,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => SoundItemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SoundItemCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SoundItemCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundItemCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundItemCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -399,14 +398,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static SoundItem CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static SoundItem CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -433,8 +424,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundItemGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -452,7 +441,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ISoundItem :
         ISoundItemGetter,
-        ILoquiObjectSetter<ISoundItem>
+        ILoquiObjectSetter<ISoundItem>,
+        ILinkedFormKeyContainer
     {
         new FormLinkNullable<Sound> Sound { get; set; }
         new Byte? Chance { get; set; }
@@ -461,7 +451,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISoundItemGetter :
         ILoquiObject,
         ILoquiObject<ISoundItemGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -519,24 +509,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ISoundItemGetter item,
-            SoundItem.Mask<bool?> checkMask)
-        {
-            return ((SoundItemCommon)((ISoundItemGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SoundItem.Mask<bool> GetHasBeenSetMask(this ISoundItemGetter item)
-        {
-            var ret = new SoundItem.Mask<bool>(false);
-            ((SoundItemCommon)((ISoundItemGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -631,17 +603,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISoundItem item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISoundItem item,
             MutagenFrame frame,
@@ -978,23 +939,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ISoundItemGetter item,
-            SoundItem.Mask<bool?> checkMask)
-        {
-            if (checkMask.Sound.HasValue && checkMask.Sound.Value != (item.Sound.FormKey != null)) return false;
-            if (checkMask.Chance.HasValue && checkMask.Chance.Value != (item.Chance != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ISoundItemGetter item,
-            SoundItem.Mask<bool> mask)
-        {
-            mask.Sound = (item.Sound.FormKey != null);
-            mask.Chance = (item.Chance != null);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ISoundItemGetter? lhs,
@@ -1237,12 +1181,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this ISoundItemGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((SoundItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1274,15 +1219,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundItemGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => SoundItemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SoundItemCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundItemCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundItemCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SoundItemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SoundItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

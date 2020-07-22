@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class NavmeshNode :
         INavmeshNode,
         ILoquiObjectSetter<NavmeshNode>,
-        IEquatable<NavmeshNode>,
-        IEqualsMask
+        IEquatable<NavmeshNode>
     {
         #region Ctor
         public NavmeshNode()
@@ -377,7 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => NavmeshNodeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => NavmeshNodeCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NavmeshNodeCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavmeshNodeCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavmeshNodeCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -397,14 +396,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static NavmeshNode CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static NavmeshNode CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -431,8 +422,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INavmeshNodeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -450,7 +439,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface INavmeshNode :
         INavmeshNodeGetter,
-        ILoquiObjectSetter<INavmeshNode>
+        ILoquiObjectSetter<INavmeshNode>,
+        ILinkedFormKeyContainer
     {
         new FormLink<ANavigationMesh> NavMesh { get; set; }
         new UInt32 NodeIndex { get; set; }
@@ -459,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INavmeshNodeGetter :
         ILoquiObject,
         ILoquiObject<INavmeshNodeGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -517,24 +507,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this INavmeshNodeGetter item,
-            NavmeshNode.Mask<bool?> checkMask)
-        {
-            return ((NavmeshNodeCommon)((INavmeshNodeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static NavmeshNode.Mask<bool> GetHasBeenSetMask(this INavmeshNodeGetter item)
-        {
-            var ret = new NavmeshNode.Mask<bool>(false);
-            ((NavmeshNodeCommon)((INavmeshNodeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -629,17 +601,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this INavmeshNode item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this INavmeshNode item,
             MutagenFrame frame,
@@ -961,21 +922,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            INavmeshNodeGetter item,
-            NavmeshNode.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            INavmeshNodeGetter item,
-            NavmeshNode.Mask<bool> mask)
-        {
-            mask.NavMesh = true;
-            mask.NodeIndex = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             INavmeshNodeGetter? lhs,
@@ -1174,12 +1120,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this INavmeshNodeGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((NavmeshNodeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1211,15 +1158,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INavmeshNodeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => NavmeshNodeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => NavmeshNodeCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavmeshNodeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavmeshNodeCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NavmeshNodeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavmeshNodeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

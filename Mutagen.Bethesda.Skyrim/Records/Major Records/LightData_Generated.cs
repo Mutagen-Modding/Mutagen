@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class LightData :
         ILightData,
         ILoquiObjectSetter<LightData>,
-        IEquatable<LightData>,
-        IEqualsMask
+        IEquatable<LightData>
     {
         #region Ctor
         public LightData()
@@ -519,14 +518,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static LightData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static LightData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -553,8 +544,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILightDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -646,24 +635,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ILightDataGetter item,
-            LightData.Mask<bool?> checkMask)
-        {
-            return ((LightDataCommon)((ILightDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LightData.Mask<bool> GetHasBeenSetMask(this ILightDataGetter item)
-        {
-            var ret = new LightData.Mask<bool>(false);
-            ((LightDataCommon)((ILightDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -758,17 +729,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ILightData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ILightData item,
             MutagenFrame frame,
@@ -1166,25 +1126,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ILightDataGetter item,
-            LightData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ILightDataGetter item,
-            LightData.Mask<bool> mask)
-        {
-            mask.Versioning = true;
-            mask.FovOffset = true;
-            mask.FadeOffset = true;
-            mask.EndDistanceCap = true;
-            mask.ShadowDepthBias = true;
-            mask.Unknown = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ILightDataGetter? lhs,
@@ -1431,12 +1372,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this ILightDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((LightDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1468,8 +1410,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILightDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LightDataBinaryWriteTranslation.Instance;

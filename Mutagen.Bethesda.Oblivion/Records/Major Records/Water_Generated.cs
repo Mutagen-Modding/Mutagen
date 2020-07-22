@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IWaterInternal,
         ILoquiObjectSetter<Water>,
-        IEquatable<Water>,
-        IEqualsMask
+        IEquatable<Water>
     {
         #region Ctor
         protected Water()
@@ -578,7 +577,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
         public Water(FormKey formKey)
@@ -613,14 +612,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Water CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Water CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -647,8 +638,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWaterGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -667,7 +656,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWater :
         IWaterGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IWaterInternal>
+        ILoquiObjectSetter<IWaterInternal>,
+        ILinkedFormKeyContainer
     {
         new String? Texture { get; set; }
         new Byte? Opacity { get; set; }
@@ -688,7 +678,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWaterGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IWaterGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Water_Registration.Instance;
@@ -745,24 +735,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IWaterGetter item,
-            Water.Mask<bool?> checkMask)
-        {
-            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Water.Mask<bool> GetHasBeenSetMask(this IWaterGetter item)
-        {
-            var ret = new Water.Mask<bool>(false);
-            ((WaterCommon)((IWaterGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -834,17 +806,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWaterInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWaterInternal item,
             MutagenFrame frame,
@@ -1315,42 +1276,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 RelatedWatersItem?.ToString(fg, "RelatedWaters");
             }
-        }
-        
-        public bool HasBeenSet(
-            IWaterGetter item,
-            Water.Mask<bool?> checkMask)
-        {
-            if (checkMask.Texture.HasValue && checkMask.Texture.Value != (item.Texture != null)) return false;
-            if (checkMask.Opacity.HasValue && checkMask.Opacity.Value != (item.Opacity != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.MaterialID.HasValue && checkMask.MaterialID.Value != (item.MaterialID != null)) return false;
-            if (checkMask.Sound.HasValue && checkMask.Sound.Value != (item.Sound.FormKey != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.RelatedWaters?.Overall.HasValue ?? false && checkMask.RelatedWaters.Overall.Value != (item.RelatedWaters != null)) return false;
-            if (checkMask.RelatedWaters?.Specific != null && (item.RelatedWaters == null || !item.RelatedWaters.HasBeenSet(checkMask.RelatedWaters.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IWaterGetter item,
-            Water.Mask<bool> mask)
-        {
-            mask.Texture = (item.Texture != null);
-            mask.Opacity = (item.Opacity != null);
-            mask.Flags = (item.Flags != null);
-            mask.MaterialID = (item.MaterialID != null);
-            mask.Sound = (item.Sound.FormKey != null);
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, WaterData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            var itemRelatedWaters = item.RelatedWaters;
-            mask.RelatedWaters = new MaskItem<bool, RelatedWaters.Mask<bool>?>(itemRelatedWaters != null, itemRelatedWaters?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Water_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1978,15 +1903,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWaterGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

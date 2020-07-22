@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APackageTarget,
         IPackageTargetObjectID,
         ILoquiObjectSetter<PackageTargetObjectID>,
-        IEquatable<PackageTargetObjectID>,
-        IEqualsMask
+        IEquatable<PackageTargetObjectID>
     {
         #region Ctor
         public PackageTargetObjectID()
@@ -341,7 +340,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PackageTargetObjectIDCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PackageTargetObjectIDCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PackageTargetObjectIDCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageTargetObjectIDCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageTargetObjectIDCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -359,14 +358,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PackageTargetObjectID CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PackageTargetObjectID CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -393,8 +384,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageTargetObjectIDGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -413,7 +402,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageTargetObjectID :
         IPackageTargetObjectIDGetter,
         IAPackageTarget,
-        ILoquiObjectSetter<IPackageTargetObjectID>
+        ILoquiObjectSetter<IPackageTargetObjectID>,
+        ILinkedFormKeyContainer
     {
         new FormLink<IObjectId> Reference { get; set; }
     }
@@ -421,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageTargetObjectIDGetter :
         IAPackageTargetGetter,
         ILoquiObject<IPackageTargetObjectIDGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PackageTargetObjectID_Registration.Instance;
@@ -472,24 +462,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPackageTargetObjectIDGetter item,
-            PackageTargetObjectID.Mask<bool?> checkMask)
-        {
-            return ((PackageTargetObjectIDCommon)((IPackageTargetObjectIDGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PackageTargetObjectID.Mask<bool> GetHasBeenSetMask(this IPackageTargetObjectIDGetter item)
-        {
-            var ret = new PackageTargetObjectID.Mask<bool>(false);
-            ((PackageTargetObjectIDCommon)((IPackageTargetObjectIDGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -561,17 +533,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPackageTargetObjectID item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPackageTargetObjectID item,
             MutagenFrame frame,
@@ -898,25 +859,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPackageTargetObjectIDGetter item,
-            PackageTargetObjectID.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPackageTargetObjectIDGetter item,
-            PackageTargetObjectID.Mask<bool> mask)
-        {
-            mask.Reference = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static PackageTargetObjectID_FieldIndex ConvertFieldIndex(APackageTarget_FieldIndex index)
         {
             switch (index)
@@ -1191,15 +1133,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPackageTargetObjectIDGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PackageTargetObjectIDCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PackageTargetObjectIDCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageTargetObjectIDCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageTargetObjectIDCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PackageTargetObjectIDCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageTargetObjectIDBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

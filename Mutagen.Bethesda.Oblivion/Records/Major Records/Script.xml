@@ -33,7 +33,7 @@
   <Object name="LocalVariableData" objType="Subrecord" recordType="SLSD" GUID="02fb12f0-9bb2-4675-9624-502859e58bd6" ID="207">
     <Fields>
       <Int32 name="Index" />
-      <ByteArray name="Unknown" byteLength="12" hasBeenSet="False" />
+      <ByteArray name="Unknown" byteLength="12" nullable="False" />
       <Enum name="Flags" enumName="Script.LocalVariableFlag" byteLength="4" />
       <Int32 name="Unknown2" />
     </Fields>
@@ -41,12 +41,12 @@
   <Object name="AScriptReference" abstract="true" objType="Subrecord" GUID="5eb6ddcc-5ba8-4da7-87f5-99b6038a61c7" ID="50" />
   <Object name="ScriptVariableReference" baseClass="AScriptReference" objType="Subrecord" GUID="fb87f678-c078-4acb-b943-fe3d2142a7be" ID="60">
     <Fields>
-      <Int32 name="VariableIndex" recordType="SCRV" hasBeenSet="False" />
+      <Int32 name="VariableIndex" recordType="SCRV" nullable="False" />
     </Fields>
   </Object>
   <Object name="ScriptObjectReference" baseClass="AScriptReference" objType="Subrecord" GUID="a00d44e0-398b-45a6-9e45-facc1da7a2b2" ID="61">
     <Fields>
-      <FormLink name="Reference" recordType="SCRO" refName="OblivionMajorRecord" hasBeenSet="False" />
+      <FormLink name="Reference" recordType="SCRO" refName="OblivionMajorRecord" nullable="False" />
     </Fields>
   </Object>
 </Loqui>

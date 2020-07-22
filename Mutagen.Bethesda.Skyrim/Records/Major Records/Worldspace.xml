@@ -19,9 +19,9 @@
       <String name="MapImage" recordType="ICON" />
       <RefDirect name="CloudModel" refName="Model" />
       <RefDirect name="MapData" refName="WorldspaceMap" />
-      <RefDirect name="MapOffset" refName="WorldspaceMapOffset" hasBeenSet="False" />
+      <RefDirect name="MapOffset" refName="WorldspaceMapOffset" nullable="False" />
       <Float name="DistantLodMultiplier" recordType="NAMA" />
-      <Enum name="Flags" enumName="Worldspace.Flag" byteLength="1" recordType="DATA" hasBeenSet="False" />
+      <Enum name="Flags" enumName="Worldspace.Flag" byteLength="1" recordType="DATA" nullable="False" />
       <RefDirect name="ObjectBounds" refName="WorldspaceObjectBounds" />
       <FormLink name="Music" refName="MusicType" recordType="ZNAM" />
       <String name="CanopyShadow" recordType="NNAM" />
@@ -73,13 +73,13 @@
     <Fields>
       <P2Int16 name="Min" />
       <P2Int16 name="Max" />
-      <ByteArray name="CellData" hasBeenSet="false" />
+      <ByteArray name="CellData" nullable="false" />
     </Fields>
   </Object>
   <Object name="WorldspaceParent" objType="Subrecord" GUID="1e24c739-2c8c-41e2-b910-59ba865655be" ID="341">
     <Fields>
-      <FormLink name="Worldspace" refName="Worldspace" recordType="WNAM" hasBeenSet="False" />
-      <Enum name="Flags" enumName="WorldspaceParent.Flag" byteLength="2" hasBeenSet="False" recordType="PNAM" />
+      <FormLink name="Worldspace" refName="Worldspace" recordType="WNAM" nullable="False" />
+      <Enum name="Flags" enumName="WorldspaceParent.Flag" byteLength="2" nullable="False" recordType="PNAM" />
     </Fields>
   </Object>
   <Object name="WorldspaceLandDefaults" objType="Subrecord" recordType="DNAM" GUID="bd2d5da4-8f2e-43df-a0da-bca4371c1cc7" ID="342">
@@ -107,8 +107,8 @@
   </Object>
   <Object name="WorldspaceObjectBounds" objType="Subrecord" GUID="5863982b-d963-4fd8-a231-eb09b921d6ab" ID="345">
     <Fields>
-      <P2Float name="Min" recordType="NAM0" hasBeenSet="False" binary="Custom" />
-      <P2Float name="Max" recordType="NAM9" hasBeenSet="False" binary="Custom" />
+      <P2Float name="Min" recordType="NAM0" nullable="False" binary="Custom" />
+      <P2Float name="Max" recordType="NAM9" nullable="False" binary="Custom" />
     </Fields>
   </Object>
 </Loqui>

@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IImageSpaceAdapterInternal,
         ILoquiObjectSetter<ImageSpaceAdapter>,
-        IEquatable<ImageSpaceAdapter>,
-        IEqualsMask
+        IEquatable<ImageSpaceAdapter>
     {
         #region Ctor
         protected ImageSpaceAdapter()
@@ -7030,14 +7029,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new ImageSpaceAdapter CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static ImageSpaceAdapter CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -7064,8 +7055,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IImageSpaceAdapterGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -7271,24 +7260,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IImageSpaceAdapterGetter item,
-            ImageSpaceAdapter.Mask<bool?> checkMask)
-        {
-            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ImageSpaceAdapter.Mask<bool> GetHasBeenSetMask(this IImageSpaceAdapterGetter item)
-        {
-            var ret = new ImageSpaceAdapter.Mask<bool>(false);
-            ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IImageSpaceAdapterGetter item,
             IImageSpaceAdapterGetter rhs)
@@ -7358,17 +7329,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IImageSpaceAdapterInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IImageSpaceAdapterInternal item,
             MutagenFrame frame,
@@ -9788,305 +9748,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
-        }
-        
-        public bool HasBeenSet(
-            IImageSpaceAdapterGetter item,
-            ImageSpaceAdapter.Mask<bool?> checkMask)
-        {
-            if (checkMask.BlurRadius?.Overall.HasValue ?? false && checkMask.BlurRadius!.Overall.Value != (item.BlurRadius != null)) return false;
-            if (checkMask.DoubleVisionStrength?.Overall.HasValue ?? false && checkMask.DoubleVisionStrength!.Overall.Value != (item.DoubleVisionStrength != null)) return false;
-            if (checkMask.TintColor?.Overall.HasValue ?? false && checkMask.TintColor!.Overall.Value != (item.TintColor != null)) return false;
-            if (checkMask.FadeColor?.Overall.HasValue ?? false && checkMask.FadeColor!.Overall.Value != (item.FadeColor != null)) return false;
-            if (checkMask.RadialBlurStrength?.Overall.HasValue ?? false && checkMask.RadialBlurStrength!.Overall.Value != (item.RadialBlurStrength != null)) return false;
-            if (checkMask.RadialBlurRampUp?.Overall.HasValue ?? false && checkMask.RadialBlurRampUp!.Overall.Value != (item.RadialBlurRampUp != null)) return false;
-            if (checkMask.RadialBlurStart?.Overall.HasValue ?? false && checkMask.RadialBlurStart!.Overall.Value != (item.RadialBlurStart != null)) return false;
-            if (checkMask.RadialBlurRampDown?.Overall.HasValue ?? false && checkMask.RadialBlurRampDown!.Overall.Value != (item.RadialBlurRampDown != null)) return false;
-            if (checkMask.RadialBlurDownStart?.Overall.HasValue ?? false && checkMask.RadialBlurDownStart!.Overall.Value != (item.RadialBlurDownStart != null)) return false;
-            if (checkMask.DepthOfFieldStrength?.Overall.HasValue ?? false && checkMask.DepthOfFieldStrength!.Overall.Value != (item.DepthOfFieldStrength != null)) return false;
-            if (checkMask.DepthOfFieldDistance?.Overall.HasValue ?? false && checkMask.DepthOfFieldDistance!.Overall.Value != (item.DepthOfFieldDistance != null)) return false;
-            if (checkMask.DepthOfFieldRange?.Overall.HasValue ?? false && checkMask.DepthOfFieldRange!.Overall.Value != (item.DepthOfFieldRange != null)) return false;
-            if (checkMask.MotionBlurStrength?.Overall.HasValue ?? false && checkMask.MotionBlurStrength!.Overall.Value != (item.MotionBlurStrength != null)) return false;
-            if (checkMask.HdrEyeAdaptSpeedMult?.Overall.HasValue ?? false && checkMask.HdrEyeAdaptSpeedMult!.Overall.Value != (item.HdrEyeAdaptSpeedMult != null)) return false;
-            if (checkMask.HdrEyeAdaptSpeedAdd?.Overall.HasValue ?? false && checkMask.HdrEyeAdaptSpeedAdd!.Overall.Value != (item.HdrEyeAdaptSpeedAdd != null)) return false;
-            if (checkMask.HdrBloomBlurRadiusMult?.Overall.HasValue ?? false && checkMask.HdrBloomBlurRadiusMult!.Overall.Value != (item.HdrBloomBlurRadiusMult != null)) return false;
-            if (checkMask.HdrBloomBlurRadiusAdd?.Overall.HasValue ?? false && checkMask.HdrBloomBlurRadiusAdd!.Overall.Value != (item.HdrBloomBlurRadiusAdd != null)) return false;
-            if (checkMask.HdrBloomThresholdMult?.Overall.HasValue ?? false && checkMask.HdrBloomThresholdMult!.Overall.Value != (item.HdrBloomThresholdMult != null)) return false;
-            if (checkMask.HdrBloomThresholdAdd?.Overall.HasValue ?? false && checkMask.HdrBloomThresholdAdd!.Overall.Value != (item.HdrBloomThresholdAdd != null)) return false;
-            if (checkMask.HdrBloomScaleMult?.Overall.HasValue ?? false && checkMask.HdrBloomScaleMult!.Overall.Value != (item.HdrBloomScaleMult != null)) return false;
-            if (checkMask.HdrBloomScaleAdd?.Overall.HasValue ?? false && checkMask.HdrBloomScaleAdd!.Overall.Value != (item.HdrBloomScaleAdd != null)) return false;
-            if (checkMask.HdrTargetLumMinMult?.Overall.HasValue ?? false && checkMask.HdrTargetLumMinMult!.Overall.Value != (item.HdrTargetLumMinMult != null)) return false;
-            if (checkMask.HdrTargetLumMinAdd?.Overall.HasValue ?? false && checkMask.HdrTargetLumMinAdd!.Overall.Value != (item.HdrTargetLumMinAdd != null)) return false;
-            if (checkMask.HdrTargetLumMaxMult?.Overall.HasValue ?? false && checkMask.HdrTargetLumMaxMult!.Overall.Value != (item.HdrTargetLumMaxMult != null)) return false;
-            if (checkMask.HdrTargetLumMaxAdd?.Overall.HasValue ?? false && checkMask.HdrTargetLumMaxAdd!.Overall.Value != (item.HdrTargetLumMaxAdd != null)) return false;
-            if (checkMask.HdrSunlightScaleMult?.Overall.HasValue ?? false && checkMask.HdrSunlightScaleMult!.Overall.Value != (item.HdrSunlightScaleMult != null)) return false;
-            if (checkMask.HdrSunlightScaleAdd?.Overall.HasValue ?? false && checkMask.HdrSunlightScaleAdd!.Overall.Value != (item.HdrSunlightScaleAdd != null)) return false;
-            if (checkMask.HdrSkyScaleMult?.Overall.HasValue ?? false && checkMask.HdrSkyScaleMult!.Overall.Value != (item.HdrSkyScaleMult != null)) return false;
-            if (checkMask.HdrSkyScaleAdd?.Overall.HasValue ?? false && checkMask.HdrSkyScaleAdd!.Overall.Value != (item.HdrSkyScaleAdd != null)) return false;
-            if (checkMask.Unknown08?.Overall.HasValue ?? false && checkMask.Unknown08!.Overall.Value != (item.Unknown08 != null)) return false;
-            if (checkMask.Unknown48?.Overall.HasValue ?? false && checkMask.Unknown48!.Overall.Value != (item.Unknown48 != null)) return false;
-            if (checkMask.Unknown09?.Overall.HasValue ?? false && checkMask.Unknown09!.Overall.Value != (item.Unknown09 != null)) return false;
-            if (checkMask.Unknown49?.Overall.HasValue ?? false && checkMask.Unknown49!.Overall.Value != (item.Unknown49 != null)) return false;
-            if (checkMask.Unknown0A?.Overall.HasValue ?? false && checkMask.Unknown0A!.Overall.Value != (item.Unknown0A != null)) return false;
-            if (checkMask.Unknown4A?.Overall.HasValue ?? false && checkMask.Unknown4A!.Overall.Value != (item.Unknown4A != null)) return false;
-            if (checkMask.Unknown0B?.Overall.HasValue ?? false && checkMask.Unknown0B!.Overall.Value != (item.Unknown0B != null)) return false;
-            if (checkMask.Unknown4B?.Overall.HasValue ?? false && checkMask.Unknown4B!.Overall.Value != (item.Unknown4B != null)) return false;
-            if (checkMask.Unknown0C?.Overall.HasValue ?? false && checkMask.Unknown0C!.Overall.Value != (item.Unknown0C != null)) return false;
-            if (checkMask.Unknown4C?.Overall.HasValue ?? false && checkMask.Unknown4C!.Overall.Value != (item.Unknown4C != null)) return false;
-            if (checkMask.Unknown0D?.Overall.HasValue ?? false && checkMask.Unknown0D!.Overall.Value != (item.Unknown0D != null)) return false;
-            if (checkMask.Unknown4D?.Overall.HasValue ?? false && checkMask.Unknown4D!.Overall.Value != (item.Unknown4D != null)) return false;
-            if (checkMask.Unknown0E?.Overall.HasValue ?? false && checkMask.Unknown0E!.Overall.Value != (item.Unknown0E != null)) return false;
-            if (checkMask.Unknown4E?.Overall.HasValue ?? false && checkMask.Unknown4E!.Overall.Value != (item.Unknown4E != null)) return false;
-            if (checkMask.Unknown0F?.Overall.HasValue ?? false && checkMask.Unknown0F!.Overall.Value != (item.Unknown0F != null)) return false;
-            if (checkMask.Unknown4F?.Overall.HasValue ?? false && checkMask.Unknown4F!.Overall.Value != (item.Unknown4F != null)) return false;
-            if (checkMask.Unknown10?.Overall.HasValue ?? false && checkMask.Unknown10!.Overall.Value != (item.Unknown10 != null)) return false;
-            if (checkMask.Unknown50?.Overall.HasValue ?? false && checkMask.Unknown50!.Overall.Value != (item.Unknown50 != null)) return false;
-            if (checkMask.CinematicSaturationMult?.Overall.HasValue ?? false && checkMask.CinematicSaturationMult!.Overall.Value != (item.CinematicSaturationMult != null)) return false;
-            if (checkMask.CinematicSaturationAdd?.Overall.HasValue ?? false && checkMask.CinematicSaturationAdd!.Overall.Value != (item.CinematicSaturationAdd != null)) return false;
-            if (checkMask.CinematicBrightnessMult?.Overall.HasValue ?? false && checkMask.CinematicBrightnessMult!.Overall.Value != (item.CinematicBrightnessMult != null)) return false;
-            if (checkMask.CinematicBrightnessAdd?.Overall.HasValue ?? false && checkMask.CinematicBrightnessAdd!.Overall.Value != (item.CinematicBrightnessAdd != null)) return false;
-            if (checkMask.CinematicContrastMult?.Overall.HasValue ?? false && checkMask.CinematicContrastMult!.Overall.Value != (item.CinematicContrastMult != null)) return false;
-            if (checkMask.CinematicContrastAdd?.Overall.HasValue ?? false && checkMask.CinematicContrastAdd!.Overall.Value != (item.CinematicContrastAdd != null)) return false;
-            if (checkMask.Unknown14?.Overall.HasValue ?? false && checkMask.Unknown14!.Overall.Value != (item.Unknown14 != null)) return false;
-            if (checkMask.Unknown54?.Overall.HasValue ?? false && checkMask.Unknown54!.Overall.Value != (item.Unknown54 != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IImageSpaceAdapterGetter item,
-            ImageSpaceAdapter.Mask<bool> mask)
-        {
-            mask.Flags = true;
-            mask.Duration = true;
-            mask.RadialBlurFlags = true;
-            mask.RadialBlurCenter = true;
-            mask.DepthOfFieldFlags = true;
-            if (item.BlurRadius.TryGet(out var BlurRadiusItem))
-            {
-                mask.BlurRadius = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, BlurRadiusItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.DoubleVisionStrength.TryGet(out var DoubleVisionStrengthItem))
-            {
-                mask.DoubleVisionStrength = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, DoubleVisionStrengthItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.TintColor.TryGet(out var TintColorItem))
-            {
-                mask.TintColor = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ColorFrame.Mask<bool>?>>?>(true, TintColorItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ColorFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.FadeColor.TryGet(out var FadeColorItem))
-            {
-                mask.FadeColor = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ColorFrame.Mask<bool>?>>?>(true, FadeColorItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ColorFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.RadialBlurStrength.TryGet(out var RadialBlurStrengthItem))
-            {
-                mask.RadialBlurStrength = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, RadialBlurStrengthItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.RadialBlurRampUp.TryGet(out var RadialBlurRampUpItem))
-            {
-                mask.RadialBlurRampUp = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, RadialBlurRampUpItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.RadialBlurStart.TryGet(out var RadialBlurStartItem))
-            {
-                mask.RadialBlurStart = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, RadialBlurStartItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.RadialBlurRampDown.TryGet(out var RadialBlurRampDownItem))
-            {
-                mask.RadialBlurRampDown = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, RadialBlurRampDownItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.RadialBlurDownStart.TryGet(out var RadialBlurDownStartItem))
-            {
-                mask.RadialBlurDownStart = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, RadialBlurDownStartItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.DepthOfFieldStrength.TryGet(out var DepthOfFieldStrengthItem))
-            {
-                mask.DepthOfFieldStrength = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, DepthOfFieldStrengthItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.DepthOfFieldDistance.TryGet(out var DepthOfFieldDistanceItem))
-            {
-                mask.DepthOfFieldDistance = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, DepthOfFieldDistanceItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.DepthOfFieldRange.TryGet(out var DepthOfFieldRangeItem))
-            {
-                mask.DepthOfFieldRange = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, DepthOfFieldRangeItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.MotionBlurStrength.TryGet(out var MotionBlurStrengthItem))
-            {
-                mask.MotionBlurStrength = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, MotionBlurStrengthItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrEyeAdaptSpeedMult.TryGet(out var HdrEyeAdaptSpeedMultItem))
-            {
-                mask.HdrEyeAdaptSpeedMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrEyeAdaptSpeedMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrEyeAdaptSpeedAdd.TryGet(out var HdrEyeAdaptSpeedAddItem))
-            {
-                mask.HdrEyeAdaptSpeedAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrEyeAdaptSpeedAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrBloomBlurRadiusMult.TryGet(out var HdrBloomBlurRadiusMultItem))
-            {
-                mask.HdrBloomBlurRadiusMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrBloomBlurRadiusMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrBloomBlurRadiusAdd.TryGet(out var HdrBloomBlurRadiusAddItem))
-            {
-                mask.HdrBloomBlurRadiusAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrBloomBlurRadiusAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrBloomThresholdMult.TryGet(out var HdrBloomThresholdMultItem))
-            {
-                mask.HdrBloomThresholdMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrBloomThresholdMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrBloomThresholdAdd.TryGet(out var HdrBloomThresholdAddItem))
-            {
-                mask.HdrBloomThresholdAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrBloomThresholdAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrBloomScaleMult.TryGet(out var HdrBloomScaleMultItem))
-            {
-                mask.HdrBloomScaleMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrBloomScaleMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrBloomScaleAdd.TryGet(out var HdrBloomScaleAddItem))
-            {
-                mask.HdrBloomScaleAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrBloomScaleAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrTargetLumMinMult.TryGet(out var HdrTargetLumMinMultItem))
-            {
-                mask.HdrTargetLumMinMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrTargetLumMinMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrTargetLumMinAdd.TryGet(out var HdrTargetLumMinAddItem))
-            {
-                mask.HdrTargetLumMinAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrTargetLumMinAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrTargetLumMaxMult.TryGet(out var HdrTargetLumMaxMultItem))
-            {
-                mask.HdrTargetLumMaxMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrTargetLumMaxMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrTargetLumMaxAdd.TryGet(out var HdrTargetLumMaxAddItem))
-            {
-                mask.HdrTargetLumMaxAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrTargetLumMaxAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrSunlightScaleMult.TryGet(out var HdrSunlightScaleMultItem))
-            {
-                mask.HdrSunlightScaleMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrSunlightScaleMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrSunlightScaleAdd.TryGet(out var HdrSunlightScaleAddItem))
-            {
-                mask.HdrSunlightScaleAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrSunlightScaleAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrSkyScaleMult.TryGet(out var HdrSkyScaleMultItem))
-            {
-                mask.HdrSkyScaleMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrSkyScaleMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.HdrSkyScaleAdd.TryGet(out var HdrSkyScaleAddItem))
-            {
-                mask.HdrSkyScaleAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, HdrSkyScaleAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown08.TryGet(out var Unknown08Item))
-            {
-                mask.Unknown08 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown08Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown48.TryGet(out var Unknown48Item))
-            {
-                mask.Unknown48 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown48Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown09.TryGet(out var Unknown09Item))
-            {
-                mask.Unknown09 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown09Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown49.TryGet(out var Unknown49Item))
-            {
-                mask.Unknown49 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown49Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown0A.TryGet(out var Unknown0AItem))
-            {
-                mask.Unknown0A = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown0AItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown4A.TryGet(out var Unknown4AItem))
-            {
-                mask.Unknown4A = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown4AItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown0B.TryGet(out var Unknown0BItem))
-            {
-                mask.Unknown0B = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown0BItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown4B.TryGet(out var Unknown4BItem))
-            {
-                mask.Unknown4B = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown4BItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown0C.TryGet(out var Unknown0CItem))
-            {
-                mask.Unknown0C = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown0CItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown4C.TryGet(out var Unknown4CItem))
-            {
-                mask.Unknown4C = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown4CItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown0D.TryGet(out var Unknown0DItem))
-            {
-                mask.Unknown0D = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown0DItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown4D.TryGet(out var Unknown4DItem))
-            {
-                mask.Unknown4D = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown4DItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown0E.TryGet(out var Unknown0EItem))
-            {
-                mask.Unknown0E = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown0EItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown4E.TryGet(out var Unknown4EItem))
-            {
-                mask.Unknown4E = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown4EItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown0F.TryGet(out var Unknown0FItem))
-            {
-                mask.Unknown0F = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown0FItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown4F.TryGet(out var Unknown4FItem))
-            {
-                mask.Unknown4F = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown4FItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown10.TryGet(out var Unknown10Item))
-            {
-                mask.Unknown10 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown10Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown50.TryGet(out var Unknown50Item))
-            {
-                mask.Unknown50 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown50Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.CinematicSaturationMult.TryGet(out var CinematicSaturationMultItem))
-            {
-                mask.CinematicSaturationMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, CinematicSaturationMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.CinematicSaturationAdd.TryGet(out var CinematicSaturationAddItem))
-            {
-                mask.CinematicSaturationAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, CinematicSaturationAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.CinematicBrightnessMult.TryGet(out var CinematicBrightnessMultItem))
-            {
-                mask.CinematicBrightnessMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, CinematicBrightnessMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.CinematicBrightnessAdd.TryGet(out var CinematicBrightnessAddItem))
-            {
-                mask.CinematicBrightnessAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, CinematicBrightnessAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.CinematicContrastMult.TryGet(out var CinematicContrastMultItem))
-            {
-                mask.CinematicContrastMult = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, CinematicContrastMultItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.CinematicContrastAdd.TryGet(out var CinematicContrastAddItem))
-            {
-                mask.CinematicContrastAdd = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, CinematicContrastAddItem.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown14.TryGet(out var Unknown14Item))
-            {
-                mask.Unknown14 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown14Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            if (item.Unknown54.TryGet(out var Unknown54Item))
-            {
-                mask.Unknown54 = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, KeyFrame.Mask<bool>?>>?>(true, Unknown54Item.WithIndex().Select((i) => new MaskItemIndexed<bool, KeyFrame.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            mask.DNAMDataTypeState = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static ImageSpaceAdapter_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -13726,8 +13387,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IImageSpaceAdapterGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ImageSpaceAdapterBinaryWriteTranslation.Instance;

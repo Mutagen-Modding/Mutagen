@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WeatherImageSpaces :
         IWeatherImageSpaces,
         ILoquiObjectSetter<WeatherImageSpaces>,
-        IEquatable<WeatherImageSpaces>,
-        IEqualsMask
+        IEquatable<WeatherImageSpaces>
     {
         #region Ctor
         public WeatherImageSpaces()
@@ -446,7 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => WeatherImageSpacesCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WeatherImageSpacesCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherImageSpacesCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -466,14 +465,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static WeatherImageSpaces CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static WeatherImageSpaces CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -500,8 +491,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherImageSpacesGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -519,7 +508,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IWeatherImageSpaces :
         IWeatherImageSpacesGetter,
-        ILoquiObjectSetter<IWeatherImageSpaces>
+        ILoquiObjectSetter<IWeatherImageSpaces>,
+        ILinkedFormKeyContainer
     {
         new FormLink<ImageSpaceAdapter> Sunrise { get; set; }
         new FormLink<ImageSpaceAdapter> Day { get; set; }
@@ -530,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherImageSpacesGetter :
         ILoquiObject,
         ILoquiObject<IWeatherImageSpacesGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -590,24 +580,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IWeatherImageSpacesGetter item,
-            WeatherImageSpaces.Mask<bool?> checkMask)
-        {
-            return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static WeatherImageSpaces.Mask<bool> GetHasBeenSetMask(this IWeatherImageSpacesGetter item)
-        {
-            var ret = new WeatherImageSpaces.Mask<bool>(false);
-            ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -702,17 +674,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWeatherImageSpaces item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWeatherImageSpaces item,
             MutagenFrame frame,
@@ -1074,23 +1035,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IWeatherImageSpacesGetter item,
-            WeatherImageSpaces.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IWeatherImageSpacesGetter item,
-            WeatherImageSpaces.Mask<bool> mask)
-        {
-            mask.Sunrise = true;
-            mask.Day = true;
-            mask.Sunset = true;
-            mask.Night = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IWeatherImageSpacesGetter? lhs,
@@ -1326,12 +1270,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IWeatherImageSpacesGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WeatherImageSpacesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1363,15 +1308,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherImageSpacesGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => WeatherImageSpacesCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => WeatherImageSpacesCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherImageSpacesCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherImageSpacesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

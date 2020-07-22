@@ -28,10 +28,10 @@ namespace Mutagen.Bethesda.Generation
         {
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}FilePathBinaryTranslation.Instance.Write{(typeGen.HasBeenSet ? "Nullable" : null)}"))
+                $"{this.Namespace}FilePathBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
-                args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
+                args.Add($"item: {itemAccessor}");
                 if (data.RecordType.HasValue)
                 {
                     args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Generation
                     ItemAccessor = itemAccessor,
                     TranslationMaskAccessor = translationMaskAccessor,
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
-                    ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}".Single(),
+                    ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}".AsEnumerable(),
                     SkipErrorMask = true
                 });
         }
@@ -93,10 +93,10 @@ namespace Mutagen.Bethesda.Generation
                 $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.Namespace}FilePathBinaryTranslation.Instance.Parse",
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
             {
-                args.Add(nodeAccessor.DirectAccess);
+                args.Add(nodeAccessor.Access);
                 if (asyncMode == AsyncMode.Off)
                 {
-                    args.Add($"item: out {outItemAccessor.DirectAccess}");
+                    args.Add($"item: out {outItemAccessor}");
                 }
                 if (data.RecordType.HasValue)
                 {

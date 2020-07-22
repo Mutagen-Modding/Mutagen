@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Generation
 
         protected override string ItemWriteAccess(TypeGeneration typeGen, Accessor itemAccessor)
         {
-            return itemAccessor.PropertyOrDirectAccess;
+            return itemAccessor.Access;
         }
 
         public override bool AllowDirectWrite(ObjectGeneration objGen, TypeGeneration typeGen)
@@ -76,12 +76,12 @@ namespace Mutagen.Bethesda.Generation
                     using (var args = new ArgsWrapper(fg,
                         $"{retAccessor}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
                     {
-                        args.Add(nodeAccessor.DirectAccess);
+                        args.Add(nodeAccessor.Access);
                         if (this.DoErrorMasks)
                         {
                             args.Add($"errorMask: {errorMaskAccessor}");
                         }
-                        args.Add($"item: out {outItemAccessor.DirectAccess}");
+                        args.Add($"item: out {outItemAccessor}");
                         foreach (var writeParam in this.AdditionalCopyInRetParams)
                         {
                             var get = writeParam(
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Generation
                     break;
                 case FormLinkType.FormIDTypeEnum.EDIDChars:
                     fg.AppendLine($"{errorMaskAccessor} = null;");
-                    fg.AppendLine($"{outItemAccessor.DirectAccess} = new {linkType.TypeName(getter: false)}(HeaderTranslation.ReadNextRecordType(r.Reader));");
+                    fg.AppendLine($"{outItemAccessor} = new {linkType.TypeName(getter: false)}(HeaderTranslation.ReadNextRecordType(r.Reader));");
                     fg.AppendLine($"return true;");
                     break;
                 default:
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Generation
                     TypeOverride = linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType",
                     DefaultOverride = linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey.Null" : "RecordType.Null",
                     ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}"
-                        .Single()
+                        .AsEnumerable()
                         .ToArray(),
                     SkipErrorMask = !this.DoErrorMasks,
                 });
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Generation
                     if (data.HasTrigger || !PreferDirectTranslation)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Write{(typeGen.HasBeenSet ? "Nullable" : null)}"))
+                            $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
                         {
                             args.Add($"writer: {writerAccessor}");
                             args.Add($"item: {ItemWriteAccess(typeGen, itemAccessor)}");
@@ -180,12 +180,12 @@ namespace Mutagen.Bethesda.Generation
                     }
                     else
                     {
-                        fg.AppendLine($"{writerAccessor.DirectAccess}.Write({itemAccessor.DirectAccess});");
+                        fg.AppendLine($"{writerAccessor}.Write({itemAccessor});");
                     }
                     break;
                 case FormLinkType.FormIDTypeEnum.EDIDChars:
                     using (var args = new ArgsWrapper(fg,
-                        $"{this.Namespace}RecordTypeBinaryTranslation.Instance.Write{(typeGen.HasBeenSet ? "Nullable" : null)}"))
+                        $"{this.Namespace}RecordTypeBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
                     {
                         args.Add($"writer: {writerAccessor}");
                         args.Add($"item: {ItemWriteAccess(typeGen, itemAccessor)}");

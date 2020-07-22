@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IImageSpaceInternal,
         ILoquiObjectSetter<ImageSpace>,
-        IEquatable<ImageSpace>,
-        IEqualsMask
+        IEquatable<ImageSpace>
     {
         #region Ctor
         protected ImageSpace()
@@ -577,14 +576,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new ImageSpace CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static ImageSpace CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -611,8 +602,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IImageSpaceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -706,24 +695,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IImageSpaceGetter item,
-            ImageSpace.Mask<bool?> checkMask)
-        {
-            return ((ImageSpaceCommon)((IImageSpaceGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ImageSpace.Mask<bool> GetHasBeenSetMask(this IImageSpaceGetter item)
-        {
-            var ret = new ImageSpace.Mask<bool>(false);
-            ((ImageSpaceCommon)((IImageSpaceGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IImageSpaceGetter item,
             IImageSpaceGetter rhs)
@@ -793,17 +764,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IImageSpaceInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IImageSpaceInternal item,
             MutagenFrame frame,
@@ -1245,42 +1205,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 DepthOfFieldItem?.ToString(fg, "DepthOfField");
             }
-        }
-        
-        public bool HasBeenSet(
-            IImageSpaceGetter item,
-            ImageSpace.Mask<bool?> checkMask)
-        {
-            if (checkMask.ENAM.HasValue && checkMask.ENAM.Value != (item.ENAM != null)) return false;
-            if (checkMask.Hdr?.Overall.HasValue ?? false && checkMask.Hdr.Overall.Value != (item.Hdr != null)) return false;
-            if (checkMask.Hdr?.Specific != null && (item.Hdr == null || !item.Hdr.HasBeenSet(checkMask.Hdr.Specific))) return false;
-            if (checkMask.Cinematic?.Overall.HasValue ?? false && checkMask.Cinematic.Overall.Value != (item.Cinematic != null)) return false;
-            if (checkMask.Cinematic?.Specific != null && (item.Cinematic == null || !item.Cinematic.HasBeenSet(checkMask.Cinematic.Specific))) return false;
-            if (checkMask.Tint?.Overall.HasValue ?? false && checkMask.Tint.Overall.Value != (item.Tint != null)) return false;
-            if (checkMask.Tint?.Specific != null && (item.Tint == null || !item.Tint.HasBeenSet(checkMask.Tint.Specific))) return false;
-            if (checkMask.DepthOfField?.Overall.HasValue ?? false && checkMask.DepthOfField.Overall.Value != (item.DepthOfField != null)) return false;
-            if (checkMask.DepthOfField?.Specific != null && (item.DepthOfField == null || !item.DepthOfField.HasBeenSet(checkMask.DepthOfField.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IImageSpaceGetter item,
-            ImageSpace.Mask<bool> mask)
-        {
-            mask.ENAM = (item.ENAM != null);
-            var itemHdr = item.Hdr;
-            mask.Hdr = new MaskItem<bool, ImageSpaceHdr.Mask<bool>?>(itemHdr != null, itemHdr?.GetHasBeenSetMask());
-            var itemCinematic = item.Cinematic;
-            mask.Cinematic = new MaskItem<bool, ImageSpaceCinematic.Mask<bool>?>(itemCinematic != null, itemCinematic?.GetHasBeenSetMask());
-            var itemTint = item.Tint;
-            mask.Tint = new MaskItem<bool, ImageSpaceTint.Mask<bool>?>(itemTint != null, itemTint?.GetHasBeenSetMask());
-            var itemDepthOfField = item.DepthOfField;
-            mask.DepthOfField = new MaskItem<bool, ImageSpaceDepthOfField.Mask<bool>?>(itemDepthOfField != null, itemDepthOfField?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static ImageSpace_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -1892,8 +1816,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IImageSpaceGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ImageSpaceBinaryWriteTranslation.Instance;

@@ -4,7 +4,7 @@
     <Interface>ITranslatedNamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
-      <String name="Translation" recordType="TNAM" translated="Normal" hasBeenSet="False" />
+      <String name="Translation" recordType="TNAM" translated="Normal" nullable="False" />
     </Fields>
   </Object>
 </Loqui>

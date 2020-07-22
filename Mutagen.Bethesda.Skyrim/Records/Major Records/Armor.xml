@@ -6,7 +6,7 @@
     <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <FormLink name="ObjectEffect" recordType="EITM" >
         <Interface>IEffectRecord</Interface>
@@ -51,7 +51,7 @@
           <Float name="Weight" />
         </Fields>
       </Data>
-      <Float name="ArmorRating" recordType="DNAM" integerType="UInt" divisor="100" hasBeenSet="False" />
+      <Float name="ArmorRating" recordType="DNAM" integerType="UInt" divisor="100" nullable="False" />
       <FormLink name="TemplateArmor" recordType="TNAM" refName="Armor" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>

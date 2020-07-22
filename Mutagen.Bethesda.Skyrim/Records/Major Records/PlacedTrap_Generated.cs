@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         APlacedTrap,
         IPlacedTrapInternal,
         ILoquiObjectSetter<PlacedTrap>,
-        IEquatable<PlacedTrap>,
-        IEqualsMask
+        IEquatable<PlacedTrap>
     {
         #region Ctor
         protected PlacedTrap()
@@ -388,7 +387,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedTrapCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedTrapCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedTrapCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedTrapCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedTrapCommon.Instance.RemapLinks(this, mapping);
         public PlacedTrap(FormKey formKey)
@@ -423,14 +422,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PlacedTrap CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PlacedTrap CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -457,8 +448,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedTrapGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -477,7 +466,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedTrap :
         IPlacedTrapGetter,
         IAPlacedTrap,
-        ILoquiObjectSetter<IPlacedTrapInternal>
+        ILoquiObjectSetter<IPlacedTrapInternal>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Projectile> Projectile { get; set; }
     }
@@ -492,7 +482,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedTrapGetter :
         IAPlacedTrapGetter,
         ILoquiObject<IPlacedTrapGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedTrap_Registration.Instance;
@@ -543,24 +533,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPlacedTrapGetter item,
-            PlacedTrap.Mask<bool?> checkMask)
-        {
-            return ((PlacedTrapCommon)((IPlacedTrapGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PlacedTrap.Mask<bool> GetHasBeenSetMask(this IPlacedTrapGetter item)
-        {
-            var ret = new PlacedTrap.Mask<bool>(false);
-            ((PlacedTrapCommon)((IPlacedTrapGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -632,17 +604,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPlacedTrapInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPlacedTrapInternal item,
             MutagenFrame frame,
@@ -1023,25 +984,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Projectile, "Projectile");
             }
-        }
-        
-        public bool HasBeenSet(
-            IPlacedTrapGetter item,
-            PlacedTrap.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPlacedTrapGetter item,
-            PlacedTrap.Mask<bool> mask)
-        {
-            mask.Projectile = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static PlacedTrap_FieldIndex ConvertFieldIndex(APlacedTrap_FieldIndex index)
@@ -1543,15 +1485,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedTrapGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedTrapCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedTrapCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedTrapCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedTrapCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedTrapCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedTrapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

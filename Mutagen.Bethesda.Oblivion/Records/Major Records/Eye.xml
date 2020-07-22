@@ -4,7 +4,7 @@
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
-      <String name="Icon" recordType="ICON" hasBeenSet="True" />
+      <String name="Icon" recordType="ICON" nullable="True" />
       <Enum name="Flags" enumName="Eye.Flag" byteLength="1" recordType="DATA" />
     </Fields>
   </Object>

@@ -33,8 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class OblivionMod :
         IOblivionMod,
         ILoquiObjectSetter<OblivionMod>,
-        IEquatable<OblivionMod>,
-        IEqualsMask
+        IEquatable<OblivionMod>
     {
         #region Ctor
         protected OblivionMod()
@@ -3611,7 +3610,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => OblivionModCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => OblivionModCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => OblivionModCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionModCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionModCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
@@ -3630,23 +3629,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         #region Binary Create
-        [DebuggerStepThrough]
         public static OblivionMod CreateFromBinary(
             MutagenFrame frame,
             ModKey modKey,
-            GroupMask? importMask = null)
-        {
-            return CreateFromBinary(
-                importMask: importMask,
-                modKey: modKey,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
-        public static OblivionMod CreateFromBinary(
-            MutagenFrame frame,
-            ModKey modKey,
-            RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
             var ret = new OblivionMod(modKey: modKey);
@@ -3655,8 +3640,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: ret,
                 importMask: importMask,
                 modKey: modKey,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                frame: frame);
             return ret;
         }
 
@@ -3695,8 +3679,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
-                    frame: frame,
-                    recordTypeConverter: null);
+                    frame: frame);
             }
         }
 
@@ -3735,8 +3718,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
-                    frame: frame,
-                    recordTypeConverter: null);
+                    frame: frame);
             }
         }
 
@@ -3778,8 +3760,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionModGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -3799,7 +3779,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionModGetter,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IOblivionMod>,
-        IMod
+        IMod,
+        ILinkedFormKeyContainer
     {
         new OblivionModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
@@ -3865,7 +3846,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordGetterEnumerable,
         ILoquiObject<IOblivionModGetter>,
         IModGetter,
-        ILinkedFormKeyContainer
+        ILinkedFormKeyContainerGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -3977,24 +3958,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IOblivionModGetter item,
-            OblivionMod.Mask<bool?> checkMask)
-        {
-            return ((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static OblivionMod.Mask<bool> GetHasBeenSetMask(this IOblivionModGetter item)
-        {
-            var ret = new OblivionMod.Mask<bool>(false);
-            ((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -4195,34 +4158,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        [DebuggerStepThrough]
         public static void CopyInFromBinary(
             this IOblivionMod item,
             MutagenFrame frame,
             ModKey modKey,
-            GroupMask? importMask = null)
-        {
-            CopyInFromBinary(
-                item: item,
-                importMask: importMask,
-                modKey: modKey,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
-        public static void CopyInFromBinary(
-            this IOblivionMod item,
-            MutagenFrame frame,
-            ModKey modKey,
-            RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
             ((OblivionModSetterCommon)((IOblivionModGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 importMask: importMask,
                 modKey: modKey,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                frame: frame);
         }
 
         public static void CopyInFromBinary(
@@ -5220,14 +5166,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionMod item,
             MutagenFrame frame,
             ModKey modKey,
-            RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
             UtilityTranslation.ModParse(
                 record: item,
                 frame: frame,
                 importMask: importMask,
-                recordTypeConverter: recordTypeConverter,
                 fillStructs: OblivionModBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: OblivionModBinaryCreateTranslation.FillBinaryRecordTypes);
         }
@@ -5591,76 +5535,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.EffectShaders?.ToString(fg, "EffectShaders");
             }
-        }
-        
-        public bool HasBeenSet(
-            IOblivionModGetter item,
-            OblivionMod.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IOblivionModGetter item,
-            OblivionMod.Mask<bool> mask)
-        {
-            mask.ModHeader = new MaskItem<bool, OblivionModHeader.Mask<bool>?>(true, item.ModHeader?.GetHasBeenSetMask());
-            mask.GameSettings = new MaskItem<bool, Group.Mask<bool>?>(true, item.GameSettings?.GetHasBeenSetMask());
-            mask.Globals = new MaskItem<bool, Group.Mask<bool>?>(true, item.Globals?.GetHasBeenSetMask());
-            mask.Classes = new MaskItem<bool, Group.Mask<bool>?>(true, item.Classes?.GetHasBeenSetMask());
-            mask.Factions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Factions?.GetHasBeenSetMask());
-            mask.Hairs = new MaskItem<bool, Group.Mask<bool>?>(true, item.Hairs?.GetHasBeenSetMask());
-            mask.Eyes = new MaskItem<bool, Group.Mask<bool>?>(true, item.Eyes?.GetHasBeenSetMask());
-            mask.Races = new MaskItem<bool, Group.Mask<bool>?>(true, item.Races?.GetHasBeenSetMask());
-            mask.Sounds = new MaskItem<bool, Group.Mask<bool>?>(true, item.Sounds?.GetHasBeenSetMask());
-            mask.Skills = new MaskItem<bool, Group.Mask<bool>?>(true, item.Skills?.GetHasBeenSetMask());
-            mask.MagicEffects = new MaskItem<bool, Group.Mask<bool>?>(true, item.MagicEffects?.GetHasBeenSetMask());
-            mask.Scripts = new MaskItem<bool, Group.Mask<bool>?>(true, item.Scripts?.GetHasBeenSetMask());
-            mask.LandTextures = new MaskItem<bool, Group.Mask<bool>?>(true, item.LandTextures?.GetHasBeenSetMask());
-            mask.Enchantments = new MaskItem<bool, Group.Mask<bool>?>(true, item.Enchantments?.GetHasBeenSetMask());
-            mask.Spells = new MaskItem<bool, Group.Mask<bool>?>(true, item.Spells?.GetHasBeenSetMask());
-            mask.Birthsigns = new MaskItem<bool, Group.Mask<bool>?>(true, item.Birthsigns?.GetHasBeenSetMask());
-            mask.Activators = new MaskItem<bool, Group.Mask<bool>?>(true, item.Activators?.GetHasBeenSetMask());
-            mask.AlchemicalApparatus = new MaskItem<bool, Group.Mask<bool>?>(true, item.AlchemicalApparatus?.GetHasBeenSetMask());
-            mask.Armors = new MaskItem<bool, Group.Mask<bool>?>(true, item.Armors?.GetHasBeenSetMask());
-            mask.Books = new MaskItem<bool, Group.Mask<bool>?>(true, item.Books?.GetHasBeenSetMask());
-            mask.Clothes = new MaskItem<bool, Group.Mask<bool>?>(true, item.Clothes?.GetHasBeenSetMask());
-            mask.Containers = new MaskItem<bool, Group.Mask<bool>?>(true, item.Containers?.GetHasBeenSetMask());
-            mask.Doors = new MaskItem<bool, Group.Mask<bool>?>(true, item.Doors?.GetHasBeenSetMask());
-            mask.Ingredients = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ingredients?.GetHasBeenSetMask());
-            mask.Lights = new MaskItem<bool, Group.Mask<bool>?>(true, item.Lights?.GetHasBeenSetMask());
-            mask.Miscellaneous = new MaskItem<bool, Group.Mask<bool>?>(true, item.Miscellaneous?.GetHasBeenSetMask());
-            mask.Statics = new MaskItem<bool, Group.Mask<bool>?>(true, item.Statics?.GetHasBeenSetMask());
-            mask.Grasses = new MaskItem<bool, Group.Mask<bool>?>(true, item.Grasses?.GetHasBeenSetMask());
-            mask.Trees = new MaskItem<bool, Group.Mask<bool>?>(true, item.Trees?.GetHasBeenSetMask());
-            mask.Flora = new MaskItem<bool, Group.Mask<bool>?>(true, item.Flora?.GetHasBeenSetMask());
-            mask.Furniture = new MaskItem<bool, Group.Mask<bool>?>(true, item.Furniture?.GetHasBeenSetMask());
-            mask.Weapons = new MaskItem<bool, Group.Mask<bool>?>(true, item.Weapons?.GetHasBeenSetMask());
-            mask.Ammunitions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ammunitions?.GetHasBeenSetMask());
-            mask.Npcs = new MaskItem<bool, Group.Mask<bool>?>(true, item.Npcs?.GetHasBeenSetMask());
-            mask.Creatures = new MaskItem<bool, Group.Mask<bool>?>(true, item.Creatures?.GetHasBeenSetMask());
-            mask.LeveledCreatures = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledCreatures?.GetHasBeenSetMask());
-            mask.SoulGems = new MaskItem<bool, Group.Mask<bool>?>(true, item.SoulGems?.GetHasBeenSetMask());
-            mask.Keys = new MaskItem<bool, Group.Mask<bool>?>(true, item.Keys?.GetHasBeenSetMask());
-            mask.Potions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Potions?.GetHasBeenSetMask());
-            mask.Subspaces = new MaskItem<bool, Group.Mask<bool>?>(true, item.Subspaces?.GetHasBeenSetMask());
-            mask.SigilStones = new MaskItem<bool, Group.Mask<bool>?>(true, item.SigilStones?.GetHasBeenSetMask());
-            mask.LeveledItems = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledItems?.GetHasBeenSetMask());
-            mask.Weathers = new MaskItem<bool, Group.Mask<bool>?>(true, item.Weathers?.GetHasBeenSetMask());
-            mask.Climates = new MaskItem<bool, Group.Mask<bool>?>(true, item.Climates?.GetHasBeenSetMask());
-            mask.Regions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Regions?.GetHasBeenSetMask());
-            mask.Cells = new MaskItem<bool, ListGroup.Mask<bool>?>(true, item.Cells?.GetHasBeenSetMask());
-            mask.Worldspaces = new MaskItem<bool, Group.Mask<bool>?>(true, item.Worldspaces?.GetHasBeenSetMask());
-            mask.DialogTopics = new MaskItem<bool, Group.Mask<bool>?>(true, item.DialogTopics?.GetHasBeenSetMask());
-            mask.Quests = new MaskItem<bool, Group.Mask<bool>?>(true, item.Quests?.GetHasBeenSetMask());
-            mask.IdleAnimations = new MaskItem<bool, Group.Mask<bool>?>(true, item.IdleAnimations?.GetHasBeenSetMask());
-            mask.AIPackages = new MaskItem<bool, Group.Mask<bool>?>(true, item.AIPackages?.GetHasBeenSetMask());
-            mask.CombatStyles = new MaskItem<bool, Group.Mask<bool>?>(true, item.CombatStyles?.GetHasBeenSetMask());
-            mask.LoadScreens = new MaskItem<bool, Group.Mask<bool>?>(true, item.LoadScreens?.GetHasBeenSetMask());
-            mask.LeveledSpells = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledSpells?.GetHasBeenSetMask());
-            mask.AnimatedObjects = new MaskItem<bool, Group.Mask<bool>?>(true, item.AnimatedObjects?.GetHasBeenSetMask());
-            mask.Waters = new MaskItem<bool, Group.Mask<bool>?>(true, item.Waters?.GetHasBeenSetMask());
-            mask.EffectShaders = new MaskItem<bool, Group.Mask<bool>?>(true, item.EffectShaders?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -6211,308 +6085,308 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public IEnumerable<FormKey> GetLinkFormKeys(IOblivionModGetter obj)
         {
-            if (obj.GameSettings is ILinkedFormKeyContainer GameSettingslinkCont)
+            if (obj.GameSettings is ILinkedFormKeyContainerGetter GameSettingslinkCont)
             {
                 foreach (var item in GameSettingslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Globals is ILinkedFormKeyContainer GlobalslinkCont)
+            if (obj.Globals is ILinkedFormKeyContainerGetter GlobalslinkCont)
             {
                 foreach (var item in GlobalslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Classes is ILinkedFormKeyContainer ClasseslinkCont)
+            if (obj.Classes is ILinkedFormKeyContainerGetter ClasseslinkCont)
             {
                 foreach (var item in ClasseslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Factions is ILinkedFormKeyContainer FactionslinkCont)
+            if (obj.Factions is ILinkedFormKeyContainerGetter FactionslinkCont)
             {
                 foreach (var item in FactionslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Hairs is ILinkedFormKeyContainer HairslinkCont)
+            if (obj.Hairs is ILinkedFormKeyContainerGetter HairslinkCont)
             {
                 foreach (var item in HairslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Eyes is ILinkedFormKeyContainer EyeslinkCont)
+            if (obj.Eyes is ILinkedFormKeyContainerGetter EyeslinkCont)
             {
                 foreach (var item in EyeslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Races is ILinkedFormKeyContainer RaceslinkCont)
+            if (obj.Races is ILinkedFormKeyContainerGetter RaceslinkCont)
             {
                 foreach (var item in RaceslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Sounds is ILinkedFormKeyContainer SoundslinkCont)
+            if (obj.Sounds is ILinkedFormKeyContainerGetter SoundslinkCont)
             {
                 foreach (var item in SoundslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Skills is ILinkedFormKeyContainer SkillslinkCont)
+            if (obj.Skills is ILinkedFormKeyContainerGetter SkillslinkCont)
             {
                 foreach (var item in SkillslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.MagicEffects is ILinkedFormKeyContainer MagicEffectslinkCont)
+            if (obj.MagicEffects is ILinkedFormKeyContainerGetter MagicEffectslinkCont)
             {
                 foreach (var item in MagicEffectslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Scripts is ILinkedFormKeyContainer ScriptslinkCont)
+            if (obj.Scripts is ILinkedFormKeyContainerGetter ScriptslinkCont)
             {
                 foreach (var item in ScriptslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.LandTextures is ILinkedFormKeyContainer LandTextureslinkCont)
+            if (obj.LandTextures is ILinkedFormKeyContainerGetter LandTextureslinkCont)
             {
                 foreach (var item in LandTextureslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Enchantments is ILinkedFormKeyContainer EnchantmentslinkCont)
+            if (obj.Enchantments is ILinkedFormKeyContainerGetter EnchantmentslinkCont)
             {
                 foreach (var item in EnchantmentslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Spells is ILinkedFormKeyContainer SpellslinkCont)
+            if (obj.Spells is ILinkedFormKeyContainerGetter SpellslinkCont)
             {
                 foreach (var item in SpellslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Birthsigns is ILinkedFormKeyContainer BirthsignslinkCont)
+            if (obj.Birthsigns is ILinkedFormKeyContainerGetter BirthsignslinkCont)
             {
                 foreach (var item in BirthsignslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Activators is ILinkedFormKeyContainer ActivatorslinkCont)
+            if (obj.Activators is ILinkedFormKeyContainerGetter ActivatorslinkCont)
             {
                 foreach (var item in ActivatorslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.AlchemicalApparatus is ILinkedFormKeyContainer AlchemicalApparatuslinkCont)
+            if (obj.AlchemicalApparatus is ILinkedFormKeyContainerGetter AlchemicalApparatuslinkCont)
             {
                 foreach (var item in AlchemicalApparatuslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Armors is ILinkedFormKeyContainer ArmorslinkCont)
+            if (obj.Armors is ILinkedFormKeyContainerGetter ArmorslinkCont)
             {
                 foreach (var item in ArmorslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Books is ILinkedFormKeyContainer BookslinkCont)
+            if (obj.Books is ILinkedFormKeyContainerGetter BookslinkCont)
             {
                 foreach (var item in BookslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Clothes is ILinkedFormKeyContainer ClotheslinkCont)
+            if (obj.Clothes is ILinkedFormKeyContainerGetter ClotheslinkCont)
             {
                 foreach (var item in ClotheslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Containers is ILinkedFormKeyContainer ContainerslinkCont)
+            if (obj.Containers is ILinkedFormKeyContainerGetter ContainerslinkCont)
             {
                 foreach (var item in ContainerslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Doors is ILinkedFormKeyContainer DoorslinkCont)
+            if (obj.Doors is ILinkedFormKeyContainerGetter DoorslinkCont)
             {
                 foreach (var item in DoorslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Ingredients is ILinkedFormKeyContainer IngredientslinkCont)
+            if (obj.Ingredients is ILinkedFormKeyContainerGetter IngredientslinkCont)
             {
                 foreach (var item in IngredientslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Lights is ILinkedFormKeyContainer LightslinkCont)
+            if (obj.Lights is ILinkedFormKeyContainerGetter LightslinkCont)
             {
                 foreach (var item in LightslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Miscellaneous is ILinkedFormKeyContainer MiscellaneouslinkCont)
+            if (obj.Miscellaneous is ILinkedFormKeyContainerGetter MiscellaneouslinkCont)
             {
                 foreach (var item in MiscellaneouslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Statics is ILinkedFormKeyContainer StaticslinkCont)
+            if (obj.Statics is ILinkedFormKeyContainerGetter StaticslinkCont)
             {
                 foreach (var item in StaticslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Grasses is ILinkedFormKeyContainer GrasseslinkCont)
+            if (obj.Grasses is ILinkedFormKeyContainerGetter GrasseslinkCont)
             {
                 foreach (var item in GrasseslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Trees is ILinkedFormKeyContainer TreeslinkCont)
+            if (obj.Trees is ILinkedFormKeyContainerGetter TreeslinkCont)
             {
                 foreach (var item in TreeslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Flora is ILinkedFormKeyContainer FloralinkCont)
+            if (obj.Flora is ILinkedFormKeyContainerGetter FloralinkCont)
             {
                 foreach (var item in FloralinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Furniture is ILinkedFormKeyContainer FurniturelinkCont)
+            if (obj.Furniture is ILinkedFormKeyContainerGetter FurniturelinkCont)
             {
                 foreach (var item in FurniturelinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Weapons is ILinkedFormKeyContainer WeaponslinkCont)
+            if (obj.Weapons is ILinkedFormKeyContainerGetter WeaponslinkCont)
             {
                 foreach (var item in WeaponslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Ammunitions is ILinkedFormKeyContainer AmmunitionslinkCont)
+            if (obj.Ammunitions is ILinkedFormKeyContainerGetter AmmunitionslinkCont)
             {
                 foreach (var item in AmmunitionslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Npcs is ILinkedFormKeyContainer NpcslinkCont)
+            if (obj.Npcs is ILinkedFormKeyContainerGetter NpcslinkCont)
             {
                 foreach (var item in NpcslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Creatures is ILinkedFormKeyContainer CreatureslinkCont)
+            if (obj.Creatures is ILinkedFormKeyContainerGetter CreatureslinkCont)
             {
                 foreach (var item in CreatureslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.LeveledCreatures is ILinkedFormKeyContainer LeveledCreatureslinkCont)
+            if (obj.LeveledCreatures is ILinkedFormKeyContainerGetter LeveledCreatureslinkCont)
             {
                 foreach (var item in LeveledCreatureslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoulGems is ILinkedFormKeyContainer SoulGemslinkCont)
+            if (obj.SoulGems is ILinkedFormKeyContainerGetter SoulGemslinkCont)
             {
                 foreach (var item in SoulGemslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Keys is ILinkedFormKeyContainer KeyslinkCont)
+            if (obj.Keys is ILinkedFormKeyContainerGetter KeyslinkCont)
             {
                 foreach (var item in KeyslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Potions is ILinkedFormKeyContainer PotionslinkCont)
+            if (obj.Potions is ILinkedFormKeyContainerGetter PotionslinkCont)
             {
                 foreach (var item in PotionslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Subspaces is ILinkedFormKeyContainer SubspaceslinkCont)
+            if (obj.Subspaces is ILinkedFormKeyContainerGetter SubspaceslinkCont)
             {
                 foreach (var item in SubspaceslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.SigilStones is ILinkedFormKeyContainer SigilStoneslinkCont)
+            if (obj.SigilStones is ILinkedFormKeyContainerGetter SigilStoneslinkCont)
             {
                 foreach (var item in SigilStoneslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.LeveledItems is ILinkedFormKeyContainer LeveledItemslinkCont)
+            if (obj.LeveledItems is ILinkedFormKeyContainerGetter LeveledItemslinkCont)
             {
                 foreach (var item in LeveledItemslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Weathers is ILinkedFormKeyContainer WeatherslinkCont)
+            if (obj.Weathers is ILinkedFormKeyContainerGetter WeatherslinkCont)
             {
                 foreach (var item in WeatherslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Climates is ILinkedFormKeyContainer ClimateslinkCont)
+            if (obj.Climates is ILinkedFormKeyContainerGetter ClimateslinkCont)
             {
                 foreach (var item in ClimateslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Regions is ILinkedFormKeyContainer RegionslinkCont)
+            if (obj.Regions is ILinkedFormKeyContainerGetter RegionslinkCont)
             {
                 foreach (var item in RegionslinkCont.LinkFormKeys)
                 {
@@ -6523,77 +6397,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Worldspaces is ILinkedFormKeyContainer WorldspaceslinkCont)
+            if (obj.Worldspaces is ILinkedFormKeyContainerGetter WorldspaceslinkCont)
             {
                 foreach (var item in WorldspaceslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.DialogTopics is ILinkedFormKeyContainer DialogTopicslinkCont)
+            if (obj.DialogTopics is ILinkedFormKeyContainerGetter DialogTopicslinkCont)
             {
                 foreach (var item in DialogTopicslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Quests is ILinkedFormKeyContainer QuestslinkCont)
+            if (obj.Quests is ILinkedFormKeyContainerGetter QuestslinkCont)
             {
                 foreach (var item in QuestslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.IdleAnimations is ILinkedFormKeyContainer IdleAnimationslinkCont)
+            if (obj.IdleAnimations is ILinkedFormKeyContainerGetter IdleAnimationslinkCont)
             {
                 foreach (var item in IdleAnimationslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.AIPackages is ILinkedFormKeyContainer AIPackageslinkCont)
+            if (obj.AIPackages is ILinkedFormKeyContainerGetter AIPackageslinkCont)
             {
                 foreach (var item in AIPackageslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.CombatStyles is ILinkedFormKeyContainer CombatStyleslinkCont)
+            if (obj.CombatStyles is ILinkedFormKeyContainerGetter CombatStyleslinkCont)
             {
                 foreach (var item in CombatStyleslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.LoadScreens is ILinkedFormKeyContainer LoadScreenslinkCont)
+            if (obj.LoadScreens is ILinkedFormKeyContainerGetter LoadScreenslinkCont)
             {
                 foreach (var item in LoadScreenslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.LeveledSpells is ILinkedFormKeyContainer LeveledSpellslinkCont)
+            if (obj.LeveledSpells is ILinkedFormKeyContainerGetter LeveledSpellslinkCont)
             {
                 foreach (var item in LeveledSpellslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.AnimatedObjects is ILinkedFormKeyContainer AnimatedObjectslinkCont)
+            if (obj.AnimatedObjects is ILinkedFormKeyContainerGetter AnimatedObjectslinkCont)
             {
                 foreach (var item in AnimatedObjectslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Waters is ILinkedFormKeyContainer WaterslinkCont)
+            if (obj.Waters is ILinkedFormKeyContainerGetter WaterslinkCont)
             {
                 foreach (var item in WaterslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.EffectShaders is ILinkedFormKeyContainer EffectShaderslinkCont)
+            if (obj.EffectShaders is ILinkedFormKeyContainerGetter EffectShaderslinkCont)
             {
                 foreach (var item in EffectShaderslinkCont.LinkFormKeys)
                 {
@@ -8848,7 +8722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModGetter item,
             MutagenWriter writer,
             GroupMask? importMask,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             if (importMask?.GameSettings ?? true)
             {
@@ -9472,7 +9346,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionModGetter item,
             ModKey modKey,
-            RecordTypeConverter? recordTypeConverter = null,
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {
@@ -9485,15 +9358,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WriteRecordTypes(
                 item: item,
                 writer: writer,
-                importMask: importMask,
-                recordTypeConverter: recordTypeConverter);
+                importMask: importMask);
         }
 
         public void Write(
             MutagenWriter writer,
             object item,
             ModKey modKey,
-            RecordTypeConverter? recordTypeConverter = null,
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {
@@ -9502,8 +9373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 importMask: importMask,
                 writer: writer,
                 param: param,
-                modKey: modKey,
-                recordTypeConverter: recordTypeConverter);
+                modKey: modKey);
         }
 
     }
@@ -10346,8 +10216,7 @@ namespace Mutagen.Bethesda.Oblivion
                 importMask: importMask,
                 writer: writer,
                 param: param,
-                modKey: modKey,
-                recordTypeConverter: null);
+                modKey: modKey);
         }
 
         public static void WriteToBinary(
@@ -10374,8 +10243,7 @@ namespace Mutagen.Bethesda.Oblivion
                     importMask: importMask,
                     writer: writer,
                     param: param,
-                    modKey: modKey,
-                    recordTypeConverter: null);
+                    modKey: modKey);
             }
             using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
@@ -10401,8 +10269,7 @@ namespace Mutagen.Bethesda.Oblivion
                     importMask: importMask,
                     writer: writer,
                     param: param,
-                    modKey: modKey,
-                    recordTypeConverter: null);
+                    modKey: modKey);
             }
         }
 
@@ -10433,8 +10300,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionModGetter)rhs, include);
 
         public GameRelease GameRelease => GameRelease.Oblivion;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
@@ -10445,9 +10310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => OblivionModCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => OblivionModCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionModCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionModCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => OblivionModCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

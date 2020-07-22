@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IFactionInternal,
         ILoquiObjectSetter<Faction>,
-        IEquatable<Faction>,
-        IEqualsMask
+        IEquatable<Faction>
     {
         #region Ctor
         protected Faction()
@@ -1144,7 +1143,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         public Faction(FormKey formKey)
@@ -1179,14 +1178,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Faction CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Faction CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1213,8 +1204,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1237,7 +1226,8 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectId,
         IRelatable,
         ITranslatedNamed,
-        ILoquiObjectSetter<IFactionInternal>
+        ILoquiObjectSetter<IFactionInternal>,
+        ILinkedFormKeyContainer
     {
         new TranslatedString? Name { get; set; }
         new IExtendedList<Relation> Relations { get; }
@@ -1271,7 +1261,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRelatableGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IFactionGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Faction_Registration.Instance;
@@ -1337,24 +1327,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IFactionGetter item,
-            Faction.Mask<bool?> checkMask)
-        {
-            return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Faction.Mask<bool> GetHasBeenSetMask(this IFactionGetter item)
-        {
-            var ret = new Faction.Mask<bool>(false);
-            ((FactionCommon)((IFactionGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1426,17 +1398,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IFactionInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IFactionInternal item,
             MutagenFrame frame,
@@ -2134,64 +2095,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IFactionGetter item,
-            Faction.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.ExteriorJailMarker.HasValue && checkMask.ExteriorJailMarker.Value != (item.ExteriorJailMarker.FormKey != null)) return false;
-            if (checkMask.FollowerWaitMarker.HasValue && checkMask.FollowerWaitMarker.Value != (item.FollowerWaitMarker.FormKey != null)) return false;
-            if (checkMask.StolenGoodsContainer.HasValue && checkMask.StolenGoodsContainer.Value != (item.StolenGoodsContainer.FormKey != null)) return false;
-            if (checkMask.PlayerInventoryContainer.HasValue && checkMask.PlayerInventoryContainer.Value != (item.PlayerInventoryContainer.FormKey != null)) return false;
-            if (checkMask.SharedCrimeFactionList.HasValue && checkMask.SharedCrimeFactionList.Value != (item.SharedCrimeFactionList.FormKey != null)) return false;
-            if (checkMask.JailOutfit.HasValue && checkMask.JailOutfit.Value != (item.JailOutfit.FormKey != null)) return false;
-            if (checkMask.CrimeValues?.Overall.HasValue ?? false && checkMask.CrimeValues.Overall.Value != (item.CrimeValues != null)) return false;
-            if (checkMask.CrimeValues?.Specific != null && (item.CrimeValues == null || !item.CrimeValues.HasBeenSet(checkMask.CrimeValues.Specific))) return false;
-            if (checkMask.VendorBuySellList.HasValue && checkMask.VendorBuySellList.Value != (item.VendorBuySellList.FormKey != null)) return false;
-            if (checkMask.MerchantContainer.HasValue && checkMask.MerchantContainer.Value != (item.MerchantContainer.FormKey != null)) return false;
-            if (checkMask.VendorValues?.Overall.HasValue ?? false && checkMask.VendorValues.Overall.Value != (item.VendorValues != null)) return false;
-            if (checkMask.VendorValues?.Specific != null && (item.VendorValues == null || !item.VendorValues.HasBeenSet(checkMask.VendorValues.Specific))) return false;
-            if (checkMask.VendorLocation?.Overall.HasValue ?? false && checkMask.VendorLocation.Overall.Value != (item.VendorLocation != null)) return false;
-            if (checkMask.VendorLocation?.Specific != null && (item.VendorLocation == null || !item.VendorLocation.HasBeenSet(checkMask.VendorLocation.Specific))) return false;
-            if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != (item.Conditions != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IFactionGetter item,
-            Faction.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            var RelationsItem = item.Relations;
-            mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation.Mask<bool>?>>?>(true, RelationsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Flags = true;
-            mask.ExteriorJailMarker = (item.ExteriorJailMarker.FormKey != null);
-            mask.FollowerWaitMarker = (item.FollowerWaitMarker.FormKey != null);
-            mask.StolenGoodsContainer = (item.StolenGoodsContainer.FormKey != null);
-            mask.PlayerInventoryContainer = (item.PlayerInventoryContainer.FormKey != null);
-            mask.SharedCrimeFactionList = (item.SharedCrimeFactionList.FormKey != null);
-            mask.JailOutfit = (item.JailOutfit.FormKey != null);
-            var itemCrimeValues = item.CrimeValues;
-            mask.CrimeValues = new MaskItem<bool, CrimeValues.Mask<bool>?>(itemCrimeValues != null, itemCrimeValues?.GetHasBeenSetMask());
-            var RanksItem = item.Ranks;
-            mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank.Mask<bool>?>>?>(true, RanksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.VendorBuySellList = (item.VendorBuySellList.FormKey != null);
-            mask.MerchantContainer = (item.MerchantContainer.FormKey != null);
-            var itemVendorValues = item.VendorValues;
-            mask.VendorValues = new MaskItem<bool, VendorValues.Mask<bool>?>(itemVendorValues != null, itemVendorValues?.GetHasBeenSetMask());
-            var itemVendorLocation = item.VendorLocation;
-            mask.VendorLocation = new MaskItem<bool, LocationTargetRadius.Mask<bool>?>(itemVendorLocation != null, itemVendorLocation?.GetHasBeenSetMask());
-            if (item.Conditions.TryGet(out var ConditionsItem))
-            {
-                mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static Faction_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -2395,7 +2298,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return MerchantContainerKey;
             }
-            if (obj.VendorLocation is ILinkedFormKeyContainer VendorLocationlinkCont)
+            if (obj.VendorLocation is ILinkedFormKeyContainerGetter VendorLocationlinkCont)
             {
                 foreach (var item in VendorLocationlinkCont.LinkFormKeys)
                 {
@@ -2404,7 +2307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Conditions.TryGet(out var ConditionsItem))
             {
-                foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+                foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
                     .SelectMany((f) => f.LinkFormKeys))
                 {
                     yield return item;
@@ -3155,15 +3058,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

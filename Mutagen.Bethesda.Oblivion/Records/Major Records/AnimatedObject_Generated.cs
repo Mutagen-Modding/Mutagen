@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IAnimatedObjectInternal,
         ILoquiObjectSetter<AnimatedObject>,
-        IEquatable<AnimatedObject>,
-        IEqualsMask
+        IEquatable<AnimatedObject>
     {
         #region Ctor
         protected AnimatedObject()
@@ -399,7 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AnimatedObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AnimatedObjectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AnimatedObjectCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AnimatedObjectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AnimatedObjectCommon.Instance.RemapLinks(this, mapping);
         public AnimatedObject(FormKey formKey)
@@ -434,14 +433,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new AnimatedObject CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static AnimatedObject CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -468,8 +459,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAnimatedObjectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -488,7 +477,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAnimatedObject :
         IAnimatedObjectGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IAnimatedObjectInternal>
+        ILoquiObjectSetter<IAnimatedObjectInternal>,
+        ILinkedFormKeyContainer
     {
         new Model? Model { get; set; }
         new FormLinkNullable<IdleAnimation> IdleAnimation { get; set; }
@@ -504,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAnimatedObjectGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IAnimatedObjectGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => AnimatedObject_Registration.Instance;
@@ -556,24 +546,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IAnimatedObjectGetter item,
-            AnimatedObject.Mask<bool?> checkMask)
-        {
-            return ((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static AnimatedObject.Mask<bool> GetHasBeenSetMask(this IAnimatedObjectGetter item)
-        {
-            var ret = new AnimatedObject.Mask<bool>(false);
-            ((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -645,17 +617,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAnimatedObjectInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAnimatedObjectInternal item,
             MutagenFrame frame,
@@ -1027,30 +988,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(IdleAnimationItem, "IdleAnimation");
             }
-        }
-        
-        public bool HasBeenSet(
-            IAnimatedObjectGetter item,
-            AnimatedObject.Mask<bool?> checkMask)
-        {
-            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
-            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.IdleAnimation.HasValue && checkMask.IdleAnimation.Value != (item.IdleAnimation.FormKey != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IAnimatedObjectGetter item,
-            AnimatedObject.Mask<bool> mask)
-        {
-            var itemModel = item.Model;
-            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.IdleAnimation = (item.IdleAnimation.FormKey != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static AnimatedObject_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1532,15 +1469,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAnimatedObjectGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AnimatedObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AnimatedObjectCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AnimatedObjectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AnimatedObjectCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AnimatedObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AnimatedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

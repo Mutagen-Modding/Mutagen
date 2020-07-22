@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         Place,
         ICellInternal,
         ILoquiObjectSetter<Cell>,
-        IEquatable<Cell>,
-        IEqualsMask
+        IEquatable<Cell>
     {
         #region Ctor
         protected Cell()
@@ -1386,7 +1385,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
         public Cell(FormKey formKey)
@@ -1433,14 +1432,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Cell CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Cell CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1467,8 +1458,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1489,7 +1478,8 @@ namespace Mutagen.Bethesda.Oblivion
         IPlace,
         INamed,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<ICellInternal>
+        ILoquiObjectSetter<ICellInternal>,
+        ILinkedFormKeyContainer
     {
         new String? Name { get; set; }
         new Cell.Flag? Flags { get; set; }
@@ -1526,7 +1516,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ICellGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Cell_Registration.Instance;
@@ -1597,24 +1587,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this ICellGetter item,
-            Cell.Mask<bool?> checkMask)
-        {
-            return ((CellCommon)((ICellGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Cell.Mask<bool> GetHasBeenSetMask(this ICellGetter item)
-        {
-            var ret = new Cell.Mask<bool>(false);
-            ((CellCommon)((ICellGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1749,17 +1721,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ICellInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ICellInternal item,
             MutagenFrame frame,
@@ -2386,17 +2347,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.PersistentTimestamp = item.PersistentTimestamp == rhs.PersistentTimestamp;
             ret.Persistent = item.Persistent.CollectionEqualsHelper(
                 rhs.Persistent,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
+                (loqLhs, loqRhs) => (IMask<bool>)loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.TemporaryTimestamp = item.TemporaryTimestamp == rhs.TemporaryTimestamp;
             ret.Temporary = item.Temporary.CollectionEqualsHelper(
                 rhs.Temporary,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
+                (loqLhs, loqRhs) => (IMask<bool>)loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.VisibleWhenDistantTimestamp = item.VisibleWhenDistantTimestamp == rhs.VisibleWhenDistantTimestamp;
             ret.VisibleWhenDistant = item.VisibleWhenDistant.CollectionEqualsHelper(
                 rhs.VisibleWhenDistant,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
+                (loqLhs, loqRhs) => (IMask<bool>)loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -2603,68 +2564,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-        }
-        
-        public bool HasBeenSet(
-            ICellGetter item,
-            Cell.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.Grid.HasValue && checkMask.Grid.Value != (item.Grid != null)) return false;
-            if (checkMask.Lighting?.Overall.HasValue ?? false && checkMask.Lighting.Overall.Value != (item.Lighting != null)) return false;
-            if (checkMask.Lighting?.Specific != null && (item.Lighting == null || !item.Lighting.HasBeenSet(checkMask.Lighting.Specific))) return false;
-            if (checkMask.Regions?.Overall.HasValue ?? false && checkMask.Regions!.Overall.Value != (item.Regions != null)) return false;
-            if (checkMask.MusicType.HasValue && checkMask.MusicType.Value != (item.MusicType != null)) return false;
-            if (checkMask.WaterHeight.HasValue && checkMask.WaterHeight.Value != (item.WaterHeight != null)) return false;
-            if (checkMask.Climate.HasValue && checkMask.Climate.Value != (item.Climate.FormKey != null)) return false;
-            if (checkMask.Water.HasValue && checkMask.Water.Value != (item.Water.FormKey != null)) return false;
-            if (checkMask.Owner.HasValue && checkMask.Owner.Value != (item.Owner.FormKey != null)) return false;
-            if (checkMask.FactionRank.HasValue && checkMask.FactionRank.Value != (item.FactionRank != null)) return false;
-            if (checkMask.GlobalVariable.HasValue && checkMask.GlobalVariable.Value != (item.GlobalVariable.FormKey != null)) return false;
-            if (checkMask.PathGrid?.Overall.HasValue ?? false && checkMask.PathGrid.Overall.Value != (item.PathGrid != null)) return false;
-            if (checkMask.PathGrid?.Specific != null && (item.PathGrid == null || !item.PathGrid.HasBeenSet(checkMask.PathGrid.Specific))) return false;
-            if (checkMask.Landscape?.Overall.HasValue ?? false && checkMask.Landscape.Overall.Value != (item.Landscape != null)) return false;
-            if (checkMask.Landscape?.Specific != null && (item.Landscape == null || !item.Landscape.HasBeenSet(checkMask.Landscape.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ICellGetter item,
-            Cell.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            mask.Flags = (item.Flags != null);
-            mask.Grid = (item.Grid != null);
-            var itemLighting = item.Lighting;
-            mask.Lighting = new MaskItem<bool, CellLighting.Mask<bool>?>(itemLighting != null, itemLighting?.GetHasBeenSetMask());
-            mask.Regions = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Regions != null), default);
-            mask.MusicType = (item.MusicType != null);
-            mask.WaterHeight = (item.WaterHeight != null);
-            mask.Climate = (item.Climate.FormKey != null);
-            mask.Water = (item.Water.FormKey != null);
-            mask.Owner = (item.Owner.FormKey != null);
-            mask.FactionRank = (item.FactionRank != null);
-            mask.GlobalVariable = (item.GlobalVariable.FormKey != null);
-            var itemPathGrid = item.PathGrid;
-            mask.PathGrid = new MaskItem<bool, PathGrid.Mask<bool>?>(itemPathGrid != null, itemPathGrid?.GetHasBeenSetMask());
-            var itemLandscape = item.Landscape;
-            mask.Landscape = new MaskItem<bool, Landscape.Mask<bool>?>(itemLandscape != null, itemLandscape?.GetHasBeenSetMask());
-            mask.Timestamp = true;
-            mask.PersistentTimestamp = true;
-            var PersistentItem = item.Persistent;
-            mask.Persistent = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>?>(true, PersistentItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
-            mask.TemporaryTimestamp = true;
-            var TemporaryItem = item.Temporary;
-            mask.Temporary = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>?>(true, TemporaryItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
-            mask.VisibleWhenDistantTimestamp = true;
-            var VisibleWhenDistantItem = item.VisibleWhenDistant;
-            mask.VisibleWhenDistant = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, IMask<bool>?>>?>(true, VisibleWhenDistantItem.WithIndex().Select((i) => new MaskItemIndexed<bool, IMask<bool>?>(i.Index, true, i.Item.GetHasBeenSetIMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Cell_FieldIndex ConvertFieldIndex(Place_FieldIndex index)
@@ -2915,17 +2814,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
             }
-            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
             }
-            foreach (var item in obj.VisibleWhenDistant.WhereCastable<IPlacedGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.VisibleWhenDistant.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -3902,15 +3801,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

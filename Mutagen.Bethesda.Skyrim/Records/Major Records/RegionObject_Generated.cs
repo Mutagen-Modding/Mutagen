@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class RegionObject :
         IRegionObject,
         ILoquiObjectSetter<RegionObject>,
-        IEquatable<RegionObject>,
-        IEqualsMask
+        IEquatable<RegionObject>
     {
         #region Ctor
         public RegionObject()
@@ -850,7 +849,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => RegionObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionObjectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionObjectCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionObjectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionObjectCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -870,14 +869,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static RegionObject CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static RegionObject CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -904,8 +895,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionObjectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -923,7 +912,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IRegionObject :
         IRegionObjectGetter,
-        ILoquiObjectSetter<IRegionObject>
+        ILoquiObjectSetter<IRegionObject>,
+        ILinkedFormKeyContainer
     {
         new FormLink<IRegionTarget> Object { get; set; }
         new UInt16 ParentIndex { get; set; }
@@ -947,7 +937,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRegionObjectGetter :
         ILoquiObject,
         ILoquiObject<IRegionObjectGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1020,24 +1010,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IRegionObjectGetter item,
-            RegionObject.Mask<bool?> checkMask)
-        {
-            return ((RegionObjectCommon)((IRegionObjectGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static RegionObject.Mask<bool> GetHasBeenSetMask(this IRegionObjectGetter item)
-        {
-            var ret = new RegionObject.Mask<bool>(false);
-            ((RegionObjectCommon)((IRegionObjectGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -1132,17 +1104,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IRegionObject item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IRegionObject item,
             MutagenFrame frame,
@@ -1734,36 +1695,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IRegionObjectGetter item,
-            RegionObject.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IRegionObjectGetter item,
-            RegionObject.Mask<bool> mask)
-        {
-            mask.Object = true;
-            mask.ParentIndex = true;
-            mask.Unknown = true;
-            mask.Density = true;
-            mask.Clustering = true;
-            mask.MinSlope = true;
-            mask.MaxSlope = true;
-            mask.Flags = true;
-            mask.RadiusWrtPercent = true;
-            mask.Radius = true;
-            mask.MinHeight = true;
-            mask.MaxHeight = true;
-            mask.Sink = true;
-            mask.SinkVariance = true;
-            mask.SizeVariance = true;
-            mask.AngleVariance = true;
-            mask.Unknown2 = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IRegionObjectGetter? lhs,
@@ -2101,12 +2032,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IRegionObjectGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RegionObjectBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -2138,15 +2070,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionObjectGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => RegionObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionObjectCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionObjectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionObjectCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RegionObjectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

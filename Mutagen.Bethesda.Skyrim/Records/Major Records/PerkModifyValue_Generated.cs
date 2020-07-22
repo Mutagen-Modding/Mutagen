@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         APerkEntryPointEffect,
         IPerkModifyValue,
         ILoquiObjectSetter<PerkModifyValue>,
-        IEquatable<PerkModifyValue>,
-        IEqualsMask
+        IEquatable<PerkModifyValue>
     {
         #region Ctor
         public PerkModifyValue()
@@ -394,14 +393,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new PerkModifyValue CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static PerkModifyValue CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -428,8 +419,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkModifyValueGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -510,24 +499,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IPerkModifyValueGetter item,
-            PerkModifyValue.Mask<bool?> checkMask)
-        {
-            return ((PerkModifyValueCommon)((IPerkModifyValueGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static PerkModifyValue.Mask<bool> GetHasBeenSetMask(this IPerkModifyValueGetter item)
-        {
-            var ret = new PerkModifyValue.Mask<bool>(false);
-            ((PerkModifyValueCommon)((IPerkModifyValueGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IPerkModifyValueGetter item,
             IPerkModifyValueGetter rhs)
@@ -597,17 +568,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPerkModifyValue item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPerkModifyValue item,
             MutagenFrame frame,
@@ -973,26 +933,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Value, "Value");
             }
-        }
-        
-        public bool HasBeenSet(
-            IPerkModifyValueGetter item,
-            PerkModifyValue.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IPerkModifyValueGetter item,
-            PerkModifyValue.Mask<bool> mask)
-        {
-            mask.Modification = true;
-            mask.Value = true;
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static PerkModifyValue_FieldIndex ConvertFieldIndex(APerkEntryPointEffect_FieldIndex index)
@@ -1387,8 +1327,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPerkModifyValueGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkModifyValueBinaryWriteTranslation.Instance;

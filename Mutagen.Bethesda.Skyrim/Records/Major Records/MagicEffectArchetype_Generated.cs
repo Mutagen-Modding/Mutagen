@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class MagicEffectArchetype :
         IMagicEffectArchetypeInternal,
         ILoquiObjectSetter<MagicEffectArchetype>,
-        IEquatable<MagicEffectArchetype>,
-        IEqualsMask
+        IEquatable<MagicEffectArchetype>
     {
         #region Type
         public MagicEffectArchetype.TypeEnum Type { get; set; } = default;
@@ -409,14 +408,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static MagicEffectArchetype CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static MagicEffectArchetype CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -443,8 +434,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectArchetypeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -536,24 +525,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IMagicEffectArchetypeGetter item,
-            MagicEffectArchetype.Mask<bool?> checkMask)
-        {
-            return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static MagicEffectArchetype.Mask<bool> GetHasBeenSetMask(this IMagicEffectArchetypeGetter item)
-        {
-            var ret = new MagicEffectArchetype.Mask<bool>(false);
-            ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -648,17 +619,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IMagicEffectArchetypeInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IMagicEffectArchetypeInternal item,
             MutagenFrame frame,
@@ -997,22 +957,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IMagicEffectArchetypeGetter item,
-            MagicEffectArchetype.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IMagicEffectArchetypeGetter item,
-            MagicEffectArchetype.Mask<bool> mask)
-        {
-            mask.Type = true;
-            mask.AssociationKey = true;
-            mask.ActorValue = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IMagicEffectArchetypeGetter? lhs,
@@ -1221,12 +1165,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IMagicEffectArchetypeGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((MagicEffectArchetypeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1258,8 +1203,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectArchetypeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => MagicEffectArchetypeBinaryWriteTranslation.Instance;

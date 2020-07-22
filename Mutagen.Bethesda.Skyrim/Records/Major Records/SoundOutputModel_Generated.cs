@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         ISoundOutputModelInternal,
         ILoquiObjectSetter<SoundOutputModel>,
-        IEquatable<SoundOutputModel>,
-        IEqualsMask
+        IEquatable<SoundOutputModel>
     {
         #region Ctor
         protected SoundOutputModel()
@@ -641,14 +640,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new SoundOutputModel CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static SoundOutputModel CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -675,8 +666,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundOutputModelGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -774,24 +763,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ISoundOutputModelGetter item,
-            SoundOutputModel.Mask<bool?> checkMask)
-        {
-            return ((SoundOutputModelCommon)((ISoundOutputModelGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SoundOutputModel.Mask<bool> GetHasBeenSetMask(this ISoundOutputModelGetter item)
-        {
-            var ret = new SoundOutputModel.Mask<bool>(false);
-            ((SoundOutputModelCommon)((ISoundOutputModelGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ISoundOutputModelGetter item,
             ISoundOutputModelGetter rhs)
@@ -861,17 +832,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISoundOutputModelInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISoundOutputModelInternal item,
             MutagenFrame frame,
@@ -1347,44 +1307,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 AttenuationItem?.ToString(fg, "Attenuation");
             }
-        }
-        
-        public bool HasBeenSet(
-            ISoundOutputModelGetter item,
-            SoundOutputModel.Mask<bool?> checkMask)
-        {
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.FNAM.HasValue && checkMask.FNAM.Value != (item.FNAM != null)) return false;
-            if (checkMask.Type.HasValue && checkMask.Type.Value != (item.Type != null)) return false;
-            if (checkMask.CNAM.HasValue && checkMask.CNAM.Value != (item.CNAM != null)) return false;
-            if (checkMask.SNAM.HasValue && checkMask.SNAM.Value != (item.SNAM != null)) return false;
-            if (checkMask.OutputChannels?.Overall.HasValue ?? false && checkMask.OutputChannels.Overall.Value != (item.OutputChannels != null)) return false;
-            if (checkMask.OutputChannels?.Specific != null && (item.OutputChannels == null || !item.OutputChannels.HasBeenSet(checkMask.OutputChannels.Specific))) return false;
-            if (checkMask.Attenuation?.Overall.HasValue ?? false && checkMask.Attenuation.Overall.Value != (item.Attenuation != null)) return false;
-            if (checkMask.Attenuation?.Specific != null && (item.Attenuation == null || !item.Attenuation.HasBeenSet(checkMask.Attenuation.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ISoundOutputModelGetter item,
-            SoundOutputModel.Mask<bool> mask)
-        {
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, SoundOutputData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            mask.FNAM = (item.FNAM != null);
-            mask.Type = (item.Type != null);
-            mask.CNAM = (item.CNAM != null);
-            mask.SNAM = (item.SNAM != null);
-            var itemOutputChannels = item.OutputChannels;
-            mask.OutputChannels = new MaskItem<bool, SoundOutputChannels.Mask<bool>?>(itemOutputChannels != null, itemOutputChannels?.GetHasBeenSetMask());
-            var itemAttenuation = item.Attenuation;
-            mask.Attenuation = new MaskItem<bool, SoundOutputAttenuation.Mask<bool>?>(itemAttenuation != null, itemAttenuation?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static SoundOutputModel_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
@@ -2025,8 +1947,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundOutputModelGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundOutputModelBinaryWriteTranslation.Instance;

@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Skyrim
 
                     worldGroupWriter.Position = 4;
                     worldGroupWriter.Write((uint)(subStreams.NotNull().Select(s => s.Length).Sum()));
-                    streams[worldspaceCounter + 1] = new CompositeReadStream(worldTrib.And(subStreams), resetPositions: true);
+                    streams[worldspaceCounter + 1] = new CompositeReadStream(worldTrib.AsEnumerable().And(subStreams), resetPositions: true);
                 });
                 UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);

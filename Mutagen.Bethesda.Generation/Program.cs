@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "artial void GetCustomRecordCount(Action<int> setter);";
+            string testString = "public bool HasBeenSet(";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Generation
             LoquiGenerator gen = new LoquiGenerator(typical: false)
             {
                 NotifyingDefault = NotifyingType.None,
-                HasBeenSetDefault = true,
+                NullableDefault = true,
                 ToStringDefault = false,
             };
             gen.AddTypicalTypeAssociations();

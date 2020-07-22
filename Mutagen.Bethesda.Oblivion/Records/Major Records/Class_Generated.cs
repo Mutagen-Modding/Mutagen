@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IClassInternal,
         ILoquiObjectSetter<Class>,
-        IEquatable<Class>,
-        IEqualsMask
+        IEquatable<Class>
     {
         #region Ctor
         protected Class()
@@ -494,14 +493,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new Class CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static Class CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -528,8 +519,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -623,24 +612,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IClassGetter item,
-            Class.Mask<bool?> checkMask)
-        {
-            return ((ClassCommon)((IClassGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Class.Mask<bool> GetHasBeenSetMask(this IClassGetter item)
-        {
-            var ret = new Class.Mask<bool>(false);
-            ((ClassCommon)((IClassGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IClassGetter item,
             IClassGetter rhs)
@@ -710,17 +681,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IClassInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IClassInternal item,
             MutagenFrame frame,
@@ -1130,34 +1090,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 DataItem?.ToString(fg, "Data");
             }
-        }
-        
-        public bool HasBeenSet(
-            IClassGetter item,
-            Class.Mask<bool?> checkMask)
-        {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IClassGetter item,
-            Class.Mask<bool> mask)
-        {
-            mask.Name = (item.Name != null);
-            mask.Description = (item.Description != null);
-            mask.Icon = (item.Icon != null);
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, ClassData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static Class_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
@@ -1678,8 +1610,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClassBinaryWriteTranslation.Instance;

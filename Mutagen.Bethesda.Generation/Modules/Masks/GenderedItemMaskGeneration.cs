@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
             GenderedType gendered = field as GenderedType;
             if (gendered.SubTypeGeneration is LoquiType loqui)
             {
-                if (gendered.ItemHasBeenSet)
+                if (gendered.ItemNullable)
                 {
                     return $"MaskItem<{typeStr}, {loqui.GetMaskString(typeStr)}?>?";
                 }
@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Generation
             if (!field.IntegrateField) return;
             GenderedType gendered = field as GenderedType;
             string maskStr;
-            if (field.HasBeenSet || gendered.SubTypeGeneration is LoquiType)
+            if (field.Nullable || gendered.SubTypeGeneration is LoquiType)
             {
                 maskStr = $"MaskItem<{typeStr}, GenderedItem<{SubMaskString(field, typeStr)}>?>?";
             }
@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Generation
             if (!field.IntegrateField) return;
             GenderedType gendered = field as GenderedType;
             var isLoqui = gendered.SubTypeGeneration is LoquiType;
-            if (field.HasBeenSet || isLoqui)
+            if (field.Nullable || isLoqui)
             {
                 using (var args = new ArgsWrapper(fg,
                     $"if (!{nameof(GenderedItem)}.{(isLoqui ? nameof(GenderedItem.AllMask) : nameof(GenderedItem.All))}",
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Generation
             if (!field.IntegrateField) return;
             GenderedType gendered = field as GenderedType;
             var isLoqui = gendered.SubTypeGeneration is LoquiType;
-            if (field.HasBeenSet || isLoqui)
+            if (field.Nullable || isLoqui)
             {
                 using (var args = new ArgsWrapper(fg,
                     $"if ({nameof(GenderedItem)}.{(isLoqui ? nameof(GenderedItem.AnyMask) : nameof(GenderedItem.Any))}",
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Generation
             if (!field.IntegrateField) return;
             var gendered = field as GenderedType;
             var loqui = gendered.SubTypeGeneration as LoquiType;
-            if (field.HasBeenSet || loqui != null)
+            if (field.Nullable || loqui != null)
             {
                 using (var args = new ArgsWrapper(fg,
                     $"{retAccessor} = GenderedItem.TranslateHelper"))
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (!field.IntegrateField) return;
             var gendered = field as GenderedType;
-            if (field.HasBeenSet || gendered.SubTypeGeneration is LoquiType)
+            if (field.Nullable || gendered.SubTypeGeneration is LoquiType)
             {
                 fg.AppendLine($"this.{field.Name} = new MaskItem<{MaskModule.GenItem}, GenderedItem<{SubMaskString(field, typeStr)}>?>({valueStr}, default);");
             }
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Generation
             bool doIf;
             using (var args = new IfWrapper(fg, ANDs: true))
             {
-                if (field.HasBeenSet)
+                if (field.Nullable)
                 {
                     args.Add($"{accessor} != null");
                 }
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override string GenerateBoolMaskCheck(TypeGeneration field, string boolMaskAccessor)
         {
-            if (field.HasBeenSet)
+            if (field.Nullable)
             {
                 return $"{boolMaskAccessor}?.{field.Name}?.Overall ?? true";
             }
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForTranslationMaskSet(FileGeneration fg, TypeGeneration field, Accessor accessor, string onAccessor)
         {
-            fg.AppendLine($"{accessor.DirectAccess} = new {this.GetTranslationMaskTypeStr(field)}({onAccessor}, default);");
+            fg.AppendLine($"{accessor} = new {this.GetTranslationMaskTypeStr(field)}({onAccessor}, default);");
         }
 
         public override string GenerateForTranslationMaskCrystalization(TypeGeneration field)

@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public abstract partial class AScriptReference :
         IAScriptReference,
         ILoquiObjectSetter<AScriptReference>,
-        IEquatable<AScriptReference>,
-        IEqualsMask
+        IEquatable<AScriptReference>
     {
         #region Ctor
         public AScriptReference()
@@ -307,7 +306,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual IEnumerable<FormKey> LinkFormKeys => AScriptReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AScriptReferenceCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AScriptReferenceCommon.Instance.GetLinkFormKeys(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AScriptReferenceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AScriptReferenceCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -329,8 +328,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAScriptReferenceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -348,14 +345,15 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IAScriptReference :
         IAScriptReferenceGetter,
-        ILoquiObjectSetter<IAScriptReference>
+        ILoquiObjectSetter<IAScriptReference>,
+        ILinkedFormKeyContainer
     {
     }
 
     public partial interface IAScriptReferenceGetter :
         ILoquiObject,
         ILoquiObject<IAScriptReferenceGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -411,24 +409,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IAScriptReferenceGetter item,
-            AScriptReference.Mask<bool?> checkMask)
-        {
-            return ((AScriptReferenceCommon)((IAScriptReferenceGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static AScriptReference.Mask<bool> GetHasBeenSetMask(this IAScriptReferenceGetter item)
-        {
-            var ret = new AScriptReference.Mask<bool>(false);
-            ((AScriptReferenceCommon)((IAScriptReferenceGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -523,17 +503,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAScriptReference item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAScriptReference item,
             MutagenFrame frame,
@@ -821,19 +790,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
         
-        public bool HasBeenSet(
-            IAScriptReferenceGetter item,
-            AScriptReference.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IAScriptReferenceGetter item,
-            AScriptReference.Mask<bool> mask)
-        {
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IAScriptReferenceGetter? lhs,
@@ -996,12 +952,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IAScriptReferenceGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AScriptReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1033,15 +990,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAScriptReferenceGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual IEnumerable<FormKey> LinkFormKeys => AScriptReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AScriptReferenceCommon.Instance.GetLinkFormKeys(this);
-        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AScriptReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AScriptReferenceCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AScriptReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => AScriptReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

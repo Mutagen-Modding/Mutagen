@@ -2,9 +2,9 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Model" objType="Subrecord" GUID="b989dfe1-feb4-4492-9a94-897f6be0c20a" ID="20">
     <Fields>
-      <String name="File" recordType="MODL" hasBeenSet="False" />
-      <Float name="BoundRadius" recordType="MODB" hasBeenSet="False" />
-      <ByteArray name="Hashes" recordType="MODT" hasBeenSet="True" />
+      <String name="File" recordType="MODL" nullable="False" />
+      <Float name="BoundRadius" recordType="MODB" nullable="False" />
+      <ByteArray name="Hashes" recordType="MODT" nullable="True" />
     </Fields>
   </Object>
 </Loqui>

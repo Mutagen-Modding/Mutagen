@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         Condition,
         IConditionGlobal,
         ILoquiObjectSetter<ConditionGlobal>,
-        IEquatable<ConditionGlobal>,
-        IEqualsMask
+        IEquatable<ConditionGlobal>
     {
         #region Ctor
         public ConditionGlobal()
@@ -383,7 +382,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ConditionGlobalCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ConditionGlobalCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ConditionGlobalCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionGlobalCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionGlobalCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -401,14 +400,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new ConditionGlobal CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static ConditionGlobal CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -435,8 +426,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionGlobalGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -455,7 +444,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IConditionGlobal :
         IConditionGlobalGetter,
         ICondition,
-        ILoquiObjectSetter<IConditionGlobal>
+        ILoquiObjectSetter<IConditionGlobal>,
+        ILinkedFormKeyContainer
     {
         new FormLink<Global> ComparisonValue { get; set; }
         new ConditionData Data { get; set; }
@@ -464,7 +454,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IConditionGlobalGetter :
         IConditionGetter,
         ILoquiObject<IConditionGlobalGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ConditionGlobal_Registration.Instance;
@@ -516,24 +506,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IConditionGlobalGetter item,
-            ConditionGlobal.Mask<bool?> checkMask)
-        {
-            return ((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static ConditionGlobal.Mask<bool> GetHasBeenSetMask(this IConditionGlobalGetter item)
-        {
-            var ret = new ConditionGlobal.Mask<bool>(false);
-            ((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -605,17 +577,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IConditionGlobal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IConditionGlobal item,
             MutagenFrame frame,
@@ -970,26 +931,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IConditionGlobalGetter item,
-            ConditionGlobal.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IConditionGlobalGetter item,
-            ConditionGlobal.Mask<bool> mask)
-        {
-            mask.ComparisonValue = true;
-            mask.Data = new MaskItem<bool, ConditionData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static ConditionGlobal_FieldIndex ConvertFieldIndex(Condition_FieldIndex index)
         {
             switch (index)
@@ -1057,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             yield return obj.ComparisonValue.FormKey;
-            if (obj.Data is ILinkedFormKeyContainer DatalinkCont)
+            if (obj.Data is ILinkedFormKeyContainerGetter DatalinkCont)
             {
                 foreach (var item in DatalinkCont.LinkFormKeys)
                 {
@@ -1353,15 +1294,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionGlobalGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ConditionGlobalCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ConditionGlobalCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionGlobalCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionGlobalCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ConditionGlobalCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ConditionGlobalBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

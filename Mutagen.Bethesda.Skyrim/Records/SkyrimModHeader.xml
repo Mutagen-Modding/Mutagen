@@ -7,12 +7,12 @@
       <Int32 name="Version" />
       <UInt16 name="FormVersion" />
       <UInt16 name="Version2" />
-      <RefDirect name="Stats" refName="ModStats" hasBeenSet="False" />
+      <RefDirect name="Stats" refName="ModStats" nullable="False" />
       <ByteArray name="TypeOffsets" recordType="OFST" />
       <ByteArray name="Deleted" recordType="DELE" />
       <String name="Author" recordType="CNAM" maxLength="512" />
       <String name="Description" recordType="SNAM" maxLength="512" />
-      <RefList name="MasterReferences" refName="Bethesda.MasterReference" hasBeenSet="False" binary="Custom" binaryOverlay="Normal" />
+      <RefList name="MasterReferences" refName="Bethesda.MasterReference" nullable="False" binary="Custom" binaryOverlay="Normal" />
       <List name="OverriddenForms" recordType="ONAM">
         <FormLink refName="SkyrimMajorRecord" />
       </List>

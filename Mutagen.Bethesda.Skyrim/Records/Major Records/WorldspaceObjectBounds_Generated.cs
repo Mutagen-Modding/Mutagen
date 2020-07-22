@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WorldspaceObjectBounds :
         IWorldspaceObjectBounds,
         ILoquiObjectSetter<WorldspaceObjectBounds>,
-        IEquatable<WorldspaceObjectBounds>,
-        IEqualsMask
+        IEquatable<WorldspaceObjectBounds>
     {
         #region Ctor
         public WorldspaceObjectBounds()
@@ -386,14 +385,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static WorldspaceObjectBounds CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static WorldspaceObjectBounds CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -420,8 +411,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceObjectBoundsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -505,24 +494,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IWorldspaceObjectBoundsGetter item,
-            WorldspaceObjectBounds.Mask<bool?> checkMask)
-        {
-            return ((WorldspaceObjectBoundsCommon)((IWorldspaceObjectBoundsGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static WorldspaceObjectBounds.Mask<bool> GetHasBeenSetMask(this IWorldspaceObjectBoundsGetter item)
-        {
-            var ret = new WorldspaceObjectBounds.Mask<bool>(false);
-            ((WorldspaceObjectBoundsCommon)((IWorldspaceObjectBoundsGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -617,17 +588,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWorldspaceObjectBounds item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWorldspaceObjectBounds item,
             MutagenFrame frame,
@@ -962,21 +922,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IWorldspaceObjectBoundsGetter item,
-            WorldspaceObjectBounds.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IWorldspaceObjectBoundsGetter item,
-            WorldspaceObjectBounds.Mask<bool> mask)
-        {
-            mask.Min = true;
-            mask.Max = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IWorldspaceObjectBoundsGetter? lhs,
@@ -1241,12 +1186,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IWorldspaceObjectBoundsGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WorldspaceObjectBoundsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1278,8 +1224,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceObjectBoundsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WorldspaceObjectBoundsBinaryWriteTranslation.Instance;

@@ -102,13 +102,13 @@
     <Fields>
       <FormLink name="Faction" refName="Faction" />
       <UInt8 name="Rank" />
-      <ByteArray name="Unused" byteLength="3" hasBeenSet="False" />
+      <ByteArray name="Unused" byteLength="3" nullable="False" />
     </Fields>
   </Object>
   <Object name="ItemEntry" objType="Subrecord" recordType="CNTO" GUID="c4622b63-e996-4d1d-b707-e75cba9c197d" ID="86">
     <Fields>
       <FormLink name="Item" refName="AItem" />
-      <Int32 name="Count" hasBeenSet="True" />
+      <Int32 name="Count" nullable="True" />
     </Fields>
   </Object>
 </Loqui>

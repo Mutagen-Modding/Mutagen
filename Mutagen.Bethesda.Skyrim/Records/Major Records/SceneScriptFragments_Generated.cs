@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Skyrim
         ScriptFragments,
         ISceneScriptFragments,
         ILoquiObjectSetter<SceneScriptFragments>,
-        IEquatable<SceneScriptFragments>,
-        IEqualsMask
+        IEquatable<SceneScriptFragments>
     {
         #region Ctor
         public SceneScriptFragments()
@@ -442,14 +441,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new SceneScriptFragments CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static SceneScriptFragments CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -476,8 +467,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISceneScriptFragmentsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -556,24 +545,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this ISceneScriptFragmentsGetter item,
-            SceneScriptFragments.Mask<bool?> checkMask)
-        {
-            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static SceneScriptFragments.Mask<bool> GetHasBeenSetMask(this ISceneScriptFragmentsGetter item)
-        {
-            var ret = new SceneScriptFragments.Mask<bool>(false);
-            ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this ISceneScriptFragmentsGetter item,
             ISceneScriptFragmentsGetter rhs)
@@ -643,17 +614,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this ISceneScriptFragments item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this ISceneScriptFragments item,
             MutagenFrame frame,
@@ -1000,26 +960,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ISceneScriptFragmentsGetter item,
-            SceneScriptFragments.Mask<bool?> checkMask)
-        {
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            ISceneScriptFragmentsGetter item,
-            SceneScriptFragments.Mask<bool> mask)
-        {
-            var PhaseFragmentsItem = item.PhaseFragments;
-            mask.PhaseFragments = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ScenePhaseFragment.Mask<bool>?>>?>(true, PhaseFragmentsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ScenePhaseFragment.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
-        }
-        
         public static SceneScriptFragments_FieldIndex ConvertFieldIndex(ScriptFragments_FieldIndex index)
         {
             switch (index)
@@ -1326,8 +1266,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISceneScriptFragmentsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SceneScriptFragmentsBinaryWriteTranslation.Instance;

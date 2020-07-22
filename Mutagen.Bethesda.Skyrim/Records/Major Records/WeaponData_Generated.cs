@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class WeaponData :
         IWeaponData,
         ILoquiObjectSetter<WeaponData>,
-        IEquatable<WeaponData>,
-        IEqualsMask
+        IEquatable<WeaponData>
     {
         #region Ctor
         public WeaponData()
@@ -1154,14 +1153,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static WeaponData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static WeaponData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1188,8 +1179,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeaponDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1323,24 +1312,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IWeaponDataGetter item,
-            WeaponData.Mask<bool?> checkMask)
-        {
-            return ((WeaponDataCommon)((IWeaponDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static WeaponData.Mask<bool> GetHasBeenSetMask(this IWeaponDataGetter item)
-        {
-            var ret = new WeaponData.Mask<bool>(false);
-            ((WeaponDataCommon)((IWeaponDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IWeaponDataGetter item,
             IWeaponDataGetter rhs)
@@ -1433,17 +1404,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWeaponData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWeaponData item,
             MutagenFrame frame,
@@ -2202,46 +2162,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IWeaponDataGetter item,
-            WeaponData.Mask<bool?> checkMask)
-        {
-            if (checkMask.Skill.HasValue && checkMask.Skill.Value != (item.Skill != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IWeaponDataGetter item,
-            WeaponData.Mask<bool> mask)
-        {
-            mask.AnimationType = true;
-            mask.Unused = true;
-            mask.Speed = true;
-            mask.Reach = true;
-            mask.Flags = true;
-            mask.Unused2 = true;
-            mask.SightFOV = true;
-            mask.Unknown = true;
-            mask.BaseVATStoHitChance = true;
-            mask.AttackAnimation = true;
-            mask.NumProjectiles = true;
-            mask.EmbeddedWeaponAV = true;
-            mask.RangeMin = true;
-            mask.RangeMax = true;
-            mask.OnHit = true;
-            mask.AnimationAttackMult = true;
-            mask.Unknown2 = true;
-            mask.RumbleLeftMotorStrength = true;
-            mask.RumbleRightMotorStrength = true;
-            mask.RumbleDuration = true;
-            mask.Unknown3 = true;
-            mask.Skill = (item.Skill != null);
-            mask.Unknown4 = true;
-            mask.Resist = true;
-            mask.Unknown5 = true;
-            mask.Stagger = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IWeaponDataGetter? lhs,
@@ -2720,12 +2640,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IWeaponDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WeaponDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -2757,8 +2678,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeaponDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeaponDataBinaryWriteTranslation.Instance;

@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Attack :
         IAttack,
         ILoquiObjectSetter<Attack>,
-        IEquatable<Attack>,
-        IEqualsMask
+        IEquatable<Attack>
     {
         #region Ctor
         public Attack()
@@ -394,7 +393,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => AttackCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AttackCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AttackCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AttackCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AttackCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -414,14 +413,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static Attack CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static Attack CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -448,8 +439,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAttackGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -467,7 +456,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IAttack :
         IAttackGetter,
-        ILoquiObjectSetter<IAttack>
+        ILoquiObjectSetter<IAttack>,
+        ILinkedFormKeyContainer
     {
         new AttackData? AttackData { get; set; }
         new String? AttackEvent { get; set; }
@@ -476,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAttackGetter :
         ILoquiObject,
         ILoquiObject<IAttackGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -534,24 +524,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IAttackGetter item,
-            Attack.Mask<bool?> checkMask)
-        {
-            return ((AttackCommon)((IAttackGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Attack.Mask<bool> GetHasBeenSetMask(this IAttackGetter item)
-        {
-            var ret = new Attack.Mask<bool>(false);
-            ((AttackCommon)((IAttackGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -646,17 +618,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IAttack item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IAttack item,
             MutagenFrame frame,
@@ -998,25 +959,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IAttackGetter item,
-            Attack.Mask<bool?> checkMask)
-        {
-            if (checkMask.AttackData?.Overall.HasValue ?? false && checkMask.AttackData.Overall.Value != (item.AttackData != null)) return false;
-            if (checkMask.AttackData?.Specific != null && (item.AttackData == null || !item.AttackData.HasBeenSet(checkMask.AttackData.Specific))) return false;
-            if (checkMask.AttackEvent.HasValue && checkMask.AttackEvent.Value != (item.AttackEvent != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IAttackGetter item,
-            Attack.Mask<bool> mask)
-        {
-            var itemAttackData = item.AttackData;
-            mask.AttackData = new MaskItem<bool, AttackData.Mask<bool>?>(itemAttackData != null, itemAttackData?.GetHasBeenSetMask());
-            mask.AttackEvent = (item.AttackEvent != null);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IAttackGetter? lhs,
@@ -1287,12 +1229,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IAttackGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((AttackBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1324,15 +1267,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAttackGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => AttackCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AttackCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AttackCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AttackCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AttackCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AttackBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

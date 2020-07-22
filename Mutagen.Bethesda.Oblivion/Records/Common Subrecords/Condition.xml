@@ -5,7 +5,7 @@
       <Enum name="CompareOperator" enumName="CompareOperator" binary="NoGeneration" />
       <Enum name="Flags" enumName="Condition.Flag" binary="NoGeneration" />
       <CustomLogic name="InitialParser" byteLength="1" />
-      <ByteArray name="Fluff" byteLength="3" hasBeenSet="False" />
+      <ByteArray name="Fluff" byteLength="3" nullable="False" />
       <Float name="ComparisonValue" />
       <Enum name="Function" enumName="Function" byteLength="4" />
       <Int32 name="FirstParameter" />

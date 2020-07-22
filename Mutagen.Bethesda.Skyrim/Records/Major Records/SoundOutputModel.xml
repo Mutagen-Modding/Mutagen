@@ -42,8 +42,8 @@
       <Int32 name="Unknown" />
       <Float name="MinDistance" />
       <Float name="MaxDistance" />
-      <ByteArray name="Curve" byteLength="5" hasBeenSet="False" />
-      <ByteArray name="Unknown2" byteLength="3" hasBeenSet="False" />
+      <ByteArray name="Curve" byteLength="5" nullable="False" />
+      <ByteArray name="Unknown2" byteLength="3" nullable="False" />
     </Fields>
   </Object>
 </Loqui>

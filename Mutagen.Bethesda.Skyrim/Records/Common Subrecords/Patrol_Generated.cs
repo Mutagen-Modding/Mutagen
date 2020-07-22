@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Patrol :
         IPatrol,
         ILoquiObjectSetter<Patrol>,
-        IEquatable<Patrol>,
-        IEqualsMask
+        IEquatable<Patrol>
     {
         #region Ctor
         public Patrol()
@@ -575,7 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => PatrolCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PatrolCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PatrolCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PatrolCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PatrolCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -595,14 +594,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static Patrol CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static Patrol CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -629,8 +620,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPatrolGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -648,7 +637,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IPatrol :
         IPatrolGetter,
-        ILoquiObjectSetter<IPatrol>
+        ILoquiObjectSetter<IPatrol>,
+        ILinkedFormKeyContainer
     {
         new Single IdleTime { get; set; }
         new FormLink<IdleAnimation> Idle { get; set; }
@@ -660,7 +650,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPatrolGetter :
         ILoquiObject,
         ILoquiObject<IPatrolGetter>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -721,24 +711,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IPatrolGetter item,
-            Patrol.Mask<bool?> checkMask)
-        {
-            return ((PatrolCommon)((IPatrolGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static Patrol.Mask<bool> GetHasBeenSetMask(this IPatrolGetter item)
-        {
-            var ret = new Patrol.Mask<bool>(false);
-            ((PatrolCommon)((IPatrolGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -833,17 +805,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IPatrol item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IPatrol item,
             MutagenFrame frame,
@@ -1242,27 +1203,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IPatrolGetter item,
-            Patrol.Mask<bool?> checkMask)
-        {
-            if (checkMask.SCHR.HasValue && checkMask.SCHR.Value != (item.SCHR != null)) return false;
-            if (checkMask.SCTX.HasValue && checkMask.SCTX.Value != (item.SCTX != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IPatrolGetter item,
-            Patrol.Mask<bool> mask)
-        {
-            mask.IdleTime = true;
-            mask.Idle = true;
-            mask.SCHR = (item.SCHR != null);
-            mask.SCTX = (item.SCTX != null);
-            var TopicsItem = item.Topics;
-            mask.Topics = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ATopicReference.Mask<bool>?>>?>(true, TopicsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ATopicReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IPatrolGetter? lhs,
@@ -1307,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<FormKey> GetLinkFormKeys(IPatrolGetter obj)
         {
             yield return obj.Idle.FormKey;
-            foreach (var item in obj.Topics.WhereCastable<IATopicReferenceGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.Topics.WhereCastable<IATopicReferenceGetter, ILinkedFormKeyContainerGetter> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -1632,12 +1572,13 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public static void WriteToBinary(
             this IPatrolGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((PatrolBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1669,15 +1610,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPatrolGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => PatrolCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PatrolCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PatrolCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PatrolCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PatrolCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PatrolBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

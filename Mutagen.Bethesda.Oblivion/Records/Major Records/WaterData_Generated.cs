@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class WaterData :
         IWaterData,
         ILoquiObjectSetter<WaterData>,
-        IEquatable<WaterData>,
-        IEqualsMask
+        IEquatable<WaterData>
     {
         #region Ctor
         public WaterData()
@@ -1174,14 +1173,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static WaterData CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static WaterData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1208,8 +1199,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWaterDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1345,24 +1334,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IWaterDataGetter item,
-            WaterData.Mask<bool?> checkMask)
-        {
-            return ((WaterDataCommon)((IWaterDataGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static WaterData.Mask<bool> GetHasBeenSetMask(this IWaterDataGetter item)
-        {
-            var ret = new WaterData.Mask<bool>(false);
-            ((WaterDataCommon)((IWaterDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IWaterDataGetter item,
             IWaterDataGetter rhs)
@@ -1455,17 +1426,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IWaterData item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IWaterData item,
             MutagenFrame frame,
@@ -2241,46 +2201,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IWaterDataGetter item,
-            WaterData.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IWaterDataGetter item,
-            WaterData.Mask<bool> mask)
-        {
-            mask.Versioning = true;
-            mask.WindVelocity = true;
-            mask.WindDirection = true;
-            mask.WaveAmplitude = true;
-            mask.WaveFrequency = true;
-            mask.SunPower = true;
-            mask.ReflectivityAmount = true;
-            mask.FresnelAmount = true;
-            mask.ScrollXSpeed = true;
-            mask.ScrollYSpeed = true;
-            mask.FogDistanceNearPlane = true;
-            mask.FogDistanceFarPlane = true;
-            mask.ShallowColor = true;
-            mask.DeepColor = true;
-            mask.ReflectionColor = true;
-            mask.TextureBlend = true;
-            mask.RainSimulatorForce = true;
-            mask.RainSimulatorVelocity = true;
-            mask.RainSimulatorFalloff = true;
-            mask.RainSimulatorDampner = true;
-            mask.RainSimulatorStartingSize = true;
-            mask.DisplacementSimulatorForce = true;
-            mask.DisplacementSimulatorVelocity = true;
-            mask.DisplacementSimulatorFalloff = true;
-            mask.DisplacementSimulatorDampner = true;
-            mask.DisplacementSimulatorStartingSize = true;
-            mask.Damage = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IWaterDataGetter? lhs,
@@ -2833,12 +2753,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IWaterDataGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((WaterDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }

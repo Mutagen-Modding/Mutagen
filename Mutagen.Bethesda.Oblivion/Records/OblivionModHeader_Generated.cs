@@ -31,8 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class OblivionModHeader :
         IOblivionModHeader,
         ILoquiObjectSetter<OblivionModHeader>,
-        IEquatable<OblivionModHeader>,
-        IEqualsMask
+        IEquatable<OblivionModHeader>
     {
         #region Ctor
         public OblivionModHeader()
@@ -726,14 +725,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static OblivionModHeader CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static OblivionModHeader CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -760,8 +751,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionModHeaderGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -861,24 +850,6 @@ namespace Mutagen.Bethesda.Oblivion
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IOblivionModHeaderGetter item,
-            OblivionModHeader.Mask<bool?> checkMask)
-        {
-            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static OblivionModHeader.Mask<bool> GetHasBeenSetMask(this IOblivionModHeaderGetter item)
-        {
-            var ret = new OblivionModHeader.Mask<bool>(false);
-            ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IOblivionModHeaderGetter item,
             IOblivionModHeaderGetter rhs)
@@ -971,17 +942,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IOblivionModHeader item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IOblivionModHeader item,
             MutagenFrame frame,
@@ -1457,33 +1417,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IOblivionModHeaderGetter item,
-            OblivionModHeader.Mask<bool?> checkMask)
-        {
-            if (checkMask.TypeOffsets.HasValue && checkMask.TypeOffsets.Value != (item.TypeOffsets != null)) return false;
-            if (checkMask.Deleted.HasValue && checkMask.Deleted.Value != (item.Deleted != null)) return false;
-            if (checkMask.Author.HasValue && checkMask.Author.Value != (item.Author != null)) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IOblivionModHeaderGetter item,
-            OblivionModHeader.Mask<bool> mask)
-        {
-            mask.Flags = true;
-            mask.FormID = true;
-            mask.Version = true;
-            mask.Stats = new MaskItem<bool, ModStats.Mask<bool>?>(true, item.Stats?.GetHasBeenSetMask());
-            mask.TypeOffsets = (item.TypeOffsets != null);
-            mask.Deleted = (item.Deleted != null);
-            mask.Author = (item.Author != null);
-            mask.Description = (item.Description != null);
-            var MasterReferencesItem = item.MasterReferences;
-            mask.MasterReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MasterReference.Mask<bool>?>>?>(true, MasterReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, MasterReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IOblivionModHeaderGetter? lhs,
@@ -1905,12 +1838,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IOblivionModHeaderGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((OblivionModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1942,8 +1876,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionModHeaderGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => OblivionModHeaderBinaryWriteTranslation.Instance;

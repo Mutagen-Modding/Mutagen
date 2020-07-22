@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
         Global,
         IGlobalIntInternal,
         ILoquiObjectSetter<GlobalInt>,
-        IEquatable<GlobalInt>,
-        IEqualsMask
+        IEquatable<GlobalInt>
     {
         #region Ctor
         protected GlobalInt()
@@ -383,14 +382,6 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static new GlobalInt CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public new static GlobalInt CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -417,8 +408,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalIntGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -504,24 +493,6 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
         }
 
-        public static bool HasBeenSet(
-            this IGlobalIntGetter item,
-            GlobalInt.Mask<bool?> checkMask)
-        {
-            return ((GlobalIntCommon)((IGlobalIntGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static GlobalInt.Mask<bool> GetHasBeenSetMask(this IGlobalIntGetter item)
-        {
-            var ret = new GlobalInt.Mask<bool>(false);
-            ((GlobalIntCommon)((IGlobalIntGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
-        }
-
         public static bool Equals(
             this IGlobalIntGetter item,
             IGlobalIntGetter rhs)
@@ -591,17 +562,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IGlobalIntInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IGlobalIntInternal item,
             MutagenFrame frame,
@@ -966,26 +926,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(DataItem, "Data");
             }
-        }
-        
-        public bool HasBeenSet(
-            IGlobalIntGetter item,
-            GlobalInt.Mask<bool?> checkMask)
-        {
-            if (checkMask.Data.HasValue && checkMask.Data.Value != (item.Data != null)) return false;
-            return base.HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-        
-        public void FillHasBeenSetMask(
-            IGlobalIntGetter item,
-            GlobalInt.Mask<bool> mask)
-        {
-            mask.Data = (item.Data != null);
-            base.FillHasBeenSetMask(
-                item: item,
-                mask: mask);
         }
         
         public static GlobalInt_FieldIndex ConvertFieldIndex(Global_FieldIndex index)
@@ -1507,8 +1447,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalIntGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GlobalIntBinaryWriteTranslation.Instance;

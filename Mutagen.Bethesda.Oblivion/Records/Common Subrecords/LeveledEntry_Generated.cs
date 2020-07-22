@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LeveledEntry<T> :
         ILeveledEntry<T>,
         ILoquiObjectSetter<LeveledEntry<T>>,
-        IEquatable<LeveledEntry<T>>,
-        IEqualsMask
+        IEquatable<LeveledEntry<T>>
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
         #region Ctor
@@ -97,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LeveledEntryCommon<T>.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledEntryCommon<T>.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledEntryCommon<T>.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryCommon<T>.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryCommon<T>.Instance.RemapLinks(this, mapping);
         #endregion
@@ -117,14 +116,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static LeveledEntry<T> CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static LeveledEntry<T> CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -151,8 +142,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledEntryGetter<T>)rhs, include);
 
         void IClearable.Clear()
         {
@@ -170,7 +159,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILeveledEntry<T> :
         ILeveledEntryGetter<T>,
-        ILoquiObjectSetter<ILeveledEntry<T>>
+        ILoquiObjectSetter<ILeveledEntry<T>>,
+        ILinkedFormKeyContainer
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
         new Int16 Level { get; set; }
@@ -183,7 +173,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledEntryGetter<out T> :
         ILoquiObject,
         ILoquiObject<ILeveledEntryGetter<T>>,
-        ILinkedFormKeyContainer,
+        ILinkedFormKeyContainerGetter,
         IBinaryItem
         where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {
@@ -249,26 +239,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet<T>(
-            this ILeveledEntryGetter<T> item,
-            LeveledEntry.Mask<bool?> checkMask)
-            where T : class, IOblivionMajorRecordGetter, IBinaryItem
-        {
-            return ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static LeveledEntry.Mask<bool> GetHasBeenSetMask<T>(this ILeveledEntryGetter<T> item)
-            where T : class, IOblivionMajorRecordGetter, IBinaryItem
-        {
-            var ret = new LeveledEntry.Mask<bool>(false);
-            ((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals<T>(
@@ -384,18 +354,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary<T>(
-            this ILeveledEntry<T> item,
-            MutagenFrame frame)
-            where T : OblivionMajorRecord, IBinaryItem
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary<T>(
             this ILeveledEntry<T> item,
             MutagenFrame frame,
@@ -789,26 +747,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            ILeveledEntryGetter<T> item,
-            LeveledEntry.Mask<bool?> checkMask)
-        {
-            if (checkMask.Count.HasValue && checkMask.Count.Value != (item.Count != null)) return false;
-            if (checkMask.Unknown2.HasValue && checkMask.Unknown2.Value != (item.Unknown2 != null)) return false;
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            ILeveledEntryGetter<T> item,
-            LeveledEntry.Mask<bool> mask)
-        {
-            mask.Level = true;
-            mask.Unknown = true;
-            mask.Reference = true;
-            mask.Count = (item.Count != null);
-            mask.Unknown2 = (item.Unknown2 != null);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ILeveledEntryGetter<T>? lhs,
@@ -1057,14 +995,15 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary<T, T_ErrMask>(
             this ILeveledEntryGetter<T> item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
             where T_ErrMask : OblivionMajorRecord.ErrorMask, IErrorMask<T_ErrMask>
         {
             ((LeveledEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1097,15 +1036,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledEntryGetter<T>)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IEnumerable<FormKey> LinkFormKeys => LeveledEntryCommon<T>.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledEntryCommon<T>.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryCommon<T>.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryCommon<T>.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledEntryCommon<T>.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LeveledEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

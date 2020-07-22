@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RoadPoint :
         IRoadPoint,
         ILoquiObjectSetter<RoadPoint>,
-        IEquatable<RoadPoint>,
-        IEqualsMask
+        IEquatable<RoadPoint>
     {
         #region Ctor
         public RoadPoint()
@@ -509,14 +508,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static RoadPoint CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static RoadPoint CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -543,8 +534,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadPointGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -630,24 +619,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IRoadPointGetter item,
-            RoadPoint.Mask<bool?> checkMask)
-        {
-            return ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static RoadPoint.Mask<bool> GetHasBeenSetMask(this IRoadPointGetter item)
-        {
-            var ret = new RoadPoint.Mask<bool>(false);
-            ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -742,17 +713,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IRoadPoint item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IRoadPoint item,
             MutagenFrame frame,
@@ -1110,22 +1070,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IRoadPointGetter item,
-            RoadPoint.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IRoadPointGetter item,
-            RoadPoint.Mask<bool> mask)
-        {
-            mask.Point = true;
-            mask.NumConnectionsFluffBytes = true;
-            mask.Connections = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IRoadPointGetter? lhs,
@@ -1350,12 +1294,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IRoadPointGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RoadPointBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1387,8 +1332,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadPointGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RoadPointBinaryWriteTranslation.Instance;

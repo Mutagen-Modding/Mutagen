@@ -29,8 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RegionDataHeader :
         IRegionDataHeaderInternal,
         ILoquiObjectSetter<RegionDataHeader>,
-        IEquatable<RegionDataHeader>,
-        IEqualsMask
+        IEquatable<RegionDataHeader>
     {
         #region Ctor
         public RegionDataHeader()
@@ -427,14 +426,6 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
-        [DebuggerStepThrough]
-        public static RegionDataHeader CreateFromBinary(MutagenFrame frame)
-        {
-            return CreateFromBinary(
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static RegionDataHeader CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -461,8 +452,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataHeaderGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -554,24 +543,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg: fg,
                 name: name,
                 printMask: printMask);
-        }
-
-        public static bool HasBeenSet(
-            this IRegionDataHeaderGetter item,
-            RegionDataHeader.Mask<bool?> checkMask)
-        {
-            return ((RegionDataHeaderCommon)((IRegionDataHeaderGetter)item).CommonInstance()!).HasBeenSet(
-                item: item,
-                checkMask: checkMask);
-        }
-
-        public static RegionDataHeader.Mask<bool> GetHasBeenSetMask(this IRegionDataHeaderGetter item)
-        {
-            var ret = new RegionDataHeader.Mask<bool>(false);
-            ((RegionDataHeaderCommon)((IRegionDataHeaderGetter)item).CommonInstance()!).FillHasBeenSetMask(
-                item: item,
-                mask: ret);
-            return ret;
         }
 
         public static bool Equals(
@@ -666,17 +637,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IRegionDataHeaderInternal item,
-            MutagenFrame frame)
-        {
-            CopyInFromBinary(
-                item: item,
-                frame: frame,
-                recordTypeConverter: null);
-        }
-
         public static void CopyInFromBinary(
             this IRegionDataHeaderInternal item,
             MutagenFrame frame,
@@ -1020,22 +980,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public bool HasBeenSet(
-            IRegionDataHeaderGetter item,
-            RegionDataHeader.Mask<bool?> checkMask)
-        {
-            return true;
-        }
-        
-        public void FillHasBeenSetMask(
-            IRegionDataHeaderGetter item,
-            RegionDataHeader.Mask<bool> mask)
-        {
-            mask.DataType = true;
-            mask.Flags = true;
-            mask.Priority = true;
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IRegionDataHeaderGetter? lhs,
@@ -1264,12 +1208,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static void WriteToBinary(
             this IRegionDataHeaderGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             ((RegionDataHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
-                recordTypeConverter: null);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -1301,8 +1246,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataHeaderGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RegionDataHeaderBinaryWriteTranslation.Instance;

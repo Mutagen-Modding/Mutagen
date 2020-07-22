@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SimpleModel" objType="Subrecord" GUID="b01327de-7969-4c42-bea3-9aeb86194e57" ID="83">
     <Fields>
-      <String name="File" recordType="MODL" hasBeenSet="False" />
+      <String name="File" recordType="MODL" nullable="False" />
       <ByteArray name="Data" recordType="MODT" />
     </Fields>
   </Object>

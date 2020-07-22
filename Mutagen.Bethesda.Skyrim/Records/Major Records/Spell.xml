@@ -4,14 +4,14 @@
     <Interface>ITranslatedNamed</Interface>
     <Interface>IObjectBounded</Interface>
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>
       <FormLink name="MenuDisplayObject" refName="Static" recordType="MDOB" />
       <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
-      <String name="Description" recordType="DESC" hasBeenSet="False" translated="DL" />
+      <String name="Description" recordType="DESC" nullable="False" translated="DL" />
       <Data recordType="SPIT">
         <Fields>
           <UInt32 name="BaseCost" />
@@ -25,7 +25,7 @@
           <FormLink name="HalfCostPerk" refName="Perk" />
         </Fields>
       </Data>
-      <RefList name="Effects" refName="Effect" hasBeenSet="False" />
+      <RefList name="Effects" refName="Effect" nullable="False" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IEffectRecord</LinkInterface>

@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Generation
         public bool HasStateLogic => this.BreakIndices.Count > 0 || this.RangeIndices.Count > 0;
         public string EnumName => $"{this.GetFieldData().RecordType.Value.Type}DataType";
         public string StateName => $"{this.EnumName}State";
-        public override bool HasBeenSet => false;
+        public override bool Nullable => false;
 
         public class DataTypeRange
         {
@@ -94,10 +94,10 @@ namespace Mutagen.Bethesda.Generation
                     if (typeGen.Succeeded)
                     {
                         if (typeGen.Value is LoquiType loqui
-                            && loqui.HasBeenSet
-                            && !loqui.HasBeenSetProperty.Value.HasBeenSet)
+                            && loqui.Nullable
+                            && !loqui.NullableProperty.Value.HasBeenSet)
                         {
-                            loqui.HasBeenSetProperty.OnNext((false, true));
+                            loqui.NullableProperty.OnNext((false, true));
                         }
                         this.SubFields.Add(typeGen.Value);
                     }
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         typical.PreSetEvent += (fg) =>
                         {
-                            if (this.HasBeenSet)
+                            if (this.Nullable)
                             {
                                 fg.AppendLine($"this.{this.StateName} |= {this.EnumName}.Has;");
                             }

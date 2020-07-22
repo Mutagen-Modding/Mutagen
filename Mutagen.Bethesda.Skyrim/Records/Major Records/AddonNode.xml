@@ -4,9 +4,9 @@
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <RefDirect name="Model" refName="Model" />
-      <Int32 name="NodeIndex" recordType="DATA" hasBeenSet="False" />
+      <Int32 name="NodeIndex" recordType="DATA" nullable="False" />
       <FormLink name="Sound" refName="SoundDescriptor" recordType="SNAM" />
       <Data recordType="DNAM">
         <Fields>

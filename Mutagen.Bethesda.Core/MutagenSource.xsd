@@ -260,10 +260,10 @@
     <xs:complexType name="Enum">
       <xs:complexContent>
         <xs:extension base="Enum">
-          <xs:attribute name="hasBeenSetBinaryFallback" type="xs:int" >
+          <xs:attribute name="nullableBinaryFallback" type="xs:int" >
             <xs:annotation>
               <xs:documentation>
-                If an enum is marked has been set, but with no record type, read/write this number as the "null" value.
+                If an enum is marked nullable, but with no record type, read/write this number as the "null" value.
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>

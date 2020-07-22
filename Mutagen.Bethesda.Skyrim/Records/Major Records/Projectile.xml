@@ -3,7 +3,7 @@
   <Object name="Projectile" recordType="PROJ" objType="Record" baseClass="SkyrimMajorRecord" GUID="ddfea8a6-86fc-4134-a352-a2fecdacda31" ID="111">
     <Interface>IObjectBounded</Interface>
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />
@@ -37,9 +37,9 @@
           <FormLink name="CollisionLayer" refName="CollisionLayer" />
         </Fields>
       </Data>
-      <String name="MuzzleFlashModel" recordType="NAM1" hasBeenSet="False" />
+      <String name="MuzzleFlashModel" recordType="NAM1" nullable="False" />
       <ByteArray name="TextureFilesHashes" recordType="NAM2" />
-      <UInt32 name="SoundLevel" hasBeenSet="False" recordType="VNAM" />
+      <UInt32 name="SoundLevel" nullable="False" recordType="VNAM" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IPlacedTrapTarget</LinkInterface>
