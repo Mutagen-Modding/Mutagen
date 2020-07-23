@@ -143,6 +143,7 @@ namespace Mutagen.Bethesda.Tests
                 MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
                 RecordCount = BinaryWriteParameters.RecordCountOption.NoCheck,
                 NextFormID = BinaryWriteParameters.NextFormIDOption.NoCheck,
+                FormIDUniqueness = BinaryWriteParameters.FormIDUniquenessOption.NoCheck,
             };
 
             // Do normal
@@ -181,7 +182,7 @@ namespace Mutagen.Bethesda.Tests
                 processedTest.AddAsChild(passthrough);
                 if (doStrings)
                 {
-                    foreach(var item in AssertStringsEqual(
+                    foreach (var item in AssertStringsEqual(
                         "Binary Normal",
                         strsProcessedPath,
                         strsWriteDir))
@@ -335,7 +336,7 @@ namespace Mutagen.Bethesda.Tests
 
         public IEnumerable<Test> AssertStringsEqual(
             string nickname,
-            DirectoryPath processedDir, 
+            DirectoryPath processedDir,
             DirectoryPath writeDir)
         {
             foreach (var source in EnumExt.GetValues<StringsSource>())
