@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Effect
         public FormLink<Spell> Effect { get; set; } = new FormLink<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISpellGetter> ICriticalDataGetter.Effect => this.Effect;
+        FormLink<ISpellGetter> ICriticalDataGetter.Effect => this.Effect.ToGetter<Spell, ISpellGetter>();
         #endregion
         #region Unused4
         public Int32 Unused4 { get; set; } = default;
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Skyrim
         CriticalData.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unused2 { get; }
         Int32 Unused3 { get; }
-        IFormLink<ISpellGetter> Effect { get; }
+        FormLink<ISpellGetter> Effect { get; }
         Int32 Unused4 { get; }
 
     }
@@ -1233,7 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Effect ?? true)
             {
-                fg.AppendItem(item.Effect, "Effect");
+                fg.AppendItem(item.Effect.FormKey, "Effect");
             }
             if (printMask?.Unused4 ?? true)
             {
@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Effect) ?? true))
             {
-                item.Effect = rhs.Effect.FormKey;
+                item.Effect = new FormLink<Spell>(rhs.Effect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused4) ?? true))
             {
@@ -1578,7 +1578,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int32 Unused3 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xC, 0x4));
         int Unused3VersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0;
         #endregion
-        public IFormLink<ISpellGetter> Effect => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(Unused3VersioningOffset + 0x10, 0x4))));
+        public FormLink<ISpellGetter> Effect => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(Unused3VersioningOffset + 0x10, 0x4))));
         #region Unused4
         public Int32 Unused4 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(Unused3VersioningOffset + 0x14, 0x4));
         int Unused4VersioningOffset => Unused3VersioningOffset + (_package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0);

@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region NavMesh
         public FormLink<ANavigationMesh> NavMesh { get; set; } = new FormLink<ANavigationMesh>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IANavigationMeshGetter> INavigationDoorLinkGetter.NavMesh => this.NavMesh;
+        FormLink<IANavigationMeshGetter> INavigationDoorLinkGetter.NavMesh => this.NavMesh.ToGetter<ANavigationMesh, IANavigationMeshGetter>();
         #endregion
         #region NavMeshTriangleIndex
         public Int16 NavMeshTriangleIndex { get; set; } = default;
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => NavigationDoorLink_Registration.Instance;
-        IFormLink<IANavigationMeshGetter> NavMesh { get; }
+        FormLink<IANavigationMeshGetter> NavMesh { get; }
         Int16 NavMeshTriangleIndex { get; }
         Int16 Unused { get; }
 
@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.NavMesh ?? true)
             {
-                fg.AppendItem(item.NavMesh, "NavMesh");
+                fg.AppendItem(item.NavMesh.FormKey, "NavMesh");
             }
             if (printMask?.NavMeshTriangleIndex ?? true)
             {
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.NavMesh) ?? true))
             {
-                item.NavMesh = rhs.NavMesh.FormKey;
+                item.NavMesh = new FormLink<ANavigationMesh>(rhs.NavMesh.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.NavMeshTriangleIndex) ?? true))
             {
@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IANavigationMeshGetter> NavMesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IANavigationMeshGetter> NavMesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int16 NavMeshTriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x4, 0x2));
         public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(

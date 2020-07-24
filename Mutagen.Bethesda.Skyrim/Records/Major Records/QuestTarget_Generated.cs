@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Target
         public FormLink<IPlaced> Target { get; set; } = new FormLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedGetter> IQuestTargetGetter.Target => this.Target;
+        FormLink<IPlacedGetter> IQuestTargetGetter.Target => this.Target.ToGetter<IPlaced, IPlacedGetter>();
         #endregion
         #region Flags
         public Quest.TargetFlag Flags { get; set; } = default;
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => QuestTarget_Registration.Instance;
-        IFormLink<IPlacedGetter> Target { get; }
+        FormLink<IPlacedGetter> Target { get; }
         Quest.TargetFlag Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         QuestTarget.QSTADataType QSTADataTypeState { get; }
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Target ?? true)
             {
-                fg.AppendItem(item.Target, "Target");
+                fg.AppendItem(item.Target.FormKey, "Target");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Target) ?? true))
             {
-                item.Target = rhs.Target.FormKey;
+                item.Target = new FormLink<IPlaced>(rhs.Target.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Flags) ?? true))
             {
@@ -1503,7 +1503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Target
         private int _TargetLocation => _QSTALocation!.Value;
         private bool _Target_IsSet => _QSTALocation.HasValue;
-        public IFormLink<IPlacedGetter> Target => _Target_IsSet ? new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TargetLocation, 0x4)))) : FormLink<IPlacedGetter>.Null;
+        public FormLink<IPlacedGetter> Target => _Target_IsSet ? new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TargetLocation, 0x4)))) : FormLink<IPlacedGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _QSTALocation!.Value + 0x4;

@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Sound
         public FormLink<SoundDescriptor> Sound { get; set; } = new FormLink<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISoundDescriptorGetter> IMagicEffectSoundGetter.Sound => this.Sound;
+        FormLink<ISoundDescriptorGetter> IMagicEffectSoundGetter.Sound => this.Sound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
 
         #region To String
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => MagicEffectSound_Registration.Instance;
         MagicEffect.SoundType Type { get; }
-        IFormLink<ISoundDescriptorGetter> Sound { get; }
+        FormLink<ISoundDescriptorGetter> Sound { get; }
 
     }
 
@@ -918,7 +918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound, "Sound");
+                fg.AppendItem(item.Sound.FormKey, "Sound");
             }
         }
         
@@ -978,7 +978,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound = rhs.Sound.FormKey;
+                item.Sound = new FormLink<SoundDescriptor>(rhs.Sound.FormKey);
             }
         }
         
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public MagicEffect.SoundType Type => (MagicEffect.SoundType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public IFormLink<ISoundDescriptorGetter> Sound => new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<ISoundDescriptorGetter> Sound => new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

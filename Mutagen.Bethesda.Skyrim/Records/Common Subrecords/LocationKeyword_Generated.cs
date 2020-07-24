@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Link
         public FormLink<Keyword> Link { get; set; } = new FormLink<Keyword>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IKeywordGetter> ILocationKeywordGetter.Link => this.Link;
+        FormLink<IKeywordGetter> ILocationKeywordGetter.Link => this.Link.ToGetter<Keyword, IKeywordGetter>();
         #endregion
 
         #region To String
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LocationKeyword_Registration.Instance;
-        IFormLink<IKeywordGetter> Link { get; }
+        FormLink<IKeywordGetter> Link { get; }
 
     }
 
@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Link ?? true)
             {
-                fg.AppendItem(item.Link, "Link");
+                fg.AppendItem(item.Link.FormKey, "Link");
             }
         }
         
@@ -934,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)LocationKeyword_FieldIndex.Link) ?? true))
             {
-                item.Link = rhs.Link.FormKey;
+                item.Link = new FormLink<Keyword>(rhs.Link.FormKey);
             }
         }
         
@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IKeywordGetter> Link => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IKeywordGetter> Link => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

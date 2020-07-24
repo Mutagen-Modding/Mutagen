@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Reference
         public FormLink<ISpellSpawn> Reference { get; set; } = new FormLink<ISpellSpawn>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISpellSpawnGetter> ILeveledSpellEntryDataGetter.Reference => this.Reference;
+        FormLink<ISpellSpawnGetter> ILeveledSpellEntryDataGetter.Reference => this.Reference.ToGetter<ISpellSpawn, ISpellSpawnGetter>();
         #endregion
         #region Count
         public Int16 Count { get; set; } = default;
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => LeveledSpellEntryData_Registration.Instance;
         Int16 Level { get; }
         Int16 Unknown { get; }
-        IFormLink<ISpellSpawnGetter> Reference { get; }
+        FormLink<ISpellSpawnGetter> Reference { get; }
         Int16 Count { get; }
         Int16 Unknown2 { get; }
 
@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference, "Reference");
+                fg.AppendItem(item.Reference.FormKey, "Reference");
             }
             if (printMask?.Count ?? true)
             {
@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledSpellEntryData_FieldIndex.Reference) ?? true))
             {
-                item.Reference = rhs.Reference.FormKey;
+                item.Reference = new FormLink<ISpellSpawn>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledSpellEntryData_FieldIndex.Count) ?? true))
             {
@@ -1367,7 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
-        public IFormLink<ISpellSpawnGetter> Reference => new FormLink<ISpellSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<ISpellSpawnGetter> Reference => new FormLink<ISpellSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Int16 Count => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
         public Int16 Unknown2 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));
         partial void CustomFactoryEnd(

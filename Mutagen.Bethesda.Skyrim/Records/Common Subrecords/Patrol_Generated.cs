@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Idle
         public FormLink<IdleAnimation> Idle { get; set; } = new FormLink<IdleAnimation>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IIdleAnimationGetter> IPatrolGetter.Idle => this.Idle;
+        FormLink<IIdleAnimationGetter> IPatrolGetter.Idle => this.Idle.ToGetter<IdleAnimation, IIdleAnimationGetter>();
         #endregion
         #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Patrol_Registration.Instance;
         Single IdleTime { get; }
-        IFormLink<IIdleAnimationGetter> Idle { get; }
+        FormLink<IIdleAnimationGetter> Idle { get; }
         ReadOnlyMemorySlice<Byte>? SCHR { get; }
         ReadOnlyMemorySlice<Byte>? SCTX { get; }
         IReadOnlyList<IATopicReferenceGetter> Topics { get; }
@@ -1171,7 +1171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Idle ?? true)
             {
-                fg.AppendItem(item.Idle, "Idle");
+                fg.AppendItem(item.Idle.FormKey, "Idle");
             }
             if ((printMask?.SCHR ?? true)
                 && item.SCHR.TryGet(out var SCHRItem))
@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.Idle) ?? true))
             {
-                item.Idle = rhs.Idle.FormKey;
+                item.Idle = new FormLink<IdleAnimation>(rhs.Idle.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCHR) ?? true))
             {
@@ -1640,7 +1640,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Idle
         private int? _IdleLocation;
-        public IFormLink<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLink<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLink<IIdleAnimationGetter>.Null;
+        public FormLink<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLink<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLink<IIdleAnimationGetter>.Null;
         #endregion
         #region SCHR
         private int? _SCHRLocation;

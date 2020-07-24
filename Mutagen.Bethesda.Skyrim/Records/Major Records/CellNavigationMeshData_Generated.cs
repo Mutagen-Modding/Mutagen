@@ -44,12 +44,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region UnusedWorldspaceParent
         public FormLink<Worldspace> UnusedWorldspaceParent { get; set; } = new FormLink<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IWorldspaceGetter> ICellNavigationMeshDataGetter.UnusedWorldspaceParent => this.UnusedWorldspaceParent;
+        FormLink<IWorldspaceGetter> ICellNavigationMeshDataGetter.UnusedWorldspaceParent => this.UnusedWorldspaceParent.ToGetter<Worldspace, IWorldspaceGetter>();
         #endregion
         #region Parent
         public FormLink<Cell> Parent { get; set; } = new FormLink<Cell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ICellGetter> ICellNavigationMeshDataGetter.Parent => this.Parent;
+        FormLink<ICellGetter> ICellNavigationMeshDataGetter.Parent => this.Parent.ToGetter<Cell, ICellGetter>();
         #endregion
 
         #region To String
@@ -472,8 +472,8 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => CellNavigationMeshData_Registration.Instance;
-        IFormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; }
-        IFormLink<ICellGetter> Parent { get; }
+        FormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; }
+        FormLink<ICellGetter> Parent { get; }
 
     }
 
@@ -938,11 +938,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.UnusedWorldspaceParent ?? true)
             {
-                fg.AppendItem(item.UnusedWorldspaceParent, "UnusedWorldspaceParent");
+                fg.AppendItem(item.UnusedWorldspaceParent.FormKey, "UnusedWorldspaceParent");
             }
             if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(item.Parent, "Parent");
+                fg.AppendItem(item.Parent.FormKey, "Parent");
             }
         }
         
@@ -1057,11 +1057,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent) ?? true))
             {
-                item.UnusedWorldspaceParent = rhs.UnusedWorldspaceParent.FormKey;
+                item.UnusedWorldspaceParent = new FormLink<Worldspace>(rhs.UnusedWorldspaceParent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)CellNavigationMeshData_FieldIndex.Parent) ?? true))
             {
-                item.Parent = rhs.Parent.FormKey;
+                item.Parent = new FormLink<Cell>(rhs.Parent.FormKey);
             }
         }
         

@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Parent
         public FormLinkNullable<SoundDescriptor> Parent { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> ISoundCategoryGetter.Parent => this.Parent;
+        FormLinkNullable<ISoundDescriptorGetter> ISoundCategoryGetter.Parent => this.Parent.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region StaticVolumeMultiplier
         public Single? StaticVolumeMultiplier { get; set; }
@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => SoundCategory_Registration.Instance;
         TranslatedString? Name { get; }
         SoundCategory.Flag? Flags { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> Parent { get; }
+        FormLinkNullable<ISoundDescriptorGetter> Parent { get; }
         Single? StaticVolumeMultiplier { get; }
         Single? DefaultMenuVolume { get; }
 
@@ -1121,10 +1121,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
-            if ((printMask?.Parent ?? true)
-                && item.Parent.TryGet(out var ParentItem))
+            if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(ParentItem, "Parent");
+                fg.AppendItem(item.Parent.FormKey, "Parent");
             }
             if ((printMask?.StaticVolumeMultiplier ?? true)
                 && item.StaticVolumeMultiplier.TryGet(out var StaticVolumeMultiplierItem))
@@ -1221,10 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Flagsitem);
             }
-            if (item.Parent.TryGet(out var Parentitem))
-            {
-                hash.Add(Parentitem);
-            }
+            hash.Add(item.Parent);
             if (item.StaticVolumeMultiplier.TryGet(out var StaticVolumeMultiplieritem))
             {
                 hash.Add(StaticVolumeMultiplieritem);
@@ -1323,7 +1319,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Parent) ?? true))
             {
-                item.Parent = rhs.Parent.FormKey;
+                item.Parent = new FormLinkNullable<SoundDescriptor>(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.StaticVolumeMultiplier) ?? true))
             {
@@ -1693,7 +1689,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullable<ISoundDescriptorGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region StaticVolumeMultiplier
         private int? _StaticVolumeMultiplierLocation;

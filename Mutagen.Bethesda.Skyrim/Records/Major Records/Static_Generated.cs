@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Material
         public FormLink<MaterialObject> Material { get; set; } = new FormLink<MaterialObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IMaterialObjectGetter> IStaticGetter.Material => this.Material;
+        FormLink<IMaterialObjectGetter> IStaticGetter.Material => this.Material.ToGetter<MaterialObject, IMaterialObjectGetter>();
         #endregion
         #region Flags
         public Static.Flag Flags { get; set; } = default;
@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         IModelGetter? Model { get; }
         Single MaxAngle { get; }
-        IFormLink<IMaterialObjectGetter> Material { get; }
+        FormLink<IMaterialObjectGetter> Material { get; }
         Static.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
         ILodGetter? Lod { get; }
@@ -1343,7 +1343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Material ?? true)
             {
-                fg.AppendItem(item.Material, "Material");
+                fg.AppendItem(item.Material.FormKey, "Material");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1594,7 +1594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Material) ?? true))
             {
-                item.Material = rhs.Material.FormKey;
+                item.Material = new FormLink<MaterialObject>(rhs.Material.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Flags) ?? true))
             {
@@ -2018,7 +2018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Material
         private int _MaterialLocation => _DNAMLocation!.Value + 0x4;
         private bool _Material_IsSet => _DNAMLocation.HasValue;
-        public IFormLink<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
+        public FormLink<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value + 0x8;

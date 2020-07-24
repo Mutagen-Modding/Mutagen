@@ -136,17 +136,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region CombatStyle
         public FormLinkNullable<CombatStyle> CombatStyle { get; set; } = new FormLinkNullable<CombatStyle>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ICombatStyleGetter> IPackageGetter.CombatStyle => this.CombatStyle;
+        FormLinkNullable<ICombatStyleGetter> IPackageGetter.CombatStyle => this.CombatStyle.ToGetter<CombatStyle, ICombatStyleGetter>();
         #endregion
         #region OwnerQuest
         public FormLinkNullable<Quest> OwnerQuest { get; set; } = new FormLinkNullable<Quest>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IQuestGetter> IPackageGetter.OwnerQuest => this.OwnerQuest;
+        FormLinkNullable<IQuestGetter> IPackageGetter.OwnerQuest => this.OwnerQuest.ToGetter<Quest, IQuestGetter>();
         #endregion
         #region PackageTemplate
         public FormLink<Package> PackageTemplate { get; set; } = new FormLink<Package>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPackageGetter> IPackageGetter.PackageTemplate => this.PackageTemplate;
+        FormLink<IPackageGetter> IPackageGetter.PackageTemplate => this.PackageTemplate.ToGetter<Package, IPackageGetter>();
         #endregion
         #region DataInputVersion
         public Int32 DataInputVersion { get; set; } = default;
@@ -1799,9 +1799,9 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IConditionGetter> Conditions { get; }
         Int32? Unknown4 { get; }
         IPackageIdlesGetter? IdleAnimations { get; }
-        IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; }
-        IFormLinkNullable<IQuestGetter> OwnerQuest { get; }
-        IFormLink<IPackageGetter> PackageTemplate { get; }
+        FormLinkNullable<ICombatStyleGetter> CombatStyle { get; }
+        FormLinkNullable<IQuestGetter> OwnerQuest { get; }
+        FormLink<IPackageGetter> PackageTemplate { get; }
         Int32 DataInputVersion { get; }
         IReadOnlyDictionary<SByte, IAPackageDataGetter> Data { get; }
         ReadOnlyMemorySlice<Byte> XnamMarker { get; }
@@ -2798,19 +2798,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 IdleAnimationsItem?.ToString(fg, "IdleAnimations");
             }
-            if ((printMask?.CombatStyle ?? true)
-                && item.CombatStyle.TryGet(out var CombatStyleItem))
+            if (printMask?.CombatStyle ?? true)
             {
-                fg.AppendItem(CombatStyleItem, "CombatStyle");
+                fg.AppendItem(item.CombatStyle.FormKey, "CombatStyle");
             }
-            if ((printMask?.OwnerQuest ?? true)
-                && item.OwnerQuest.TryGet(out var OwnerQuestItem))
+            if (printMask?.OwnerQuest ?? true)
             {
-                fg.AppendItem(OwnerQuestItem, "OwnerQuest");
+                fg.AppendItem(item.OwnerQuest.FormKey, "OwnerQuest");
             }
             if (printMask?.PackageTemplate ?? true)
             {
-                fg.AppendItem(item.PackageTemplate, "PackageTemplate");
+                fg.AppendItem(item.PackageTemplate.FormKey, "PackageTemplate");
             }
             if (printMask?.DataInputVersion ?? true)
             {
@@ -3009,14 +3007,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(IdleAnimationsitem);
             }
-            if (item.CombatStyle.TryGet(out var CombatStyleitem))
-            {
-                hash.Add(CombatStyleitem);
-            }
-            if (item.OwnerQuest.TryGet(out var OwnerQuestitem))
-            {
-                hash.Add(OwnerQuestitem);
-            }
+            hash.Add(item.CombatStyle);
+            hash.Add(item.OwnerQuest);
             hash.Add(item.PackageTemplate);
             hash.Add(item.DataInputVersion);
             hash.Add(item.Data);
@@ -3304,15 +3296,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.CombatStyle) ?? true))
             {
-                item.CombatStyle = rhs.CombatStyle.FormKey;
+                item.CombatStyle = new FormLinkNullable<CombatStyle>(rhs.CombatStyle.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.OwnerQuest) ?? true))
             {
-                item.OwnerQuest = rhs.OwnerQuest.FormKey;
+                item.OwnerQuest = new FormLinkNullable<Quest>(rhs.OwnerQuest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.PackageTemplate) ?? true))
             {
-                item.PackageTemplate = rhs.PackageTemplate.FormKey;
+                item.PackageTemplate = new FormLink<Package>(rhs.PackageTemplate.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.DataInputVersion) ?? true))
             {
@@ -4083,18 +4075,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IPackageIdlesGetter? IdleAnimations { get; private set; }
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public IFormLinkNullable<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
+        public FormLinkNullable<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
         #endregion
         #region OwnerQuest
         private int? _OwnerQuestLocation;
-        public IFormLinkNullable<IQuestGetter> OwnerQuest => _OwnerQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public FormLinkNullable<IQuestGetter> OwnerQuest => _OwnerQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region PackageTemplate
         partial void PackageTemplateCustomParse(
             OverlayStream stream,
             long finalPos,
             int offset);
-        public IFormLink<IPackageGetter> PackageTemplate => GetPackageTemplateCustom();
+        public FormLink<IPackageGetter> PackageTemplate => GetPackageTemplateCustom();
         #endregion
         #region XnamMarker
         partial void XnamMarkerCustomParse(

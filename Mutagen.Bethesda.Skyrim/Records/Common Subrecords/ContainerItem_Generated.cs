@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Item
         public FormLink<IItem> Item { get; set; } = new FormLink<IItem>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IItemGetter> IContainerItemGetter.Item => this.Item;
+        FormLink<IItemGetter> IContainerItemGetter.Item => this.Item.ToGetter<IItem, IItemGetter>();
         #endregion
         #region Count
         public Int32 Count { get; set; } = default;
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ContainerItem_Registration.Instance;
-        IFormLink<IItemGetter> Item { get; }
+        FormLink<IItemGetter> Item { get; }
         Int32 Count { get; }
 
     }
@@ -919,7 +919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Item ?? true)
             {
-                fg.AppendItem(item.Item, "Item");
+                fg.AppendItem(item.Item.FormKey, "Item");
             }
             if (printMask?.Count ?? true)
             {
@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
             {
-                item.Item = rhs.Item.FormKey;
+                item.Item = new FormLink<IItem>(rhs.Item.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
             {
@@ -1188,7 +1188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IItemGetter> Item => new FormLink<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IItemGetter> Item => new FormLink<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Count => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Target
         public FormLink<IPlaced> Target { get; set; } = new FormLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedGetter> IQuestTargetDataGetter.Target => this.Target;
+        FormLink<IPlacedGetter> IQuestTargetDataGetter.Target => this.Target.ToGetter<IPlaced, IPlacedGetter>();
         #endregion
         #region Flags
         public QuestTarget.Flag Flags { get; set; } = default;
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => QuestTargetData_Registration.Instance;
-        IFormLink<IPlacedGetter> Target { get; }
+        FormLink<IPlacedGetter> Target { get; }
         QuestTarget.Flag Flags { get; }
 
     }
@@ -919,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Target ?? true)
             {
-                fg.AppendItem(item.Target, "Target");
+                fg.AppendItem(item.Target.FormKey, "Target");
             }
             if (printMask?.Flags ?? true)
             {
@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)QuestTargetData_FieldIndex.Target) ?? true))
             {
-                item.Target = rhs.Target.FormKey;
+                item.Target = new FormLink<IPlaced>(rhs.Target.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestTargetData_FieldIndex.Flags) ?? true))
             {
@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IPlacedGetter> Target => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IPlacedGetter> Target => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public QuestTarget.Flag Flags => (QuestTarget.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

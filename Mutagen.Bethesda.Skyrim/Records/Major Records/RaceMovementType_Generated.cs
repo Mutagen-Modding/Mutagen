@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region MovementType
         public FormLinkNullable<MovementType> MovementType { get; set; } = new FormLinkNullable<MovementType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IMovementTypeGetter> IRaceMovementTypeGetter.MovementType => this.MovementType;
+        FormLinkNullable<IMovementTypeGetter> IRaceMovementTypeGetter.MovementType => this.MovementType.ToGetter<MovementType, IMovementTypeGetter>();
         #endregion
         #region Overrides
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RaceMovementType_Registration.Instance;
-        IFormLinkNullable<IMovementTypeGetter> MovementType { get; }
+        FormLinkNullable<IMovementTypeGetter> MovementType { get; }
         ISpeedOverridesGetter? Overrides { get; }
 
     }
@@ -947,10 +947,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             RaceMovementType.Mask<bool>? printMask = null)
         {
-            if ((printMask?.MovementType ?? true)
-                && item.MovementType.TryGet(out var MovementTypeItem))
+            if (printMask?.MovementType ?? true)
             {
-                fg.AppendItem(MovementTypeItem, "MovementType");
+                fg.AppendItem(item.MovementType.FormKey, "MovementType");
             }
             if ((printMask?.Overrides?.Overall ?? true)
                 && item.Overrides.TryGet(out var OverridesItem))
@@ -974,10 +973,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IRaceMovementTypeGetter item)
         {
             var hash = new HashCode();
-            if (item.MovementType.TryGet(out var MovementTypeitem))
-            {
-                hash.Add(MovementTypeitem);
-            }
+            hash.Add(item.MovementType);
             if (item.Overrides.TryGet(out var Overridesitem))
             {
                 hash.Add(Overridesitem);
@@ -1020,7 +1016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RaceMovementType_FieldIndex.MovementType) ?? true))
             {
-                item.MovementType = rhs.MovementType.FormKey;
+                item.MovementType = new FormLinkNullable<MovementType>(rhs.MovementType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RaceMovementType_FieldIndex.Overrides) ?? true))
             {
@@ -1284,7 +1280,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region MovementType
         private int? _MovementTypeLocation;
-        public IFormLinkNullable<IMovementTypeGetter> MovementType => _MovementTypeLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MovementTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public FormLinkNullable<IMovementTypeGetter> MovementType => _MovementTypeLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MovementTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region Overrides
         private RangeInt32? _OverridesLocation;

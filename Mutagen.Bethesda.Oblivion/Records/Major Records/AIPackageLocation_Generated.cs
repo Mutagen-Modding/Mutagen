@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region LocationReference
         public FormLink<IPlaced> LocationReference { get; set; } = new FormLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference;
+        FormLink<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference.ToGetter<IPlaced, IPlacedGetter>();
         #endregion
         #region Radius
         public Single Radius { get; set; } = default;
@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => AIPackageLocation_Registration.Instance;
         AIPackageLocation.LocationType Type { get; }
-        IFormLink<IPlacedGetter> LocationReference { get; }
+        FormLink<IPlacedGetter> LocationReference { get; }
         Single Radius { get; }
 
     }
@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.LocationReference ?? true)
             {
-                fg.AppendItem(item.LocationReference, "LocationReference");
+                fg.AppendItem(item.LocationReference.FormKey, "LocationReference");
             }
             if (printMask?.Radius ?? true)
             {
@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.LocationReference) ?? true))
             {
-                item.LocationReference = rhs.LocationReference.FormKey;
+                item.LocationReference = new FormLink<IPlaced>(rhs.LocationReference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Radius) ?? true))
             {
@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public AIPackageLocation.LocationType Type => (AIPackageLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public IFormLink<IPlacedGetter> LocationReference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IPlacedGetter> LocationReference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Single Radius => _data.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Generation
             }
             var allowDirectWrite = subTransl.AllowDirectWrite(objGen, gendered.SubTypeGeneration);
             bool needsMasters = gendered.SubTypeGeneration is FormLinkType || gendered.SubTypeGeneration is LoquiType;
-            var typeName = gendered.SubTypeGeneration.TypeName(getter: true);
+            var typeName = gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true);
             var loqui = gendered.SubTypeGeneration as LoquiType;
             if (loqui != null)
             {
@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda.Generation
 
             var gendered = typeGen as GenderedType;
             this.Module.TryGetTypeGeneration(gendered.SubTypeGeneration.GetType(), out var subBin);
-            var typeName = $"{gendered.SubTypeGeneration.TypeName(getter: true)}{gendered.SubTypeGeneration.NullChar}";
+            var typeName = $"{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{gendered.SubTypeGeneration.NullChar}";
 
             if (data.HasTrigger
                 && !gendered.ItemNullable)
@@ -290,7 +290,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     fg.AppendLine($"private int? _{typeGen.Name}Location;");
                 }
-                fg.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}>{(typeGen.Nullable ? "?" : null)} {typeGen.Name}");
+                fg.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>{(typeGen.Nullable ? "?" : null)} {typeGen.Name}");
                 using (new BraceWrapper(fg))
                 {
                     fg.AppendLine("get");
@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {(typeGen.Nullable ? "default" : $"new GenderedItem<{typeName}>({subTypeDefault}, {subTypeDefault})")};");
                         fg.AppendLine($"var data = HeaderTranslation.ExtractSubrecordMemory(_data, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)});");
                         using (var args = new ArgsWrapper(fg,
-                            $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true)}>"))
+                            $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                         {
                             args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, "data", "_package")}");
                             args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"data.Slice({subLen})", "_package")}");
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                     else
                     {
-                        fg.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}> {typeGen.Name}");
+                        fg.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}> {typeGen.Name}");
                         using (new BraceWrapper(fg))
                         {
                             fg.AppendLine("get");
@@ -333,7 +333,7 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 fg.AppendLine($"var data = {dataAccessor}.Span.Slice({passedLengthAccessor}, {subLen * 2});");
                                 using (var args = new ArgsWrapper(fg,
-                                    $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true)}>"))
+                                    $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                                 {
                                     args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, "data", "_package")}");
                                     args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"data.Slice({subLen})", "_package")}");
@@ -345,16 +345,16 @@ namespace Mutagen.Bethesda.Generation
                 else
                 {
                     DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, passedLengthAccessor);
-                    fg.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}>{(typeGen.Nullable ? "?" : null)} {typeGen.Name}");
+                    fg.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>{(typeGen.Nullable ? "?" : null)} {typeGen.Name}");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine("get");
                         using (new BraceWrapper(fg))
                         {
-                            fg.AppendLine($"if (!_{typeGen.Name}_IsSet) return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true)}>({gendered.SubTypeGeneration.GetDefault(getter: true)}, {gendered.SubTypeGeneration.GetDefault(getter: true)});");
+                            fg.AppendLine($"if (!_{typeGen.Name}_IsSet) return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>({gendered.SubTypeGeneration.GetDefault(getter: true)}, {gendered.SubTypeGeneration.GetDefault(getter: true)});");
                             fg.AppendLine($"var data = {dataAccessor}.Span.Slice(_{typeGen.Name}Location);");
                             using (var args = new ArgsWrapper(fg,
-                                $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true)}>"))
+                                $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                             {
                                 args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, "data", "_package")}");
                                 args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"data.Slice({subLen})", "_package")}");
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (data.HasTrigger)
                 {
-                    fg.AppendLine($"private IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}{gendered.SubTypeGeneration.NullChar}>? _{typeGen.Name}Overlay;");
+                    fg.AppendLine($"private IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{gendered.SubTypeGeneration.NullChar}>? _{typeGen.Name}Overlay;");
                 }
                 fg.AppendLine($"public IGenderedItemGetter<{typeName}>{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Overlay{(typeGen.Nullable ? null : $" ?? new GenderedItem<{typeName}>(default, default)")};");
             }
@@ -404,7 +404,7 @@ namespace Mutagen.Bethesda.Generation
                         }
                         bool notNull = gendered.ItemNullable && !gendered.SubTypeGeneration.IsNullable;
                         using (var args = new ArgsWrapper(fg,
-                            $"_{typeGen.Name}Overlay = GenderedItemBinaryOverlay.{callName}<{gendered.SubTypeGeneration.TypeName(getter: true)}>"))
+                            $"_{typeGen.Name}Overlay = GenderedItemBinaryOverlay.{callName}<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                         {
                             args.Add("package: _package");
                             if (gendered.MaleMarker.HasValue)

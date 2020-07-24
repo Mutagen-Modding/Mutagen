@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region MarkerKeyword
         public FormLinkNullable<Keyword> MarkerKeyword { get; set; } = new FormLinkNullable<Keyword>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IKeywordGetter> IFurnitureMarkerGetter.MarkerKeyword => this.MarkerKeyword;
+        FormLinkNullable<IKeywordGetter> IFurnitureMarkerGetter.MarkerKeyword => this.MarkerKeyword.ToGetter<Keyword, IKeywordGetter>();
         #endregion
         #region EntryPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => FurnitureMarker_Registration.Instance;
         Boolean Enabled { get; }
         IEntryPointsGetter? DisabledEntryPoints { get; }
-        IFormLinkNullable<IKeywordGetter> MarkerKeyword { get; }
+        FormLinkNullable<IKeywordGetter> MarkerKeyword { get; }
         IEntryPointsGetter? EntryPoints { get; }
 
     }
@@ -1057,10 +1057,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 DisabledEntryPointsItem?.ToString(fg, "DisabledEntryPoints");
             }
-            if ((printMask?.MarkerKeyword ?? true)
-                && item.MarkerKeyword.TryGet(out var MarkerKeywordItem))
+            if (printMask?.MarkerKeyword ?? true)
             {
-                fg.AppendItem(MarkerKeywordItem, "MarkerKeyword");
+                fg.AppendItem(item.MarkerKeyword.FormKey, "MarkerKeyword");
             }
             if ((printMask?.EntryPoints?.Overall ?? true)
                 && item.EntryPoints.TryGet(out var EntryPointsItem))
@@ -1091,10 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(DisabledEntryPointsitem);
             }
-            if (item.MarkerKeyword.TryGet(out var MarkerKeyworditem))
-            {
-                hash.Add(MarkerKeyworditem);
-            }
+            hash.Add(item.MarkerKeyword);
             if (item.EntryPoints.TryGet(out var EntryPointsitem))
             {
                 hash.Add(EntryPointsitem);
@@ -1167,7 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.MarkerKeyword) ?? true))
             {
-                item.MarkerKeyword = rhs.MarkerKeyword.FormKey;
+                item.MarkerKeyword = new FormLinkNullable<Keyword>(rhs.MarkerKeyword.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.EntryPoints) ?? true))
             {
@@ -1411,7 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Boolean Enabled => _data.Slice(0x0, 0x1)[0] == 1;
         public IEntryPointsGetter DisabledEntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new OverlayStream(_data.Slice(0x1), _package), _package, default(RecordTypeConverter));
-        public IFormLinkNullable<IKeywordGetter> MarkerKeyword => new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x5, 0x4))));
+        public FormLinkNullable<IKeywordGetter> MarkerKeyword => new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x5, 0x4))));
         public IEntryPointsGetter EntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new OverlayStream(_data.Slice(0x9), _package), _package, default(RecordTypeConverter));
         partial void CustomFactoryEnd(
             OverlayStream stream,

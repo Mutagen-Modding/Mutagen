@@ -57,12 +57,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Explosion
         public FormLink<Explosion> Explosion { get; set; } = new FormLink<Explosion>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IExplosionGetter> IDestructionStageDataGetter.Explosion => this.Explosion;
+        FormLink<IExplosionGetter> IDestructionStageDataGetter.Explosion => this.Explosion.ToGetter<Explosion, IExplosionGetter>();
         #endregion
         #region Debris
         public FormLink<Debris> Debris { get; set; } = new FormLink<Debris>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IDebrisGetter> IDestructionStageDataGetter.Debris => this.Debris;
+        FormLink<IDebrisGetter> IDestructionStageDataGetter.Debris => this.Debris.ToGetter<Debris, IDebrisGetter>();
         #endregion
         #region DebrisCount
         public Int32 DebrisCount { get; set; } = default;
@@ -659,8 +659,8 @@ namespace Mutagen.Bethesda.Skyrim
         Byte ModelDamageStage { get; }
         DestructionStageData.Flag Flags { get; }
         Int32 SelfDamagePerSecond { get; }
-        IFormLink<IExplosionGetter> Explosion { get; }
-        IFormLink<IDebrisGetter> Debris { get; }
+        FormLink<IExplosionGetter> Explosion { get; }
+        FormLink<IDebrisGetter> Debris { get; }
         Int32 DebrisCount { get; }
 
     }
@@ -1223,11 +1223,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Explosion ?? true)
             {
-                fg.AppendItem(item.Explosion, "Explosion");
+                fg.AppendItem(item.Explosion.FormKey, "Explosion");
             }
             if (printMask?.Debris ?? true)
             {
-                fg.AppendItem(item.Debris, "Debris");
+                fg.AppendItem(item.Debris.FormKey, "Debris");
             }
             if (printMask?.DebrisCount ?? true)
             {
@@ -1320,11 +1320,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStageData_FieldIndex.Explosion) ?? true))
             {
-                item.Explosion = rhs.Explosion.FormKey;
+                item.Explosion = new FormLink<Explosion>(rhs.Explosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStageData_FieldIndex.Debris) ?? true))
             {
-                item.Debris = rhs.Debris.FormKey;
+                item.Debris = new FormLink<Debris>(rhs.Debris.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStageData_FieldIndex.DebrisCount) ?? true))
             {
@@ -1557,8 +1557,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Byte ModelDamageStage => _data.Span[0x2];
         public DestructionStageData.Flag Flags => (DestructionStageData.Flag)_data.Span.Slice(0x3, 0x1)[0];
         public Int32 SelfDamagePerSecond => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public IFormLink<IExplosionGetter> Explosion => new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
-        public IFormLink<IDebrisGetter> Debris => new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
+        public FormLink<IExplosionGetter> Explosion => new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public FormLink<IDebrisGetter> Debris => new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
         public Int32 DebrisCount => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x10, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class WorldspaceNavigationMeshDataBinaryOverlay
         {
-            public IFormLink<IWorldspaceGetter> Parent =>
+            public FormLink<IWorldspaceGetter> Parent =>
                 new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(8))));
 
             public P2Int16 Coordinates => new P2Int16(

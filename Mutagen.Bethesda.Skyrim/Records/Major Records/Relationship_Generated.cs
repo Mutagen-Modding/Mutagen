@@ -45,12 +45,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Parent
         public FormLink<Npc> Parent { get; set; } = new FormLink<Npc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<INpcGetter> IRelationshipGetter.Parent => this.Parent;
+        FormLink<INpcGetter> IRelationshipGetter.Parent => this.Parent.ToGetter<Npc, INpcGetter>();
         #endregion
         #region Child
         public FormLink<Npc> Child { get; set; } = new FormLink<Npc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<INpcGetter> IRelationshipGetter.Child => this.Child;
+        FormLink<INpcGetter> IRelationshipGetter.Child => this.Child.ToGetter<Npc, INpcGetter>();
         #endregion
         #region Rank
         public Relationship.RankType Rank { get; set; } = default;
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AssociationType
         public FormLink<AssociationType> AssociationType { get; set; } = new FormLink<AssociationType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IAssociationTypeGetter> IRelationshipGetter.AssociationType => this.AssociationType;
+        FormLink<IAssociationTypeGetter> IRelationshipGetter.AssociationType => this.AssociationType.ToGetter<AssociationType, IAssociationTypeGetter>();
         #endregion
         #region DATADataTypeState
         public Relationship.DATADataType DATADataTypeState { get; set; } = default;
@@ -661,12 +661,12 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Relationship_Registration.Instance;
-        IFormLink<INpcGetter> Parent { get; }
-        IFormLink<INpcGetter> Child { get; }
+        FormLink<INpcGetter> Parent { get; }
+        FormLink<INpcGetter> Child { get; }
         Relationship.RankType Rank { get; }
         Byte Unknown { get; }
         Relationship.Flag Flags { get; }
-        IFormLink<IAssociationTypeGetter> AssociationType { get; }
+        FormLink<IAssociationTypeGetter> AssociationType { get; }
         Relationship.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
@@ -1218,11 +1218,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(item.Parent, "Parent");
+                fg.AppendItem(item.Parent.FormKey, "Parent");
             }
             if (printMask?.Child ?? true)
             {
-                fg.AppendItem(item.Child, "Child");
+                fg.AppendItem(item.Child.FormKey, "Child");
             }
             if (printMask?.Rank ?? true)
             {
@@ -1238,7 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.AssociationType ?? true)
             {
-                fg.AppendItem(item.AssociationType, "AssociationType");
+                fg.AppendItem(item.AssociationType.FormKey, "AssociationType");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
@@ -1411,11 +1411,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Parent) ?? true))
             {
-                item.Parent = rhs.Parent.FormKey;
+                item.Parent = new FormLink<Npc>(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Child) ?? true))
             {
-                item.Child = rhs.Child.FormKey;
+                item.Child = new FormLink<Npc>(rhs.Child.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Rank) ?? true))
             {
@@ -1431,7 +1431,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.AssociationType) ?? true))
             {
-                item.AssociationType = rhs.AssociationType.FormKey;
+                item.AssociationType = new FormLink<AssociationType>(rhs.AssociationType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -1773,12 +1773,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Parent
         private int _ParentLocation => _DATALocation!.Value;
         private bool _Parent_IsSet => _DATALocation.HasValue;
-        public IFormLink<INpcGetter> Parent => _Parent_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ParentLocation, 0x4)))) : FormLink<INpcGetter>.Null;
+        public FormLink<INpcGetter> Parent => _Parent_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ParentLocation, 0x4)))) : FormLink<INpcGetter>.Null;
         #endregion
         #region Child
         private int _ChildLocation => _DATALocation!.Value + 0x4;
         private bool _Child_IsSet => _DATALocation.HasValue;
-        public IFormLink<INpcGetter> Child => _Child_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ChildLocation, 0x4)))) : FormLink<INpcGetter>.Null;
+        public FormLink<INpcGetter> Child => _Child_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ChildLocation, 0x4)))) : FormLink<INpcGetter>.Null;
         #endregion
         #region Rank
         private int _RankLocation => _DATALocation!.Value + 0x8;
@@ -1798,7 +1798,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AssociationType
         private int _AssociationTypeLocation => _DATALocation!.Value + 0xC;
         private bool _AssociationType_IsSet => _DATALocation.HasValue;
-        public IFormLink<IAssociationTypeGetter> AssociationType => _AssociationType_IsSet ? new FormLink<IAssociationTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AssociationTypeLocation, 0x4)))) : FormLink<IAssociationTypeGetter>.Null;
+        public FormLink<IAssociationTypeGetter> AssociationType => _AssociationType_IsSet ? new FormLink<IAssociationTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AssociationTypeLocation, 0x4)))) : FormLink<IAssociationTypeGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

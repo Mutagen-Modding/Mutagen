@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Sound
         public FormLink<ISound> Sound { get; set; } = new FormLink<ISound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISoundGetter> IWeatherSoundGetter.Sound => this.Sound;
+        FormLink<ISoundGetter> IWeatherSoundGetter.Sound => this.Sound.ToGetter<ISound, ISoundGetter>();
         #endregion
         #region Type
         public WeatherSound.TypeEnum Type { get; set; } = default;
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WeatherSound_Registration.Instance;
-        IFormLink<ISoundGetter> Sound { get; }
+        FormLink<ISoundGetter> Sound { get; }
         WeatherSound.TypeEnum Type { get; }
 
     }
@@ -919,7 +919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound, "Sound");
+                fg.AppendItem(item.Sound.FormKey, "Sound");
             }
             if (printMask?.Type ?? true)
             {
@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound = rhs.Sound.FormKey;
+                item.Sound = new FormLink<ISound>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherSound_FieldIndex.Type) ?? true))
             {
@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public WeatherSound.TypeEnum Type => (WeatherSound.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

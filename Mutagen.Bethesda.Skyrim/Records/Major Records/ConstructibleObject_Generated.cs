@@ -73,12 +73,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region CreatedObject
         public FormLinkNullable<SkyrimMajorRecord> CreatedObject { get; set; } = new FormLinkNullable<SkyrimMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISkyrimMajorRecordGetter> IConstructibleObjectGetter.CreatedObject => this.CreatedObject;
+        FormLinkNullable<ISkyrimMajorRecordGetter> IConstructibleObjectGetter.CreatedObject => this.CreatedObject.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
         #endregion
         #region WorkbenchKeyword
         public FormLinkNullable<Keyword> WorkbenchKeyword { get; set; } = new FormLinkNullable<Keyword>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IKeywordGetter> IConstructibleObjectGetter.WorkbenchKeyword => this.WorkbenchKeyword;
+        FormLinkNullable<IKeywordGetter> IConstructibleObjectGetter.WorkbenchKeyword => this.WorkbenchKeyword.ToGetter<Keyword, IKeywordGetter>();
         #endregion
         #region CreatedObjectCount
         public UInt16? CreatedObjectCount { get; set; }
@@ -760,8 +760,8 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => ConstructibleObject_Registration.Instance;
         IReadOnlyList<IContainerEntryGetter>? Items { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        IFormLinkNullable<ISkyrimMajorRecordGetter> CreatedObject { get; }
-        IFormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; }
+        FormLinkNullable<ISkyrimMajorRecordGetter> CreatedObject { get; }
+        FormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; }
         UInt16? CreatedObjectCount { get; }
 
     }
@@ -1324,15 +1324,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.CreatedObject ?? true)
-                && item.CreatedObject.TryGet(out var CreatedObjectItem))
+            if (printMask?.CreatedObject ?? true)
             {
-                fg.AppendItem(CreatedObjectItem, "CreatedObject");
+                fg.AppendItem(item.CreatedObject.FormKey, "CreatedObject");
             }
-            if ((printMask?.WorkbenchKeyword ?? true)
-                && item.WorkbenchKeyword.TryGet(out var WorkbenchKeywordItem))
+            if (printMask?.WorkbenchKeyword ?? true)
             {
-                fg.AppendItem(WorkbenchKeywordItem, "WorkbenchKeyword");
+                fg.AppendItem(item.WorkbenchKeyword.FormKey, "WorkbenchKeyword");
             }
             if ((printMask?.CreatedObjectCount ?? true)
                 && item.CreatedObjectCount.TryGet(out var CreatedObjectCountItem))
@@ -1418,14 +1416,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var hash = new HashCode();
             hash.Add(item.Items);
             hash.Add(item.Conditions);
-            if (item.CreatedObject.TryGet(out var CreatedObjectitem))
-            {
-                hash.Add(CreatedObjectitem);
-            }
-            if (item.WorkbenchKeyword.TryGet(out var WorkbenchKeyworditem))
-            {
-                hash.Add(WorkbenchKeyworditem);
-            }
+            hash.Add(item.CreatedObject);
+            hash.Add(item.WorkbenchKeyword);
             if (item.CreatedObjectCount.TryGet(out var CreatedObjectCountitem))
             {
                 hash.Add(CreatedObjectCountitem);
@@ -1585,11 +1577,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObject) ?? true))
             {
-                item.CreatedObject = rhs.CreatedObject.FormKey;
+                item.CreatedObject = new FormLinkNullable<SkyrimMajorRecord>(rhs.CreatedObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.WorkbenchKeyword) ?? true))
             {
-                item.WorkbenchKeyword = rhs.WorkbenchKeyword.FormKey;
+                item.WorkbenchKeyword = new FormLinkNullable<Keyword>(rhs.WorkbenchKeyword.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObjectCount) ?? true))
             {
@@ -1976,11 +1968,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region CreatedObject
         private int? _CreatedObjectLocation;
-        public IFormLinkNullable<ISkyrimMajorRecordGetter> CreatedObject => _CreatedObjectLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CreatedObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
+        public FormLinkNullable<ISkyrimMajorRecordGetter> CreatedObject => _CreatedObjectLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CreatedObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
         #endregion
         #region WorkbenchKeyword
         private int? _WorkbenchKeywordLocation;
-        public IFormLinkNullable<IKeywordGetter> WorkbenchKeyword => _WorkbenchKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorkbenchKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public FormLinkNullable<IKeywordGetter> WorkbenchKeyword => _WorkbenchKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorkbenchKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
         #endregion
         #region CreatedObjectCount
         private int? _CreatedObjectCountLocation;

@@ -45,12 +45,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Owner
         public FormLink<IOwner> Owner { get; set; } = new FormLink<IOwner>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IOwnerGetter> IEncounterZoneGetter.Owner => this.Owner;
+        FormLink<IOwnerGetter> IEncounterZoneGetter.Owner => this.Owner.ToGetter<IOwner, IOwnerGetter>();
         #endregion
         #region Location
         public FormLink<Location> Location { get; set; } = new FormLink<Location>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILocationGetter> IEncounterZoneGetter.Location => this.Location;
+        FormLink<ILocationGetter> IEncounterZoneGetter.Location => this.Location.ToGetter<Location, ILocationGetter>();
         #endregion
         #region Rank
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -691,8 +691,8 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => EncounterZone_Registration.Instance;
-        IFormLink<IOwnerGetter> Owner { get; }
-        IFormLink<ILocationGetter> Location { get; }
+        FormLink<IOwnerGetter> Owner { get; }
+        FormLink<ILocationGetter> Location { get; }
         SByte Rank { get; }
         SByte MinLevel { get; }
         EncounterZone.Flag Flags { get; }
@@ -1244,11 +1244,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Owner ?? true)
             {
-                fg.AppendItem(item.Owner, "Owner");
+                fg.AppendItem(item.Owner.FormKey, "Owner");
             }
             if (printMask?.Location ?? true)
             {
-                fg.AppendItem(item.Location, "Location");
+                fg.AppendItem(item.Location.FormKey, "Location");
             }
             if (printMask?.Rank ?? true)
             {
@@ -1436,11 +1436,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Owner) ?? true))
             {
-                item.Owner = rhs.Owner.FormKey;
+                item.Owner = new FormLink<IOwner>(rhs.Owner.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Location) ?? true))
             {
-                item.Location = rhs.Location.FormKey;
+                item.Location = new FormLink<Location>(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Rank) ?? true))
             {
@@ -1798,12 +1798,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Owner
         private int _OwnerLocation => _DATALocation!.Value;
         private bool _Owner_IsSet => _DATALocation.HasValue;
-        public IFormLink<IOwnerGetter> Owner => _Owner_IsSet ? new FormLink<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OwnerLocation, 0x4)))) : FormLink<IOwnerGetter>.Null;
+        public FormLink<IOwnerGetter> Owner => _Owner_IsSet ? new FormLink<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OwnerLocation, 0x4)))) : FormLink<IOwnerGetter>.Null;
         #endregion
         #region Location
         private int _LocationLocation => _DATALocation!.Value + 0x4;
         private bool _Location_IsSet => _DATALocation.HasValue;
-        public IFormLink<ILocationGetter> Location => _Location_IsSet ? new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LocationLocation, 0x4)))) : FormLink<ILocationGetter>.Null;
+        public FormLink<ILocationGetter> Location => _Location_IsSet ? new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LocationLocation, 0x4)))) : FormLink<ILocationGetter>.Null;
         #endregion
         #region Rank
         private int _RankLocation => _DATALocation!.Value + 0x8;

@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Sound
         public FormLinkNullable<Sound> Sound { get; set; } = new FormLinkNullable<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundGetter> IWaterGetter.Sound => this.Sound;
+        FormLinkNullable<ISoundGetter> IWaterGetter.Sound => this.Sound.ToGetter<Sound, ISoundGetter>();
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Oblivion
         Byte? Opacity { get; }
         Water.Flag? Flags { get; }
         String? MaterialID { get; }
-        IFormLinkNullable<ISoundGetter> Sound { get; }
+        FormLinkNullable<ISoundGetter> Sound { get; }
         IWaterDataGetter? Data { get; }
         IRelatedWatersGetter? RelatedWaters { get; }
 
@@ -1261,10 +1261,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(MaterialIDItem, "MaterialID");
             }
-            if ((printMask?.Sound ?? true)
-                && item.Sound.TryGet(out var SoundItem))
+            if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(SoundItem, "Sound");
+                fg.AppendItem(item.Sound.FormKey, "Sound");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data.TryGet(out var DataItem))
@@ -1369,10 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(MaterialIDitem);
             }
-            if (item.Sound.TryGet(out var Sounditem))
-            {
-                hash.Add(Sounditem);
-            }
+            hash.Add(item.Sound);
             if (item.Data.TryGet(out var Dataitem))
             {
                 hash.Add(Dataitem);
@@ -1486,7 +1482,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
             {
-                item.Sound = rhs.Sound.FormKey;
+                item.Sound = new FormLinkNullable<Sound>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Data) ?? true))
             {
@@ -1938,7 +1934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Sound
         private int? _SoundLocation;
-        public IFormLinkNullable<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public FormLinkNullable<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Data
         partial void DataCustomParse(

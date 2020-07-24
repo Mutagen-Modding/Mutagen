@@ -32,15 +32,12 @@ namespace Mutagen.Bethesda.Generation
         public override string Typename(TypeGeneration typeGen)
         {
             FormLinkType linkType = typeGen as FormLinkType;
-            switch (linkType.FormIDType)
+            return linkType.FormIDType switch
             {
-                case FormLinkType.FormIDTypeEnum.Normal:
-                    return "FormLink";
-                case FormLinkType.FormIDTypeEnum.EDIDChars:
-                    return "RecordType";
-                default:
-                    throw new NotImplementedException();
-            }
+                FormLinkType.FormIDTypeEnum.Normal => "FormLink",
+                FormLinkType.FormIDTypeEnum.EDIDChars => "RecordType",
+                _ => throw new NotImplementedException(),
+            };
         }
 
         public override void GenerateCopyInRet(

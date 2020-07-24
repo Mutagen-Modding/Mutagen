@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region LoopingSound
         public FormLinkNullable<SoundDescriptor> LoopingSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IMoveableStaticGetter.LoopingSound => this.LoopingSound;
+        FormLinkNullable<ISoundDescriptorGetter> IMoveableStaticGetter.LoopingSound => this.LoopingSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
 
         #region To String
@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
         MoveableStatic.Flag Flags { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; }
 
         #region Mutagen
         MoveableStatic.MajorFlag MajorFlags { get; }
@@ -1247,10 +1247,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Flags, "Flags");
             }
-            if ((printMask?.LoopingSound ?? true)
-                && item.LoopingSound.TryGet(out var LoopingSoundItem))
+            if (printMask?.LoopingSound ?? true)
             {
-                fg.AppendItem(LoopingSoundItem, "LoopingSound");
+                fg.AppendItem(item.LoopingSound.FormKey, "LoopingSound");
             }
         }
         
@@ -1344,10 +1343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(Destructibleitem);
             }
             hash.Add(item.Flags);
-            if (item.LoopingSound.TryGet(out var LoopingSounditem))
-            {
-                hash.Add(LoopingSounditem);
-            }
+            hash.Add(item.LoopingSound);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1526,7 +1522,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.LoopingSound) ?? true))
             {
-                item.LoopingSound = rhs.LoopingSound.FormKey;
+                item.LoopingSound = new FormLinkNullable<SoundDescriptor>(rhs.LoopingSound.FormKey);
             }
         }
         
@@ -1906,7 +1902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LoopingSound
         private int? _LoopingSoundLocation;
-        public IFormLinkNullable<ISoundDescriptorGetter> LoopingSound => _LoopingSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> LoopingSound => _LoopingSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

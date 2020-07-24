@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Sound
         public FormLink<Sound> Sound { get; set; } = new FormLink<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISoundGetter> IRegionSoundGetter.Sound => this.Sound;
+        FormLink<ISoundGetter> IRegionSoundGetter.Sound => this.Sound.ToGetter<Sound, ISoundGetter>();
         #endregion
         #region Flags
         public RegionSound.Flag Flags { get; set; } = default;
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RegionSound_Registration.Instance;
-        IFormLink<ISoundGetter> Sound { get; }
+        FormLink<ISoundGetter> Sound { get; }
         RegionSound.Flag Flags { get; }
         Single Chance { get; }
 
@@ -962,7 +962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound, "Sound");
+                fg.AppendItem(item.Sound.FormKey, "Sound");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1028,7 +1028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound = rhs.Sound.FormKey;
+                item.Sound = new FormLink<Sound>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Flags) ?? true))
             {
@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public RegionSound.Flag Flags => (RegionSound.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public Single Chance => _data.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(

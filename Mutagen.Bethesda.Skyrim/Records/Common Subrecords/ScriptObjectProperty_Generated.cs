@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Object
         public FormLink<SkyrimMajorRecord> Object { get; set; } = new FormLink<SkyrimMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISkyrimMajorRecordGetter> IScriptObjectPropertyGetter.Object => this.Object;
+        FormLink<ISkyrimMajorRecordGetter> IScriptObjectPropertyGetter.Object => this.Object.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
         #endregion
         #region Alias
         public Int16 Alias { get; set; } = default;
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ScriptObjectProperty_Registration.Instance;
-        IFormLink<ISkyrimMajorRecordGetter> Object { get; }
+        FormLink<ISkyrimMajorRecordGetter> Object { get; }
         Int16 Alias { get; }
         UInt16 Unused { get; }
 
@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Object ?? true)
             {
-                fg.AppendItem(item.Object, "Object");
+                fg.AppendItem(item.Object.FormKey, "Object");
             }
             if (printMask?.Alias ?? true)
             {
@@ -1057,7 +1057,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Object) ?? true))
             {
-                item.Object = rhs.Object.FormKey;
+                item.Object = new FormLink<SkyrimMajorRecord>(rhs.Object.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Alias) ?? true))
             {
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ISkyrimMajorRecordGetter> Object => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ISkyrimMajorRecordGetter> Object => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int16 Alias => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x4, 0x2));
         public UInt16 Unused => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(

@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Spell
         public FormLink<Spell> Spell { get; set; } = new FormLink<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISpellGetter> IPerkSelectSpellGetter.Spell => this.Spell;
+        FormLink<ISpellGetter> IPerkSelectSpellGetter.Spell => this.Spell.ToGetter<Spell, ISpellGetter>();
         #endregion
 
         #region To String
@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkSelectSpell_Registration.Instance;
-        IFormLink<ISpellGetter> Spell { get; }
+        FormLink<ISpellGetter> Spell { get; }
 
     }
 
@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell, "Spell");
+                fg.AppendItem(item.Spell.FormKey, "Spell");
             }
         }
         
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)PerkSelectSpell_FieldIndex.Spell) ?? true))
             {
-                item.Spell = rhs.Spell.FormKey;
+                item.Spell = new FormLink<Spell>(rhs.Spell.FormKey);
             }
         }
         
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
+        public FormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

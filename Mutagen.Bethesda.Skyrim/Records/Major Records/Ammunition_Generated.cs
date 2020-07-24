@@ -88,12 +88,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region PickUpSound
         public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IAmmunitionGetter.PickUpSound => this.PickUpSound;
+        FormLinkNullable<ISoundDescriptorGetter> IAmmunitionGetter.PickUpSound => this.PickUpSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region PutDownSound
         public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IAmmunitionGetter.PutDownSound => this.PutDownSound;
+        FormLinkNullable<ISoundDescriptorGetter> IAmmunitionGetter.PutDownSound => this.PutDownSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Projectile
         public FormLink<Projectile> Projectile { get; set; } = new FormLink<Projectile>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IProjectileGetter> IAmmunitionGetter.Projectile => this.Projectile;
+        FormLink<IProjectileGetter> IAmmunitionGetter.Projectile => this.Projectile.ToGetter<Projectile, IProjectileGetter>();
         #endregion
         #region Flags
         public Ammunition.Flag Flags { get; set; } = default;
@@ -1116,11 +1116,11 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? Model { get; }
         IIconsGetter? Icons { get; }
         IDestructibleGetter? Destructible { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
         TranslatedString? Description { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
-        IFormLink<IProjectileGetter> Projectile { get; }
+        FormLink<IProjectileGetter> Projectile { get; }
         Ammunition.Flag Flags { get; }
         Single Damage { get; }
         UInt32 Value { get; }
@@ -1842,15 +1842,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 DestructibleItem?.ToString(fg, "Destructible");
             }
-            if ((printMask?.PickUpSound ?? true)
-                && item.PickUpSound.TryGet(out var PickUpSoundItem))
+            if (printMask?.PickUpSound ?? true)
             {
-                fg.AppendItem(PickUpSoundItem, "PickUpSound");
+                fg.AppendItem(item.PickUpSound.FormKey, "PickUpSound");
             }
-            if ((printMask?.PutDownSound ?? true)
-                && item.PutDownSound.TryGet(out var PutDownSoundItem))
+            if (printMask?.PutDownSound ?? true)
             {
-                fg.AppendItem(PutDownSoundItem, "PutDownSound");
+                fg.AppendItem(item.PutDownSound.FormKey, "PutDownSound");
             }
             if ((printMask?.Description ?? true)
                 && item.Description.TryGet(out var DescriptionItem))
@@ -1869,7 +1867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -1878,7 +1876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Projectile ?? true)
             {
-                fg.AppendItem(item.Projectile, "Projectile");
+                fg.AppendItem(item.Projectile.FormKey, "Projectile");
             }
             if (printMask?.Flags ?? true)
             {
@@ -2010,14 +2008,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Destructibleitem);
             }
-            if (item.PickUpSound.TryGet(out var PickUpSounditem))
-            {
-                hash.Add(PickUpSounditem);
-            }
-            if (item.PutDownSound.TryGet(out var PutDownSounditem))
-            {
-                hash.Add(PutDownSounditem);
-            }
+            hash.Add(item.PickUpSound);
+            hash.Add(item.PutDownSound);
             if (item.Description.TryGet(out var Descriptionitem))
             {
                 hash.Add(Descriptionitem);
@@ -2245,11 +2237,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = rhs.PickUpSound.FormKey;
+                item.PickUpSound = new FormLinkNullable<SoundDescriptor>(rhs.PickUpSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = rhs.PutDownSound.FormKey;
+                item.PutDownSound = new FormLinkNullable<SoundDescriptor>(rhs.PutDownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Description) ?? true))
             {
@@ -2284,7 +2276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile = rhs.Projectile.FormKey;
+                item.Projectile = new FormLink<Projectile>(rhs.Projectile.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Flags) ?? true))
             {
@@ -2798,11 +2790,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IDestructibleGetter? Destructible { get; private set; }
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region Description
         private int? _DescriptionLocation;
@@ -2814,7 +2806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Projectile
         private int _ProjectileLocation => _DATALocation!.Value;
         private bool _Projectile_IsSet => _DATALocation.HasValue;
-        public IFormLink<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        public FormLink<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0x4;

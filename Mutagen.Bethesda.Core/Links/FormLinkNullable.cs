@@ -15,7 +15,12 @@ namespace Mutagen.Bethesda
     /// FormKey allowed to be null to communicate the absence of the field.
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public struct FormLinkNullable<TMajor> : IFormLinkNullable<TMajor>, IEquatable<IFormLink<TMajor>>, IEquatable<IFormLinkNullable<TMajor>>
+    public struct FormLinkNullable<TMajor> : 
+        IFormLinkNullable<TMajor>,
+        IEquatable<FormLink<TMajor>>,
+        IEquatable<FormLinkNullable<TMajor>>,
+        IEquatable<IFormLink<TMajor>>,
+        IEquatable<IFormLinkNullable<TMajor>>
        where TMajor : class, IMajorRecordCommonGetter
     {
         /// <summary>
@@ -43,14 +48,24 @@ namespace Mutagen.Bethesda
             this.FormKey = formKey;
         }
 
-        public static bool operator ==(FormLinkNullable<TMajor> lhs, IFormLink<TMajor> rhs)
+        public static bool operator ==(FormLinkNullable<TMajor> lhs, FormLink<TMajor> rhs)
         {
             return lhs.FormKey?.Equals(rhs.FormKey) ?? false;
         }
 
-        public static bool operator !=(FormLinkNullable<TMajor> lhs, IFormLink<TMajor> rhs)
+        public static bool operator !=(FormLinkNullable<TMajor> lhs, FormLink<TMajor> rhs)
         {
             return !lhs.FormKey?.Equals(rhs.FormKey) ?? true;
+        }
+
+        public static bool operator ==(FormLink<TMajor> lhs, FormLinkNullable<TMajor> rhs)
+        {
+            return EqualityComparer<FormKey?>.Default.Equals(lhs.FormKey, rhs.FormKey);
+        }
+
+        public static bool operator !=(FormLink<TMajor> lhs, FormLinkNullable<TMajor> rhs)
+        {
+            return !EqualityComparer<FormKey?>.Default.Equals(lhs.FormKey, rhs.FormKey);
         }
 
         /// <summary>
@@ -63,7 +78,21 @@ namespace Mutagen.Bethesda
             if (!(obj is ILink<TMajor> rhs)) return false;
             return this.Equals(rhs);
         }
-        
+
+        /// <summary>
+        /// Compares equality of two links, where rhs is a non nullable link.
+        /// </summary>
+        /// <param name="other">Other link to compare to</param>
+        /// <returns>True if FormKey members are equal</returns>
+        public bool Equals(FormLink<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other.FormKey);
+
+        /// <summary>
+        /// Compares equality of two links, where rhs is a nullable link.
+        /// </summary>
+        /// <param name="other">Other link to compare to</param>
+        /// <returns>True if FormKey members are equal</returns>
+        public bool Equals(FormLinkNullable<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other.FormKey);
+
         /// <summary>
         /// Compares equality of two links, where rhs is a non nullable link.
         /// </summary>

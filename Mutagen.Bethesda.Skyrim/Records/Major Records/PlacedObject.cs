@@ -267,10 +267,10 @@ namespace Mutagen.Bethesda.Skyrim
             public IReadOnlyList<IFormLink<IPlacedObjectGetter>> LinkedRooms { get; private set; } = ListExt.Empty<IFormLink<IPlacedObjectGetter>>();
 
             int? _lightingTemplateLoc;
-            public IFormLinkNullable<ILightGetter> LightingTemplate => _lightingTemplateLoc.HasValue ? new FormLinkNullable<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _lightingTemplateLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILightGetter>.Null;
+            public FormLinkNullable<ILightGetter> LightingTemplate => _lightingTemplateLoc.HasValue ? new FormLinkNullable<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _lightingTemplateLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILightGetter>.Null;
 
             int? _imageSpaceLoc;
-            public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => _imageSpaceLoc.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _imageSpaceLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+            public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => _imageSpaceLoc.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _imageSpaceLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
 
             partial void BoundDataCustomParse(OverlayStream stream, int offset)
             {

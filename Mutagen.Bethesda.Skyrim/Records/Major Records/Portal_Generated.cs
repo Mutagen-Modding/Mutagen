@@ -42,12 +42,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Origin
         public FormLink<PlacedObject> Origin { get; set; } = new FormLink<PlacedObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedObjectGetter> IPortalGetter.Origin => this.Origin;
+        FormLink<IPlacedObjectGetter> IPortalGetter.Origin => this.Origin.ToGetter<PlacedObject, IPlacedObjectGetter>();
         #endregion
         #region Destination
         public FormLink<PlacedObject> Destination { get; set; } = new FormLink<PlacedObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedObjectGetter> IPortalGetter.Destination => this.Destination;
+        FormLink<IPlacedObjectGetter> IPortalGetter.Destination => this.Destination.ToGetter<PlacedObject, IPlacedObjectGetter>();
         #endregion
 
         #region To String
@@ -461,8 +461,8 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Portal_Registration.Instance;
-        IFormLink<IPlacedObjectGetter> Origin { get; }
-        IFormLink<IPlacedObjectGetter> Destination { get; }
+        FormLink<IPlacedObjectGetter> Origin { get; }
+        FormLink<IPlacedObjectGetter> Destination { get; }
 
     }
 
@@ -916,11 +916,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Origin ?? true)
             {
-                fg.AppendItem(item.Origin, "Origin");
+                fg.AppendItem(item.Origin.FormKey, "Origin");
             }
             if (printMask?.Destination ?? true)
             {
-                fg.AppendItem(item.Destination, "Destination");
+                fg.AppendItem(item.Destination.FormKey, "Destination");
             }
         }
         
@@ -977,11 +977,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Portal_FieldIndex.Origin) ?? true))
             {
-                item.Origin = rhs.Origin.FormKey;
+                item.Origin = new FormLink<PlacedObject>(rhs.Origin.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Portal_FieldIndex.Destination) ?? true))
             {
-                item.Destination = rhs.Destination.FormKey;
+                item.Destination = new FormLink<PlacedObject>(rhs.Destination.FormKey);
             }
         }
         
@@ -1184,8 +1184,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IPlacedObjectGetter> Origin => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLink<IPlacedObjectGetter> Destination => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IPlacedObjectGetter> Origin => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IPlacedObjectGetter> Destination => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

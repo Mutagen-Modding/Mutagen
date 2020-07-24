@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Idle
         public FormLinkNullable<IdleAnimation> Idle { get; set; } = new FormLinkNullable<IdleAnimation>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IIdleAnimationGetter> IPackageEventGetter.Idle => this.Idle;
+        FormLinkNullable<IIdleAnimationGetter> IPackageEventGetter.Idle => this.Idle.ToGetter<IdleAnimation, IIdleAnimationGetter>();
         #endregion
         #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => PackageEvent_Registration.Instance;
-        IFormLinkNullable<IIdleAnimationGetter> Idle { get; }
+        FormLinkNullable<IIdleAnimationGetter> Idle { get; }
         ReadOnlyMemorySlice<Byte>? SCHR { get; }
         ReadOnlyMemorySlice<Byte>? SCDA { get; }
         ReadOnlyMemorySlice<Byte>? SCTX { get; }
@@ -1298,10 +1298,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             PackageEvent.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Idle ?? true)
-                && item.Idle.TryGet(out var IdleItem))
+            if (printMask?.Idle ?? true)
             {
-                fg.AppendItem(IdleItem, "Idle");
+                fg.AppendItem(item.Idle.FormKey, "Idle");
             }
             if ((printMask?.SCHR ?? true)
                 && item.SCHR.TryGet(out var SCHRItem))
@@ -1368,10 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IPackageEventGetter item)
         {
             var hash = new HashCode();
-            if (item.Idle.TryGet(out var Idleitem))
-            {
-                hash.Add(Idleitem);
-            }
+            hash.Add(item.Idle);
             if (item.SCHR.TryGet(out var SCHRItem))
             {
                 hash.Add(SCHRItem);
@@ -1436,7 +1432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.Idle) ?? true))
             {
-                item.Idle = rhs.Idle.FormKey;
+                item.Idle = new FormLinkNullable<IdleAnimation>(rhs.Idle.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCHR) ?? true))
             {
@@ -1823,7 +1819,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Idle
         private int? _IdleLocation;
-        public IFormLinkNullable<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public FormLinkNullable<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
         #endregion
         #region SCHR
         private int? _SCHRLocation;

@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Reference
         public FormLink<T> Reference { get; set; } = new FormLink<T>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<T> ILeveledEntryGetter<T>.Reference => this.Reference;
+        IFormLink<T> ILeveledEntryGetter<T>.Reference => this.Reference.ToGetter<T, T>();
         #endregion
         #region Count
         public Int16? Count { get; set; }
@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference, "Reference");
+                fg.AppendItem(item.Reference.FormKey, "Reference");
             }
             if ((printMask?.Count ?? true)
                 && item.Count.TryGet(out var CountItem))
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Reference) ?? true))
             {
-                item.Reference = rhs.Reference.FormKey;
+                item.Reference = new FormLink<T>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Count) ?? true))
             {

@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Global
         public FormLinkNullable<Global> Global { get; set; } = new FormLinkNullable<Global>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IGlobalGetter> ILeveledItemGetter.Global => this.Global;
+        FormLinkNullable<IGlobalGetter> ILeveledItemGetter.Global => this.Global.ToGetter<Global, IGlobalGetter>();
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -688,7 +688,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         Byte ChanceNone { get; }
         LeveledItem.Flag Flags { get; }
-        IFormLinkNullable<IGlobalGetter> Global { get; }
+        FormLinkNullable<IGlobalGetter> Global { get; }
         IReadOnlyList<ILeveledItemEntryGetter>? Entries { get; }
 
     }
@@ -1223,10 +1223,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Flags, "Flags");
             }
-            if ((printMask?.Global ?? true)
-                && item.Global.TryGet(out var GlobalItem))
+            if (printMask?.Global ?? true)
             {
-                fg.AppendItem(GlobalItem, "Global");
+                fg.AppendItem(item.Global.FormKey, "Global");
             }
             if ((printMask?.Entries?.Overall ?? true)
                 && item.Entries.TryGet(out var EntriesItem))
@@ -1327,10 +1326,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.ObjectBounds);
             hash.Add(item.ChanceNone);
             hash.Add(item.Flags);
-            if (item.Global.TryGet(out var Globalitem))
-            {
-                hash.Add(Globalitem);
-            }
+            hash.Add(item.Global);
             hash.Add(item.Entries);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1452,7 +1448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Global) ?? true))
             {
-                item.Global = rhs.Global.FormKey;
+                item.Global = new FormLinkNullable<Global>(rhs.Global.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
             {
@@ -1854,7 +1850,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Global
         private int? _GlobalLocation;
-        public IFormLinkNullable<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public FormLinkNullable<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
         #endregion
         public IReadOnlyList<ILeveledItemEntryGetter>? Entries { get; private set; }
         partial void CustomFactoryEnd(

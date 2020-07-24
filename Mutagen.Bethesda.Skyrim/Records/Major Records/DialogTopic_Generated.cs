@@ -53,12 +53,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Branch
         public FormLinkNullable<DialogBranch> Branch { get; set; } = new FormLinkNullable<DialogBranch>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IDialogBranchGetter> IDialogTopicGetter.Branch => this.Branch;
+        FormLinkNullable<IDialogBranchGetter> IDialogTopicGetter.Branch => this.Branch.ToGetter<DialogBranch, IDialogBranchGetter>();
         #endregion
         #region Quest
         public FormLinkNullable<Quest> Quest { get; set; } = new FormLinkNullable<Quest>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IQuestGetter> IDialogTopicGetter.Quest => this.Quest;
+        FormLinkNullable<IQuestGetter> IDialogTopicGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
         #endregion
         #region TopicFlags
         public DialogTopic.TopicFlag TopicFlags { get; set; } = default;
@@ -919,8 +919,8 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => DialogTopic_Registration.Instance;
         TranslatedString? Name { get; }
         Single Priority { get; }
-        IFormLinkNullable<IDialogBranchGetter> Branch { get; }
-        IFormLinkNullable<IQuestGetter> Quest { get; }
+        FormLinkNullable<IDialogBranchGetter> Branch { get; }
+        FormLinkNullable<IQuestGetter> Quest { get; }
         DialogTopic.TopicFlag TopicFlags { get; }
         DialogTopic.CategoryEnum Category { get; }
         DialogTopic.SubtypeEnum Subtype { get; }
@@ -1645,15 +1645,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Priority, "Priority");
             }
-            if ((printMask?.Branch ?? true)
-                && item.Branch.TryGet(out var BranchItem))
+            if (printMask?.Branch ?? true)
             {
-                fg.AppendItem(BranchItem, "Branch");
+                fg.AppendItem(item.Branch.FormKey, "Branch");
             }
-            if ((printMask?.Quest ?? true)
-                && item.Quest.TryGet(out var QuestItem))
+            if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(QuestItem, "Quest");
+                fg.AppendItem(item.Quest.FormKey, "Quest");
             }
             if (printMask?.TopicFlags ?? true)
             {
@@ -1790,14 +1788,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(Nameitem);
             }
             hash.Add(item.Priority);
-            if (item.Branch.TryGet(out var Branchitem))
-            {
-                hash.Add(Branchitem);
-            }
-            if (item.Quest.TryGet(out var Questitem))
-            {
-                hash.Add(Questitem);
-            }
+            hash.Add(item.Branch);
+            hash.Add(item.Quest);
             hash.Add(item.TopicFlags);
             hash.Add(item.Category);
             hash.Add(item.Subtype);
@@ -1962,11 +1954,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Branch) ?? true))
             {
-                item.Branch = rhs.Branch.FormKey;
+                item.Branch = new FormLinkNullable<DialogBranch>(rhs.Branch.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
             {
-                item.Quest = rhs.Quest.FormKey;
+                item.Quest = new FormLinkNullable<Quest>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicFlags) ?? true))
             {
@@ -2462,11 +2454,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Branch
         private int? _BranchLocation;
-        public IFormLinkNullable<IDialogBranchGetter> Branch => _BranchLocation.HasValue ? new FormLinkNullable<IDialogBranchGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BranchLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogBranchGetter>.Null;
+        public FormLinkNullable<IDialogBranchGetter> Branch => _BranchLocation.HasValue ? new FormLinkNullable<IDialogBranchGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BranchLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogBranchGetter>.Null;
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public FormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         private int? _DATALocation;
         public DialogTopic.DATADataType DATADataTypeState { get; private set; }

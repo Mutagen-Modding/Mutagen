@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Object
         public FormLink<SkyrimMajorRecord> Object { get; set; } = new FormLink<SkyrimMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISkyrimMajorRecordGetter> ICreateReferenceToObjectGetter.Object => this.Object;
+        FormLink<ISkyrimMajorRecordGetter> ICreateReferenceToObjectGetter.Object => this.Object.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
         #endregion
         #region AliasIndex
         public Int16 AliasIndex { get; set; } = default;
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => CreateReferenceToObject_Registration.Instance;
-        IFormLink<ISkyrimMajorRecordGetter> Object { get; }
+        FormLink<ISkyrimMajorRecordGetter> Object { get; }
         Int16 AliasIndex { get; }
         CreateReferenceToObject.CreateEnum Create { get; }
         Level Level { get; }
@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Object ?? true)
             {
-                fg.AppendItem(item.Object, "Object");
+                fg.AppendItem(item.Object.FormKey, "Object");
             }
             if (printMask?.AliasIndex ?? true)
             {
@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Object) ?? true))
             {
-                item.Object = rhs.Object.FormKey;
+                item.Object = new FormLink<SkyrimMajorRecord>(rhs.Object.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.AliasIndex) ?? true))
             {
@@ -1417,7 +1417,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Object
         private int? _ObjectLocation;
-        public IFormLink<ISkyrimMajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        public FormLink<ISkyrimMajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
         #endregion
         private int? _ALCALocation;
         public CreateReferenceToObject.ALCADataType ALCADataTypeState { get; private set; }

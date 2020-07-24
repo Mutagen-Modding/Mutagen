@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else if (data.HasTrigger)
             {
-                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.Nullable ? null : $" = ListExt.Empty<{list.SubTypeGeneration.TypeName(getter: true)}>();")}");
+                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.Nullable ? null : $" = ListExt.Empty<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>();")}");
             }
             else
             {

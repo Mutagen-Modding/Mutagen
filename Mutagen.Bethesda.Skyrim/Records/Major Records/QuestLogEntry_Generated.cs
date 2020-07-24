@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region NextQuest
         public FormLinkNullable<Quest> NextQuest { get; set; } = new FormLinkNullable<Quest>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IQuestGetter> IQuestLogEntryGetter.NextQuest => this.NextQuest;
+        FormLinkNullable<IQuestGetter> IQuestLogEntryGetter.NextQuest => this.NextQuest.ToGetter<Quest, IQuestGetter>();
         #endregion
         #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim
         QuestLogEntry.Flag? Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         TranslatedString? Entry { get; }
-        IFormLinkNullable<IQuestGetter> NextQuest { get; }
+        FormLinkNullable<IQuestGetter> NextQuest { get; }
         ReadOnlyMemorySlice<Byte>? SCHR { get; }
         ReadOnlyMemorySlice<Byte>? SCTX { get; }
         ReadOnlyMemorySlice<Byte>? QNAM { get; }
@@ -1314,10 +1314,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(EntryItem, "Entry");
             }
-            if ((printMask?.NextQuest ?? true)
-                && item.NextQuest.TryGet(out var NextQuestItem))
+            if (printMask?.NextQuest ?? true)
             {
-                fg.AppendItem(NextQuestItem, "NextQuest");
+                fg.AppendItem(item.NextQuest.FormKey, "NextQuest");
             }
             if ((printMask?.SCHR ?? true)
                 && item.SCHR.TryGet(out var SCHRItem))
@@ -1365,10 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Entryitem);
             }
-            if (item.NextQuest.TryGet(out var NextQuestitem))
-            {
-                hash.Add(NextQuestitem);
-            }
+            hash.Add(item.NextQuest);
             if (item.SCHR.TryGet(out var SCHRItem))
             {
                 hash.Add(SCHRItem);
@@ -1456,7 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.NextQuest) ?? true))
             {
-                item.NextQuest = rhs.NextQuest.FormKey;
+                item.NextQuest = new FormLinkNullable<Quest>(rhs.NextQuest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCHR) ?? true))
             {
@@ -1819,7 +1815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region NextQuest
         private int? _NextQuestLocation;
-        public IFormLinkNullable<IQuestGetter> NextQuest => _NextQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NextQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public FormLinkNullable<IQuestGetter> NextQuest => _NextQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NextQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region SCHR
         private int? _SCHRLocation;

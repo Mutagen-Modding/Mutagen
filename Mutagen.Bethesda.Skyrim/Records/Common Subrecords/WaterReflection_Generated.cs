@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Water
         public FormLink<PlacedObject> Water { get; set; } = new FormLink<PlacedObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedObjectGetter> IWaterReflectionGetter.Water => this.Water;
+        FormLink<IPlacedObjectGetter> IWaterReflectionGetter.Water => this.Water.ToGetter<PlacedObject, IPlacedObjectGetter>();
         #endregion
         #region Type
         public WaterReflection.Flag Type { get; set; } = default;
@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WaterReflection_Registration.Instance;
         WaterReflection.VersioningBreaks Versioning { get; }
-        IFormLink<IPlacedObjectGetter> Water { get; }
+        FormLink<IPlacedObjectGetter> Water { get; }
         WaterReflection.Flag Type { get; }
 
     }
@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Water ?? true)
             {
-                fg.AppendItem(item.Water, "Water");
+                fg.AppendItem(item.Water.FormKey, "Water");
             }
             if (printMask?.Type ?? true)
             {
@@ -1041,7 +1041,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)WaterReflection_FieldIndex.Water) ?? true))
             {
-                item.Water = rhs.Water.FormKey;
+                item.Water = new FormLink<PlacedObject>(rhs.Water.FormKey);
             }
             if (rhs.Versioning.HasFlag(WaterReflection.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)WaterReflection_FieldIndex.Type) ?? true))
@@ -1263,7 +1263,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public WaterReflection.VersioningBreaks Versioning { get; private set; }
-        public IFormLink<IPlacedObjectGetter> Water => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IPlacedObjectGetter> Water => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public WaterReflection.Flag Type => (WaterReflection.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

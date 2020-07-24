@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Parameter3
         public FormLink<SkyrimMajorRecord> Parameter3 { get; set; } = new FormLink<SkyrimMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISkyrimMajorRecordGetter> IGetEventDataGetter.Parameter3 => this.Parameter3;
+        FormLink<ISkyrimMajorRecordGetter> IGetEventDataGetter.Parameter3 => this.Parameter3.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
         #endregion
         #region RunOnType
         public Condition.RunOnType RunOnType { get; set; } = default;
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Reference
         public FormLink<SkyrimMajorRecord> Reference { get; set; } = new FormLink<SkyrimMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISkyrimMajorRecordGetter> IGetEventDataGetter.Reference => this.Reference;
+        FormLink<ISkyrimMajorRecordGetter> IGetEventDataGetter.Reference => this.Reference.ToGetter<SkyrimMajorRecord, ISkyrimMajorRecordGetter>();
         #endregion
         #region Unknown3
         public readonly static Int32 _Unknown3_Default = -1;
@@ -612,9 +612,9 @@ namespace Mutagen.Bethesda.Skyrim
         UInt16 Unknown2 { get; }
         UInt16 EventFunction { get; }
         UInt16 EventMember { get; }
-        IFormLink<ISkyrimMajorRecordGetter> Parameter3 { get; }
+        FormLink<ISkyrimMajorRecordGetter> Parameter3 { get; }
         Condition.RunOnType RunOnType { get; }
-        IFormLink<ISkyrimMajorRecordGetter> Reference { get; }
+        FormLink<ISkyrimMajorRecordGetter> Reference { get; }
         Int32 Unknown3 { get; }
 
     }
@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Parameter3 ?? true)
             {
-                fg.AppendItem(item.Parameter3, "Parameter3");
+                fg.AppendItem(item.Parameter3.FormKey, "Parameter3");
             }
             if (printMask?.RunOnType ?? true)
             {
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference, "Reference");
+                fg.AppendItem(item.Reference.FormKey, "Reference");
             }
             if (printMask?.Unknown3 ?? true)
             {
@@ -1275,7 +1275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Parameter3) ?? true))
             {
-                item.Parameter3 = rhs.Parameter3.FormKey;
+                item.Parameter3 = new FormLink<SkyrimMajorRecord>(rhs.Parameter3.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.RunOnType) ?? true))
             {
@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Reference) ?? true))
             {
-                item.Reference = rhs.Reference.FormKey;
+                item.Reference = new FormLink<SkyrimMajorRecord>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Unknown3) ?? true))
             {
@@ -1508,9 +1508,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x0, 0x2));
         public UInt16 EventFunction => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
         public UInt16 EventMember => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
-        public IFormLink<ISkyrimMajorRecordGetter> Parameter3 => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x6, 0x4))));
+        public FormLink<ISkyrimMajorRecordGetter> Parameter3 => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x6, 0x4))));
         public Condition.RunOnType RunOnType => (Condition.RunOnType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xA, 0x4));
-        public IFormLink<ISkyrimMajorRecordGetter> Reference => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xE, 0x4))));
+        public FormLink<ISkyrimMajorRecordGetter> Reference => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xE, 0x4))));
         public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x12, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

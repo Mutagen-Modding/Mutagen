@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Reference
         public FormLink<ILinkedReference> Reference { get; set; } = new FormLink<ILinkedReference>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILinkedReferenceGetter> IEnableParentGetter.Reference => this.Reference;
+        FormLink<ILinkedReferenceGetter> IEnableParentGetter.Reference => this.Reference.ToGetter<ILinkedReference, ILinkedReferenceGetter>();
         #endregion
         #region Flags
         public EnableParent.Flag Flags { get; set; } = default;
@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => EnableParent_Registration.Instance;
         EnableParent.VersioningBreaks Versioning { get; }
-        IFormLink<ILinkedReferenceGetter> Reference { get; }
+        FormLink<ILinkedReferenceGetter> Reference { get; }
         EnableParent.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
 
@@ -1030,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference, "Reference");
+                fg.AppendItem(item.Reference.FormKey, "Reference");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
             {
-                item.Reference = rhs.Reference.FormKey;
+                item.Reference = new FormLink<ILinkedReference>(rhs.Reference.FormKey);
             }
             if (rhs.Versioning.HasFlag(EnableParent.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public EnableParent.VersioningBreaks Versioning { get; private set; }
-        public IFormLink<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public EnableParent.Flag Flags => (EnableParent.Flag)_data.Span.Slice(0x4, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

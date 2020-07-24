@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Location
         public FormLink<IComplexLocation> Location { get; set; } = new FormLink<IComplexLocation>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IComplexLocationGetter> ILocationCoordinateGetter.Location => this.Location;
+        FormLink<IComplexLocationGetter> ILocationCoordinateGetter.Location => this.Location.ToGetter<IComplexLocation, IComplexLocationGetter>();
         #endregion
         #region Coordinates
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LocationCoordinate_Registration.Instance;
-        IFormLink<IComplexLocationGetter> Location { get; }
+        FormLink<IComplexLocationGetter> Location { get; }
         IReadOnlyList<P2Int16> Coordinates { get; }
 
     }
@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Location ?? true)
             {
-                fg.AppendItem(item.Location, "Location");
+                fg.AppendItem(item.Location.FormKey, "Location");
             }
             if (printMask?.Coordinates?.Overall ?? true)
             {
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Location) ?? true))
             {
-                item.Location = rhs.Location.FormKey;
+                item.Location = new FormLink<IComplexLocation>(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Coordinates) ?? true))
             {
@@ -1310,7 +1310,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         #region Coordinates
         public IReadOnlyList<P2Int16> Coordinates => BinaryOverlayList.FactoryByStartIndex<P2Int16>(_data.Slice(0x4), _package, 4, (s, p) => P2Int16BinaryTranslation.Read(s, swapCoords: true));
         protected int CoordinatesEndingPos;

@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Quest
         public FormLink<Quest> Quest { get; set; } = new FormLink<Quest>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IQuestGetter> IPerkQuestEffectGetter.Quest => this.Quest;
+        FormLink<IQuestGetter> IPerkQuestEffectGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
         #endregion
         #region Stage
         public Byte Stage { get; set; } = default;
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkQuestEffect_Registration.Instance;
-        IFormLink<IQuestGetter> Quest { get; }
+        FormLink<IQuestGetter> Quest { get; }
         Byte Stage { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
 
@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(item.Quest, "Quest");
+                fg.AppendItem(item.Quest.FormKey, "Quest");
             }
             if (printMask?.Stage ?? true)
             {
@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Quest) ?? true))
             {
-                item.Quest = rhs.Quest.FormKey;
+                item.Quest = new FormLink<Quest>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Stage) ?? true))
             {
@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IQuestGetter> Quest => new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IQuestGetter> Quest => new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Byte Stage => _data.Span[0x4];
         public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

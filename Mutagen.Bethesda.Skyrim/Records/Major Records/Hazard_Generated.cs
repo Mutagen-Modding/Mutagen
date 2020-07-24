@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ImageSpaceModifier
         public FormLinkNullable<ImageSpaceAdapter> ImageSpaceModifier { get; set; } = new FormLinkNullable<ImageSpaceAdapter>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IImageSpaceAdapterGetter> IHazardGetter.ImageSpaceModifier => this.ImageSpaceModifier;
+        FormLinkNullable<IImageSpaceAdapterGetter> IHazardGetter.ImageSpaceModifier => this.ImageSpaceModifier.ToGetter<ImageSpaceAdapter, IImageSpaceAdapterGetter>();
         #endregion
         #region Limit
         public UInt32 Limit { get; set; } = default;
@@ -89,22 +89,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Spell
         public FormLink<IEffectRecord> Spell { get; set; } = new FormLink<IEffectRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IEffectRecordGetter> IHazardGetter.Spell => this.Spell;
+        FormLink<IEffectRecordGetter> IHazardGetter.Spell => this.Spell.ToGetter<IEffectRecord, IEffectRecordGetter>();
         #endregion
         #region Light
         public FormLink<Light> Light { get; set; } = new FormLink<Light>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILightGetter> IHazardGetter.Light => this.Light;
+        FormLink<ILightGetter> IHazardGetter.Light => this.Light.ToGetter<Light, ILightGetter>();
         #endregion
         #region ImpactDataSet
         public FormLink<ImpactDataSet> ImpactDataSet { get; set; } = new FormLink<ImpactDataSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IImpactDataSetGetter> IHazardGetter.ImpactDataSet => this.ImpactDataSet;
+        FormLink<IImpactDataSetGetter> IHazardGetter.ImpactDataSet => this.ImpactDataSet.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
         #endregion
         #region Sound
         public FormLink<SoundDescriptor> Sound { get; set; } = new FormLink<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISoundDescriptorGetter> IHazardGetter.Sound => this.Sound;
+        FormLink<ISoundDescriptorGetter> IHazardGetter.Sound => this.Sound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region DATADataTypeState
         public Hazard.DATADataType DATADataTypeState { get; set; } = default;
@@ -947,17 +947,17 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         TranslatedString? Name { get; }
         IModelGetter? Model { get; }
-        IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
         UInt32 Limit { get; }
         Single Radius { get; }
         Single Lifetime { get; }
         Single ImageSpaceRadius { get; }
         Single TargetInterval { get; }
         Hazard.Flag Flags { get; }
-        IFormLink<IEffectRecordGetter> Spell { get; }
-        IFormLink<ILightGetter> Light { get; }
-        IFormLink<IImpactDataSetGetter> ImpactDataSet { get; }
-        IFormLink<ISoundDescriptorGetter> Sound { get; }
+        FormLink<IEffectRecordGetter> Spell { get; }
+        FormLink<ILightGetter> Light { get; }
+        FormLink<IImpactDataSetGetter> ImpactDataSet { get; }
+        FormLink<ISoundDescriptorGetter> Sound { get; }
         Hazard.DATADataType DATADataTypeState { get; }
 
     }
@@ -1634,10 +1634,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if ((printMask?.ImageSpaceModifier ?? true)
-                && item.ImageSpaceModifier.TryGet(out var ImageSpaceModifierItem))
+            if (printMask?.ImageSpaceModifier ?? true)
             {
-                fg.AppendItem(ImageSpaceModifierItem, "ImageSpaceModifier");
+                fg.AppendItem(item.ImageSpaceModifier.FormKey, "ImageSpaceModifier");
             }
             if (printMask?.Limit ?? true)
             {
@@ -1665,19 +1664,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell, "Spell");
+                fg.AppendItem(item.Spell.FormKey, "Spell");
             }
             if (printMask?.Light ?? true)
             {
-                fg.AppendItem(item.Light, "Light");
+                fg.AppendItem(item.Light.FormKey, "Light");
             }
             if (printMask?.ImpactDataSet ?? true)
             {
-                fg.AppendItem(item.ImpactDataSet, "ImpactDataSet");
+                fg.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
             }
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound, "Sound");
+                fg.AppendItem(item.Sound.FormKey, "Sound");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
@@ -1779,10 +1778,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Modelitem);
             }
-            if (item.ImageSpaceModifier.TryGet(out var ImageSpaceModifieritem))
-            {
-                hash.Add(ImageSpaceModifieritem);
-            }
+            hash.Add(item.ImageSpaceModifier);
             hash.Add(item.Limit);
             hash.Add(item.Radius);
             hash.Add(item.Lifetime);
@@ -1939,7 +1935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier = rhs.ImageSpaceModifier.FormKey;
+                item.ImageSpaceModifier = new FormLinkNullable<ImageSpaceAdapter>(rhs.ImageSpaceModifier.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Limit) ?? true))
             {
@@ -1967,19 +1963,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Spell) ?? true))
             {
-                item.Spell = rhs.Spell.FormKey;
+                item.Spell = new FormLink<IEffectRecord>(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Light) ?? true))
             {
-                item.Light = rhs.Light.FormKey;
+                item.Light = new FormLink<Light>(rhs.Light.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet = rhs.ImpactDataSet.FormKey;
+                item.ImpactDataSet = new FormLink<ImpactDataSet>(rhs.ImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Sound) ?? true))
             {
-                item.Sound = rhs.Sound.FormKey;
+                item.Sound = new FormLink<SoundDescriptor>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -2395,7 +2391,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Model { get; private set; }
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
         private int? _DATALocation;
         public Hazard.DATADataType DATADataTypeState { get; private set; }
@@ -2432,22 +2428,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Spell
         private int _SpellLocation => _DATALocation!.Value + 0x18;
         private bool _Spell_IsSet => _DATALocation.HasValue;
-        public IFormLink<IEffectRecordGetter> Spell => _Spell_IsSet ? new FormLink<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SpellLocation, 0x4)))) : FormLink<IEffectRecordGetter>.Null;
+        public FormLink<IEffectRecordGetter> Spell => _Spell_IsSet ? new FormLink<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SpellLocation, 0x4)))) : FormLink<IEffectRecordGetter>.Null;
         #endregion
         #region Light
         private int _LightLocation => _DATALocation!.Value + 0x1C;
         private bool _Light_IsSet => _DATALocation.HasValue;
-        public IFormLink<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public FormLink<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion
         #region ImpactDataSet
         private int _ImpactDataSetLocation => _DATALocation!.Value + 0x20;
         private bool _ImpactDataSet_IsSet => _DATALocation.HasValue;
-        public IFormLink<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public FormLink<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region Sound
         private int _SoundLocation => _DATALocation!.Value + 0x24;
         private bool _Sound_IsSet => _DATALocation.HasValue;
-        public IFormLink<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public FormLink<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

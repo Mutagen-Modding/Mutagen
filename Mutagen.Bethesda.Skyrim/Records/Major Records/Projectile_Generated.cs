@@ -92,12 +92,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Light
         public FormLink<Light> Light { get; set; } = new FormLink<Light>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILightGetter> IProjectileGetter.Light => this.Light;
+        FormLink<ILightGetter> IProjectileGetter.Light => this.Light.ToGetter<Light, ILightGetter>();
         #endregion
         #region MuzzleFlash
         public FormLink<Light> MuzzleFlash { get; set; } = new FormLink<Light>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILightGetter> IProjectileGetter.MuzzleFlash => this.MuzzleFlash;
+        FormLink<ILightGetter> IProjectileGetter.MuzzleFlash => this.MuzzleFlash.ToGetter<Light, ILightGetter>();
         #endregion
         #region TracerChance
         public Single TracerChance { get; set; } = default;
@@ -111,12 +111,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Explosion
         public FormLink<Explosion> Explosion { get; set; } = new FormLink<Explosion>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IExplosionGetter> IProjectileGetter.Explosion => this.Explosion;
+        FormLink<IExplosionGetter> IProjectileGetter.Explosion => this.Explosion.ToGetter<Explosion, IExplosionGetter>();
         #endregion
         #region Sound
         public FormLink<SoundDescriptor> Sound { get; set; } = new FormLink<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISoundDescriptorGetter> IProjectileGetter.Sound => this.Sound;
+        FormLink<ISoundDescriptorGetter> IProjectileGetter.Sound => this.Sound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region MuzzleFlashDuration
         public Single MuzzleFlashDuration { get; set; } = default;
@@ -130,17 +130,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region CountdownSound
         public FormLink<SoundDescriptor> CountdownSound { get; set; } = new FormLink<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISoundDescriptorGetter> IProjectileGetter.CountdownSound => this.CountdownSound;
+        FormLink<ISoundDescriptorGetter> IProjectileGetter.CountdownSound => this.CountdownSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region DisaleSound
         public FormLink<SoundDescriptor> DisaleSound { get; set; } = new FormLink<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISoundDescriptorGetter> IProjectileGetter.DisaleSound => this.DisaleSound;
+        FormLink<ISoundDescriptorGetter> IProjectileGetter.DisaleSound => this.DisaleSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region DefaultWeaponSource
         public FormLink<Weapon> DefaultWeaponSource { get; set; } = new FormLink<Weapon>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IWeaponGetter> IProjectileGetter.DefaultWeaponSource => this.DefaultWeaponSource;
+        FormLink<IWeaponGetter> IProjectileGetter.DefaultWeaponSource => this.DefaultWeaponSource.ToGetter<Weapon, IWeaponGetter>();
         #endregion
         #region ConeSpread
         public Single ConeSpread { get; set; } = default;
@@ -157,12 +157,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region DecalData
         public FormLink<TextureSet> DecalData { get; set; } = new FormLink<TextureSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ITextureSetGetter> IProjectileGetter.DecalData => this.DecalData;
+        FormLink<ITextureSetGetter> IProjectileGetter.DecalData => this.DecalData.ToGetter<TextureSet, ITextureSetGetter>();
         #endregion
         #region CollisionLayer
         public FormLink<CollisionLayer> CollisionLayer { get; set; } = new FormLink<CollisionLayer>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ICollisionLayerGetter> IProjectileGetter.CollisionLayer => this.CollisionLayer;
+        FormLink<ICollisionLayerGetter> IProjectileGetter.CollisionLayer => this.CollisionLayer.ToGetter<CollisionLayer, ICollisionLayerGetter>();
         #endregion
         #region MuzzleFlashModel
         public String MuzzleFlashModel { get; set; } = string.Empty;
@@ -1533,25 +1533,25 @@ namespace Mutagen.Bethesda.Skyrim
         Single Gravity { get; }
         Single Speed { get; }
         Single Range { get; }
-        IFormLink<ILightGetter> Light { get; }
-        IFormLink<ILightGetter> MuzzleFlash { get; }
+        FormLink<ILightGetter> Light { get; }
+        FormLink<ILightGetter> MuzzleFlash { get; }
         Single TracerChance { get; }
         Single ExplosionAltTriggerProximity { get; }
         Single ExplosionAltTriggerTimer { get; }
-        IFormLink<IExplosionGetter> Explosion { get; }
-        IFormLink<ISoundDescriptorGetter> Sound { get; }
+        FormLink<IExplosionGetter> Explosion { get; }
+        FormLink<ISoundDescriptorGetter> Sound { get; }
         Single MuzzleFlashDuration { get; }
         Single FadeDuration { get; }
         Single ImpactForce { get; }
-        IFormLink<ISoundDescriptorGetter> CountdownSound { get; }
-        IFormLink<ISoundDescriptorGetter> DisaleSound { get; }
-        IFormLink<IWeaponGetter> DefaultWeaponSource { get; }
+        FormLink<ISoundDescriptorGetter> CountdownSound { get; }
+        FormLink<ISoundDescriptorGetter> DisaleSound { get; }
+        FormLink<IWeaponGetter> DefaultWeaponSource { get; }
         Single ConeSpread { get; }
         Single CollisionRadius { get; }
         Single Lifetime { get; }
         Single RelaunchInterval { get; }
-        IFormLink<ITextureSetGetter> DecalData { get; }
-        IFormLink<ICollisionLayerGetter> CollisionLayer { get; }
+        FormLink<ITextureSetGetter> DecalData { get; }
+        FormLink<ICollisionLayerGetter> CollisionLayer { get; }
         String MuzzleFlashModel { get; }
         ReadOnlyMemorySlice<Byte>? TextureFilesHashes { get; }
         UInt32 SoundLevel { get; }
@@ -2500,11 +2500,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Light ?? true)
             {
-                fg.AppendItem(item.Light, "Light");
+                fg.AppendItem(item.Light.FormKey, "Light");
             }
             if (printMask?.MuzzleFlash ?? true)
             {
-                fg.AppendItem(item.MuzzleFlash, "MuzzleFlash");
+                fg.AppendItem(item.MuzzleFlash.FormKey, "MuzzleFlash");
             }
             if (printMask?.TracerChance ?? true)
             {
@@ -2520,11 +2520,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Explosion ?? true)
             {
-                fg.AppendItem(item.Explosion, "Explosion");
+                fg.AppendItem(item.Explosion.FormKey, "Explosion");
             }
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound, "Sound");
+                fg.AppendItem(item.Sound.FormKey, "Sound");
             }
             if (printMask?.MuzzleFlashDuration ?? true)
             {
@@ -2540,15 +2540,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.CountdownSound ?? true)
             {
-                fg.AppendItem(item.CountdownSound, "CountdownSound");
+                fg.AppendItem(item.CountdownSound.FormKey, "CountdownSound");
             }
             if (printMask?.DisaleSound ?? true)
             {
-                fg.AppendItem(item.DisaleSound, "DisaleSound");
+                fg.AppendItem(item.DisaleSound.FormKey, "DisaleSound");
             }
             if (printMask?.DefaultWeaponSource ?? true)
             {
-                fg.AppendItem(item.DefaultWeaponSource, "DefaultWeaponSource");
+                fg.AppendItem(item.DefaultWeaponSource.FormKey, "DefaultWeaponSource");
             }
             if (printMask?.ConeSpread ?? true)
             {
@@ -2568,11 +2568,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.DecalData ?? true)
             {
-                fg.AppendItem(item.DecalData, "DecalData");
+                fg.AppendItem(item.DecalData.FormKey, "DecalData");
             }
             if (printMask?.CollisionLayer ?? true)
             {
-                fg.AppendItem(item.CollisionLayer, "CollisionLayer");
+                fg.AppendItem(item.CollisionLayer.FormKey, "CollisionLayer");
             }
             if (printMask?.MuzzleFlashModel ?? true)
             {
@@ -2938,11 +2938,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Light) ?? true))
             {
-                item.Light = rhs.Light.FormKey;
+                item.Light = new FormLink<Light>(rhs.Light.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlash) ?? true))
             {
-                item.MuzzleFlash = rhs.MuzzleFlash.FormKey;
+                item.MuzzleFlash = new FormLink<Light>(rhs.MuzzleFlash.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.TracerChance) ?? true))
             {
@@ -2958,11 +2958,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Explosion) ?? true))
             {
-                item.Explosion = rhs.Explosion.FormKey;
+                item.Explosion = new FormLink<Explosion>(rhs.Explosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Sound) ?? true))
             {
-                item.Sound = rhs.Sound.FormKey;
+                item.Sound = new FormLink<SoundDescriptor>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashDuration) ?? true))
             {
@@ -2978,15 +2978,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.CountdownSound) ?? true))
             {
-                item.CountdownSound = rhs.CountdownSound.FormKey;
+                item.CountdownSound = new FormLink<SoundDescriptor>(rhs.CountdownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.DisaleSound) ?? true))
             {
-                item.DisaleSound = rhs.DisaleSound.FormKey;
+                item.DisaleSound = new FormLink<SoundDescriptor>(rhs.DisaleSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.DefaultWeaponSource) ?? true))
             {
-                item.DefaultWeaponSource = rhs.DefaultWeaponSource.FormKey;
+                item.DefaultWeaponSource = new FormLink<Weapon>(rhs.DefaultWeaponSource.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.ConeSpread) ?? true))
             {
@@ -3006,11 +3006,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.DecalData) ?? true))
             {
-                item.DecalData = rhs.DecalData.FormKey;
+                item.DecalData = new FormLink<TextureSet>(rhs.DecalData.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.CollisionLayer) ?? true))
             {
-                item.CollisionLayer = rhs.CollisionLayer.FormKey;
+                item.CollisionLayer = new FormLink<CollisionLayer>(rhs.CollisionLayer.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
             {
@@ -3596,12 +3596,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Light
         private int _LightLocation => _DATALocation!.Value + 0x10;
         private bool _Light_IsSet => _DATALocation.HasValue;
-        public IFormLink<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public FormLink<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion
         #region MuzzleFlash
         private int _MuzzleFlashLocation => _DATALocation!.Value + 0x14;
         private bool _MuzzleFlash_IsSet => _DATALocation.HasValue;
-        public IFormLink<ILightGetter> MuzzleFlash => _MuzzleFlash_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MuzzleFlashLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public FormLink<ILightGetter> MuzzleFlash => _MuzzleFlash_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MuzzleFlashLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion
         #region TracerChance
         private int _TracerChanceLocation => _DATALocation!.Value + 0x18;
@@ -3621,12 +3621,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Explosion
         private int _ExplosionLocation => _DATALocation!.Value + 0x24;
         private bool _Explosion_IsSet => _DATALocation.HasValue;
-        public IFormLink<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public FormLink<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region Sound
         private int _SoundLocation => _DATALocation!.Value + 0x28;
         private bool _Sound_IsSet => _DATALocation.HasValue;
-        public IFormLink<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public FormLink<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region MuzzleFlashDuration
         private int _MuzzleFlashDurationLocation => _DATALocation!.Value + 0x2C;
@@ -3646,17 +3646,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region CountdownSound
         private int _CountdownSoundLocation => _DATALocation!.Value + 0x38;
         private bool _CountdownSound_IsSet => _DATALocation.HasValue;
-        public IFormLink<ISoundDescriptorGetter> CountdownSound => _CountdownSound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CountdownSoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public FormLink<ISoundDescriptorGetter> CountdownSound => _CountdownSound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CountdownSoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region DisaleSound
         private int _DisaleSoundLocation => _DATALocation!.Value + 0x3C;
         private bool _DisaleSound_IsSet => _DATALocation.HasValue;
-        public IFormLink<ISoundDescriptorGetter> DisaleSound => _DisaleSound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DisaleSoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public FormLink<ISoundDescriptorGetter> DisaleSound => _DisaleSound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DisaleSoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region DefaultWeaponSource
         private int _DefaultWeaponSourceLocation => _DATALocation!.Value + 0x40;
         private bool _DefaultWeaponSource_IsSet => _DATALocation.HasValue;
-        public IFormLink<IWeaponGetter> DefaultWeaponSource => _DefaultWeaponSource_IsSet ? new FormLink<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DefaultWeaponSourceLocation, 0x4)))) : FormLink<IWeaponGetter>.Null;
+        public FormLink<IWeaponGetter> DefaultWeaponSource => _DefaultWeaponSource_IsSet ? new FormLink<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DefaultWeaponSourceLocation, 0x4)))) : FormLink<IWeaponGetter>.Null;
         #endregion
         #region ConeSpread
         private int _ConeSpreadLocation => _DATALocation!.Value + 0x44;
@@ -3681,12 +3681,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region DecalData
         private int _DecalDataLocation => _DATALocation!.Value + 0x54;
         private bool _DecalData_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break0);
-        public IFormLink<ITextureSetGetter> DecalData => _DecalData_IsSet ? new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DecalDataLocation, 0x4)))) : FormLink<ITextureSetGetter>.Null;
+        public FormLink<ITextureSetGetter> DecalData => _DecalData_IsSet ? new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DecalDataLocation, 0x4)))) : FormLink<ITextureSetGetter>.Null;
         #endregion
         #region CollisionLayer
         private int _CollisionLayerLocation => _DATALocation!.Value + 0x58;
         private bool _CollisionLayer_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break1);
-        public IFormLink<ICollisionLayerGetter> CollisionLayer => _CollisionLayer_IsSet ? new FormLink<ICollisionLayerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CollisionLayerLocation, 0x4)))) : FormLink<ICollisionLayerGetter>.Null;
+        public FormLink<ICollisionLayerGetter> CollisionLayer => _CollisionLayer_IsSet ? new FormLink<ICollisionLayerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CollisionLayerLocation, 0x4)))) : FormLink<ICollisionLayerGetter>.Null;
         #endregion
         #region MuzzleFlashModel
         private int? _MuzzleFlashModelLocation;

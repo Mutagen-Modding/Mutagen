@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Perk
         public FormLink<Perk> Perk { get; set; } = new FormLink<Perk>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPerkGetter> IPerkPlacementGetter.Perk => this.Perk;
+        FormLink<IPerkGetter> IPerkPlacementGetter.Perk => this.Perk.ToGetter<Perk, IPerkGetter>();
         #endregion
         #region Rank
         public Byte Rank { get; set; } = default;
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => PerkPlacement_Registration.Instance;
-        IFormLink<IPerkGetter> Perk { get; }
+        FormLink<IPerkGetter> Perk { get; }
         Byte Rank { get; }
         ReadOnlyMemorySlice<Byte> Fluff { get; }
 
@@ -974,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Perk ?? true)
             {
-                fg.AppendItem(item.Perk, "Perk");
+                fg.AppendItem(item.Perk.FormKey, "Perk");
             }
             if (printMask?.Rank ?? true)
             {
@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)PerkPlacement_FieldIndex.Perk) ?? true))
             {
-                item.Perk = rhs.Perk.FormKey;
+                item.Perk = new FormLink<Perk>(rhs.Perk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PerkPlacement_FieldIndex.Rank) ?? true))
             {
@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IPerkGetter> Perk => new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IPerkGetter> Perk => new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Byte Rank => _data.Span[0x4];
         public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

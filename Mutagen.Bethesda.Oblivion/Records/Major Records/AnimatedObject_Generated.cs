@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region IdleAnimation
         public FormLinkNullable<IdleAnimation> IdleAnimation { get; set; } = new FormLinkNullable<IdleAnimation>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IIdleAnimationGetter> IAnimatedObjectGetter.IdleAnimation => this.IdleAnimation;
+        FormLinkNullable<IIdleAnimationGetter> IAnimatedObjectGetter.IdleAnimation => this.IdleAnimation.ToGetter<IdleAnimation, IIdleAnimationGetter>();
         #endregion
 
         #region To String
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         static new ILoquiRegistration Registration => AnimatedObject_Registration.Instance;
         IModelGetter? Model { get; }
-        IFormLinkNullable<IIdleAnimationGetter> IdleAnimation { get; }
+        FormLinkNullable<IIdleAnimationGetter> IdleAnimation { get; }
 
     }
 
@@ -983,10 +983,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if ((printMask?.IdleAnimation ?? true)
-                && item.IdleAnimation.TryGet(out var IdleAnimationItem))
+            if (printMask?.IdleAnimation ?? true)
             {
-                fg.AppendItem(IdleAnimationItem, "IdleAnimation");
+                fg.AppendItem(item.IdleAnimation.FormKey, "IdleAnimation");
             }
         }
         
@@ -1064,10 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Modelitem);
             }
-            if (item.IdleAnimation.TryGet(out var IdleAnimationitem))
-            {
-                hash.Add(IdleAnimationitem);
-            }
+            hash.Add(item.IdleAnimation);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1176,7 +1172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.IdleAnimation) ?? true))
             {
-                item.IdleAnimation = rhs.IdleAnimation.FormKey;
+                item.IdleAnimation = new FormLinkNullable<IdleAnimation>(rhs.IdleAnimation.FormKey);
             }
         }
         
@@ -1489,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter? Model { get; private set; }
         #region IdleAnimation
         private int? _IdleAnimationLocation;
-        public IFormLinkNullable<IIdleAnimationGetter> IdleAnimation => _IdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public FormLinkNullable<IIdleAnimationGetter> IdleAnimation => _IdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

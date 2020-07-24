@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ImpactDataSet
         public FormLink<ImpactDataSet> ImpactDataSet { get; set; } = new FormLink<ImpactDataSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IImpactDataSetGetter> IFootstepGetter.ImpactDataSet => this.ImpactDataSet;
+        FormLink<IImpactDataSetGetter> IFootstepGetter.ImpactDataSet => this.ImpactDataSet.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
         #endregion
         #region Tag
         public String Tag { get; set; } = string.Empty;
@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Footstep_Registration.Instance;
-        IFormLink<IImpactDataSetGetter> ImpactDataSet { get; }
+        FormLink<IImpactDataSetGetter> ImpactDataSet { get; }
         String Tag { get; }
 
     }
@@ -962,7 +962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.ImpactDataSet ?? true)
             {
-                fg.AppendItem(item.ImpactDataSet, "ImpactDataSet");
+                fg.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
             }
             if (printMask?.Tag ?? true)
             {
@@ -1123,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)Footstep_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet = rhs.ImpactDataSet.FormKey;
+                item.ImpactDataSet = new FormLink<ImpactDataSet>(rhs.ImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Footstep_FieldIndex.Tag) ?? true))
             {
@@ -1438,7 +1438,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;
-        public IFormLink<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLink<IImpactDataSetGetter>.Null;
+        public FormLink<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region Tag
         private int? _TagLocation;

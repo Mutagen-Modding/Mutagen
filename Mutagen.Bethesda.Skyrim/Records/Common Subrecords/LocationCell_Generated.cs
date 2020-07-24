@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Link
         public FormLink<Cell> Link { get; set; } = new FormLink<Cell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ICellGetter> ILocationCellGetter.Link => this.Link;
+        FormLink<ICellGetter> ILocationCellGetter.Link => this.Link.ToGetter<Cell, ICellGetter>();
         #endregion
 
         #region To String
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LocationCell_Registration.Instance;
-        IFormLink<ICellGetter> Link { get; }
+        FormLink<ICellGetter> Link { get; }
 
     }
 
@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Link ?? true)
             {
-                fg.AppendItem(item.Link, "Link");
+                fg.AppendItem(item.Link.FormKey, "Link");
             }
         }
         
@@ -934,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)LocationCell_FieldIndex.Link) ?? true))
             {
-                item.Link = rhs.Link.FormKey;
+                item.Link = new FormLink<Cell>(rhs.Link.FormKey);
             }
         }
         
@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ICellGetter> Link => new FormLink<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ICellGetter> Link => new FormLink<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

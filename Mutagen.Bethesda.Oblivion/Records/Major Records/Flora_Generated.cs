@@ -61,12 +61,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region Script
         public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IScriptGetter> IFloraGetter.Script => this.Script;
+        FormLinkNullable<IScriptGetter> IFloraGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
         #endregion
         #region Ingredient
         public FormLinkNullable<Ingredient> Ingredient { get; set; } = new FormLinkNullable<Ingredient>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IIngredientGetter> IFloraGetter.Ingredient => this.Ingredient;
+        FormLinkNullable<IIngredientGetter> IFloraGetter.Ingredient => this.Ingredient.ToGetter<Ingredient, IIngredientGetter>();
         #endregion
         #region SeasonalIngredientProduction
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -618,8 +618,8 @@ namespace Mutagen.Bethesda.Oblivion
         static new ILoquiRegistration Registration => Flora_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
-        IFormLinkNullable<IScriptGetter> Script { get; }
-        IFormLinkNullable<IIngredientGetter> Ingredient { get; }
+        FormLinkNullable<IScriptGetter> Script { get; }
+        FormLinkNullable<IIngredientGetter> Ingredient { get; }
         ISeasonalIngredientProductionGetter? SeasonalIngredientProduction { get; }
 
     }
@@ -1155,15 +1155,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if ((printMask?.Script ?? true)
-                && item.Script.TryGet(out var ScriptItem))
+            if (printMask?.Script ?? true)
             {
-                fg.AppendItem(ScriptItem, "Script");
+                fg.AppendItem(item.Script.FormKey, "Script");
             }
-            if ((printMask?.Ingredient ?? true)
-                && item.Ingredient.TryGet(out var IngredientItem))
+            if (printMask?.Ingredient ?? true)
             {
-                fg.AppendItem(IngredientItem, "Ingredient");
+                fg.AppendItem(item.Ingredient.FormKey, "Ingredient");
             }
             if ((printMask?.SeasonalIngredientProduction?.Overall ?? true)
                 && item.SeasonalIngredientProduction.TryGet(out var SeasonalIngredientProductionItem))
@@ -1253,14 +1251,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Modelitem);
             }
-            if (item.Script.TryGet(out var Scriptitem))
-            {
-                hash.Add(Scriptitem);
-            }
-            if (item.Ingredient.TryGet(out var Ingredientitem))
-            {
-                hash.Add(Ingredientitem);
-            }
+            hash.Add(item.Script);
+            hash.Add(item.Ingredient);
             if (item.SeasonalIngredientProduction.TryGet(out var SeasonalIngredientProductionitem))
             {
                 hash.Add(SeasonalIngredientProductionitem);
@@ -1381,11 +1373,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Script) ?? true))
             {
-                item.Script = rhs.Script.FormKey;
+                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
             {
-                item.Ingredient = rhs.Ingredient.FormKey;
+                item.Ingredient = new FormLinkNullable<Ingredient>(rhs.Ingredient.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.SeasonalIngredientProduction) ?? true))
             {
@@ -1765,11 +1757,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter? Model { get; private set; }
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public FormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region Ingredient
         private int? _IngredientLocation;
-        public IFormLinkNullable<IIngredientGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IIngredientGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IngredientLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIngredientGetter>.Null;
+        public FormLinkNullable<IIngredientGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IIngredientGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IngredientLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIngredientGetter>.Null;
         #endregion
         #region SeasonalIngredientProduction
         private RangeInt32? _SeasonalIngredientProductionLocation;

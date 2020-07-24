@@ -42,12 +42,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region Direct
         public FormLink<Place> Direct { get; set; } = new FormLink<Place>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlaceGetter> ILoadScreenLocationGetter.Direct => this.Direct;
+        FormLink<IPlaceGetter> ILoadScreenLocationGetter.Direct => this.Direct.ToGetter<Place, IPlaceGetter>();
         #endregion
         #region Indirect
         public FormLink<Worldspace> Indirect { get; set; } = new FormLink<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IWorldspaceGetter> ILoadScreenLocationGetter.Indirect => this.Indirect;
+        FormLink<IWorldspaceGetter> ILoadScreenLocationGetter.Indirect => this.Indirect.ToGetter<Worldspace, IWorldspaceGetter>();
         #endregion
         #region GridPoint
         public P2Int16 GridPoint { get; set; } = default;
@@ -494,8 +494,8 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LoadScreenLocation_Registration.Instance;
-        IFormLink<IPlaceGetter> Direct { get; }
-        IFormLink<IWorldspaceGetter> Indirect { get; }
+        FormLink<IPlaceGetter> Direct { get; }
+        FormLink<IWorldspaceGetter> Indirect { get; }
         P2Int16 GridPoint { get; }
 
     }
@@ -968,11 +968,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Direct ?? true)
             {
-                fg.AppendItem(item.Direct, "Direct");
+                fg.AppendItem(item.Direct.FormKey, "Direct");
             }
             if (printMask?.Indirect ?? true)
             {
-                fg.AppendItem(item.Indirect, "Indirect");
+                fg.AppendItem(item.Indirect.FormKey, "Indirect");
             }
             if (printMask?.GridPoint ?? true)
             {
@@ -1035,11 +1035,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Direct) ?? true))
             {
-                item.Direct = rhs.Direct.FormKey;
+                item.Direct = new FormLink<Place>(rhs.Direct.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Indirect) ?? true))
             {
-                item.Indirect = rhs.Indirect.FormKey;
+                item.Indirect = new FormLink<Worldspace>(rhs.Indirect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.GridPoint) ?? true))
             {
@@ -1256,8 +1256,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IPlaceGetter> Direct => new FormLink<IPlaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLink<IWorldspaceGetter> Indirect => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IPlaceGetter> Direct => new FormLink<IPlaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IWorldspaceGetter> Indirect => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public P2Int16 GridPoint => P2Int16BinaryTranslation.Read(_data.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

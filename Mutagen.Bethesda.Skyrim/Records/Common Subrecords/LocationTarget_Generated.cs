@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Link
         public FormLink<ILocationTargetable> Link { get; set; } = new FormLink<ILocationTargetable>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILocationTargetableGetter> ILocationTargetGetter.Link => this.Link;
+        FormLink<ILocationTargetableGetter> ILocationTargetGetter.Link => this.Link.ToGetter<ILocationTargetable, ILocationTargetableGetter>();
         #endregion
 
         #region To String
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LocationTarget_Registration.Instance;
-        IFormLink<ILocationTargetableGetter> Link { get; }
+        FormLink<ILocationTargetableGetter> Link { get; }
 
     }
 
@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Link ?? true)
             {
-                fg.AppendItem(item.Link, "Link");
+                fg.AppendItem(item.Link.FormKey, "Link");
             }
         }
         
@@ -934,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)LocationTarget_FieldIndex.Link) ?? true))
             {
-                item.Link = rhs.Link.FormKey;
+                item.Link = new FormLink<ILocationTargetable>(rhs.Link.FormKey);
             }
         }
         
@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ILocationTargetableGetter> Link => new FormLink<ILocationTargetableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ILocationTargetableGetter> Link => new FormLink<ILocationTargetableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

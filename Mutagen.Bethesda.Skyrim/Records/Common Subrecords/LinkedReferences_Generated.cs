@@ -45,12 +45,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region KeywordOrReference
         public FormLink<IKeywordLinkedReference> KeywordOrReference { get; set; } = new FormLink<IKeywordLinkedReference>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IKeywordLinkedReferenceGetter> ILinkedReferencesGetter.KeywordOrReference => this.KeywordOrReference;
+        FormLink<IKeywordLinkedReferenceGetter> ILinkedReferencesGetter.KeywordOrReference => this.KeywordOrReference.ToGetter<IKeywordLinkedReference, IKeywordLinkedReferenceGetter>();
         #endregion
         #region Reference
         public FormLink<ILinkedReference> Reference { get; set; } = new FormLink<ILinkedReference>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILinkedReferenceGetter> ILinkedReferencesGetter.Reference => this.Reference;
+        FormLink<ILinkedReferenceGetter> ILinkedReferencesGetter.Reference => this.Reference.ToGetter<ILinkedReference, ILinkedReferenceGetter>();
         #endregion
 
         #region To String
@@ -500,8 +500,8 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LinkedReferences_Registration.Instance;
         LinkedReferences.VersioningBreaks Versioning { get; }
-        IFormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; }
-        IFormLink<ILinkedReferenceGetter> Reference { get; }
+        FormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; }
+        FormLink<ILinkedReferenceGetter> Reference { get; }
 
     }
 
@@ -977,11 +977,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.KeywordOrReference ?? true)
             {
-                fg.AppendItem(item.KeywordOrReference, "KeywordOrReference");
+                fg.AppendItem(item.KeywordOrReference.FormKey, "KeywordOrReference");
             }
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference, "Reference");
+                fg.AppendItem(item.Reference.FormKey, "Reference");
             }
         }
         
@@ -1045,12 +1045,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LinkedReferences_FieldIndex.KeywordOrReference) ?? true))
             {
-                item.KeywordOrReference = rhs.KeywordOrReference.FormKey;
+                item.KeywordOrReference = new FormLink<IKeywordLinkedReference>(rhs.KeywordOrReference.FormKey);
             }
             if (rhs.Versioning.HasFlag(LinkedReferences.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)LinkedReferences_FieldIndex.Reference) ?? true))
             {
-                item.Reference = rhs.Reference.FormKey;
+                item.Reference = new FormLink<ILinkedReference>(rhs.Reference.FormKey);
             }
         }
         
@@ -1268,8 +1268,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public LinkedReferences.VersioningBreaks Versioning { get; private set; }
-        public IFormLink<IKeywordLinkedReferenceGetter> KeywordOrReference => new FormLink<IKeywordLinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLink<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IKeywordLinkedReferenceGetter> KeywordOrReference => new FormLink<IKeywordLinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

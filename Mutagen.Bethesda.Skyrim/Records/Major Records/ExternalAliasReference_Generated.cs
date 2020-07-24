@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Quest
         public FormLinkNullable<Quest> Quest { get; set; } = new FormLinkNullable<Quest>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IQuestGetter> IExternalAliasReferenceGetter.Quest => this.Quest;
+        FormLinkNullable<IQuestGetter> IExternalAliasReferenceGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
         #endregion
         #region AliasIndex
         public Int32? AliasIndex { get; set; }
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ExternalAliasReference_Registration.Instance;
-        IFormLinkNullable<IQuestGetter> Quest { get; }
+        FormLinkNullable<IQuestGetter> Quest { get; }
         Int32? AliasIndex { get; }
 
     }
@@ -927,10 +927,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             ExternalAliasReference.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Quest ?? true)
-                && item.Quest.TryGet(out var QuestItem))
+            if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(QuestItem, "Quest");
+                fg.AppendItem(item.Quest.FormKey, "Quest");
             }
             if ((printMask?.AliasIndex ?? true)
                 && item.AliasIndex.TryGet(out var AliasIndexItem))
@@ -954,10 +953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IExternalAliasReferenceGetter item)
         {
             var hash = new HashCode();
-            if (item.Quest.TryGet(out var Questitem))
-            {
-                hash.Add(Questitem);
-            }
+            hash.Add(item.Quest);
             if (item.AliasIndex.TryGet(out var AliasIndexitem))
             {
                 hash.Add(AliasIndexitem);
@@ -1000,7 +996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.Quest) ?? true))
             {
-                item.Quest = rhs.Quest.FormKey;
+                item.Quest = new FormLinkNullable<Quest>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.AliasIndex) ?? true))
             {
@@ -1240,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public FormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region AliasIndex
         private int? _AliasIndexLocation;

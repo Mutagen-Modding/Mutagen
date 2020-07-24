@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Script
         public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IScriptGetter> ISoulGemGetter.Script => this.Script;
+        FormLinkNullable<IScriptGetter> ISoulGemGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
-        IFormLinkNullable<IScriptGetter> Script { get; }
+        FormLinkNullable<IScriptGetter> Script { get; }
         ISoulGemDataGetter? Data { get; }
         SoulLevel? ContainedSoul { get; }
         SoulLevel? MaximumCapacity { get; }
@@ -1274,10 +1274,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(IconItem, "Icon");
             }
-            if ((printMask?.Script ?? true)
-                && item.Script.TryGet(out var ScriptItem))
+            if (printMask?.Script ?? true)
             {
-                fg.AppendItem(ScriptItem, "Script");
+                fg.AppendItem(item.Script.FormKey, "Script");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data.TryGet(out var DataItem))
@@ -1411,10 +1410,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Iconitem);
             }
-            if (item.Script.TryGet(out var Scriptitem))
-            {
-                hash.Add(Scriptitem);
-            }
+            hash.Add(item.Script);
             if (item.Data.TryGet(out var Dataitem))
             {
                 hash.Add(Dataitem);
@@ -1548,7 +1544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Script) ?? true))
             {
-                item.Script = rhs.Script.FormKey;
+                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Data) ?? true))
             {
@@ -2000,7 +1996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public FormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;

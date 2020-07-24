@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ObjectEffect
         public FormLinkNullable<IEffectRecord> ObjectEffect { get; set; } = new FormLinkNullable<IEffectRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IEffectRecordGetter> IArmorGetter.ObjectEffect => this.ObjectEffect;
+        FormLinkNullable<IEffectRecordGetter> IArmorGetter.ObjectEffect => this.ObjectEffect.ToGetter<IEffectRecord, IEffectRecordGetter>();
         #endregion
         #region EnchantmentAmount
         public UInt16? EnchantmentAmount { get; set; }
@@ -102,12 +102,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region PickUpSound
         public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IArmorGetter.PickUpSound => this.PickUpSound;
+        FormLinkNullable<ISoundDescriptorGetter> IArmorGetter.PickUpSound => this.PickUpSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region PutDownSound
         public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IArmorGetter.PutDownSound => this.PutDownSound;
+        FormLinkNullable<ISoundDescriptorGetter> IArmorGetter.PutDownSound => this.PutDownSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region RagdollConstraintTemplate
         public String? RagdollConstraintTemplate { get; set; }
@@ -117,22 +117,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region EquipmentType
         public FormLinkNullable<EquipType> EquipmentType { get; set; } = new FormLinkNullable<EquipType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IEquipTypeGetter> IArmorGetter.EquipmentType => this.EquipmentType;
+        FormLinkNullable<IEquipTypeGetter> IArmorGetter.EquipmentType => this.EquipmentType.ToGetter<EquipType, IEquipTypeGetter>();
         #endregion
         #region BashImpactDataSet
         public FormLinkNullable<ImpactDataSet> BashImpactDataSet { get; set; } = new FormLinkNullable<ImpactDataSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IImpactDataSetGetter> IArmorGetter.BashImpactDataSet => this.BashImpactDataSet;
+        FormLinkNullable<IImpactDataSetGetter> IArmorGetter.BashImpactDataSet => this.BashImpactDataSet.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
         #endregion
         #region AlternateBlockMaterial
         public FormLinkNullable<MaterialType> AlternateBlockMaterial { get; set; } = new FormLinkNullable<MaterialType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IMaterialTypeGetter> IArmorGetter.AlternateBlockMaterial => this.AlternateBlockMaterial;
+        FormLinkNullable<IMaterialTypeGetter> IArmorGetter.AlternateBlockMaterial => this.AlternateBlockMaterial.ToGetter<MaterialType, IMaterialTypeGetter>();
         #endregion
         #region Race
         public FormLinkNullable<Race> Race { get; set; } = new FormLinkNullable<Race>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IRaceGetter> IArmorGetter.Race => this.Race;
+        FormLinkNullable<IRaceGetter> IArmorGetter.Race => this.Race.ToGetter<Race, IRaceGetter>();
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region TemplateArmor
         public FormLinkNullable<Armor> TemplateArmor { get; set; } = new FormLinkNullable<Armor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IArmorGetter> IArmorGetter.TemplateArmor => this.TemplateArmor;
+        FormLinkNullable<IArmorGetter> IArmorGetter.TemplateArmor => this.TemplateArmor.ToGetter<Armor, IArmorGetter>();
         #endregion
         #region DATADataTypeState
         public Armor.DATADataType DATADataTypeState { get; set; } = default;
@@ -1445,25 +1445,25 @@ namespace Mutagen.Bethesda.Skyrim
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
         TranslatedString? Name { get; }
-        IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; }
+        FormLinkNullable<IEffectRecordGetter> ObjectEffect { get; }
         UInt16? EnchantmentAmount { get; }
         IGenderedItemGetter<IArmorModelGetter?>? WorldModel { get; }
         IBodyTemplateGetter? BodyTemplate { get; }
         IDestructibleGetter? Destructible { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
         String? RagdollConstraintTemplate { get; }
-        IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
-        IFormLinkNullable<IImpactDataSetGetter> BashImpactDataSet { get; }
-        IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; }
-        IFormLinkNullable<IRaceGetter> Race { get; }
+        FormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
+        FormLinkNullable<IImpactDataSetGetter> BashImpactDataSet { get; }
+        FormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; }
+        FormLinkNullable<IRaceGetter> Race { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         TranslatedString? Description { get; }
         IReadOnlyList<IFormLink<IArmorAddonGetter>> Armature { get; }
         UInt32 Value { get; }
         Single Weight { get; }
         Single ArmorRating { get; }
-        IFormLinkNullable<IArmorGetter> TemplateArmor { get; }
+        FormLinkNullable<IArmorGetter> TemplateArmor { get; }
         Armor.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
@@ -2301,10 +2301,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(NameItem, "Name");
             }
-            if ((printMask?.ObjectEffect ?? true)
-                && item.ObjectEffect.TryGet(out var ObjectEffectItem))
+            if (printMask?.ObjectEffect ?? true)
             {
-                fg.AppendItem(ObjectEffectItem, "ObjectEffect");
+                fg.AppendItem(item.ObjectEffect.FormKey, "ObjectEffect");
             }
             if ((printMask?.EnchantmentAmount ?? true)
                 && item.EnchantmentAmount.TryGet(out var EnchantmentAmountItem))
@@ -2326,40 +2325,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 DestructibleItem?.ToString(fg, "Destructible");
             }
-            if ((printMask?.PickUpSound ?? true)
-                && item.PickUpSound.TryGet(out var PickUpSoundItem))
+            if (printMask?.PickUpSound ?? true)
             {
-                fg.AppendItem(PickUpSoundItem, "PickUpSound");
+                fg.AppendItem(item.PickUpSound.FormKey, "PickUpSound");
             }
-            if ((printMask?.PutDownSound ?? true)
-                && item.PutDownSound.TryGet(out var PutDownSoundItem))
+            if (printMask?.PutDownSound ?? true)
             {
-                fg.AppendItem(PutDownSoundItem, "PutDownSound");
+                fg.AppendItem(item.PutDownSound.FormKey, "PutDownSound");
             }
             if ((printMask?.RagdollConstraintTemplate ?? true)
                 && item.RagdollConstraintTemplate.TryGet(out var RagdollConstraintTemplateItem))
             {
                 fg.AppendItem(RagdollConstraintTemplateItem, "RagdollConstraintTemplate");
             }
-            if ((printMask?.EquipmentType ?? true)
-                && item.EquipmentType.TryGet(out var EquipmentTypeItem))
+            if (printMask?.EquipmentType ?? true)
             {
-                fg.AppendItem(EquipmentTypeItem, "EquipmentType");
+                fg.AppendItem(item.EquipmentType.FormKey, "EquipmentType");
             }
-            if ((printMask?.BashImpactDataSet ?? true)
-                && item.BashImpactDataSet.TryGet(out var BashImpactDataSetItem))
+            if (printMask?.BashImpactDataSet ?? true)
             {
-                fg.AppendItem(BashImpactDataSetItem, "BashImpactDataSet");
+                fg.AppendItem(item.BashImpactDataSet.FormKey, "BashImpactDataSet");
             }
-            if ((printMask?.AlternateBlockMaterial ?? true)
-                && item.AlternateBlockMaterial.TryGet(out var AlternateBlockMaterialItem))
+            if (printMask?.AlternateBlockMaterial ?? true)
             {
-                fg.AppendItem(AlternateBlockMaterialItem, "AlternateBlockMaterial");
+                fg.AppendItem(item.AlternateBlockMaterial.FormKey, "AlternateBlockMaterial");
             }
-            if ((printMask?.Race ?? true)
-                && item.Race.TryGet(out var RaceItem))
+            if (printMask?.Race ?? true)
             {
-                fg.AppendItem(RaceItem, "Race");
+                fg.AppendItem(item.Race.FormKey, "Race");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords.TryGet(out var KeywordsItem))
@@ -2373,7 +2366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -2396,7 +2389,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -2415,10 +2408,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.ArmorRating, "ArmorRating");
             }
-            if ((printMask?.TemplateArmor ?? true)
-                && item.TemplateArmor.TryGet(out var TemplateArmorItem))
+            if (printMask?.TemplateArmor ?? true)
             {
-                fg.AppendItem(TemplateArmorItem, "TemplateArmor");
+                fg.AppendItem(item.TemplateArmor.FormKey, "TemplateArmor");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
@@ -2528,10 +2520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Nameitem);
             }
-            if (item.ObjectEffect.TryGet(out var ObjectEffectitem))
-            {
-                hash.Add(ObjectEffectitem);
-            }
+            hash.Add(item.ObjectEffect);
             if (item.EnchantmentAmount.TryGet(out var EnchantmentAmountitem))
             {
                 hash.Add(EnchantmentAmountitem);
@@ -2548,34 +2537,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Destructibleitem);
             }
-            if (item.PickUpSound.TryGet(out var PickUpSounditem))
-            {
-                hash.Add(PickUpSounditem);
-            }
-            if (item.PutDownSound.TryGet(out var PutDownSounditem))
-            {
-                hash.Add(PutDownSounditem);
-            }
+            hash.Add(item.PickUpSound);
+            hash.Add(item.PutDownSound);
             if (item.RagdollConstraintTemplate.TryGet(out var RagdollConstraintTemplateitem))
             {
                 hash.Add(RagdollConstraintTemplateitem);
             }
-            if (item.EquipmentType.TryGet(out var EquipmentTypeitem))
-            {
-                hash.Add(EquipmentTypeitem);
-            }
-            if (item.BashImpactDataSet.TryGet(out var BashImpactDataSetitem))
-            {
-                hash.Add(BashImpactDataSetitem);
-            }
-            if (item.AlternateBlockMaterial.TryGet(out var AlternateBlockMaterialitem))
-            {
-                hash.Add(AlternateBlockMaterialitem);
-            }
-            if (item.Race.TryGet(out var Raceitem))
-            {
-                hash.Add(Raceitem);
-            }
+            hash.Add(item.EquipmentType);
+            hash.Add(item.BashImpactDataSet);
+            hash.Add(item.AlternateBlockMaterial);
+            hash.Add(item.Race);
             hash.Add(item.Keywords);
             if (item.Description.TryGet(out var Descriptionitem))
             {
@@ -2585,10 +2556,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Value);
             hash.Add(item.Weight);
             hash.Add(item.ArmorRating);
-            if (item.TemplateArmor.TryGet(out var TemplateArmoritem))
-            {
-                hash.Add(TemplateArmoritem);
-            }
+            hash.Add(item.TemplateArmor);
             hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2777,7 +2745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectEffect) ?? true))
             {
-                item.ObjectEffect = rhs.ObjectEffect.FormKey;
+                item.ObjectEffect = new FormLinkNullable<IEffectRecord>(rhs.ObjectEffect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.EnchantmentAmount) ?? true))
             {
@@ -2851,11 +2819,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = rhs.PickUpSound.FormKey;
+                item.PickUpSound = new FormLinkNullable<SoundDescriptor>(rhs.PickUpSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = rhs.PutDownSound.FormKey;
+                item.PutDownSound = new FormLinkNullable<SoundDescriptor>(rhs.PutDownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.RagdollConstraintTemplate) ?? true))
             {
@@ -2863,19 +2831,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType = rhs.EquipmentType.FormKey;
+                item.EquipmentType = new FormLinkNullable<EquipType>(rhs.EquipmentType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.BashImpactDataSet) ?? true))
             {
-                item.BashImpactDataSet = rhs.BashImpactDataSet.FormKey;
+                item.BashImpactDataSet = new FormLinkNullable<ImpactDataSet>(rhs.BashImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.AlternateBlockMaterial) ?? true))
             {
-                item.AlternateBlockMaterial = rhs.AlternateBlockMaterial.FormKey;
+                item.AlternateBlockMaterial = new FormLinkNullable<MaterialType>(rhs.AlternateBlockMaterial.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Race) ?? true))
             {
-                item.Race = rhs.Race.FormKey;
+                item.Race = new FormLinkNullable<Race>(rhs.Race.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Keywords) ?? true))
             {
@@ -2941,7 +2909,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.TemplateArmor) ?? true))
             {
-                item.TemplateArmor = rhs.TemplateArmor.FormKey;
+                item.TemplateArmor = new FormLinkNullable<Armor>(rhs.TemplateArmor.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -3570,7 +3538,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ObjectEffect
         private int? _ObjectEffectLocation;
-        public IFormLinkNullable<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectRecordGetter>.Null;
+        public FormLinkNullable<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectRecordGetter>.Null;
         #endregion
         #region EnchantmentAmount
         private int? _EnchantmentAmountLocation;
@@ -3590,11 +3558,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IDestructibleGetter? Destructible { get; private set; }
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region RagdollConstraintTemplate
         private int? _RagdollConstraintTemplateLocation;
@@ -3602,19 +3570,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region EquipmentType
         private int? _EquipmentTypeLocation;
-        public IFormLinkNullable<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        public FormLinkNullable<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
         #region BashImpactDataSet
         private int? _BashImpactDataSetLocation;
-        public IFormLinkNullable<IImpactDataSetGetter> BashImpactDataSet => _BashImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BashImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
+        public FormLinkNullable<IImpactDataSetGetter> BashImpactDataSet => _BashImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BashImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
         #endregion
         #region AlternateBlockMaterial
         private int? _AlternateBlockMaterialLocation;
-        public IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial => _AlternateBlockMaterialLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AlternateBlockMaterialLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public FormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial => _AlternateBlockMaterialLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AlternateBlockMaterialLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
         #endregion
         #region Race
         private int? _RaceLocation;
-        public IFormLinkNullable<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public FormLinkNullable<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
         #region Description
@@ -3640,7 +3608,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region TemplateArmor
         private int? _TemplateArmorLocation;
-        public IFormLinkNullable<IArmorGetter> TemplateArmor => _TemplateArmorLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TemplateArmorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public FormLinkNullable<IArmorGetter> TemplateArmor => _TemplateArmorLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TemplateArmorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

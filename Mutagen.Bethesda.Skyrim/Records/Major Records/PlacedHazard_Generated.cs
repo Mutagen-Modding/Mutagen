@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Hazard
         public FormLink<Hazard> Hazard { get; set; } = new FormLink<Hazard>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IHazardGetter> IPlacedHazardGetter.Hazard => this.Hazard;
+        FormLink<IHazardGetter> IPlacedHazardGetter.Hazard => this.Hazard.ToGetter<Hazard, IHazardGetter>();
         #endregion
 
         #region To String
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedHazard_Registration.Instance;
-        IFormLink<IHazardGetter> Hazard { get; }
+        FormLink<IHazardGetter> Hazard { get; }
 
     }
 
@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Hazard ?? true)
             {
-                fg.AppendItem(item.Hazard, "Hazard");
+                fg.AppendItem(item.Hazard.FormKey, "Hazard");
             }
         }
         
@@ -1206,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)PlacedHazard_FieldIndex.Hazard) ?? true))
             {
-                item.Hazard = rhs.Hazard.FormKey;
+                item.Hazard = new FormLink<Hazard>(rhs.Hazard.FormKey);
             }
         }
         

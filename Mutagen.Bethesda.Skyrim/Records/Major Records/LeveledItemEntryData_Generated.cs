@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Reference
         public FormLink<INpcSpawn> Reference { get; set; } = new FormLink<INpcSpawn>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<INpcSpawnGetter> ILeveledItemEntryDataGetter.Reference => this.Reference;
+        FormLink<INpcSpawnGetter> ILeveledItemEntryDataGetter.Reference => this.Reference.ToGetter<INpcSpawn, INpcSpawnGetter>();
         #endregion
         #region Count
         public Int16 Count { get; set; } = default;
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => LeveledItemEntryData_Registration.Instance;
         Int16 Level { get; }
         Int16 Unknown { get; }
-        IFormLink<INpcSpawnGetter> Reference { get; }
+        FormLink<INpcSpawnGetter> Reference { get; }
         Int16 Count { get; }
         Int16 Unknown2 { get; }
 
@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference, "Reference");
+                fg.AppendItem(item.Reference.FormKey, "Reference");
             }
             if (printMask?.Count ?? true)
             {
@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Reference) ?? true))
             {
-                item.Reference = rhs.Reference.FormKey;
+                item.Reference = new FormLink<INpcSpawn>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Count) ?? true))
             {
@@ -1367,7 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
-        public IFormLink<INpcSpawnGetter> Reference => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<INpcSpawnGetter> Reference => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Int16 Count => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
         public Int16 Unknown2 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));
         partial void CustomFactoryEnd(

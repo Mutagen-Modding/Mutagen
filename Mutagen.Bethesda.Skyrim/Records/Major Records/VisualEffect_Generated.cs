@@ -45,12 +45,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region EffectArt
         public FormLink<ArtObject> EffectArt { get; set; } = new FormLink<ArtObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IArtObjectGetter> IVisualEffectGetter.EffectArt => this.EffectArt;
+        FormLink<IArtObjectGetter> IVisualEffectGetter.EffectArt => this.EffectArt.ToGetter<ArtObject, IArtObjectGetter>();
         #endregion
         #region Shader
         public FormLink<EffectShader> Shader { get; set; } = new FormLink<EffectShader>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IEffectShaderGetter> IVisualEffectGetter.Shader => this.Shader;
+        FormLink<IEffectShaderGetter> IVisualEffectGetter.Shader => this.Shader.ToGetter<EffectShader, IEffectShaderGetter>();
         #endregion
         #region Flags
         public VisualEffect.Flag Flags { get; set; } = default;
@@ -554,8 +554,8 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => VisualEffect_Registration.Instance;
-        IFormLink<IArtObjectGetter> EffectArt { get; }
-        IFormLink<IEffectShaderGetter> Shader { get; }
+        FormLink<IArtObjectGetter> EffectArt { get; }
+        FormLink<IEffectShaderGetter> Shader { get; }
         VisualEffect.Flag Flags { get; }
         VisualEffect.DATADataType DATADataTypeState { get; }
 
@@ -1062,11 +1062,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.EffectArt ?? true)
             {
-                fg.AppendItem(item.EffectArt, "EffectArt");
+                fg.AppendItem(item.EffectArt.FormKey, "EffectArt");
             }
             if (printMask?.Shader ?? true)
             {
-                fg.AppendItem(item.Shader, "Shader");
+                fg.AppendItem(item.Shader.FormKey, "Shader");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1236,11 +1236,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.EffectArt) ?? true))
             {
-                item.EffectArt = rhs.EffectArt.FormKey;
+                item.EffectArt = new FormLink<ArtObject>(rhs.EffectArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Shader) ?? true))
             {
-                item.Shader = rhs.Shader.FormKey;
+                item.Shader = new FormLink<EffectShader>(rhs.Shader.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Flags) ?? true))
             {
@@ -1572,12 +1572,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region EffectArt
         private int _EffectArtLocation => _DATALocation!.Value;
         private bool _EffectArt_IsSet => _DATALocation.HasValue;
-        public IFormLink<IArtObjectGetter> EffectArt => _EffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public FormLink<IArtObjectGetter> EffectArt => _EffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region Shader
         private int _ShaderLocation => _DATALocation!.Value + 0x4;
         private bool _Shader_IsSet => _DATALocation.HasValue;
-        public IFormLink<IEffectShaderGetter> Shader => _Shader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        public FormLink<IEffectShaderGetter> Shader => _Shader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0x8;

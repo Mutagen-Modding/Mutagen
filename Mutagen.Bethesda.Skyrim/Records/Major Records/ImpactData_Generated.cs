@@ -42,12 +42,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Material
         public FormLink<MaterialType> Material { get; set; } = new FormLink<MaterialType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IMaterialTypeGetter> IImpactDataGetter.Material => this.Material;
+        FormLink<IMaterialTypeGetter> IImpactDataGetter.Material => this.Material.ToGetter<MaterialType, IMaterialTypeGetter>();
         #endregion
         #region Impact
         public FormLink<Impact> Impact { get; set; } = new FormLink<Impact>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IImpactGetter> IImpactDataGetter.Impact => this.Impact;
+        FormLink<IImpactGetter> IImpactDataGetter.Impact => this.Impact.ToGetter<Impact, IImpactGetter>();
         #endregion
 
         #region To String
@@ -462,8 +462,8 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ImpactData_Registration.Instance;
-        IFormLink<IMaterialTypeGetter> Material { get; }
-        IFormLink<IImpactGetter> Impact { get; }
+        FormLink<IMaterialTypeGetter> Material { get; }
+        FormLink<IImpactGetter> Impact { get; }
 
     }
 
@@ -921,11 +921,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Material ?? true)
             {
-                fg.AppendItem(item.Material, "Material");
+                fg.AppendItem(item.Material.FormKey, "Material");
             }
             if (printMask?.Impact ?? true)
             {
-                fg.AppendItem(item.Impact, "Impact");
+                fg.AppendItem(item.Impact.FormKey, "Impact");
             }
         }
         
@@ -982,11 +982,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ImpactData_FieldIndex.Material) ?? true))
             {
-                item.Material = rhs.Material.FormKey;
+                item.Material = new FormLink<MaterialType>(rhs.Material.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ImpactData_FieldIndex.Impact) ?? true))
             {
-                item.Impact = rhs.Impact.FormKey;
+                item.Impact = new FormLink<Impact>(rhs.Impact.FormKey);
             }
         }
         
@@ -1195,8 +1195,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IMaterialTypeGetter> Material => new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLink<IImpactGetter> Impact => new FormLink<IImpactGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IMaterialTypeGetter> Material => new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IImpactGetter> Impact => new FormLink<IImpactGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

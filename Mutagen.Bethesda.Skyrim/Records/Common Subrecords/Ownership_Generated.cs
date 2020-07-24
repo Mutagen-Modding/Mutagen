@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Owner
         public FormLinkNullable<IOwner> Owner { get; set; } = new FormLinkNullable<IOwner>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IOwnerGetter> IOwnershipGetter.Owner => this.Owner;
+        FormLinkNullable<IOwnerGetter> IOwnershipGetter.Owner => this.Owner.ToGetter<IOwner, IOwnerGetter>();
         #endregion
         #region FactionRank
         public Int32? FactionRank { get; set; }
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Ownership_Registration.Instance;
-        IFormLinkNullable<IOwnerGetter> Owner { get; }
+        FormLinkNullable<IOwnerGetter> Owner { get; }
         Int32? FactionRank { get; }
 
     }
@@ -927,10 +927,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Ownership.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Owner ?? true)
-                && item.Owner.TryGet(out var OwnerItem))
+            if (printMask?.Owner ?? true)
             {
-                fg.AppendItem(OwnerItem, "Owner");
+                fg.AppendItem(item.Owner.FormKey, "Owner");
             }
             if ((printMask?.FactionRank ?? true)
                 && item.FactionRank.TryGet(out var FactionRankItem))
@@ -954,10 +953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IOwnershipGetter item)
         {
             var hash = new HashCode();
-            if (item.Owner.TryGet(out var Owneritem))
-            {
-                hash.Add(Owneritem);
-            }
+            hash.Add(item.Owner);
             if (item.FactionRank.TryGet(out var FactionRankitem))
             {
                 hash.Add(FactionRankitem);
@@ -1000,7 +996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Ownership_FieldIndex.Owner) ?? true))
             {
-                item.Owner = rhs.Owner.FormKey;
+                item.Owner = new FormLinkNullable<IOwner>(rhs.Owner.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ownership_FieldIndex.FactionRank) ?? true))
             {
@@ -1240,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Owner
         private int? _OwnerLocation;
-        public IFormLinkNullable<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
+        public FormLinkNullable<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;

@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Projectile
         public FormLink<Projectile> Projectile { get; set; } = new FormLink<Projectile>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IProjectileGetter> IPlacedMissileGetter.Projectile => this.Projectile;
+        FormLink<IProjectileGetter> IPlacedMissileGetter.Projectile => this.Projectile.ToGetter<Projectile, IProjectileGetter>();
         #endregion
 
         #region To String
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedMissile_Registration.Instance;
-        IFormLink<IProjectileGetter> Projectile { get; }
+        FormLink<IProjectileGetter> Projectile { get; }
 
     }
 
@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Projectile ?? true)
             {
-                fg.AppendItem(item.Projectile, "Projectile");
+                fg.AppendItem(item.Projectile.FormKey, "Projectile");
             }
         }
         
@@ -1206,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile = rhs.Projectile.FormKey;
+                item.Projectile = new FormLink<Projectile>(rhs.Projectile.FormKey);
             }
         }
         

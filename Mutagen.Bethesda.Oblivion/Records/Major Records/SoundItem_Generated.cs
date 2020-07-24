@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Sound
         public FormLinkNullable<Sound> Sound { get; set; } = new FormLinkNullable<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundGetter> ISoundItemGetter.Sound => this.Sound;
+        FormLinkNullable<ISoundGetter> ISoundItemGetter.Sound => this.Sound.ToGetter<Sound, ISoundGetter>();
         #endregion
         #region Chance
         public Byte? Chance { get; set; }
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => SoundItem_Registration.Instance;
-        IFormLinkNullable<ISoundGetter> Sound { get; }
+        FormLinkNullable<ISoundGetter> Sound { get; }
         Byte? Chance { get; }
 
     }
@@ -927,10 +927,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             SoundItem.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Sound ?? true)
-                && item.Sound.TryGet(out var SoundItem))
+            if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(SoundItem, "Sound");
+                fg.AppendItem(item.Sound.FormKey, "Sound");
             }
             if ((printMask?.Chance ?? true)
                 && item.Chance.TryGet(out var ChanceItem))
@@ -954,10 +953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ISoundItemGetter item)
         {
             var hash = new HashCode();
-            if (item.Sound.TryGet(out var Sounditem))
-            {
-                hash.Add(Sounditem);
-            }
+            hash.Add(item.Sound);
             if (item.Chance.TryGet(out var Chanceitem))
             {
                 hash.Add(Chanceitem);
@@ -1000,7 +996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Sound) ?? true))
             {
-                item.Sound = rhs.Sound.FormKey;
+                item.Sound = new FormLinkNullable<Sound>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Chance) ?? true))
             {
@@ -1240,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Sound
         private int? _SoundLocation;
-        public IFormLinkNullable<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public FormLinkNullable<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Chance
         private int? _ChanceLocation;

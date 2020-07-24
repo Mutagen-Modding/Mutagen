@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Reference
         public FormLink<PlacedObject> Reference { get; set; } = new FormLink<PlacedObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedObjectGetter> IWorldspaceReferenceGetter.Reference => this.Reference;
+        FormLink<IPlacedObjectGetter> IWorldspaceReferenceGetter.Reference => this.Reference.ToGetter<PlacedObject, IPlacedObjectGetter>();
         #endregion
         #region Position
         public P2Int16 Position { get; set; } = default;
@@ -459,7 +459,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WorldspaceReference_Registration.Instance;
-        IFormLink<IPlacedObjectGetter> Reference { get; }
+        FormLink<IPlacedObjectGetter> Reference { get; }
         P2Int16 Position { get; }
 
     }
@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference, "Reference");
+                fg.AppendItem(item.Reference.FormKey, "Reference");
             }
             if (printMask?.Position ?? true)
             {
@@ -974,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WorldspaceReference_FieldIndex.Reference) ?? true))
             {
-                item.Reference = rhs.Reference.FormKey;
+                item.Reference = new FormLink<PlacedObject>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WorldspaceReference_FieldIndex.Position) ?? true))
             {
@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IPlacedObjectGetter> Reference => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IPlacedObjectGetter> Reference => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public P2Int16 Position => P2Int16BinaryTranslation.Read(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Race
         public FormLink<Race> Race { get; set; } = new FormLink<Race>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IRaceGetter> IRaceRelationGetter.Race => this.Race;
+        FormLink<IRaceGetter> IRaceRelationGetter.Race => this.Race.ToGetter<Race, IRaceGetter>();
         #endregion
         #region Modifier
         public Int32 Modifier { get; set; } = default;
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RaceRelation_Registration.Instance;
-        IFormLink<IRaceGetter> Race { get; }
+        FormLink<IRaceGetter> Race { get; }
         Int32 Modifier { get; }
 
     }
@@ -919,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Race ?? true)
             {
-                fg.AppendItem(item.Race, "Race");
+                fg.AppendItem(item.Race.FormKey, "Race");
             }
             if (printMask?.Modifier ?? true)
             {
@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Race) ?? true))
             {
-                item.Race = rhs.Race.FormKey;
+                item.Race = new FormLink<Race>(rhs.Race.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Modifier) ?? true))
             {
@@ -1188,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IRaceGetter> Race => new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IRaceGetter> Race => new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

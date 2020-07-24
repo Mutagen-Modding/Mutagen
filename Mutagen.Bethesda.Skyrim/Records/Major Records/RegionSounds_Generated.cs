@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Music
         public FormLinkNullable<MusicType> Music { get; set; } = new FormLinkNullable<MusicType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IMusicTypeGetter> IRegionSoundsGetter.Music => this.Music;
+        FormLinkNullable<IMusicTypeGetter> IRegionSoundsGetter.Music => this.Music.ToGetter<MusicType, IMusicTypeGetter>();
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => RegionSounds_Registration.Instance;
-        IFormLinkNullable<IMusicTypeGetter> Music { get; }
+        FormLinkNullable<IMusicTypeGetter> Music { get; }
         IReadOnlyList<IRegionSoundGetter>? Sounds { get; }
 
     }
@@ -1009,10 +1009,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.Music ?? true)
-                && item.Music.TryGet(out var MusicItem))
+            if (printMask?.Music ?? true)
             {
-                fg.AppendItem(MusicItem, "Music");
+                fg.AppendItem(item.Music.FormKey, "Music");
             }
             if ((printMask?.Sounds?.Overall ?? true)
                 && item.Sounds.TryGet(out var SoundsItem))
@@ -1073,10 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IRegionSoundsGetter item)
         {
             var hash = new HashCode();
-            if (item.Music.TryGet(out var Musicitem))
-            {
-                hash.Add(Musicitem);
-            }
+            hash.Add(item.Music);
             hash.Add(item.Sounds);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1138,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.Music) ?? true))
             {
-                item.Music = rhs.Music.FormKey;
+                item.Music = new FormLinkNullable<MusicType>(rhs.Music.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.Sounds) ?? true))
             {
@@ -1428,7 +1424,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Music
         private int? _MusicLocation;
-        public IFormLinkNullable<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
+        public FormLinkNullable<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
         #endregion
         public IReadOnlyList<IRegionSoundGetter>? Sounds { get; private set; }
         partial void CustomFactoryEnd(

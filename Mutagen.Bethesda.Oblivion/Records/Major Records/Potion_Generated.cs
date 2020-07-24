@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Script
         public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IScriptGetter> IPotionGetter.Script => this.Script;
+        FormLinkNullable<IScriptGetter> IPotionGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
         #endregion
         #region Weight
         public Single? Weight { get; set; }
@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
-        IFormLinkNullable<IScriptGetter> Script { get; }
+        FormLinkNullable<IScriptGetter> Script { get; }
         Single? Weight { get; }
         IPotionDataGetter? Data { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
@@ -1363,10 +1363,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(IconItem, "Icon");
             }
-            if ((printMask?.Script ?? true)
-                && item.Script.TryGet(out var ScriptItem))
+            if (printMask?.Script ?? true)
             {
-                fg.AppendItem(ScriptItem, "Script");
+                fg.AppendItem(item.Script.FormKey, "Script");
             }
             if ((printMask?.Weight ?? true)
                 && item.Weight.TryGet(out var WeightItem))
@@ -1513,10 +1512,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Iconitem);
             }
-            if (item.Script.TryGet(out var Scriptitem))
-            {
-                hash.Add(Scriptitem);
-            }
+            hash.Add(item.Script);
             if (item.Weight.TryGet(out var Weightitem))
             {
                 hash.Add(Weightitem);
@@ -1651,7 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Potion_FieldIndex.Script) ?? true))
             {
-                item.Script = rhs.Script.FormKey;
+                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Potion_FieldIndex.Weight) ?? true))
             {
@@ -2133,7 +2129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public FormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region Weight
         private int? _WeightLocation;

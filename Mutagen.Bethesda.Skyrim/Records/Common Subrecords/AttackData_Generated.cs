@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Spell
         public FormLink<ASpell> Spell { get; set; } = new FormLink<ASpell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IASpellGetter> IAttackDataGetter.Spell => this.Spell;
+        FormLink<IASpellGetter> IAttackDataGetter.Spell => this.Spell.ToGetter<ASpell, IASpellGetter>();
         #endregion
         #region Flags
         public AttackData.Flag Flags { get; set; } = default;
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AttackType
         public FormLink<Keyword> AttackType { get; set; } = new FormLink<Keyword>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IKeywordGetter> IAttackDataGetter.AttackType => this.AttackType;
+        FormLink<IKeywordGetter> IAttackDataGetter.AttackType => this.AttackType.ToGetter<Keyword, IKeywordGetter>();
         #endregion
         #region Knockdown
         public Single Knockdown { get; set; } = default;
@@ -752,12 +752,12 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => AttackData_Registration.Instance;
         Single DamageMult { get; }
         Single Chance { get; }
-        IFormLink<IASpellGetter> Spell { get; }
+        FormLink<IASpellGetter> Spell { get; }
         AttackData.Flag Flags { get; }
         Single AttackAngle { get; }
         Single StrikeAngle { get; }
         Single Stagger { get; }
-        IFormLink<IKeywordGetter> AttackType { get; }
+        FormLink<IKeywordGetter> AttackType { get; }
         Single Knockdown { get; }
         Single RecoveryTime { get; }
         Single StaminaMult { get; }
@@ -1352,7 +1352,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell, "Spell");
+                fg.AppendItem(item.Spell.FormKey, "Spell");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1372,7 +1372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.AttackType ?? true)
             {
-                fg.AppendItem(item.AttackType, "AttackType");
+                fg.AppendItem(item.AttackType.FormKey, "AttackType");
             }
             if (printMask?.Knockdown ?? true)
             {
@@ -1467,7 +1467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Spell) ?? true))
             {
-                item.Spell = rhs.Spell.FormKey;
+                item.Spell = new FormLink<ASpell>(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Flags) ?? true))
             {
@@ -1487,7 +1487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.AttackType) ?? true))
             {
-                item.AttackType = rhs.AttackType.FormKey;
+                item.AttackType = new FormLink<Keyword>(rhs.AttackType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Knockdown) ?? true))
             {
@@ -1747,12 +1747,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Single DamageMult => _data.Slice(0x0, 0x4).Float();
         public Single Chance => _data.Slice(0x4, 0x4).Float();
-        public IFormLink<IASpellGetter> Spell => new FormLink<IASpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public FormLink<IASpellGetter> Spell => new FormLink<IASpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
         public AttackData.Flag Flags => (AttackData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
         public Single AttackAngle => _data.Slice(0x10, 0x4).Float();
         public Single StrikeAngle => _data.Slice(0x14, 0x4).Float();
         public Single Stagger => _data.Slice(0x18, 0x4).Float();
-        public IFormLink<IKeywordGetter> AttackType => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x1C, 0x4))));
+        public FormLink<IKeywordGetter> AttackType => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x1C, 0x4))));
         public Single Knockdown => _data.Slice(0x20, 0x4).Float();
         public Single RecoveryTime => _data.Slice(0x24, 0x4).Float();
         public Single StaminaMult => _data.Slice(0x28, 0x4).Float();

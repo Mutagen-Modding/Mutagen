@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Quest
         public FormLink<Quest> Quest { get; set; } = new FormLink<Quest>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IQuestGetter> IDialogBranchGetter.Quest => this.Quest;
+        FormLink<IQuestGetter> IDialogBranchGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
         #endregion
         #region TNAM
         public Int32? TNAM { get; set; }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region StartingTopic
         public FormLinkNullable<DialogTopic> StartingTopic { get; set; } = new FormLinkNullable<DialogTopic>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IDialogTopicGetter> IDialogBranchGetter.StartingTopic => this.StartingTopic;
+        FormLinkNullable<IDialogTopicGetter> IDialogBranchGetter.StartingTopic => this.StartingTopic.ToGetter<DialogTopic, IDialogTopicGetter>();
         #endregion
 
         #region To String
@@ -554,10 +554,10 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DialogBranch_Registration.Instance;
-        IFormLink<IQuestGetter> Quest { get; }
+        FormLink<IQuestGetter> Quest { get; }
         Int32? TNAM { get; }
         DialogBranch.Flag? Flags { get; }
-        IFormLinkNullable<IDialogTopicGetter> StartingTopic { get; }
+        FormLinkNullable<IDialogTopicGetter> StartingTopic { get; }
 
     }
 
@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(item.Quest, "Quest");
+                fg.AppendItem(item.Quest.FormKey, "Quest");
             }
             if ((printMask?.TNAM ?? true)
                 && item.TNAM.TryGet(out var TNAMItem))
@@ -1074,10 +1074,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
-            if ((printMask?.StartingTopic ?? true)
-                && item.StartingTopic.TryGet(out var StartingTopicItem))
+            if (printMask?.StartingTopic ?? true)
             {
-                fg.AppendItem(StartingTopicItem, "StartingTopic");
+                fg.AppendItem(item.StartingTopic.FormKey, "StartingTopic");
             }
         }
         
@@ -1164,10 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Flagsitem);
             }
-            if (item.StartingTopic.TryGet(out var StartingTopicitem))
-            {
-                hash.Add(StartingTopicitem);
-            }
+            hash.Add(item.StartingTopic);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1251,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Quest) ?? true))
             {
-                item.Quest = rhs.Quest.FormKey;
+                item.Quest = new FormLink<Quest>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.TNAM) ?? true))
             {
@@ -1263,7 +1259,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.StartingTopic) ?? true))
             {
-                item.StartingTopic = rhs.StartingTopic.FormKey;
+                item.StartingTopic = new FormLinkNullable<DialogTopic>(rhs.StartingTopic.FormKey);
             }
         }
         
@@ -1594,7 +1590,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Quest
         private int? _QuestLocation;
-        public IFormLink<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLink<IQuestGetter>.Null;
+        public FormLink<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLink<IQuestGetter>.Null;
         #endregion
         #region TNAM
         private int? _TNAMLocation;
@@ -1606,7 +1602,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region StartingTopic
         private int? _StartingTopicLocation;
-        public IFormLinkNullable<IDialogTopicGetter> StartingTopic => _StartingTopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StartingTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public FormLinkNullable<IDialogTopicGetter> StartingTopic => _StartingTopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StartingTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

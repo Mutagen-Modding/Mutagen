@@ -376,11 +376,11 @@ namespace Mutagen.Bethesda.Skyrim
         {
             private ReadOnlyMemorySlice<byte> _data2;
 
-            public IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2)));
+            public FormLink<ISkyrimMajorRecordGetter> ParameterOneRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2)));
 
             public int ParameterOneNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2);
 
-            public IFormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2.Slice(4))));
+            public FormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2.Slice(4))));
 
             public int ParameterTwoNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(4));
             

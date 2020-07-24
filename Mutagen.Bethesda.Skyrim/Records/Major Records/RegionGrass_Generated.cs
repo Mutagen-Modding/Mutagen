@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Grass
         public FormLink<Grass> Grass { get; set; } = new FormLink<Grass>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IGrassGetter> IRegionGrassGetter.Grass => this.Grass;
+        FormLink<IGrassGetter> IRegionGrassGetter.Grass => this.Grass.ToGetter<Grass, IGrassGetter>();
         #endregion
         #region Unknown
         public Int32 Unknown { get; set; } = default;
@@ -459,7 +459,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RegionGrass_Registration.Instance;
-        IFormLink<IGrassGetter> Grass { get; }
+        FormLink<IGrassGetter> Grass { get; }
         Int32 Unknown { get; }
 
     }
@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Grass ?? true)
             {
-                fg.AppendItem(item.Grass, "Grass");
+                fg.AppendItem(item.Grass.FormKey, "Grass");
             }
             if (printMask?.Unknown ?? true)
             {
@@ -974,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionGrass_FieldIndex.Grass) ?? true))
             {
-                item.Grass = rhs.Grass.FormKey;
+                item.Grass = new FormLink<Grass>(rhs.Grass.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionGrass_FieldIndex.Unknown) ?? true))
             {
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IGrassGetter> Grass => new FormLink<IGrassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IGrassGetter> Grass => new FormLink<IGrassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

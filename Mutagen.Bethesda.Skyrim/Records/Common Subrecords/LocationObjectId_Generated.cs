@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Link
         public FormLink<IObjectId> Link { get; set; } = new FormLink<IObjectId>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IObjectIdGetter> ILocationObjectIdGetter.Link => this.Link;
+        FormLink<IObjectIdGetter> ILocationObjectIdGetter.Link => this.Link.ToGetter<IObjectId, IObjectIdGetter>();
         #endregion
 
         #region To String
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LocationObjectId_Registration.Instance;
-        IFormLink<IObjectIdGetter> Link { get; }
+        FormLink<IObjectIdGetter> Link { get; }
 
     }
 
@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Link ?? true)
             {
-                fg.AppendItem(item.Link, "Link");
+                fg.AppendItem(item.Link.FormKey, "Link");
             }
         }
         
@@ -934,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)LocationObjectId_FieldIndex.Link) ?? true))
             {
-                item.Link = rhs.Link.FormKey;
+                item.Link = new FormLink<IObjectId>(rhs.Link.FormKey);
             }
         }
         
@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IObjectIdGetter> Link => new FormLink<IObjectIdGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IObjectIdGetter> Link => new FormLink<IObjectIdGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

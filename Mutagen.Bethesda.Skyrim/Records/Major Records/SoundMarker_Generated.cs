@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region SoundDescriptor
         public FormLinkNullable<SoundDescriptor> SoundDescriptor { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> ISoundMarkerGetter.SoundDescriptor => this.SoundDescriptor;
+        FormLinkNullable<ISoundDescriptorGetter> ISoundMarkerGetter.SoundDescriptor => this.SoundDescriptor.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
 
         #region To String
@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         ReadOnlyMemorySlice<Byte>? SNDD { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; }
+        FormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; }
 
     }
 
@@ -1101,10 +1101,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"SNDD => {SpanExt.ToHexString(SNDDItem)}");
             }
-            if ((printMask?.SoundDescriptor ?? true)
-                && item.SoundDescriptor.TryGet(out var SoundDescriptorItem))
+            if (printMask?.SoundDescriptor ?? true)
             {
-                fg.AppendItem(SoundDescriptorItem, "SoundDescriptor");
+                fg.AppendItem(item.SoundDescriptor.FormKey, "SoundDescriptor");
             }
         }
         
@@ -1191,10 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(SNDDItem);
             }
-            if (item.SoundDescriptor.TryGet(out var SoundDescriptoritem))
-            {
-                hash.Add(SoundDescriptoritem);
-            }
+            hash.Add(item.SoundDescriptor);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1321,7 +1317,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.SoundDescriptor) ?? true))
             {
-                item.SoundDescriptor = rhs.SoundDescriptor.FormKey;
+                item.SoundDescriptor = new FormLinkNullable<SoundDescriptor>(rhs.SoundDescriptor.FormKey);
             }
         }
         
@@ -1662,7 +1658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region SoundDescriptor
         private int? _SoundDescriptorLocation;
-        public IFormLinkNullable<ISoundDescriptorGetter> SoundDescriptor => _SoundDescriptorLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundDescriptorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> SoundDescriptor => _SoundDescriptorLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundDescriptorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region NavMesh
         public FormLink<ANavigationMesh> NavMesh { get; set; } = new FormLink<ANavigationMesh>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IANavigationMeshGetter> INavmeshNodeGetter.NavMesh => this.NavMesh;
+        FormLink<IANavigationMeshGetter> INavmeshNodeGetter.NavMesh => this.NavMesh.ToGetter<ANavigationMesh, IANavigationMeshGetter>();
         #endregion
         #region NodeIndex
         public UInt32 NodeIndex { get; set; } = default;
@@ -459,7 +459,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => NavmeshNode_Registration.Instance;
-        IFormLink<IANavigationMeshGetter> NavMesh { get; }
+        FormLink<IANavigationMeshGetter> NavMesh { get; }
         UInt32 NodeIndex { get; }
 
     }
@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.NavMesh ?? true)
             {
-                fg.AppendItem(item.NavMesh, "NavMesh");
+                fg.AppendItem(item.NavMesh.FormKey, "NavMesh");
             }
             if (printMask?.NodeIndex ?? true)
             {
@@ -974,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)NavmeshNode_FieldIndex.NavMesh) ?? true))
             {
-                item.NavMesh = rhs.NavMesh.FormKey;
+                item.NavMesh = new FormLink<ANavigationMesh>(rhs.NavMesh.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NavmeshNode_FieldIndex.NodeIndex) ?? true))
             {
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IANavigationMeshGetter> NavMesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IANavigationMeshGetter> NavMesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public UInt32 NodeIndex => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

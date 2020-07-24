@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Door
         public FormLink<PlacedObject> Door { get; set; } = new FormLink<PlacedObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedObjectGetter> ILinkedDoorGetter.Door => this.Door;
+        FormLink<IPlacedObjectGetter> ILinkedDoorGetter.Door => this.Door.ToGetter<PlacedObject, IPlacedObjectGetter>();
         #endregion
 
         #region To String
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LinkedDoor_Registration.Instance;
         Int32 Unknown { get; }
-        IFormLink<IPlacedObjectGetter> Door { get; }
+        FormLink<IPlacedObjectGetter> Door { get; }
 
     }
 
@@ -918,7 +918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Door ?? true)
             {
-                fg.AppendItem(item.Door, "Door");
+                fg.AppendItem(item.Door.FormKey, "Door");
             }
         }
         
@@ -978,7 +978,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LinkedDoor_FieldIndex.Door) ?? true))
             {
-                item.Door = rhs.Door.FormKey;
+                item.Door = new FormLink<PlacedObject>(rhs.Door.FormKey);
             }
         }
         
@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public IFormLink<IPlacedObjectGetter> Door => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IPlacedObjectGetter> Door => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

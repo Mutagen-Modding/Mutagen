@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region LoadingScreenNif
         public FormLink<Static> LoadingScreenNif { get; set; } = new FormLink<Static>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IStaticGetter> ILoadScreenGetter.LoadingScreenNif => this.LoadingScreenNif;
+        FormLink<IStaticGetter> ILoadScreenGetter.LoadingScreenNif => this.LoadingScreenNif.ToGetter<Static, IStaticGetter>();
         #endregion
         #region InitialScale
         public Single? InitialScale { get; set; }
@@ -849,7 +849,7 @@ namespace Mutagen.Bethesda.Skyrim
         IIconsGetter? Icons { get; }
         TranslatedString Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        IFormLink<IStaticGetter> LoadingScreenNif { get; }
+        FormLink<IStaticGetter> LoadingScreenNif { get; }
         Single? InitialScale { get; }
         P3Int16? InitialRotation { get; }
         IInt16MinMaxGetter? RotationOffsetConstraints { get; }
@@ -1473,7 +1473,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.LoadingScreenNif ?? true)
             {
-                fg.AppendItem(item.LoadingScreenNif, "LoadingScreenNif");
+                fg.AppendItem(item.LoadingScreenNif.FormKey, "LoadingScreenNif");
             }
             if ((printMask?.InitialScale ?? true)
                 && item.InitialScale.TryGet(out var InitialScaleItem))
@@ -1746,7 +1746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.LoadingScreenNif) ?? true))
             {
-                item.LoadingScreenNif = rhs.LoadingScreenNif.FormKey;
+                item.LoadingScreenNif = new FormLink<Static>(rhs.LoadingScreenNif.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.InitialScale) ?? true))
             {
@@ -2215,7 +2215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LoadingScreenNif
         private int? _LoadingScreenNifLocation;
-        public IFormLink<IStaticGetter> LoadingScreenNif => _LoadingScreenNifLocation.HasValue ? new FormLink<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoadingScreenNifLocation.Value, _package.MetaData.Constants)))) : FormLink<IStaticGetter>.Null;
+        public FormLink<IStaticGetter> LoadingScreenNif => _LoadingScreenNifLocation.HasValue ? new FormLink<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoadingScreenNifLocation.Value, _package.MetaData.Constants)))) : FormLink<IStaticGetter>.Null;
         #endregion
         #region InitialScale
         private int? _InitialScaleLocation;

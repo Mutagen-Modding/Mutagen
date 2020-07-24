@@ -11,10 +11,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class CellNavigationMeshDataBinaryOverlay
         {
-            public IFormLink<IWorldspaceGetter> UnusedWorldspaceParent =>
+            public FormLink<IWorldspaceGetter> UnusedWorldspaceParent =>
                 new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(8))));
 
-            public IFormLink<ICellGetter> Parent =>
+            public FormLink<ICellGetter> Parent =>
                 new FormLink<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(12))));
 
             partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)

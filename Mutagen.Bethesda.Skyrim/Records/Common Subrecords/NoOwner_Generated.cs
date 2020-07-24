@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Global
         public FormLink<Global> Global { get; set; } = new FormLink<Global>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IGlobalGetter> INoOwnerGetter.Global => this.Global;
+        FormLink<IGlobalGetter> INoOwnerGetter.Global => this.Global.ToGetter<Global, IGlobalGetter>();
         #endregion
 
         #region To String
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => NoOwner_Registration.Instance;
         UInt32 RawOwnerData { get; }
-        IFormLink<IGlobalGetter> Global { get; }
+        FormLink<IGlobalGetter> Global { get; }
 
     }
 
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Global ?? true)
             {
-                fg.AppendItem(item.Global, "Global");
+                fg.AppendItem(item.Global.FormKey, "Global");
             }
         }
         
@@ -998,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)NoOwner_FieldIndex.Global) ?? true))
             {
-                item.Global = rhs.Global.FormKey;
+                item.Global = new FormLink<Global>(rhs.Global.FormKey);
             }
         }
         
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public UInt32 RawOwnerData => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public IFormLink<IGlobalGetter> Global => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IGlobalGetter> Global => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

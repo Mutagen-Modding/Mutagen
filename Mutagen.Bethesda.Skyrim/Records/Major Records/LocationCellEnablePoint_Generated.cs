@@ -42,12 +42,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Actor
         public FormLink<IPlaced> Actor { get; set; } = new FormLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedGetter> ILocationCellEnablePointGetter.Actor => this.Actor;
+        FormLink<IPlacedGetter> ILocationCellEnablePointGetter.Actor => this.Actor.ToGetter<IPlaced, IPlacedGetter>();
         #endregion
         #region Ref
         public FormLink<IPlaced> Ref { get; set; } = new FormLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedGetter> ILocationCellEnablePointGetter.Ref => this.Ref;
+        FormLink<IPlacedGetter> ILocationCellEnablePointGetter.Ref => this.Ref.ToGetter<IPlaced, IPlacedGetter>();
         #endregion
         #region Grid
         public P2Int16 Grid { get; set; } = default;
@@ -493,8 +493,8 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LocationCellEnablePoint_Registration.Instance;
-        IFormLink<IPlacedGetter> Actor { get; }
-        IFormLink<IPlacedGetter> Ref { get; }
+        FormLink<IPlacedGetter> Actor { get; }
+        FormLink<IPlacedGetter> Ref { get; }
         P2Int16 Grid { get; }
 
     }
@@ -963,11 +963,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Actor ?? true)
             {
-                fg.AppendItem(item.Actor, "Actor");
+                fg.AppendItem(item.Actor.FormKey, "Actor");
             }
             if (printMask?.Ref ?? true)
             {
-                fg.AppendItem(item.Ref, "Ref");
+                fg.AppendItem(item.Ref.FormKey, "Ref");
             }
             if (printMask?.Grid ?? true)
             {
@@ -1030,11 +1030,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Actor) ?? true))
             {
-                item.Actor = rhs.Actor.FormKey;
+                item.Actor = new FormLink<IPlaced>(rhs.Actor.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Ref) ?? true))
             {
-                item.Ref = rhs.Ref.FormKey;
+                item.Ref = new FormLink<IPlaced>(rhs.Ref.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Grid) ?? true))
             {
@@ -1248,8 +1248,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IPlacedGetter> Actor => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLink<IPlacedGetter> Ref => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IPlacedGetter> Actor => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IPlacedGetter> Ref => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public P2Int16 Grid => P2Int16BinaryTranslation.Read(_data.Slice(0x8, 0x4), swapCoords: true);
         partial void CustomFactoryEnd(
             OverlayStream stream,

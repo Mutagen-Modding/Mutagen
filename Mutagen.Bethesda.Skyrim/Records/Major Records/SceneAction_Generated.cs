@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Topic
         public FormLinkNullable<DialogTopic> Topic { get; set; } = new FormLinkNullable<DialogTopic>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IDialogTopicGetter> ISceneActionGetter.Topic => this.Topic;
+        FormLinkNullable<IDialogTopicGetter> ISceneActionGetter.Topic => this.Topic.ToGetter<DialogTopic, IDialogTopicGetter>();
         #endregion
         #region HeadtrackActorID
         public Int32? HeadtrackActorID { get; set; }
@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Skyrim
         UInt32? EndPhase { get; }
         Single? TimerSeconds { get; }
         IReadOnlyList<IFormLink<IPackageGetter>> Packages { get; }
-        IFormLinkNullable<IDialogTopicGetter> Topic { get; }
+        FormLinkNullable<IDialogTopicGetter> Topic { get; }
         Int32? HeadtrackActorID { get; }
         Single? LoopingMax { get; }
         Single? LoopingMin { get; }
@@ -1817,17 +1817,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.Topic ?? true)
-                && item.Topic.TryGet(out var TopicItem))
+            if (printMask?.Topic ?? true)
             {
-                fg.AppendItem(TopicItem, "Topic");
+                fg.AppendItem(item.Topic.FormKey, "Topic");
             }
             if ((printMask?.HeadtrackActorID ?? true)
                 && item.HeadtrackActorID.TryGet(out var HeadtrackActorIDItem))
@@ -1925,10 +1924,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(TimerSecondsitem);
             }
             hash.Add(item.Packages);
-            if (item.Topic.TryGet(out var Topicitem))
-            {
-                hash.Add(Topicitem);
-            }
+            hash.Add(item.Topic);
             if (item.HeadtrackActorID.TryGet(out var HeadtrackActorIDitem))
             {
                 hash.Add(HeadtrackActorIDitem);
@@ -2057,7 +2053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Topic) ?? true))
             {
-                item.Topic = rhs.Topic.FormKey;
+                item.Topic = new FormLinkNullable<DialogTopic>(rhs.Topic.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.HeadtrackActorID) ?? true))
             {
@@ -2562,7 +2558,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLink<IPackageGetter>> Packages { get; private set; } = ListExt.Empty<IFormLink<IPackageGetter>>();
         #region Topic
         private int? _TopicLocation;
-        public IFormLinkNullable<IDialogTopicGetter> Topic => _TopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public FormLinkNullable<IDialogTopicGetter> Topic => _TopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
         #endregion
         #region HeadtrackActorID
         private int? _HeadtrackActorIDLocation;

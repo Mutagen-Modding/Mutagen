@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Target
         public FormLink<IRelatable> Target { get; set; } = new FormLink<IRelatable>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IRelatableGetter> IRelationGetter.Target => this.Target;
+        FormLink<IRelatableGetter> IRelationGetter.Target => this.Target.ToGetter<IRelatable, IRelatableGetter>();
         #endregion
         #region Modifier
         public Int32 Modifier { get; set; } = default;
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Relation_Registration.Instance;
-        IFormLink<IRelatableGetter> Target { get; }
+        FormLink<IRelatableGetter> Target { get; }
         Int32 Modifier { get; }
         CombatReaction Reaction { get; }
 
@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Target ?? true)
             {
-                fg.AppendItem(item.Target, "Target");
+                fg.AppendItem(item.Target.FormKey, "Target");
             }
             if (printMask?.Modifier ?? true)
             {
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Target) ?? true))
             {
-                item.Target = rhs.Target.FormKey;
+                item.Target = new FormLink<IRelatable>(rhs.Target.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
             {
@@ -1250,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IRelatableGetter> Target => new FormLink<IRelatableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IRelatableGetter> Target => new FormLink<IRelatableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         public CombatReaction Reaction => (CombatReaction)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(

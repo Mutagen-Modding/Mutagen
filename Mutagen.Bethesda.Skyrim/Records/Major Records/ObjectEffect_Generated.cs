@@ -76,12 +76,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region BaseEnchantment
         public FormLink<ObjectEffect> BaseEnchantment { get; set; } = new FormLink<ObjectEffect>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IObjectEffectGetter> IObjectEffectGetter.BaseEnchantment => this.BaseEnchantment;
+        FormLink<IObjectEffectGetter> IObjectEffectGetter.BaseEnchantment => this.BaseEnchantment.ToGetter<ObjectEffect, IObjectEffectGetter>();
         #endregion
         #region WornRestrictions
         public FormLink<FormList> WornRestrictions { get; set; } = new FormLink<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IFormListGetter> IObjectEffectGetter.WornRestrictions => this.WornRestrictions;
+        FormLink<IFormListGetter> IObjectEffectGetter.WornRestrictions => this.WornRestrictions.ToGetter<FormList, IFormListGetter>();
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -957,8 +957,8 @@ namespace Mutagen.Bethesda.Skyrim
         TargetType TargetType { get; }
         ObjectEffect.EnchantTypeEnum EnchantType { get; }
         Single ChargeTime { get; }
-        IFormLink<IObjectEffectGetter> BaseEnchantment { get; }
-        IFormLink<IFormListGetter> WornRestrictions { get; }
+        FormLink<IObjectEffectGetter> BaseEnchantment { get; }
+        FormLink<IFormListGetter> WornRestrictions { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
         ObjectEffect.ENITDataType ENITDataTypeState { get; }
 
@@ -1633,11 +1633,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.BaseEnchantment ?? true)
             {
-                fg.AppendItem(item.BaseEnchantment, "BaseEnchantment");
+                fg.AppendItem(item.BaseEnchantment.FormKey, "BaseEnchantment");
             }
             if (printMask?.WornRestrictions ?? true)
             {
-                fg.AppendItem(item.WornRestrictions, "WornRestrictions");
+                fg.AppendItem(item.WornRestrictions.FormKey, "WornRestrictions");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
@@ -1900,11 +1900,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.BaseEnchantment) ?? true))
             {
-                item.BaseEnchantment = rhs.BaseEnchantment.FormKey;
+                item.BaseEnchantment = new FormLink<ObjectEffect>(rhs.BaseEnchantment.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.WornRestrictions) ?? true))
             {
-                item.WornRestrictions = rhs.WornRestrictions.FormKey;
+                item.WornRestrictions = new FormLink<FormList>(rhs.WornRestrictions.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Effects) ?? true))
             {
@@ -2379,12 +2379,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region BaseEnchantment
         private int _BaseEnchantmentLocation => _ENITLocation!.Value + 0x1C;
         private bool _BaseEnchantment_IsSet => _ENITLocation.HasValue;
-        public IFormLink<IObjectEffectGetter> BaseEnchantment => _BaseEnchantment_IsSet ? new FormLink<IObjectEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_BaseEnchantmentLocation, 0x4)))) : FormLink<IObjectEffectGetter>.Null;
+        public FormLink<IObjectEffectGetter> BaseEnchantment => _BaseEnchantment_IsSet ? new FormLink<IObjectEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_BaseEnchantmentLocation, 0x4)))) : FormLink<IObjectEffectGetter>.Null;
         #endregion
         #region WornRestrictions
         private int _WornRestrictionsLocation => _ENITLocation!.Value + 0x20;
         private bool _WornRestrictions_IsSet => _ENITLocation.HasValue && !ENITDataTypeState.HasFlag(ObjectEffect.ENITDataType.Break0);
-        public IFormLink<IFormListGetter> WornRestrictions => _WornRestrictions_IsSet ? new FormLink<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_WornRestrictionsLocation, 0x4)))) : FormLink<IFormListGetter>.Null;
+        public FormLink<IFormListGetter> WornRestrictions => _WornRestrictions_IsSet ? new FormLink<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_WornRestrictionsLocation, 0x4)))) : FormLink<IFormListGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomFactoryEnd(

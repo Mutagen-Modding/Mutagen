@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Worldspace
         public FormLink<Worldspace> Worldspace { get; set; } = new FormLink<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IWorldspaceGetter> IWorldspaceParentGetter.Worldspace => this.Worldspace;
+        FormLink<IWorldspaceGetter> IWorldspaceParentGetter.Worldspace => this.Worldspace.ToGetter<Worldspace, IWorldspaceGetter>();
         #endregion
         #region Flags
         public WorldspaceParent.Flag Flags { get; set; } = default;
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WorldspaceParent_Registration.Instance;
-        IFormLink<IWorldspaceGetter> Worldspace { get; }
+        FormLink<IWorldspaceGetter> Worldspace { get; }
         WorldspaceParent.Flag Flags { get; }
 
     }
@@ -917,7 +917,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Worldspace ?? true)
             {
-                fg.AppendItem(item.Worldspace, "Worldspace");
+                fg.AppendItem(item.Worldspace.FormKey, "Worldspace");
             }
             if (printMask?.Flags ?? true)
             {
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WorldspaceParent_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace = rhs.Worldspace.FormKey;
+                item.Worldspace = new FormLink<Worldspace>(rhs.Worldspace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WorldspaceParent_FieldIndex.Flags) ?? true))
             {
@@ -1217,7 +1217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Worldspace
         private int? _WorldspaceLocation;
-        public IFormLink<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IWorldspaceGetter>.Null;
+        public FormLink<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IWorldspaceGetter>.Null;
         #endregion
         #region Flags
         private int? _FlagsLocation;

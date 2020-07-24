@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Key
         public FormLink<Key> Key { get; set; } = new FormLink<Key>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IKeyGetter> ILockInformationGetter.Key => this.Key;
+        FormLink<IKeyGetter> ILockInformationGetter.Key => this.Key.ToGetter<Key, IKeyGetter>();
         #endregion
         #region Flags
         public LockInformation.Flag Flags { get; set; } = default;
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => LockInformation_Registration.Instance;
         Byte LockLevel { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
-        IFormLink<IKeyGetter> Key { get; }
+        FormLink<IKeyGetter> Key { get; }
         LockInformation.Flag Flags { get; }
 
     }
@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Key ?? true)
             {
-                fg.AppendItem(item.Key, "Key");
+                fg.AppendItem(item.Key.FormKey, "Key");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1101,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Key) ?? true))
             {
-                item.Key = rhs.Key.FormKey;
+                item.Key = new FormLink<Key>(rhs.Key.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Flags) ?? true))
             {
@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Byte LockLevel => _data.Span[0x0];
         public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x1, 0x3).ToArray();
-        public IFormLink<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public LockInformation.Flag Flags => (LockInformation.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

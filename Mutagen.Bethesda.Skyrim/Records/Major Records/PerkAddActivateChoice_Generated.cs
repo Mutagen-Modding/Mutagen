@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Spell
         public FormLinkNullable<Spell> Spell { get; set; } = new FormLinkNullable<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISpellGetter> IPerkAddActivateChoiceGetter.Spell => this.Spell;
+        FormLinkNullable<ISpellGetter> IPerkAddActivateChoiceGetter.Spell => this.Spell.ToGetter<Spell, ISpellGetter>();
         #endregion
         #region ButtonLabel
         public TranslatedString? ButtonLabel { get; set; }
@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkAddActivateChoice_Registration.Instance;
-        IFormLinkNullable<ISpellGetter> Spell { get; }
+        FormLinkNullable<ISpellGetter> Spell { get; }
         TranslatedString? ButtonLabel { get; }
         IPerkScriptFlagGetter Flags { get; }
 
@@ -995,10 +995,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.Spell ?? true)
-                && item.Spell.TryGet(out var SpellItem))
+            if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(SpellItem, "Spell");
+                fg.AppendItem(item.Spell.FormKey, "Spell");
             }
             if ((printMask?.ButtonLabel ?? true)
                 && item.ButtonLabel.TryGet(out var ButtonLabelItem))
@@ -1084,10 +1083,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IPerkAddActivateChoiceGetter item)
         {
             var hash = new HashCode();
-            if (item.Spell.TryGet(out var Spellitem))
-            {
-                hash.Add(Spellitem);
-            }
+            hash.Add(item.Spell);
             if (item.ButtonLabel.TryGet(out var ButtonLabelitem))
             {
                 hash.Add(ButtonLabelitem);
@@ -1151,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)PerkAddActivateChoice_FieldIndex.Spell) ?? true))
             {
-                item.Spell = rhs.Spell.FormKey;
+                item.Spell = new FormLinkNullable<Spell>(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PerkAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
             {
@@ -1471,7 +1467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkNullable<ISpellGetter> Spell => new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
+        public FormLinkNullable<ISpellGetter> Spell => new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
         #region ButtonLabel
         private int? _ButtonLabelLocation;
         public TranslatedString? ButtonLabel => _ButtonLabelLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ButtonLabelLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);

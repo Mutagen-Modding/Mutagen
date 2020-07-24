@@ -48,6 +48,7 @@
     <Compile Include="Enums\StringsFileFormat.cs" />
     <Compile Include="Enums\StringsSource.cs" />
     <Compile Include="Extensions\EnumerableExt.cs" />
+    <Compile Include="Extensions\FormLinkExt.cs" />
     <Compile Include="Interfaces\IDuplicatable.cs" />
     <Compile Include="Interfaces\IGameSettingCommon.cs" />
     <Compile Include="Interfaces\IGroup.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
     <Compile Include="Links\DirectModLinkCache.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
+    <Compile Include="Links\IFormLink.cs" />
     <Compile Include="Links\ILinkCache.cs" />
     <Compile Include="Links\LoadOrderLinkCache.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
@@ -135,7 +137,6 @@
     <Compile Include="Links\EDIDLink.cs" />
     <Compile Include="Links\FormLink.cs" />
     <Compile Include="Links\IEDIDLink.cs" />
-    <Compile Include="Links\IFormLink.cs" />
     <Compile Include="Links\ILink.cs" />
     <Compile Include="Links\ILinkedFormKeyContainerGetter.cs" />
     <Compile Include="Utility\MasterReferenceReader.cs" />

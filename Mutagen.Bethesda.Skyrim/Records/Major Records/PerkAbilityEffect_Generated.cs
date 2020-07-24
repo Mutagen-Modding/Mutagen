@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ability
         public FormLink<Spell> Ability { get; set; } = new FormLink<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISpellGetter> IPerkAbilityEffectGetter.Ability => this.Ability;
+        FormLink<ISpellGetter> IPerkAbilityEffectGetter.Ability => this.Ability.ToGetter<Spell, ISpellGetter>();
         #endregion
 
         #region To String
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkAbilityEffect_Registration.Instance;
-        IFormLink<ISpellGetter> Ability { get; }
+        FormLink<ISpellGetter> Ability { get; }
 
     }
 
@@ -868,7 +868,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Ability ?? true)
             {
-                fg.AppendItem(item.Ability, "Ability");
+                fg.AppendItem(item.Ability.FormKey, "Ability");
             }
         }
         
@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)PerkAbilityEffect_FieldIndex.Ability) ?? true))
             {
-                item.Ability = rhs.Ability.FormKey;
+                item.Ability = new FormLink<Spell>(rhs.Ability.FormKey);
             }
         }
         
@@ -1173,7 +1173,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ISpellGetter> Ability => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ISpellGetter> Ability => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

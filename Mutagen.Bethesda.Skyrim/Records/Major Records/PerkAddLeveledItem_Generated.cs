@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Item
         public FormLink<LeveledItem> Item { get; set; } = new FormLink<LeveledItem>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILeveledItemGetter> IPerkAddLeveledItemGetter.Item => this.Item;
+        FormLink<ILeveledItemGetter> IPerkAddLeveledItemGetter.Item => this.Item.ToGetter<LeveledItem, ILeveledItemGetter>();
         #endregion
 
         #region To String
@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkAddLeveledItem_Registration.Instance;
-        IFormLink<ILeveledItemGetter> Item { get; }
+        FormLink<ILeveledItemGetter> Item { get; }
 
     }
 
@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Item ?? true)
             {
-                fg.AppendItem(item.Item, "Item");
+                fg.AppendItem(item.Item.FormKey, "Item");
             }
         }
         
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)PerkAddLeveledItem_FieldIndex.Item) ?? true))
             {
-                item.Item = rhs.Item.FormKey;
+                item.Item = new FormLink<LeveledItem>(rhs.Item.FormKey);
             }
         }
         
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ILeveledItemGetter> Item => new FormLink<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
+        public FormLink<ILeveledItemGetter> Item => new FormLink<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

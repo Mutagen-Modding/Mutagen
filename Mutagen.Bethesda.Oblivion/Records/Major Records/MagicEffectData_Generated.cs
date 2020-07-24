@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Light
         public FormLink<Light> Light { get; set; } = new FormLink<Light>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILightGetter> IMagicEffectDataGetter.Light => this.Light;
+        FormLink<ILightGetter> IMagicEffectDataGetter.Light => this.Light.ToGetter<Light, ILightGetter>();
         #endregion
         #region ProjectileSpeed
         public Single ProjectileSpeed { get; set; } = default;
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region EffectShader
         public FormLink<EffectShader> EffectShader { get; set; } = new FormLink<EffectShader>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IEffectShaderGetter> IMagicEffectDataGetter.EffectShader => this.EffectShader;
+        FormLink<IEffectShaderGetter> IMagicEffectDataGetter.EffectShader => this.EffectShader.ToGetter<EffectShader, IEffectShaderGetter>();
         #endregion
         #region SubData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -779,9 +779,9 @@ namespace Mutagen.Bethesda.Oblivion
         MagicSchool MagicSchool { get; }
         Resistance Resistance { get; }
         UInt32 CounterEffectCount { get; }
-        IFormLink<ILightGetter> Light { get; }
+        FormLink<ILightGetter> Light { get; }
         Single ProjectileSpeed { get; }
-        IFormLink<IEffectShaderGetter> EffectShader { get; }
+        FormLink<IEffectShaderGetter> EffectShader { get; }
         IMagicEffectSubDataGetter? SubData { get; }
 
     }
@@ -1399,7 +1399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Light ?? true)
             {
-                fg.AppendItem(item.Light, "Light");
+                fg.AppendItem(item.Light.FormKey, "Light");
             }
             if (printMask?.ProjectileSpeed ?? true)
             {
@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.EffectShader ?? true)
             {
-                fg.AppendItem(item.EffectShader, "EffectShader");
+                fg.AppendItem(item.EffectShader.FormKey, "EffectShader");
             }
             if ((printMask?.SubData?.Overall ?? true)
                 && item.SubData.TryGet(out var SubDataItem))
@@ -1526,7 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Light) ?? true))
             {
-                item.Light = rhs.Light.FormKey;
+                item.Light = new FormLink<Light>(rhs.Light.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.ProjectileSpeed) ?? true))
             {
@@ -1534,7 +1534,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.EffectShader) ?? true))
             {
-                item.EffectShader = rhs.EffectShader.FormKey;
+                item.EffectShader = new FormLink<EffectShader>(rhs.EffectShader.FormKey);
             }
             if (rhs.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.SubData) ?? true))
@@ -1820,9 +1820,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MagicSchool MagicSchool => (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
         public Resistance Resistance => (Resistance)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x10, 0x4));
         public UInt32 CounterEffectCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x14, 0x4));
-        public IFormLink<ILightGetter> Light => new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x18, 0x4))));
+        public FormLink<ILightGetter> Light => new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x18, 0x4))));
         public Single ProjectileSpeed => _data.Slice(0x1C, 0x4).Float();
-        public IFormLink<IEffectShaderGetter> EffectShader => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x20, 0x4))));
+        public FormLink<IEffectShaderGetter> EffectShader => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x20, 0x4))));
         public IMagicEffectSubDataGetter SubData => MagicEffectSubDataBinaryOverlay.MagicEffectSubDataFactory(new OverlayStream(_data.Slice(0x24), _package), _package, default(RecordTypeConverter));
         partial void CustomFactoryEnd(
             OverlayStream stream,

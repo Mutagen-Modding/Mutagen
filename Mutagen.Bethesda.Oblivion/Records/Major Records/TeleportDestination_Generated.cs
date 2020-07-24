@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Destination
         public FormLink<IPlaced> Destination { get; set; } = new FormLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedGetter> ITeleportDestinationGetter.Destination => this.Destination;
+        FormLink<IPlacedGetter> ITeleportDestinationGetter.Destination => this.Destination.ToGetter<IPlaced, IPlacedGetter>();
         #endregion
         #region Position
         public P3Float Position { get; set; } = default;
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => TeleportDestination_Registration.Instance;
-        IFormLink<IPlacedGetter> Destination { get; }
+        FormLink<IPlacedGetter> Destination { get; }
         P3Float Position { get; }
         P3Float Rotation { get; }
 
@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Destination ?? true)
             {
-                fg.AppendItem(item.Destination, "Destination");
+                fg.AppendItem(item.Destination.FormKey, "Destination");
             }
             if (printMask?.Position ?? true)
             {
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Destination) ?? true))
             {
-                item.Destination = rhs.Destination.FormKey;
+                item.Destination = new FormLink<IPlaced>(rhs.Destination.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
             {
@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IPlacedGetter> Destination => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IPlacedGetter> Destination => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public P3Float Position => P3FloatBinaryTranslation.Read(_data.Slice(0x4, 0xC));
         public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Slice(0x10, 0xC));
         partial void CustomFactoryEnd(

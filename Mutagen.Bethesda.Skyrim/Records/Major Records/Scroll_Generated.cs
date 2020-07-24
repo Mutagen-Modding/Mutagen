@@ -69,12 +69,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region MenuDisplayObject
         public FormLinkNullable<Static> MenuDisplayObject { get; set; } = new FormLinkNullable<Static>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IStaticGetter> IScrollGetter.MenuDisplayObject => this.MenuDisplayObject;
+        FormLinkNullable<IStaticGetter> IScrollGetter.MenuDisplayObject => this.MenuDisplayObject.ToGetter<Static, IStaticGetter>();
         #endregion
         #region EquipmentType
         public FormLinkNullable<EquipType> EquipmentType { get; set; } = new FormLinkNullable<EquipType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IEquipTypeGetter> IScrollGetter.EquipmentType => this.EquipmentType;
+        FormLinkNullable<IEquipTypeGetter> IScrollGetter.EquipmentType => this.EquipmentType.ToGetter<EquipType, IEquipTypeGetter>();
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -106,12 +106,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region PickUpSound
         public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IScrollGetter.PickUpSound => this.PickUpSound;
+        FormLinkNullable<ISoundDescriptorGetter> IScrollGetter.PickUpSound => this.PickUpSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region PutDownSound
         public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IScrollGetter.PutDownSound => this.PutDownSound;
+        FormLinkNullable<ISoundDescriptorGetter> IScrollGetter.PutDownSound => this.PutDownSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region Value
         public UInt32 Value { get; set; } = default;
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region HalfCostPerk
         public FormLink<Perk> HalfCostPerk { get; set; } = new FormLink<Perk>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPerkGetter> IScrollGetter.HalfCostPerk => this.HalfCostPerk;
+        FormLink<IPerkGetter> IScrollGetter.HalfCostPerk => this.HalfCostPerk.ToGetter<Perk, IPerkGetter>();
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1436,13 +1436,13 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         TranslatedString? Name { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
-        IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
-        IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
+        FormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
+        FormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
         TranslatedString? Description { get; }
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
         UInt32 Value { get; }
         Single Weight { get; }
         UInt32 BaseCost { get; }
@@ -1453,7 +1453,7 @@ namespace Mutagen.Bethesda.Skyrim
         TargetType TargetType { get; }
         Single CastDuration { get; }
         Single Range { get; }
-        IFormLink<IPerkGetter> HalfCostPerk { get; }
+        FormLink<IPerkGetter> HalfCostPerk { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
         Scroll.DATADataType DATADataTypeState { get; }
         Scroll.SPITDataType SPITDataTypeState { get; }
@@ -2276,22 +2276,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.MenuDisplayObject ?? true)
-                && item.MenuDisplayObject.TryGet(out var MenuDisplayObjectItem))
+            if (printMask?.MenuDisplayObject ?? true)
             {
-                fg.AppendItem(MenuDisplayObjectItem, "MenuDisplayObject");
+                fg.AppendItem(item.MenuDisplayObject.FormKey, "MenuDisplayObject");
             }
-            if ((printMask?.EquipmentType ?? true)
-                && item.EquipmentType.TryGet(out var EquipmentTypeItem))
+            if (printMask?.EquipmentType ?? true)
             {
-                fg.AppendItem(EquipmentTypeItem, "EquipmentType");
+                fg.AppendItem(item.EquipmentType.FormKey, "EquipmentType");
             }
             if ((printMask?.Description ?? true)
                 && item.Description.TryGet(out var DescriptionItem))
@@ -2308,15 +2306,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 DestructibleItem?.ToString(fg, "Destructible");
             }
-            if ((printMask?.PickUpSound ?? true)
-                && item.PickUpSound.TryGet(out var PickUpSoundItem))
+            if (printMask?.PickUpSound ?? true)
             {
-                fg.AppendItem(PickUpSoundItem, "PickUpSound");
+                fg.AppendItem(item.PickUpSound.FormKey, "PickUpSound");
             }
-            if ((printMask?.PutDownSound ?? true)
-                && item.PutDownSound.TryGet(out var PutDownSoundItem))
+            if (printMask?.PutDownSound ?? true)
             {
-                fg.AppendItem(PutDownSoundItem, "PutDownSound");
+                fg.AppendItem(item.PutDownSound.FormKey, "PutDownSound");
             }
             if (printMask?.Value ?? true)
             {
@@ -2360,7 +2356,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.HalfCostPerk ?? true)
             {
-                fg.AppendItem(item.HalfCostPerk, "HalfCostPerk");
+                fg.AppendItem(item.HalfCostPerk.FormKey, "HalfCostPerk");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
@@ -2490,14 +2486,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(Nameitem);
             }
             hash.Add(item.Keywords);
-            if (item.MenuDisplayObject.TryGet(out var MenuDisplayObjectitem))
-            {
-                hash.Add(MenuDisplayObjectitem);
-            }
-            if (item.EquipmentType.TryGet(out var EquipmentTypeitem))
-            {
-                hash.Add(EquipmentTypeitem);
-            }
+            hash.Add(item.MenuDisplayObject);
+            hash.Add(item.EquipmentType);
             if (item.Description.TryGet(out var Descriptionitem))
             {
                 hash.Add(Descriptionitem);
@@ -2510,14 +2500,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Destructibleitem);
             }
-            if (item.PickUpSound.TryGet(out var PickUpSounditem))
-            {
-                hash.Add(PickUpSounditem);
-            }
-            if (item.PutDownSound.TryGet(out var PutDownSounditem))
-            {
-                hash.Add(PutDownSounditem);
-            }
+            hash.Add(item.PickUpSound);
+            hash.Add(item.PutDownSound);
             hash.Add(item.Value);
             hash.Add(item.Weight);
             hash.Add(item.BaseCost);
@@ -2705,11 +2689,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject = rhs.MenuDisplayObject.FormKey;
+                item.MenuDisplayObject = new FormLinkNullable<Static>(rhs.MenuDisplayObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType = rhs.EquipmentType.FormKey;
+                item.EquipmentType = new FormLinkNullable<EquipType>(rhs.EquipmentType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Description) ?? true))
             {
@@ -2769,11 +2753,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = rhs.PickUpSound.FormKey;
+                item.PickUpSound = new FormLinkNullable<SoundDescriptor>(rhs.PickUpSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = rhs.PutDownSound.FormKey;
+                item.PutDownSound = new FormLinkNullable<SoundDescriptor>(rhs.PutDownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Value) ?? true))
             {
@@ -2817,7 +2801,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.HalfCostPerk) ?? true))
             {
-                item.HalfCostPerk = rhs.HalfCostPerk.FormKey;
+                item.HalfCostPerk = new FormLink<Perk>(rhs.HalfCostPerk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Effects) ?? true))
             {
@@ -3384,11 +3368,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
-        public IFormLinkNullable<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        public FormLinkNullable<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         #region EquipmentType
         private int? _EquipmentTypeLocation;
-        public IFormLinkNullable<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        public FormLinkNullable<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
         #region Description
         private int? _DescriptionLocation;
@@ -3398,11 +3382,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IDestructibleGetter? Destructible { get; private set; }
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         private int? _DATALocation;
         public Scroll.DATADataType DATADataTypeState { get; private set; }
@@ -3461,7 +3445,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region HalfCostPerk
         private int _HalfCostPerkLocation => _SPITLocation!.Value + 0x20;
         private bool _HalfCostPerk_IsSet => _SPITLocation.HasValue;
-        public IFormLink<IPerkGetter> HalfCostPerk => _HalfCostPerk_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HalfCostPerkLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
+        public FormLink<IPerkGetter> HalfCostPerk => _HalfCostPerk_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HalfCostPerkLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomFactoryEnd(

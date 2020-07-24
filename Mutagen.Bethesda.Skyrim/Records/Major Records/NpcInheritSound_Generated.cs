@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region InheritsSoundsFrom
         public FormLinkNullable<Npc> InheritsSoundsFrom { get; set; } = new FormLinkNullable<Npc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<INpcGetter> INpcInheritSoundGetter.InheritsSoundsFrom => this.InheritsSoundsFrom;
+        FormLinkNullable<INpcGetter> INpcInheritSoundGetter.InheritsSoundsFrom => this.InheritsSoundsFrom.ToGetter<Npc, INpcGetter>();
         #endregion
 
         #region To String
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => NpcInheritSound_Registration.Instance;
-        IFormLinkNullable<INpcGetter> InheritsSoundsFrom { get; }
+        FormLinkNullable<INpcGetter> InheritsSoundsFrom { get; }
 
     }
 
@@ -847,10 +847,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.InheritsSoundsFrom ?? true)
-                && item.InheritsSoundsFrom.TryGet(out var InheritsSoundsFromItem))
+            if (printMask?.InheritsSoundsFrom ?? true)
             {
-                fg.AppendItem(InheritsSoundsFromItem, "InheritsSoundsFrom");
+                fg.AppendItem(item.InheritsSoundsFrom.FormKey, "InheritsSoundsFrom");
             }
         }
         
@@ -887,10 +886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(INpcInheritSoundGetter item)
         {
             var hash = new HashCode();
-            if (item.InheritsSoundsFrom.TryGet(out var InheritsSoundsFromitem))
-            {
-                hash.Add(InheritsSoundsFromitem);
-            }
+            hash.Add(item.InheritsSoundsFrom);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -944,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) ?? true))
             {
-                item.InheritsSoundsFrom = rhs.InheritsSoundsFrom.FormKey;
+                item.InheritsSoundsFrom = new FormLinkNullable<Npc>(rhs.InheritsSoundsFrom.FormKey);
             }
         }
         
@@ -1171,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region InheritsSoundsFrom
         private int? _InheritsSoundsFromLocation;
-        public IFormLinkNullable<INpcGetter> InheritsSoundsFrom => _InheritsSoundsFromLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InheritsSoundsFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        public FormLinkNullable<INpcGetter> InheritsSoundsFrom => _InheritsSoundsFromLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InheritsSoundsFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

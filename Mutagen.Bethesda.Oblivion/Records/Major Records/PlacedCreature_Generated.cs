@@ -45,12 +45,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region Base
         public FormLinkNullable<Creature> Base { get; set; } = new FormLinkNullable<Creature>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ICreatureGetter> IPlacedCreatureGetter.Base => this.Base;
+        FormLinkNullable<ICreatureGetter> IPlacedCreatureGetter.Base => this.Base.ToGetter<Creature, ICreatureGetter>();
         #endregion
         #region Owner
         public FormLinkNullable<Faction> Owner { get; set; } = new FormLinkNullable<Faction>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IFactionGetter> IPlacedCreatureGetter.Owner => this.Owner;
+        FormLinkNullable<IFactionGetter> IPlacedCreatureGetter.Owner => this.Owner.ToGetter<Faction, IFactionGetter>();
         #endregion
         #region FactionRank
         public Int32? FactionRank { get; set; }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region GlobalVariable
         public FormLinkNullable<Global> GlobalVariable { get; set; } = new FormLinkNullable<Global>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IGlobalGetter> IPlacedCreatureGetter.GlobalVariable => this.GlobalVariable;
+        FormLinkNullable<IGlobalGetter> IPlacedCreatureGetter.GlobalVariable => this.GlobalVariable.ToGetter<Global, IGlobalGetter>();
         #endregion
         #region EnableParent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -724,10 +724,10 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedCreature_Registration.Instance;
-        IFormLinkNullable<ICreatureGetter> Base { get; }
-        IFormLinkNullable<IFactionGetter> Owner { get; }
+        FormLinkNullable<ICreatureGetter> Base { get; }
+        FormLinkNullable<IFactionGetter> Owner { get; }
         Int32? FactionRank { get; }
-        IFormLinkNullable<IGlobalGetter> GlobalVariable { get; }
+        FormLinkNullable<IGlobalGetter> GlobalVariable { get; }
         IEnableParentGetter? EnableParent { get; }
         ReadOnlyMemorySlice<Byte>? RagdollData { get; }
         Single? Scale { get; }
@@ -1298,25 +1298,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.Base ?? true)
-                && item.Base.TryGet(out var BaseItem))
+            if (printMask?.Base ?? true)
             {
-                fg.AppendItem(BaseItem, "Base");
+                fg.AppendItem(item.Base.FormKey, "Base");
             }
-            if ((printMask?.Owner ?? true)
-                && item.Owner.TryGet(out var OwnerItem))
+            if (printMask?.Owner ?? true)
             {
-                fg.AppendItem(OwnerItem, "Owner");
+                fg.AppendItem(item.Owner.FormKey, "Owner");
             }
             if ((printMask?.FactionRank ?? true)
                 && item.FactionRank.TryGet(out var FactionRankItem))
             {
                 fg.AppendItem(FactionRankItem, "FactionRank");
             }
-            if ((printMask?.GlobalVariable ?? true)
-                && item.GlobalVariable.TryGet(out var GlobalVariableItem))
+            if (printMask?.GlobalVariable ?? true)
             {
-                fg.AppendItem(GlobalVariableItem, "GlobalVariable");
+                fg.AppendItem(item.GlobalVariable.FormKey, "GlobalVariable");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
                 && item.EnableParent.TryGet(out var EnableParentItem))
@@ -1416,22 +1413,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IPlacedCreatureGetter item)
         {
             var hash = new HashCode();
-            if (item.Base.TryGet(out var Baseitem))
-            {
-                hash.Add(Baseitem);
-            }
-            if (item.Owner.TryGet(out var Owneritem))
-            {
-                hash.Add(Owneritem);
-            }
+            hash.Add(item.Base);
+            hash.Add(item.Owner);
             if (item.FactionRank.TryGet(out var FactionRankitem))
             {
                 hash.Add(FactionRankitem);
             }
-            if (item.GlobalVariable.TryGet(out var GlobalVariableitem))
-            {
-                hash.Add(GlobalVariableitem);
-            }
+            hash.Add(item.GlobalVariable);
             if (item.EnableParent.TryGet(out var EnableParentitem))
             {
                 hash.Add(EnableParentitem);
@@ -1545,11 +1533,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Base) ?? true))
             {
-                item.Base = rhs.Base.FormKey;
+                item.Base = new FormLinkNullable<Creature>(rhs.Base.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Owner) ?? true))
             {
-                item.Owner = rhs.Owner.FormKey;
+                item.Owner = new FormLinkNullable<Faction>(rhs.Owner.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.FactionRank) ?? true))
             {
@@ -1557,7 +1545,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.GlobalVariable) ?? true))
             {
-                item.GlobalVariable = rhs.GlobalVariable.FormKey;
+                item.GlobalVariable = new FormLinkNullable<Global>(rhs.GlobalVariable.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.EnableParent) ?? true))
             {
@@ -2004,11 +1992,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Base
         private int? _BaseLocation;
-        public IFormLinkNullable<ICreatureGetter> Base => _BaseLocation.HasValue ? new FormLinkNullable<ICreatureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICreatureGetter>.Null;
+        public FormLinkNullable<ICreatureGetter> Base => _BaseLocation.HasValue ? new FormLinkNullable<ICreatureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICreatureGetter>.Null;
         #endregion
         #region Owner
         private int? _OwnerLocation;
-        public IFormLinkNullable<IFactionGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
+        public FormLinkNullable<IFactionGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;
@@ -2016,7 +2004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region GlobalVariable
         private int? _GlobalVariableLocation;
-        public IFormLinkNullable<IGlobalGetter> GlobalVariable => _GlobalVariableLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GlobalVariableLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public FormLinkNullable<IGlobalGetter> GlobalVariable => _GlobalVariableLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GlobalVariableLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;

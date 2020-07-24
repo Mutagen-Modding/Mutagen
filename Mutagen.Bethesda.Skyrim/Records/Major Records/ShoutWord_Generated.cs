@@ -42,12 +42,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Word
         public FormLink<WordOfPower> Word { get; set; } = new FormLink<WordOfPower>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IWordOfPowerGetter> IShoutWordGetter.Word => this.Word;
+        FormLink<IWordOfPowerGetter> IShoutWordGetter.Word => this.Word.ToGetter<WordOfPower, IWordOfPowerGetter>();
         #endregion
         #region Spell
         public FormLink<Spell> Spell { get; set; } = new FormLink<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISpellGetter> IShoutWordGetter.Spell => this.Spell;
+        FormLink<ISpellGetter> IShoutWordGetter.Spell => this.Spell.ToGetter<Spell, ISpellGetter>();
         #endregion
         #region RecoveryTime
         public Single RecoveryTime { get; set; } = default;
@@ -494,8 +494,8 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ShoutWord_Registration.Instance;
-        IFormLink<IWordOfPowerGetter> Word { get; }
-        IFormLink<ISpellGetter> Spell { get; }
+        FormLink<IWordOfPowerGetter> Word { get; }
+        FormLink<ISpellGetter> Spell { get; }
         Single RecoveryTime { get; }
 
     }
@@ -968,11 +968,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Word ?? true)
             {
-                fg.AppendItem(item.Word, "Word");
+                fg.AppendItem(item.Word.FormKey, "Word");
             }
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell, "Spell");
+                fg.AppendItem(item.Spell.FormKey, "Spell");
             }
             if (printMask?.RecoveryTime ?? true)
             {
@@ -1035,11 +1035,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.Word) ?? true))
             {
-                item.Word = rhs.Word.FormKey;
+                item.Word = new FormLink<WordOfPower>(rhs.Word.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.Spell) ?? true))
             {
-                item.Spell = rhs.Spell.FormKey;
+                item.Spell = new FormLink<Spell>(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.RecoveryTime) ?? true))
             {
@@ -1256,8 +1256,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IWordOfPowerGetter> Word => new FormLink<IWordOfPowerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IWordOfPowerGetter> Word => new FormLink<IWordOfPowerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Single RecoveryTime => _data.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,

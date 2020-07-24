@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region MagicEffect
         public EDIDLink<MagicEffect> MagicEffect { get; set; } = new EDIDLink<MagicEffect>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEDIDLink<IMagicEffectGetter> IEffectDataGetter.MagicEffect => this.MagicEffect;
+        EDIDLink<IMagicEffectGetter> IEffectDataGetter.MagicEffect => this.MagicEffect.ToGetter<MagicEffect, IMagicEffectGetter>();
         #endregion
         #region Magnitude
         public UInt32 Magnitude { get; set; } = default;
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => EffectData_Registration.Instance;
-        IEDIDLink<IMagicEffectGetter> MagicEffect { get; }
+        EDIDLink<IMagicEffectGetter> MagicEffect { get; }
         UInt32 Magnitude { get; }
         UInt32 Area { get; }
         UInt32 Duration { get; }
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.MagicEffect ?? true)
             {
-                fg.AppendItem(item.MagicEffect, "MagicEffect");
+                fg.AppendItem(item.MagicEffect.EDID, "MagicEffect");
             }
             if (printMask?.Magnitude ?? true)
             {
@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)EffectData_FieldIndex.MagicEffect) ?? true))
             {
-                item.MagicEffect = rhs.MagicEffect.EDID;
+                item.MagicEffect = new EDIDLink<MagicEffect>(rhs.MagicEffect.EDID);
             }
             if ((copyMask?.GetShouldTranslate((int)EffectData_FieldIndex.Magnitude) ?? true))
             {
@@ -1429,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IEDIDLink<IMagicEffectGetter> MagicEffect => new EDIDLink<IMagicEffectGetter>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public EDIDLink<IMagicEffectGetter> MagicEffect => new EDIDLink<IMagicEffectGetter>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public UInt32 Magnitude => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         public UInt32 Area => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         public UInt32 Duration => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0xC, 0x4));

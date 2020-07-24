@@ -42,12 +42,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Actor
         public FormLink<ILinkedReference> Actor { get; set; } = new FormLink<ILinkedReference>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILinkedReferenceGetter> ILocationReferenceGetter.Actor => this.Actor;
+        FormLink<ILinkedReferenceGetter> ILocationReferenceGetter.Actor => this.Actor.ToGetter<ILinkedReference, ILinkedReferenceGetter>();
         #endregion
         #region Location
         public FormLink<IComplexLocation> Location { get; set; } = new FormLink<IComplexLocation>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IComplexLocationGetter> ILocationReferenceGetter.Location => this.Location;
+        FormLink<IComplexLocationGetter> ILocationReferenceGetter.Location => this.Location.ToGetter<IComplexLocation, IComplexLocationGetter>();
         #endregion
         #region Grid
         public P2Int16 Grid { get; set; } = default;
@@ -493,8 +493,8 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LocationReference_Registration.Instance;
-        IFormLink<ILinkedReferenceGetter> Actor { get; }
-        IFormLink<IComplexLocationGetter> Location { get; }
+        FormLink<ILinkedReferenceGetter> Actor { get; }
+        FormLink<IComplexLocationGetter> Location { get; }
         P2Int16 Grid { get; }
 
     }
@@ -963,11 +963,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Actor ?? true)
             {
-                fg.AppendItem(item.Actor, "Actor");
+                fg.AppendItem(item.Actor.FormKey, "Actor");
             }
             if (printMask?.Location ?? true)
             {
-                fg.AppendItem(item.Location, "Location");
+                fg.AppendItem(item.Location.FormKey, "Location");
             }
             if (printMask?.Grid ?? true)
             {
@@ -1030,11 +1030,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Actor) ?? true))
             {
-                item.Actor = rhs.Actor.FormKey;
+                item.Actor = new FormLink<ILinkedReference>(rhs.Actor.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Location) ?? true))
             {
-                item.Location = rhs.Location.FormKey;
+                item.Location = new FormLink<IComplexLocation>(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Grid) ?? true))
             {
@@ -1248,8 +1248,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ILinkedReferenceGetter> Actor => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLink<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<ILinkedReferenceGetter> Actor => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public P2Int16 Grid => P2Int16BinaryTranslation.Read(_data.Slice(0x8, 0x4), swapCoords: true);
         partial void CustomFactoryEnd(
             OverlayStream stream,

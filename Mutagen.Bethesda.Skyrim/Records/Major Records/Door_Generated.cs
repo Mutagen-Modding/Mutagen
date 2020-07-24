@@ -88,17 +88,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region OpenSound
         public FormLinkNullable<SoundDescriptor> OpenSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IDoorGetter.OpenSound => this.OpenSound;
+        FormLinkNullable<ISoundDescriptorGetter> IDoorGetter.OpenSound => this.OpenSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region CloseSound
         public FormLinkNullable<SoundDescriptor> CloseSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IDoorGetter.CloseSound => this.CloseSound;
+        FormLinkNullable<ISoundDescriptorGetter> IDoorGetter.CloseSound => this.CloseSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region LoopSound
         public FormLinkNullable<SoundDescriptor> LoopSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IDoorGetter.LoopSound => this.LoopSound;
+        FormLinkNullable<ISoundDescriptorGetter> IDoorGetter.LoopSound => this.LoopSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region Flags
         public Door.Flag Flags { get; set; } = default;
@@ -796,9 +796,9 @@ namespace Mutagen.Bethesda.Skyrim
         TranslatedString? Name { get; }
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> CloseSound { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> LoopSound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> OpenSound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> CloseSound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> LoopSound { get; }
         Door.Flag Flags { get; }
 
         #region Mutagen
@@ -1413,20 +1413,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 DestructibleItem?.ToString(fg, "Destructible");
             }
-            if ((printMask?.OpenSound ?? true)
-                && item.OpenSound.TryGet(out var OpenSoundItem))
+            if (printMask?.OpenSound ?? true)
             {
-                fg.AppendItem(OpenSoundItem, "OpenSound");
+                fg.AppendItem(item.OpenSound.FormKey, "OpenSound");
             }
-            if ((printMask?.CloseSound ?? true)
-                && item.CloseSound.TryGet(out var CloseSoundItem))
+            if (printMask?.CloseSound ?? true)
             {
-                fg.AppendItem(CloseSoundItem, "CloseSound");
+                fg.AppendItem(item.CloseSound.FormKey, "CloseSound");
             }
-            if ((printMask?.LoopSound ?? true)
-                && item.LoopSound.TryGet(out var LoopSoundItem))
+            if (printMask?.LoopSound ?? true)
             {
-                fg.AppendItem(LoopSoundItem, "LoopSound");
+                fg.AppendItem(item.LoopSound.FormKey, "LoopSound");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1530,18 +1527,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Destructibleitem);
             }
-            if (item.OpenSound.TryGet(out var OpenSounditem))
-            {
-                hash.Add(OpenSounditem);
-            }
-            if (item.CloseSound.TryGet(out var CloseSounditem))
-            {
-                hash.Add(CloseSounditem);
-            }
-            if (item.LoopSound.TryGet(out var LoopSounditem))
-            {
-                hash.Add(LoopSounditem);
-            }
+            hash.Add(item.OpenSound);
+            hash.Add(item.CloseSound);
+            hash.Add(item.LoopSound);
             hash.Add(item.Flags);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1758,15 +1746,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound = rhs.OpenSound.FormKey;
+                item.OpenSound = new FormLinkNullable<SoundDescriptor>(rhs.OpenSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.CloseSound) ?? true))
             {
-                item.CloseSound = rhs.CloseSound.FormKey;
+                item.CloseSound = new FormLinkNullable<SoundDescriptor>(rhs.CloseSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
             {
-                item.LoopSound = rhs.LoopSound.FormKey;
+                item.LoopSound = new FormLinkNullable<SoundDescriptor>(rhs.LoopSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
             {
@@ -2186,15 +2174,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IDestructibleGetter? Destructible { get; private set; }
         #region OpenSound
         private int? _OpenSoundLocation;
-        public IFormLinkNullable<ISoundDescriptorGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region CloseSound
         private int? _CloseSoundLocation;
-        public IFormLinkNullable<ISoundDescriptorGetter> CloseSound => _CloseSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CloseSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> CloseSound => _CloseSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CloseSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region LoopSound
         private int? _LoopSoundLocation;
-        public IFormLinkNullable<ISoundDescriptorGetter> LoopSound => _LoopSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> LoopSound => _LoopSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region Flags
         private int? _FlagsLocation;

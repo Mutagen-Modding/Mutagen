@@ -262,7 +262,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AddonModels
         public FormLink<Debris> AddonModels { get; set; } = new FormLink<Debris>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IDebrisGetter> IEffectShaderGetter.AddonModels => this.AddonModels;
+        FormLink<IDebrisGetter> IEffectShaderGetter.AddonModels => this.AddonModels.ToGetter<Debris, IDebrisGetter>();
         #endregion
         #region HolesStartTime
         public Single HolesStartTime { get; set; } = default;
@@ -312,7 +312,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AmbientSound
         public FormLink<ISound> AmbientSound { get; set; } = new FormLink<ISound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ISoundGetter> IEffectShaderGetter.AmbientSound => this.AmbientSound;
+        FormLink<ISoundGetter> IEffectShaderGetter.AmbientSound => this.AmbientSound.ToGetter<ISound, ISoundGetter>();
         #endregion
         #region FillColorKey2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4164,7 +4164,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single ParticleInitialRotationDegreePlusMinus { get; }
         Single ParticleRotationSpeedDegreePerSec { get; }
         Single ParticleRotationSpeedDegreePerSecPlusMinus { get; }
-        IFormLink<IDebrisGetter> AddonModels { get; }
+        FormLink<IDebrisGetter> AddonModels { get; }
         Single HolesStartTime { get; }
         Single HolesEndTime { get; }
         Single HolesStartValue { get; }
@@ -4180,7 +4180,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single AddonModelsScaleEnd { get; }
         Single AddonModelsScaleInTime { get; }
         Single AddonModelsScaleOutTime { get; }
-        IFormLink<ISoundGetter> AmbientSound { get; }
+        FormLink<ISoundGetter> AmbientSound { get; }
         Color FillColorKey2 { get; }
         Color FillColorKey3 { get; }
         Single FillColorKey1Scale { get; }
@@ -6405,7 +6405,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.AddonModels ?? true)
             {
-                fg.AppendItem(item.AddonModels, "AddonModels");
+                fg.AppendItem(item.AddonModels.FormKey, "AddonModels");
             }
             if (printMask?.HolesStartTime ?? true)
             {
@@ -6469,7 +6469,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.AmbientSound ?? true)
             {
-                fg.AppendItem(item.AmbientSound, "AmbientSound");
+                fg.AppendItem(item.AmbientSound.FormKey, "AmbientSound");
             }
             if (printMask?.FillColorKey2 ?? true)
             {
@@ -7206,7 +7206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModels) ?? true))
             {
-                item.AddonModels = rhs.AddonModels.FormKey;
+                item.AddonModels = new FormLink<Debris>(rhs.AddonModels.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesStartTime) ?? true))
             {
@@ -7270,7 +7270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AmbientSound) ?? true))
             {
-                item.AmbientSound = rhs.AmbientSound.FormKey;
+                item.AmbientSound = new FormLink<ISound>(rhs.AmbientSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2) ?? true))
             {
@@ -8482,7 +8482,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AddonModels
         private int _AddonModelsLocation => _DATALocation!.Value + 0xF4;
         private bool _AddonModels_IsSet => _DATALocation.HasValue;
-        public IFormLink<IDebrisGetter> AddonModels => _AddonModels_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AddonModelsLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public FormLink<IDebrisGetter> AddonModels => _AddonModels_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AddonModelsLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region HolesStartTime
         private int _HolesStartTimeLocation => _DATALocation!.Value + 0xF8;
@@ -8562,7 +8562,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AmbientSound
         private int _AmbientSoundLocation => _DATALocation!.Value + 0x134;
         private bool _AmbientSound_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public IFormLink<ISoundGetter> AmbientSound => _AmbientSound_IsSet ? new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AmbientSoundLocation, 0x4)))) : FormLink<ISoundGetter>.Null;
+        public FormLink<ISoundGetter> AmbientSound => _AmbientSound_IsSet ? new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AmbientSoundLocation, 0x4)))) : FormLink<ISoundGetter>.Null;
         #endregion
         #region FillColorKey2
         private int _FillColorKey2Location => _DATALocation!.Value + 0x138;

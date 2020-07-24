@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Item
         public FormLink<AItem> Item { get; set; } = new FormLink<AItem>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IAItemGetter> IContainerItemGetter.Item => this.Item;
+        FormLink<IAItemGetter> IContainerItemGetter.Item => this.Item.ToGetter<AItem, IAItemGetter>();
         #endregion
         #region Count
         public UInt32 Count { get; set; } = default;
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ContainerItem_Registration.Instance;
-        IFormLink<IAItemGetter> Item { get; }
+        FormLink<IAItemGetter> Item { get; }
         UInt32 Count { get; }
 
     }
@@ -919,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Item ?? true)
             {
-                fg.AppendItem(item.Item, "Item");
+                fg.AppendItem(item.Item.FormKey, "Item");
             }
             if (printMask?.Count ?? true)
             {
@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
             {
-                item.Item = rhs.Item.FormKey;
+                item.Item = new FormLink<AItem>(rhs.Item.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
             {
@@ -1188,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IAItemGetter> Item => new FormLink<IAItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IAItemGetter> Item => new FormLink<IAItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public UInt32 Count => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

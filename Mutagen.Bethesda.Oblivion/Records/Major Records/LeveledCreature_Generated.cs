@@ -69,12 +69,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region Script
         public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IScriptGetter> ILeveledCreatureGetter.Script => this.Script;
+        FormLinkNullable<IScriptGetter> ILeveledCreatureGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
         #endregion
         #region Template
         public FormLinkNullable<ANpc> Template { get; set; } = new FormLinkNullable<ANpc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IANpcGetter> ILeveledCreatureGetter.Template => this.Template;
+        FormLinkNullable<IANpcGetter> ILeveledCreatureGetter.Template => this.Template.ToGetter<ANpc, IANpcGetter>();
         #endregion
 
         #region To String
@@ -674,8 +674,8 @@ namespace Mutagen.Bethesda.Oblivion
         Byte? ChanceNone { get; }
         LeveledFlag? Flags { get; }
         IReadOnlyList<ILeveledEntryGetter<IANpcSpawnGetter>> Entries { get; }
-        IFormLinkNullable<IScriptGetter> Script { get; }
-        IFormLinkNullable<IANpcGetter> Template { get; }
+        FormLinkNullable<IScriptGetter> Script { get; }
+        FormLinkNullable<IANpcGetter> Template { get; }
 
     }
 
@@ -1240,15 +1240,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.Script ?? true)
-                && item.Script.TryGet(out var ScriptItem))
+            if (printMask?.Script ?? true)
             {
-                fg.AppendItem(ScriptItem, "Script");
+                fg.AppendItem(item.Script.FormKey, "Script");
             }
-            if ((printMask?.Template ?? true)
-                && item.Template.TryGet(out var TemplateItem))
+            if (printMask?.Template ?? true)
             {
-                fg.AppendItem(TemplateItem, "Template");
+                fg.AppendItem(item.Template.FormKey, "Template");
             }
         }
         
@@ -1362,14 +1360,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 hash.Add(Flagsitem);
             }
             hash.Add(item.Entries);
-            if (item.Script.TryGet(out var Scriptitem))
-            {
-                hash.Add(Scriptitem);
-            }
-            if (item.Template.TryGet(out var Templateitem))
-            {
-                hash.Add(Templateitem);
-            }
+            hash.Add(item.Script);
+            hash.Add(item.Template);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1497,11 +1489,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Script) ?? true))
             {
-                item.Script = rhs.Script.FormKey;
+                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Template) ?? true))
             {
-                item.Template = rhs.Template.FormKey;
+                item.Template = new FormLinkNullable<ANpc>(rhs.Template.FormKey);
             }
         }
         
@@ -1899,11 +1891,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<ILeveledEntryGetter<IANpcSpawnGetter>> Entries { get; private set; } = ListExt.Empty<LeveledEntryBinaryOverlay<IANpcSpawnGetter>>();
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public FormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region Template
         private int? _TemplateLocation;
-        public IFormLinkNullable<IANpcGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<IANpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IANpcGetter>.Null;
+        public FormLinkNullable<IANpcGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<IANpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IANpcGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

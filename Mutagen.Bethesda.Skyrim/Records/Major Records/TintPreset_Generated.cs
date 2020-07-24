@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Color
         public FormLinkNullable<ColorRecord> Color { get; set; } = new FormLinkNullable<ColorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IColorRecordGetter> ITintPresetGetter.Color => this.Color;
+        FormLinkNullable<IColorRecordGetter> ITintPresetGetter.Color => this.Color.ToGetter<ColorRecord, IColorRecordGetter>();
         #endregion
         #region DefaultValue
         public Single? DefaultValue { get; set; }
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => TintPreset_Registration.Instance;
-        IFormLinkNullable<IColorRecordGetter> Color { get; }
+        FormLinkNullable<IColorRecordGetter> Color { get; }
         Single? DefaultValue { get; }
         UInt16? Index { get; }
 
@@ -977,10 +977,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             TintPreset.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Color ?? true)
-                && item.Color.TryGet(out var ColorItem))
+            if (printMask?.Color ?? true)
             {
-                fg.AppendItem(ColorItem, "Color");
+                fg.AppendItem(item.Color.FormKey, "Color");
             }
             if ((printMask?.DefaultValue ?? true)
                 && item.DefaultValue.TryGet(out var DefaultValueItem))
@@ -1010,10 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ITintPresetGetter item)
         {
             var hash = new HashCode();
-            if (item.Color.TryGet(out var Coloritem))
-            {
-                hash.Add(Coloritem);
-            }
+            hash.Add(item.Color);
             if (item.DefaultValue.TryGet(out var DefaultValueitem))
             {
                 hash.Add(DefaultValueitem);
@@ -1060,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)TintPreset_FieldIndex.Color) ?? true))
             {
-                item.Color = rhs.Color.FormKey;
+                item.Color = new FormLinkNullable<ColorRecord>(rhs.Color.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)TintPreset_FieldIndex.DefaultValue) ?? true))
             {
@@ -1315,7 +1311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Color
         private int? _ColorLocation;
-        public IFormLinkNullable<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public FormLinkNullable<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         #region DefaultValue
         private int? _DefaultValueLocation;

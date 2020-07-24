@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PlacedHazardBinaryOverlay
         {
-            public IFormLink<IHazardGetter> Hazard { get; internal set; } = FormLink<IHazardGetter>.Null;
+            public FormLink<IHazardGetter> Hazard { get; internal set; } = FormLink<IHazardGetter>.Null;
         }
     }
 }

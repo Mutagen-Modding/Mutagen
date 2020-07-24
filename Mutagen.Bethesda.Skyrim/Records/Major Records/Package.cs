@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
             public ReadOnlyMemorySlice<Byte> GetXnamMarkerCustom() => _xnam;
 
             FormLink<IPackageGetter> _packageTemplate;
-            public IFormLink<IPackageGetter> GetPackageTemplateCustom() => _packageTemplate;
+            public FormLink<IPackageGetter> GetPackageTemplateCustom() => _packageTemplate;
 
             private void PackageTemplateCustomParse(
                 OverlayStream stream,

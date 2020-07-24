@@ -102,12 +102,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region PickUpSound
         public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IBookGetter.PickUpSound => this.PickUpSound;
+        FormLinkNullable<ISoundDescriptorGetter> IBookGetter.PickUpSound => this.PickUpSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region PutDownSound
         public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IBookGetter.PutDownSound => this.PutDownSound;
+        FormLinkNullable<ISoundDescriptorGetter> IBookGetter.PutDownSound => this.PutDownSound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region InventoryArt
         public FormLinkNullable<Static> InventoryArt { get; set; } = new FormLinkNullable<Static>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IStaticGetter> IBookGetter.InventoryArt => this.InventoryArt;
+        FormLinkNullable<IStaticGetter> IBookGetter.InventoryArt => this.InventoryArt.ToGetter<Static, IStaticGetter>();
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -1235,8 +1235,8 @@ namespace Mutagen.Bethesda.Skyrim
         IIconsGetter? Icons { get; }
         TranslatedString BookText { get; }
         IDestructibleGetter? Destructible { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         Book.Flag Flags { get; }
         Book.BookType Type { get; }
@@ -1244,7 +1244,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBookTeachTargetGetter? Teaches { get; }
         UInt32 Value { get; }
         Single Weight { get; }
-        IFormLinkNullable<IStaticGetter> InventoryArt { get; }
+        FormLinkNullable<IStaticGetter> InventoryArt { get; }
         TranslatedString? Description { get; }
         Book.DATADataType DATADataTypeState { get; }
 
@@ -2017,15 +2017,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 DestructibleItem?.ToString(fg, "Destructible");
             }
-            if ((printMask?.PickUpSound ?? true)
-                && item.PickUpSound.TryGet(out var PickUpSoundItem))
+            if (printMask?.PickUpSound ?? true)
             {
-                fg.AppendItem(PickUpSoundItem, "PickUpSound");
+                fg.AppendItem(item.PickUpSound.FormKey, "PickUpSound");
             }
-            if ((printMask?.PutDownSound ?? true)
-                && item.PutDownSound.TryGet(out var PutDownSoundItem))
+            if (printMask?.PutDownSound ?? true)
             {
-                fg.AppendItem(PutDownSoundItem, "PutDownSound");
+                fg.AppendItem(item.PutDownSound.FormKey, "PutDownSound");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords.TryGet(out var KeywordsItem))
@@ -2039,7 +2037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendItem(subItem);
+                            fg.AppendItem(subItem.FormKey);
                         }
                         fg.AppendLine("]");
                     }
@@ -2071,10 +2069,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Weight, "Weight");
             }
-            if ((printMask?.InventoryArt ?? true)
-                && item.InventoryArt.TryGet(out var InventoryArtItem))
+            if (printMask?.InventoryArt ?? true)
             {
-                fg.AppendItem(InventoryArtItem, "InventoryArt");
+                fg.AppendItem(item.InventoryArt.FormKey, "InventoryArt");
             }
             if ((printMask?.Description ?? true)
                 && item.Description.TryGet(out var DescriptionItem))
@@ -2198,14 +2195,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Destructibleitem);
             }
-            if (item.PickUpSound.TryGet(out var PickUpSounditem))
-            {
-                hash.Add(PickUpSounditem);
-            }
-            if (item.PutDownSound.TryGet(out var PutDownSounditem))
-            {
-                hash.Add(PutDownSounditem);
-            }
+            hash.Add(item.PickUpSound);
+            hash.Add(item.PutDownSound);
             hash.Add(item.Keywords);
             hash.Add(item.Flags);
             hash.Add(item.Type);
@@ -2216,10 +2207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             hash.Add(item.Value);
             hash.Add(item.Weight);
-            if (item.InventoryArt.TryGet(out var InventoryArtitem))
-            {
-                hash.Add(InventoryArtitem);
-            }
+            hash.Add(item.InventoryArt);
             if (item.Description.TryGet(out var Descriptionitem))
             {
                 hash.Add(Descriptionitem);
@@ -2484,11 +2472,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = rhs.PickUpSound.FormKey;
+                item.PickUpSound = new FormLinkNullable<SoundDescriptor>(rhs.PickUpSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = rhs.PutDownSound.FormKey;
+                item.PutDownSound = new FormLinkNullable<SoundDescriptor>(rhs.PutDownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Keywords) ?? true))
             {
@@ -2565,7 +2553,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.InventoryArt) ?? true))
             {
-                item.InventoryArt = rhs.InventoryArt.FormKey;
+                item.InventoryArt = new FormLinkNullable<Static>(rhs.InventoryArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Description) ?? true))
             {
@@ -3128,11 +3116,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IDestructibleGetter? Destructible { get; private set; }
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
         private int? _DATALocation;
@@ -3167,7 +3155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region InventoryArt
         private int? _InventoryArtLocation;
-        public IFormLinkNullable<IStaticGetter> InventoryArt => _InventoryArtLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InventoryArtLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        public FormLinkNullable<IStaticGetter> InventoryArt => _InventoryArtLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InventoryArtLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         #region Description
         private int? _DescriptionLocation;

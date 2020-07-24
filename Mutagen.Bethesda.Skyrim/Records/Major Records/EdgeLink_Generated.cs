@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mesh
         public FormLink<ANavigationMesh> Mesh { get; set; } = new FormLink<ANavigationMesh>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IANavigationMeshGetter> IEdgeLinkGetter.Mesh => this.Mesh;
+        FormLink<IANavigationMeshGetter> IEdgeLinkGetter.Mesh => this.Mesh.ToGetter<ANavigationMesh, IANavigationMeshGetter>();
         #endregion
         #region TriangleIndex
         public Int16 TriangleIndex { get; set; } = default;
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => EdgeLink_Registration.Instance;
         Int32 Unknown { get; }
-        IFormLink<IANavigationMeshGetter> Mesh { get; }
+        FormLink<IANavigationMeshGetter> Mesh { get; }
         Int16 TriangleIndex { get; }
 
     }
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Mesh ?? true)
             {
-                fg.AppendItem(item.Mesh, "Mesh");
+                fg.AppendItem(item.Mesh.FormKey, "Mesh");
             }
             if (printMask?.TriangleIndex ?? true)
             {
@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.Mesh) ?? true))
             {
-                item.Mesh = rhs.Mesh.FormKey;
+                item.Mesh = new FormLink<ANavigationMesh>(rhs.Mesh.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.TriangleIndex) ?? true))
             {
@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public IFormLink<IANavigationMeshGetter> Mesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IANavigationMeshGetter> Mesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Int16 TriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,

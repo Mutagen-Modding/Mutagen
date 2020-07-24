@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Quest
         public FormLinkNullable<Quest> Quest { get; set; } = new FormLinkNullable<Quest>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IQuestGetter> ISceneGetter.Quest => this.Quest;
+        FormLinkNullable<IQuestGetter> ISceneGetter.Quest => this.Quest.ToGetter<Quest, IQuestGetter>();
         #endregion
         #region LastActionIndex
         public UInt32? LastActionIndex { get; set; }
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<ISceneActionGetter> Actions { get; }
         IScenePhaseUnusedDataGetter? Unused { get; }
         IScenePhaseUnusedDataGetter? Unused2 { get; }
-        IFormLinkNullable<IQuestGetter> Quest { get; }
+        FormLinkNullable<IQuestGetter> Quest { get; }
         UInt32? LastActionIndex { get; }
         ReadOnlyMemorySlice<Byte>? VNAM { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
@@ -1891,10 +1891,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 Unused2Item?.ToString(fg, "Unused2");
             }
-            if ((printMask?.Quest ?? true)
-                && item.Quest.TryGet(out var QuestItem))
+            if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(QuestItem, "Quest");
+                fg.AppendItem(item.Quest.FormKey, "Quest");
             }
             if ((printMask?.LastActionIndex ?? true)
                 && item.LastActionIndex.TryGet(out var LastActionIndexItem))
@@ -2026,10 +2025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Unused2item);
             }
-            if (item.Quest.TryGet(out var Questitem))
-            {
-                hash.Add(Questitem);
-            }
+            hash.Add(item.Quest);
             if (item.LastActionIndex.TryGet(out var LastActionIndexitem))
             {
                 hash.Add(LastActionIndexitem);
@@ -2296,7 +2292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Quest) ?? true))
             {
-                item.Quest = rhs.Quest.FormKey;
+                item.Quest = new FormLinkNullable<Quest>(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.LastActionIndex) ?? true))
             {
@@ -2813,7 +2809,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IScenePhaseUnusedDataGetter? Unused2 { get; private set; }
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public FormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region LastActionIndex
         private int? _LastActionIndexLocation;

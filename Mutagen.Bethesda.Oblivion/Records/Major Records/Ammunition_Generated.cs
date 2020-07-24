@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Enchantment
         public FormLinkNullable<Enchantment> Enchantment { get; set; } = new FormLinkNullable<Enchantment>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IEnchantmentGetter> IAmmunitionGetter.Enchantment => this.Enchantment;
+        FormLinkNullable<IEnchantmentGetter> IAmmunitionGetter.Enchantment => this.Enchantment.ToGetter<Enchantment, IEnchantmentGetter>();
         #endregion
         #region EnchantmentPoints
         public UInt16? EnchantmentPoints { get; set; }
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
-        IFormLinkNullable<IEnchantmentGetter> Enchantment { get; }
+        FormLinkNullable<IEnchantmentGetter> Enchantment { get; }
         UInt16? EnchantmentPoints { get; }
         IAmmunitionDataGetter? Data { get; }
 
@@ -1225,10 +1225,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(IconItem, "Icon");
             }
-            if ((printMask?.Enchantment ?? true)
-                && item.Enchantment.TryGet(out var EnchantmentItem))
+            if (printMask?.Enchantment ?? true)
             {
-                fg.AppendItem(EnchantmentItem, "Enchantment");
+                fg.AppendItem(item.Enchantment.FormKey, "Enchantment");
             }
             if ((printMask?.EnchantmentPoints ?? true)
                 && item.EnchantmentPoints.TryGet(out var EnchantmentPointsItem))
@@ -1356,10 +1355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Iconitem);
             }
-            if (item.Enchantment.TryGet(out var Enchantmentitem))
-            {
-                hash.Add(Enchantmentitem);
-            }
+            hash.Add(item.Enchantment);
             if (item.EnchantmentPoints.TryGet(out var EnchantmentPointsitem))
             {
                 hash.Add(EnchantmentPointsitem);
@@ -1489,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Enchantment) ?? true))
             {
-                item.Enchantment = rhs.Enchantment.FormKey;
+                item.Enchantment = new FormLinkNullable<Enchantment>(rhs.Enchantment.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.EnchantmentPoints) ?? true))
             {
@@ -1925,7 +1921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Enchantment
         private int? _EnchantmentLocation;
-        public IFormLinkNullable<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormLinkNullable<IEnchantmentGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnchantmentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEnchantmentGetter>.Null;
+        public FormLinkNullable<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormLinkNullable<IEnchantmentGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnchantmentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEnchantmentGetter>.Null;
         #endregion
         #region EnchantmentPoints
         private int? _EnchantmentPointsLocation;

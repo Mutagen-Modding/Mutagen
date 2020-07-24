@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Head
         public FormLinkNullable<HeadPart> Head { get; set; } = new FormLinkNullable<HeadPart>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IHeadPartGetter> IHeadPartReferenceGetter.Head => this.Head;
+        FormLinkNullable<IHeadPartGetter> IHeadPartReferenceGetter.Head => this.Head.ToGetter<HeadPart, IHeadPartGetter>();
         #endregion
 
         #region To String
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => HeadPartReference_Registration.Instance;
         Int32? Number { get; }
-        IFormLinkNullable<IHeadPartGetter> Head { get; }
+        FormLinkNullable<IHeadPartGetter> Head { get; }
 
     }
 
@@ -932,10 +932,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(NumberItem, "Number");
             }
-            if ((printMask?.Head ?? true)
-                && item.Head.TryGet(out var HeadItem))
+            if (printMask?.Head ?? true)
             {
-                fg.AppendItem(HeadItem, "Head");
+                fg.AppendItem(item.Head.FormKey, "Head");
             }
         }
         
@@ -958,10 +957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Numberitem);
             }
-            if (item.Head.TryGet(out var Headitem))
-            {
-                hash.Add(Headitem);
-            }
+            hash.Add(item.Head);
             return hash.ToHashCode();
         }
         
@@ -1004,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPartReference_FieldIndex.Head) ?? true))
             {
-                item.Head = rhs.Head.FormKey;
+                item.Head = new FormLinkNullable<HeadPart>(rhs.Head.FormKey);
             }
         }
         
@@ -1244,7 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Head
         private int? _HeadLocation;
-        public IFormLinkNullable<IHeadPartGetter> Head => _HeadLocation.HasValue ? new FormLinkNullable<IHeadPartGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HeadLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHeadPartGetter>.Null;
+        public FormLinkNullable<IHeadPartGetter> Head => _HeadLocation.HasValue ? new FormLinkNullable<IHeadPartGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HeadLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHeadPartGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

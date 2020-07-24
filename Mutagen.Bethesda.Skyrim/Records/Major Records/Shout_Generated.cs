@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region MenuDisplayObject
         public FormLinkNullable<Static> MenuDisplayObject { get; set; } = new FormLinkNullable<Static>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IStaticGetter> IShoutGetter.MenuDisplayObject => this.MenuDisplayObject;
+        FormLinkNullable<IStaticGetter> IShoutGetter.MenuDisplayObject => this.MenuDisplayObject.ToGetter<Static, IStaticGetter>();
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => Shout_Registration.Instance;
         TranslatedString? Name { get; }
-        IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
+        FormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
         TranslatedString? Description { get; }
         IReadOnlyList<IShoutWordGetter> WordsOfPower { get; }
 
@@ -1188,10 +1188,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(NameItem, "Name");
             }
-            if ((printMask?.MenuDisplayObject ?? true)
-                && item.MenuDisplayObject.TryGet(out var MenuDisplayObjectItem))
+            if (printMask?.MenuDisplayObject ?? true)
             {
-                fg.AppendItem(MenuDisplayObjectItem, "MenuDisplayObject");
+                fg.AppendItem(item.MenuDisplayObject.FormKey, "MenuDisplayObject");
             }
             if ((printMask?.Description ?? true)
                 && item.Description.TryGet(out var DescriptionItem))
@@ -1326,10 +1325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Nameitem);
             }
-            if (item.MenuDisplayObject.TryGet(out var MenuDisplayObjectitem))
-            {
-                hash.Add(MenuDisplayObjectitem);
-            }
+            hash.Add(item.MenuDisplayObject);
             if (item.Description.TryGet(out var Descriptionitem))
             {
                 hash.Add(Descriptionitem);
@@ -1430,7 +1426,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject = rhs.MenuDisplayObject.FormKey;
+                item.MenuDisplayObject = new FormLinkNullable<Static>(rhs.MenuDisplayObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.Description) ?? true))
             {
@@ -1849,7 +1845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
-        public IFormLinkNullable<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        public FormLinkNullable<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         #region Description
         private int? _DescriptionLocation;

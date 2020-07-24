@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "ublic partial class GroupBinaryOverlay<T";
+            string testString = "public IFormLink<T> Reference { get; set; } = new FormLink<T>()";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

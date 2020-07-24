@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PlacedBarrierBinaryOverlay
         {
-            public IFormLink<IProjectileGetter> Projectile { get; internal set; } = FormLink<IProjectileGetter>.Null;
+            public FormLink<IProjectileGetter> Projectile { get; internal set; } = FormLink<IProjectileGetter>.Null;
         }
     }
 }

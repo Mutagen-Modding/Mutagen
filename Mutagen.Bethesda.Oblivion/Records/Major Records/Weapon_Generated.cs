@@ -66,12 +66,12 @@ namespace Mutagen.Bethesda.Oblivion
         #region Script
         public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IScriptGetter> IWeaponGetter.Script => this.Script;
+        FormLinkNullable<IScriptGetter> IWeaponGetter.Script => this.Script.ToGetter<Script, IScriptGetter>();
         #endregion
         #region Enchantment
         public FormLinkNullable<Enchantment> Enchantment { get; set; } = new FormLinkNullable<Enchantment>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IEnchantmentGetter> IWeaponGetter.Enchantment => this.Enchantment;
+        FormLinkNullable<IEnchantmentGetter> IWeaponGetter.Enchantment => this.Enchantment.ToGetter<Enchantment, IEnchantmentGetter>();
         #endregion
         #region EnchantmentPoints
         public UInt16? EnchantmentPoints { get; set; }
@@ -687,8 +687,8 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
-        IFormLinkNullable<IScriptGetter> Script { get; }
-        IFormLinkNullable<IEnchantmentGetter> Enchantment { get; }
+        FormLinkNullable<IScriptGetter> Script { get; }
+        FormLinkNullable<IEnchantmentGetter> Enchantment { get; }
         UInt16? EnchantmentPoints { get; }
         IWeaponDataGetter? Data { get; }
 
@@ -1274,15 +1274,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(IconItem, "Icon");
             }
-            if ((printMask?.Script ?? true)
-                && item.Script.TryGet(out var ScriptItem))
+            if (printMask?.Script ?? true)
             {
-                fg.AppendItem(ScriptItem, "Script");
+                fg.AppendItem(item.Script.FormKey, "Script");
             }
-            if ((printMask?.Enchantment ?? true)
-                && item.Enchantment.TryGet(out var EnchantmentItem))
+            if (printMask?.Enchantment ?? true)
             {
-                fg.AppendItem(EnchantmentItem, "Enchantment");
+                fg.AppendItem(item.Enchantment.FormKey, "Enchantment");
             }
             if ((printMask?.EnchantmentPoints ?? true)
                 && item.EnchantmentPoints.TryGet(out var EnchantmentPointsItem))
@@ -1411,14 +1409,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Iconitem);
             }
-            if (item.Script.TryGet(out var Scriptitem))
-            {
-                hash.Add(Scriptitem);
-            }
-            if (item.Enchantment.TryGet(out var Enchantmentitem))
-            {
-                hash.Add(Enchantmentitem);
-            }
+            hash.Add(item.Script);
+            hash.Add(item.Enchantment);
             if (item.EnchantmentPoints.TryGet(out var EnchantmentPointsitem))
             {
                 hash.Add(EnchantmentPointsitem);
@@ -1552,11 +1544,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Script) ?? true))
             {
-                item.Script = rhs.Script.FormKey;
+                item.Script = new FormLinkNullable<Script>(rhs.Script.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Enchantment) ?? true))
             {
-                item.Enchantment = rhs.Enchantment.FormKey;
+                item.Enchantment = new FormLinkNullable<Enchantment>(rhs.Enchantment.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentPoints) ?? true))
             {
@@ -2004,11 +1996,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public FormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region Enchantment
         private int? _EnchantmentLocation;
-        public IFormLinkNullable<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormLinkNullable<IEnchantmentGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnchantmentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEnchantmentGetter>.Null;
+        public FormLinkNullable<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormLinkNullable<IEnchantmentGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnchantmentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEnchantmentGetter>.Null;
         #endregion
         #region EnchantmentPoints
         private int? _EnchantmentPointsLocation;

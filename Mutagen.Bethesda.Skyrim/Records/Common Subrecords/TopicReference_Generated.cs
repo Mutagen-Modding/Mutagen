@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Reference
         public FormLink<DialogTopic> Reference { get; set; } = new FormLink<DialogTopic>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IDialogTopicGetter> ITopicReferenceGetter.Reference => this.Reference;
+        FormLink<IDialogTopicGetter> ITopicReferenceGetter.Reference => this.Reference.ToGetter<DialogTopic, IDialogTopicGetter>();
         #endregion
 
         #region To String
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => TopicReference_Registration.Instance;
-        IFormLink<IDialogTopicGetter> Reference { get; }
+        FormLink<IDialogTopicGetter> Reference { get; }
 
     }
 
@@ -848,7 +848,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference, "Reference");
+                fg.AppendItem(item.Reference.FormKey, "Reference");
             }
         }
         
@@ -936,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)TopicReference_FieldIndex.Reference) ?? true))
             {
-                item.Reference = rhs.Reference.FormKey;
+                item.Reference = new FormLink<DialogTopic>(rhs.Reference.FormKey);
             }
         }
         
@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IDialogTopicGetter> Reference => new FormLink<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IDialogTopicGetter> Reference => new FormLink<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

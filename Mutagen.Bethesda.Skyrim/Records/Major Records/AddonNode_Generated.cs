@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Sound
         public FormLinkNullable<SoundDescriptor> Sound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundDescriptorGetter> IAddonNodeGetter.Sound => this.Sound;
+        FormLinkNullable<ISoundDescriptorGetter> IAddonNodeGetter.Sound => this.Sound.ToGetter<SoundDescriptor, ISoundDescriptorGetter>();
         #endregion
         #region MasterParticleSystemCap
         public UInt16 MasterParticleSystemCap { get; set; } = default;
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         IModelGetter? Model { get; }
         Int32 NodeIndex { get; }
-        IFormLinkNullable<ISoundDescriptorGetter> Sound { get; }
+        FormLinkNullable<ISoundDescriptorGetter> Sound { get; }
         UInt16 MasterParticleSystemCap { get; }
         Boolean AlwaysLoaded { get; }
         AddonNode.DNAMDataType DNAMDataTypeState { get; }
@@ -1247,10 +1247,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.NodeIndex, "NodeIndex");
             }
-            if ((printMask?.Sound ?? true)
-                && item.Sound.TryGet(out var SoundItem))
+            if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(SoundItem, "Sound");
+                fg.AppendItem(item.Sound.FormKey, "Sound");
             }
             if (printMask?.MasterParticleSystemCap ?? true)
             {
@@ -1349,10 +1348,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(Modelitem);
             }
             hash.Add(item.NodeIndex);
-            if (item.Sound.TryGet(out var Sounditem))
-            {
-                hash.Add(Sounditem);
-            }
+            hash.Add(item.Sound);
             hash.Add(item.MasterParticleSystemCap);
             hash.Add(item.AlwaysLoaded);
             hash.Add(item.DNAMDataTypeState);
@@ -1497,7 +1493,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Sound) ?? true))
             {
-                item.Sound = rhs.Sound.FormKey;
+                item.Sound = new FormLinkNullable<SoundDescriptor>(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.MasterParticleSystemCap) ?? true))
             {
@@ -1894,7 +1890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Sound
         private int? _SoundLocation;
-        public IFormLinkNullable<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public FormLinkNullable<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         private int? _DNAMLocation;
         public AddonNode.DNAMDataType DNAMDataTypeState { get; private set; }

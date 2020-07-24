@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Worldspace
         public FormLinkNullable<Worldspace> Worldspace { get; set; } = new FormLinkNullable<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace;
+        FormLinkNullable<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace.ToGetter<Worldspace, IWorldspaceGetter>();
         #endregion
         #region Areas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -880,7 +880,7 @@ namespace Mutagen.Bethesda.Oblivion
         static new ILoquiRegistration Registration => Region_Registration.Instance;
         String? Icon { get; }
         Color? MapColor { get; }
-        IFormLinkNullable<IWorldspaceGetter> Worldspace { get; }
+        FormLinkNullable<IWorldspaceGetter> Worldspace { get; }
         IReadOnlyList<IRegionAreaGetter> Areas { get; }
         IRegionObjectsGetter? Objects { get; }
         IRegionWeatherGetter? Weather { get; }
@@ -1493,10 +1493,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(MapColorItem, "MapColor");
             }
-            if ((printMask?.Worldspace ?? true)
-                && item.Worldspace.TryGet(out var WorldspaceItem))
+            if (printMask?.Worldspace ?? true)
             {
-                fg.AppendItem(WorldspaceItem, "Worldspace");
+                fg.AppendItem(item.Worldspace.FormKey, "Worldspace");
             }
             if (printMask?.Areas?.Overall ?? true)
             {
@@ -1628,10 +1627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(MapColoritem);
             }
-            if (item.Worldspace.TryGet(out var Worldspaceitem))
-            {
-                hash.Add(Worldspaceitem);
-            }
+            hash.Add(item.Worldspace);
             hash.Add(item.Areas);
             if (item.Objects.TryGet(out var Objectsitem))
             {
@@ -1771,7 +1767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace = rhs.Worldspace.FormKey;
+                item.Worldspace = new FormLinkNullable<Worldspace>(rhs.Worldspace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {
@@ -2306,7 +2302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Worldspace
         private int? _WorldspaceLocation;
-        public IFormLinkNullable<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
+        public FormLinkNullable<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
         #endregion
         public IReadOnlyList<IRegionAreaGetter> Areas { get; private set; } = ListExt.Empty<RegionAreaBinaryOverlay>();
         #region RegionAreaLogic

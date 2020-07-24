@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Reference
         public FormLink<ILinkedReference> Reference { get; set; } = new FormLink<ILinkedReference>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILinkedReferenceGetter> IActivateParentGetter.Reference => this.Reference;
+        FormLink<ILinkedReferenceGetter> IActivateParentGetter.Reference => this.Reference.ToGetter<ILinkedReference, ILinkedReferenceGetter>();
         #endregion
         #region Delay
         public Single Delay { get; set; } = default;
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ActivateParent_Registration.Instance;
-        IFormLink<ILinkedReferenceGetter> Reference { get; }
+        FormLink<ILinkedReferenceGetter> Reference { get; }
         Single Delay { get; }
 
     }
@@ -919,7 +919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference, "Reference");
+                fg.AppendItem(item.Reference.FormKey, "Reference");
             }
             if (printMask?.Delay ?? true)
             {
@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ActivateParent_FieldIndex.Reference) ?? true))
             {
-                item.Reference = rhs.Reference.FormKey;
+                item.Reference = new FormLink<ILinkedReference>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ActivateParent_FieldIndex.Delay) ?? true))
             {
@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Single Delay => _data.Slice(0x4, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,

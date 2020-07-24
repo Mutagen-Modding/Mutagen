@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Parent
         public FormLinkNullable<MaterialType> Parent { get; set; } = new FormLinkNullable<MaterialType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IMaterialTypeGetter> IMaterialTypeGetter.Parent => this.Parent;
+        FormLinkNullable<IMaterialTypeGetter> IMaterialTypeGetter.Parent => this.Parent.ToGetter<MaterialType, IMaterialTypeGetter>();
         #endregion
         #region Name
         public String? Name { get; set; }
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region HavokImpactDataSet
         public FormLinkNullable<ImpactDataSet> HavokImpactDataSet { get; set; } = new FormLinkNullable<ImpactDataSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IImpactDataSetGetter> IMaterialTypeGetter.HavokImpactDataSet => this.HavokImpactDataSet;
+        FormLinkNullable<IImpactDataSetGetter> IMaterialTypeGetter.HavokImpactDataSet => this.HavokImpactDataSet.ToGetter<ImpactDataSet, IImpactDataSetGetter>();
         #endregion
 
         #region To String
@@ -623,12 +623,12 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => MaterialType_Registration.Instance;
-        IFormLinkNullable<IMaterialTypeGetter> Parent { get; }
+        FormLinkNullable<IMaterialTypeGetter> Parent { get; }
         String? Name { get; }
         Color? HavokDisplayColor { get; }
         Single? Buoyancy { get; }
         MaterialType.Flag? Flags { get; }
-        IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet { get; }
+        FormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet { get; }
 
     }
 
@@ -1159,10 +1159,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.Parent ?? true)
-                && item.Parent.TryGet(out var ParentItem))
+            if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(ParentItem, "Parent");
+                fg.AppendItem(item.Parent.FormKey, "Parent");
             }
             if ((printMask?.Name ?? true)
                 && item.Name.TryGet(out var NameItem))
@@ -1184,10 +1183,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(FlagsItem, "Flags");
             }
-            if ((printMask?.HavokImpactDataSet ?? true)
-                && item.HavokImpactDataSet.TryGet(out var HavokImpactDataSetItem))
+            if (printMask?.HavokImpactDataSet ?? true)
             {
-                fg.AppendItem(HavokImpactDataSetItem, "HavokImpactDataSet");
+                fg.AppendItem(item.HavokImpactDataSet.FormKey, "HavokImpactDataSet");
             }
         }
         
@@ -1267,10 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IMaterialTypeGetter item)
         {
             var hash = new HashCode();
-            if (item.Parent.TryGet(out var Parentitem))
-            {
-                hash.Add(Parentitem);
-            }
+            hash.Add(item.Parent);
             if (item.Name.TryGet(out var Nameitem))
             {
                 hash.Add(Nameitem);
@@ -1287,10 +1282,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Flagsitem);
             }
-            if (item.HavokImpactDataSet.TryGet(out var HavokImpactDataSetitem))
-            {
-                hash.Add(HavokImpactDataSetitem);
-            }
+            hash.Add(item.HavokImpactDataSet);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1377,7 +1369,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Parent) ?? true))
             {
-                item.Parent = rhs.Parent.FormKey;
+                item.Parent = new FormLinkNullable<MaterialType>(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Name) ?? true))
             {
@@ -1397,7 +1389,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokImpactDataSet) ?? true))
             {
-                item.HavokImpactDataSet = rhs.HavokImpactDataSet.FormKey;
+                item.HavokImpactDataSet = new FormLinkNullable<ImpactDataSet>(rhs.HavokImpactDataSet.FormKey);
             }
         }
         
@@ -1752,7 +1744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullable<IMaterialTypeGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public FormLinkNullable<IMaterialTypeGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -1772,7 +1764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region HavokImpactDataSet
         private int? _HavokImpactDataSetLocation;
-        public IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet => _HavokImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HavokImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
+        public FormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet => _HavokImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HavokImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -91,27 +91,27 @@ namespace Mutagen.Bethesda.Skyrim
         #region TextureSet
         public FormLinkNullable<TextureSet> TextureSet { get; set; } = new FormLinkNullable<TextureSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ITextureSetGetter> IImpactGetter.TextureSet => this.TextureSet;
+        FormLinkNullable<ITextureSetGetter> IImpactGetter.TextureSet => this.TextureSet.ToGetter<TextureSet, ITextureSetGetter>();
         #endregion
         #region SecondaryTextureSet
         public FormLinkNullable<TextureSet> SecondaryTextureSet { get; set; } = new FormLinkNullable<TextureSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ITextureSetGetter> IImpactGetter.SecondaryTextureSet => this.SecondaryTextureSet;
+        FormLinkNullable<ITextureSetGetter> IImpactGetter.SecondaryTextureSet => this.SecondaryTextureSet.ToGetter<TextureSet, ITextureSetGetter>();
         #endregion
         #region Sound1
         public FormLinkNullable<ISound> Sound1 { get; set; } = new FormLinkNullable<ISound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundGetter> IImpactGetter.Sound1 => this.Sound1;
+        FormLinkNullable<ISoundGetter> IImpactGetter.Sound1 => this.Sound1.ToGetter<ISound, ISoundGetter>();
         #endregion
         #region Sound2
         public FormLinkNullable<ISound> Sound2 { get; set; } = new FormLinkNullable<ISound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<ISoundGetter> IImpactGetter.Sound2 => this.Sound2;
+        FormLinkNullable<ISoundGetter> IImpactGetter.Sound2 => this.Sound2.ToGetter<ISound, ISoundGetter>();
         #endregion
         #region Hazard
         public FormLinkNullable<Hazard> Hazard { get; set; } = new FormLinkNullable<Hazard>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IHazardGetter> IImpactGetter.Hazard => this.Hazard;
+        FormLinkNullable<IHazardGetter> IImpactGetter.Hazard => this.Hazard.ToGetter<Hazard, IHazardGetter>();
         #endregion
         #region DATADataTypeState
         public Impact.DATADataType DATADataTypeState { get; set; } = default;
@@ -988,11 +988,11 @@ namespace Mutagen.Bethesda.Skyrim
         Impact.ResultType Result { get; }
         Int16 Unknown { get; }
         IDecalGetter? Decal { get; }
-        IFormLinkNullable<ITextureSetGetter> TextureSet { get; }
-        IFormLinkNullable<ITextureSetGetter> SecondaryTextureSet { get; }
-        IFormLinkNullable<ISoundGetter> Sound1 { get; }
-        IFormLinkNullable<ISoundGetter> Sound2 { get; }
-        IFormLinkNullable<IHazardGetter> Hazard { get; }
+        FormLinkNullable<ITextureSetGetter> TextureSet { get; }
+        FormLinkNullable<ITextureSetGetter> SecondaryTextureSet { get; }
+        FormLinkNullable<ISoundGetter> Sound1 { get; }
+        FormLinkNullable<ISoundGetter> Sound2 { get; }
+        FormLinkNullable<IHazardGetter> Hazard { get; }
         Impact.DATADataType DATADataTypeState { get; }
 
     }
@@ -1715,30 +1715,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 DecalItem?.ToString(fg, "Decal");
             }
-            if ((printMask?.TextureSet ?? true)
-                && item.TextureSet.TryGet(out var TextureSetItem))
+            if (printMask?.TextureSet ?? true)
             {
-                fg.AppendItem(TextureSetItem, "TextureSet");
+                fg.AppendItem(item.TextureSet.FormKey, "TextureSet");
             }
-            if ((printMask?.SecondaryTextureSet ?? true)
-                && item.SecondaryTextureSet.TryGet(out var SecondaryTextureSetItem))
+            if (printMask?.SecondaryTextureSet ?? true)
             {
-                fg.AppendItem(SecondaryTextureSetItem, "SecondaryTextureSet");
+                fg.AppendItem(item.SecondaryTextureSet.FormKey, "SecondaryTextureSet");
             }
-            if ((printMask?.Sound1 ?? true)
-                && item.Sound1.TryGet(out var Sound1Item))
+            if (printMask?.Sound1 ?? true)
             {
-                fg.AppendItem(Sound1Item, "Sound1");
+                fg.AppendItem(item.Sound1.FormKey, "Sound1");
             }
-            if ((printMask?.Sound2 ?? true)
-                && item.Sound2.TryGet(out var Sound2Item))
+            if (printMask?.Sound2 ?? true)
             {
-                fg.AppendItem(Sound2Item, "Sound2");
+                fg.AppendItem(item.Sound2.FormKey, "Sound2");
             }
-            if ((printMask?.Hazard ?? true)
-                && item.Hazard.TryGet(out var HazardItem))
+            if (printMask?.Hazard ?? true)
             {
-                fg.AppendItem(HazardItem, "Hazard");
+                fg.AppendItem(item.Hazard.FormKey, "Hazard");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
@@ -1848,26 +1843,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Decalitem);
             }
-            if (item.TextureSet.TryGet(out var TextureSetitem))
-            {
-                hash.Add(TextureSetitem);
-            }
-            if (item.SecondaryTextureSet.TryGet(out var SecondaryTextureSetitem))
-            {
-                hash.Add(SecondaryTextureSetitem);
-            }
-            if (item.Sound1.TryGet(out var Sound1item))
-            {
-                hash.Add(Sound1item);
-            }
-            if (item.Sound2.TryGet(out var Sound2item))
-            {
-                hash.Add(Sound2item);
-            }
-            if (item.Hazard.TryGet(out var Hazarditem))
-            {
-                hash.Add(Hazarditem);
-            }
+            hash.Add(item.TextureSet);
+            hash.Add(item.SecondaryTextureSet);
+            hash.Add(item.Sound1);
+            hash.Add(item.Sound2);
+            hash.Add(item.Hazard);
             hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2058,23 +2038,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet = rhs.TextureSet.FormKey;
+                item.TextureSet = new FormLinkNullable<TextureSet>(rhs.TextureSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.SecondaryTextureSet) ?? true))
             {
-                item.SecondaryTextureSet = rhs.SecondaryTextureSet.FormKey;
+                item.SecondaryTextureSet = new FormLinkNullable<TextureSet>(rhs.SecondaryTextureSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound1) ?? true))
             {
-                item.Sound1 = rhs.Sound1.FormKey;
+                item.Sound1 = new FormLinkNullable<ISound>(rhs.Sound1.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound2) ?? true))
             {
-                item.Sound2 = rhs.Sound2.FormKey;
+                item.Sound2 = new FormLinkNullable<ISound>(rhs.Sound2.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Hazard) ?? true))
             {
-                item.Hazard = rhs.Hazard.FormKey;
+                item.Hazard = new FormLinkNullable<Hazard>(rhs.Hazard.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -2549,23 +2529,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region TextureSet
         private int? _TextureSetLocation;
-        public IFormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public FormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region SecondaryTextureSet
         private int? _SecondaryTextureSetLocation;
-        public IFormLinkNullable<ITextureSetGetter> SecondaryTextureSet => _SecondaryTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SecondaryTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public FormLinkNullable<ITextureSetGetter> SecondaryTextureSet => _SecondaryTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SecondaryTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region Sound1
         private int? _Sound1Location;
-        public IFormLinkNullable<ISoundGetter> Sound1 => _Sound1Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound1Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public FormLinkNullable<ISoundGetter> Sound1 => _Sound1Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound1Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Sound2
         private int? _Sound2Location;
-        public IFormLinkNullable<ISoundGetter> Sound2 => _Sound2Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound2Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public FormLinkNullable<ISoundGetter> Sound2 => _Sound2Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound2Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Hazard
         private int? _HazardLocation;
-        public IFormLinkNullable<IHazardGetter> Hazard => _HazardLocation.HasValue ? new FormLinkNullable<IHazardGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HazardLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHazardGetter>.Null;
+        public FormLinkNullable<IHazardGetter> Hazard => _HazardLocation.HasValue ? new FormLinkNullable<IHazardGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HazardLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHazardGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

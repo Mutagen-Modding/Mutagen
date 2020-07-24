@@ -42,17 +42,17 @@ namespace Mutagen.Bethesda.Oblivion
         #region RelatedWaterDaytime
         public FormLink<Water> RelatedWaterDaytime { get; set; } = new FormLink<Water>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IWaterGetter> IRelatedWatersGetter.RelatedWaterDaytime => this.RelatedWaterDaytime;
+        FormLink<IWaterGetter> IRelatedWatersGetter.RelatedWaterDaytime => this.RelatedWaterDaytime.ToGetter<Water, IWaterGetter>();
         #endregion
         #region RelatedWaterNighttime
         public FormLink<Water> RelatedWaterNighttime { get; set; } = new FormLink<Water>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IWaterGetter> IRelatedWatersGetter.RelatedWaterNighttime => this.RelatedWaterNighttime;
+        FormLink<IWaterGetter> IRelatedWatersGetter.RelatedWaterNighttime => this.RelatedWaterNighttime.ToGetter<Water, IWaterGetter>();
         #endregion
         #region RelatedWaterUnderwater
         public FormLink<Water> RelatedWaterUnderwater { get; set; } = new FormLink<Water>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IWaterGetter> IRelatedWatersGetter.RelatedWaterUnderwater => this.RelatedWaterUnderwater;
+        FormLink<IWaterGetter> IRelatedWatersGetter.RelatedWaterUnderwater => this.RelatedWaterUnderwater.ToGetter<Water, IWaterGetter>();
         #endregion
 
         #region To String
@@ -496,9 +496,9 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RelatedWaters_Registration.Instance;
-        IFormLink<IWaterGetter> RelatedWaterDaytime { get; }
-        IFormLink<IWaterGetter> RelatedWaterNighttime { get; }
-        IFormLink<IWaterGetter> RelatedWaterUnderwater { get; }
+        FormLink<IWaterGetter> RelatedWaterDaytime { get; }
+        FormLink<IWaterGetter> RelatedWaterNighttime { get; }
+        FormLink<IWaterGetter> RelatedWaterUnderwater { get; }
 
     }
 
@@ -970,15 +970,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.RelatedWaterDaytime ?? true)
             {
-                fg.AppendItem(item.RelatedWaterDaytime, "RelatedWaterDaytime");
+                fg.AppendItem(item.RelatedWaterDaytime.FormKey, "RelatedWaterDaytime");
             }
             if (printMask?.RelatedWaterNighttime ?? true)
             {
-                fg.AppendItem(item.RelatedWaterNighttime, "RelatedWaterNighttime");
+                fg.AppendItem(item.RelatedWaterNighttime.FormKey, "RelatedWaterNighttime");
             }
             if (printMask?.RelatedWaterUnderwater ?? true)
             {
-                fg.AppendItem(item.RelatedWaterUnderwater, "RelatedWaterUnderwater");
+                fg.AppendItem(item.RelatedWaterUnderwater.FormKey, "RelatedWaterUnderwater");
             }
         }
         
@@ -1038,15 +1038,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterDaytime) ?? true))
             {
-                item.RelatedWaterDaytime = rhs.RelatedWaterDaytime.FormKey;
+                item.RelatedWaterDaytime = new FormLink<Water>(rhs.RelatedWaterDaytime.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterNighttime) ?? true))
             {
-                item.RelatedWaterNighttime = rhs.RelatedWaterNighttime.FormKey;
+                item.RelatedWaterNighttime = new FormLink<Water>(rhs.RelatedWaterNighttime.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater) ?? true))
             {
-                item.RelatedWaterUnderwater = rhs.RelatedWaterUnderwater.FormKey;
+                item.RelatedWaterUnderwater = new FormLink<Water>(rhs.RelatedWaterUnderwater.FormKey);
             }
         }
         
@@ -1261,9 +1261,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IWaterGetter> RelatedWaterDaytime => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLink<IWaterGetter> RelatedWaterNighttime => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public IFormLink<IWaterGetter> RelatedWaterUnderwater => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public FormLink<IWaterGetter> RelatedWaterDaytime => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IWaterGetter> RelatedWaterNighttime => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IWaterGetter> RelatedWaterUnderwater => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

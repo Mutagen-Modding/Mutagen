@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Reference
         public FormLink<IPlaced> Reference { get; set; } = new FormLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IPlacedGetter> IPointToReferenceMappingGetter.Reference => this.Reference;
+        FormLink<IPlacedGetter> IPointToReferenceMappingGetter.Reference => this.Reference.ToGetter<IPlaced, IPlacedGetter>();
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => PointToReferenceMapping_Registration.Instance;
-        IFormLink<IPlacedGetter> Reference { get; }
+        FormLink<IPlacedGetter> Reference { get; }
         IReadOnlyList<Int16> Points { get; }
 
     }
@@ -1007,7 +1007,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference, "Reference");
+                fg.AppendItem(item.Reference.FormKey, "Reference");
             }
             if (printMask?.Points?.Overall ?? true)
             {
@@ -1081,7 +1081,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Reference) ?? true))
             {
-                item.Reference = rhs.Reference.FormKey;
+                item.Reference = new FormLink<IPlaced>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Points) ?? true))
             {
@@ -1309,7 +1309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         #region Points
         public IReadOnlyList<Int16> Points => BinaryOverlayList.FactoryByStartIndex<Int16>(_data.Slice(0x4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
         protected int PointsEndingPos;

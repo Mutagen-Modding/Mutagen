@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region NewTexture
         public FormLink<TextureSet> NewTexture { get; set; } = new FormLink<TextureSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ITextureSetGetter> IAlternateTextureGetter.NewTexture => this.NewTexture;
+        FormLink<ITextureSetGetter> IAlternateTextureGetter.NewTexture => this.NewTexture.ToGetter<TextureSet, ITextureSetGetter>();
         #endregion
         #region Index
         public Int32 Index { get; set; } = default;
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => AlternateTexture_Registration.Instance;
         String Name { get; }
-        IFormLink<ITextureSetGetter> NewTexture { get; }
+        FormLink<ITextureSetGetter> NewTexture { get; }
         Int32 Index { get; }
 
     }
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.NewTexture ?? true)
             {
-                fg.AppendItem(item.NewTexture, "NewTexture");
+                fg.AppendItem(item.NewTexture.FormKey, "NewTexture");
             }
             if (printMask?.Index ?? true)
             {
@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.NewTexture) ?? true))
             {
-                item.NewTexture = rhs.NewTexture.FormKey;
+                item.NewTexture = new FormLink<TextureSet>(rhs.NewTexture.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.Index) ?? true))
             {
@@ -1245,7 +1245,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public String Name => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 4);
         protected int NameEndingPos;
         #endregion
-        public IFormLink<ITextureSetGetter> NewTexture => new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(NameEndingPos, 0x4))));
+        public FormLink<ITextureSetGetter> NewTexture => new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(NameEndingPos, 0x4))));
         public Int32 Index => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(NameEndingPos + 0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Faction
         public FormLink<Faction> Faction { get; set; } = new FormLink<Faction>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
+        FormLink<IFactionGetter> IRankPlacementGetter.Faction => this.Faction.ToGetter<Faction, IFactionGetter>();
         #endregion
         #region Rank
         public Byte Rank { get; set; } = default;
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RankPlacement_Registration.Instance;
-        IFormLink<IFactionGetter> Faction { get; }
+        FormLink<IFactionGetter> Faction { get; }
         Byte Rank { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
 
@@ -974,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Faction ?? true)
             {
-                fg.AppendItem(item.Faction, "Faction");
+                fg.AppendItem(item.Faction.FormKey, "Faction");
             }
             if (printMask?.Rank ?? true)
             {
@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Faction) ?? true))
             {
-                item.Faction = rhs.Faction.FormKey;
+                item.Faction = new FormLink<Faction>(rhs.Faction.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Rank) ?? true))
             {
@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Byte Rank => _data.Span[0x4];
         public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

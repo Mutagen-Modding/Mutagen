@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Texture
         public FormLink<LandscapeTexture> Texture { get; set; } = new FormLink<LandscapeTexture>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<ILandscapeTextureGetter> ILayerHeaderGetter.Texture => this.Texture;
+        FormLink<ILandscapeTextureGetter> ILayerHeaderGetter.Texture => this.Texture.ToGetter<LandscapeTexture, ILandscapeTextureGetter>();
         #endregion
         #region Quadrant
         public Quadrant Quadrant { get; set; } = default;
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LayerHeader_Registration.Instance;
-        IFormLink<ILandscapeTextureGetter> Texture { get; }
+        FormLink<ILandscapeTextureGetter> Texture { get; }
         Quadrant Quadrant { get; }
         UInt16 LayerNumber { get; }
 
@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Texture ?? true)
             {
-                fg.AppendItem(item.Texture, "Texture");
+                fg.AppendItem(item.Texture.FormKey, "Texture");
             }
             if (printMask?.Quadrant ?? true)
             {
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Texture) ?? true))
             {
-                item.Texture = rhs.Texture.FormKey;
+                item.Texture = new FormLink<LandscapeTexture>(rhs.Texture.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Quadrant) ?? true))
             {
@@ -1250,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLink<ILandscapeTextureGetter> Texture => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public FormLink<ILandscapeTextureGetter> Texture => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Quadrant Quadrant => (Quadrant)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x4, 0x2));
         public UInt16 LayerNumber => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(

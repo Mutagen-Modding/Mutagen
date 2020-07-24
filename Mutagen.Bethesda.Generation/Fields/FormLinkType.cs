@@ -24,42 +24,29 @@ namespace Mutagen.Bethesda.Generation
         public MutagenLoquiType LoquiType { get; private set; }
         public FormIDTypeEnum FormIDType;
         public override bool IsEnumerable => false;
+        public override bool CanBeNullable(bool getter) => false;
 
-        public override string TypeName(bool getter, bool needsCovariance = false) => $"{(getter || needsCovariance ? "I" : null)}{ClassTypeString}Link{(this.Nullable ? "Nullable" : string.Empty)}<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>";
+        public string ClassTypeStringPrefix => this.FormIDType switch
+        {
+            FormIDTypeEnum.Normal => "Form",
+            FormIDTypeEnum.EDIDChars => "EDID",
+            _ => throw new NotImplementedException(),
+        };
+
+        public string FormIDTypeString => this.FormIDType switch
+        {
+            FormIDTypeEnum.Normal => "FormKey",
+            FormIDTypeEnum.EDIDChars => "EDID",
+            _ => throw new NotImplementedException(),
+        };
+
+        public override string TypeName(bool getter, bool needsCovariance = false) => $"{((needsCovariance || (getter && this.LoquiType.RefType == Loqui.Generation.LoquiType.LoquiRefType.Generic)) ? "I" : null)}{DirectTypeName(getter)}";
+
         public override Type Type(bool getter) => typeof(FormID);
-        public string ClassTypeString
-        {
-            get
-            {
-                switch (this.FormIDType)
-                {
-                    case FormIDTypeEnum.Normal:
-                        return "Form";
-                    case FormIDTypeEnum.EDIDChars:
-                        return "EDID";
-                    default:
-                        throw new NotImplementedException();
-                }
-            }
-        }
-        public string FormIDTypeString
-        {
-            get
-            {
-                switch (this.FormIDType)
-                {
-                    case FormIDTypeEnum.Normal:
-                        return "FormKey";
-                    case FormIDTypeEnum.EDIDChars:
-                        return "EDID";
-                    default:
-                        throw new NotImplementedException();
-                }
-            }
-        }
+
         public string DirectTypeName(bool getter, bool internalInterface = false)
         {
-            return $"{ClassTypeString}Link{(this.Nullable ? "Nullable" : string.Empty)}<{LoquiType.TypeNameInternal(getter: getter, internalInterface: internalInterface)}>";
+            return $"{ClassTypeStringPrefix}Link{(this.Nullable ? "Nullable" : string.Empty)}<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>";
         }
 
         public override async Task Load(XElement node, bool requireName = true)
@@ -119,23 +106,17 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"if ({(deepCopy ? this.GetTranslationIfAccessor(copyMaskAccessor) : this.SkipCheck(copyMaskAccessor, deepCopy))})");
             using (new BraceWrapper(fg))
             {
-                if (this.Nullable)
+                if (this.Nullable
+                    || deepCopy)
                 {
-                    fg.AppendLine($"{accessor} = {rhs}.{FormIDTypeString};");
+                    fg.AppendLine($"{accessor} = new {DirectTypeName(getter: false)}({rhs}.{FormIDTypeString});");
                 }
                 else
                 {
-                    if (deepCopy)
+                    using (var args = new ArgsWrapper(fg,
+                        $"{accessor}.SetLink"))
                     {
-                        fg.AppendLine($"{accessor} = {rhs}.{FormIDTypeString};");
-                    }
-                    else
-                    {
-                        using (var args = new ArgsWrapper(fg,
-                            $"{accessor}.SetLink"))
-                        {
-                            args.Add($"value: {rhs}");
-                        }
+                        args.Add($"value: {rhs}");
                     }
                 }
             }
@@ -144,7 +125,7 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateToString(FileGeneration fg, string name, Accessor accessor, string fgAccessor)
         {
             if (!this.IntegrateField) return;
-            fg.AppendLine($"fg.{nameof(FileGeneration.AppendItem)}({accessor}{(string.IsNullOrWhiteSpace(this.Name) ? null : $", \"{this.Name}\"")});");
+            fg.AppendLine($"fg.{nameof(FileGeneration.AppendItem)}({accessor}.{FormIDTypeString}{(string.IsNullOrWhiteSpace(this.Name) ? null : $", \"{this.Name}\"")});");
         }
 
         public override void GenerateUnsetNth(FileGeneration fg, Accessor identifier)
@@ -182,7 +163,7 @@ namespace Mutagen.Bethesda.Generation
         {
             fg.AppendLine($"public {this.TypeName(getter: false)} {this.Name} {{ get; set; }} = {GetNewForNonNullable()};");
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-            fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, this.InternalGetInterface)}.{this.Name} => this.{this.Name};");
+            fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, this.InternalGetInterface)}.{this.Name} => this.{this.Name}.ToGetter<{LoquiType.TypeNameInternal(getter: false, internalInterface: true)}, {LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>();");
         }
 
         public override void GenerateForInterface(FileGeneration fg, bool getter, bool internalInterface)
@@ -190,7 +171,7 @@ namespace Mutagen.Bethesda.Generation
             if (getter)
             {
                 if (!ApplicableInterfaceField(getter, internalInterface)) return;
-                fg.AppendLine($"{TypeName(getter: true)} {this.Name} {{ get; }}");
+                fg.AppendLine($"{TypeName(getter: true, needsCovariance: this.LoquiType.RefType == Loqui.Generation.LoquiType.LoquiRefType.Generic)} {this.Name} {{ get; }}");
             }
             else
             {
