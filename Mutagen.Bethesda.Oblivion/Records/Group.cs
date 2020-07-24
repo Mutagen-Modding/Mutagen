@@ -61,14 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class GroupBinaryOverlay<T>
+        public partial class GroupBinaryOverlay<T> : AGroupBinaryOverlay<T>
         {
-            private GroupMajorRecordCacheWrapper<T>? _RecordCache;
-            public IReadOnlyCache<T, FormKey> RecordCache => _RecordCache!;
-            public IMod SourceMod => throw new NotImplementedException();
-            public IEnumerable<T> Records => RecordCache.Items;
-            public int Count => this.RecordCache.Count;
-
             partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
                 _RecordCache = GroupMajorRecordCacheWrapper<T>.Factory(

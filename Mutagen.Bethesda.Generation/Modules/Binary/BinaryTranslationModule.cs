@@ -2093,7 +2093,9 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ClassWrapper(fg, $"{BinaryOverlayClass(obj)}"))
             {
                 args.Partial = true;
-                args.BaseClass = obj.HasLoquiBaseObject ? BinaryOverlayClass(obj.BaseClass) : (obj.GetObjectType() == ObjectType.Mod ? null : nameof(BinaryOverlay));
+                var block = obj.GetObjectType() == ObjectType.Mod 
+                    || (obj.GetObjectType() == ObjectType.Group && obj.Generics.Count > 0);
+                args.BaseClass = obj.HasLoquiBaseObject ? BinaryOverlayClass(obj.BaseClass) : (block ? null : nameof(BinaryOverlay));
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
                     args.Interfaces.Add($"I{obj.Name}DisposableGetter");

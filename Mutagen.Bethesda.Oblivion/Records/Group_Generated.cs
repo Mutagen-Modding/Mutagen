@@ -1210,9 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class GroupBinaryOverlay<T> :
-        BinaryOverlay,
-        IGroupGetter<T>
+    public partial class GroupBinaryOverlay<T> : IGroupGetter<T>
         where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {
         #region Common Routing

@@ -1312,9 +1312,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ListGroupBinaryOverlay<T> :
-        BinaryOverlay,
-        IListGroupGetter<T>
+    public partial class ListGroupBinaryOverlay<T> : IListGroupGetter<T>
         where T : class, ICellBlockGetter, IBinaryItem
     {
         #region Common Routing

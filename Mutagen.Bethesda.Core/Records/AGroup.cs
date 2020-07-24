@@ -202,5 +202,40 @@ namespace Mutagen.Bethesda
                     package);
             }
         }
+
+        public class AGroupBinaryOverlay<T> : BinaryOverlay, IReadOnlyCache<T, FormKey>
+        {
+            protected GroupMajorRecordCacheWrapper<T>? _RecordCache;
+
+            public T this[FormKey key] => _RecordCache![key];
+            public IReadOnlyCache<T, FormKey> RecordCache => _RecordCache!;
+            public IMod SourceMod => throw new NotImplementedException();
+            public IEnumerable<T> Records => RecordCache.Items;
+            public int Count => this.RecordCache.Count;
+            public IEnumerable<FormKey> Keys => _RecordCache!.Keys;
+            public IEnumerable<T> Items => _RecordCache!.Items;
+
+            public bool ContainsKey(FormKey key)
+            {
+                return _RecordCache!.ContainsKey(key);
+            }
+
+            public IEnumerator<IKeyValue<T, FormKey>> GetEnumerator()
+            {
+                return _RecordCache!.GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return _RecordCache!.GetEnumerator();
+            }
+
+            protected AGroupBinaryOverlay(
+                ReadOnlyMemorySlice<byte> bytes,
+                BinaryOverlayFactoryPackage package)
+                : base(bytes, package)
+            {
+            }
+        }
     }
 }
