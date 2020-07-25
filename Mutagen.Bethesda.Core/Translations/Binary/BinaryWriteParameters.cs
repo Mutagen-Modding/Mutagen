@@ -207,8 +207,23 @@ namespace Mutagen.Bethesda
         /// </summary>
         public enum MasterFlagOption
         {
+            /// <summary>
+            /// Do no check
+            /// </summary>
             NoCheck,
+
+            /// <summary>
+            /// Changes master flags to match the ModKey type<br/>
+            /// The master flag will be modified to be on if ModKey.Type is Master.<br/>
+            /// The light master flag will be modified unless ModKey.Type is Plugin, in which case the flag will be left alone.<br/>
+            /// </summary>
             ChangeToMatchModKey,
+
+            /// <summary>
+            /// Changes master flags to match the ModKey type<br/>
+            /// The master flag will be modified to be on if ModKey.Type is Master.<br/>
+            /// The light master flag will be modified unless ModKey.Type is Plugin, in which case the flag will be left alone.<br/>
+            /// </summary>
             ExceptionOnMismatch,
         }
 
@@ -216,6 +231,28 @@ namespace Mutagen.Bethesda
         /// Logic to use to ensure a mod's master flag matches the specified ModKey
         /// </summary>
         public MasterFlagOption MasterFlag { get; set; } = MasterFlagOption.ChangeToMatchModKey;
+        #endregion
+
+        #region ESL FormID Limit
+        /// <summary>
+        /// Flag to specify what logic to use to ensure a light master mod does not go over its FormID count
+        /// </summary>
+        public enum LightMasterLimitOption
+        {
+            /// <summary>
+            /// Do no check
+            /// </summary>
+            NoCheck,
+            /// <summary>
+            /// Will throw an exception if a light master 
+            /// </summary>
+            ExceptionOnOverflow,
+        }
+
+        /// <summary>
+        /// Logic to use to ensure a light master mod does not go over its FormID count
+        /// </summary>
+        public LightMasterLimitOption LightMasterLimit { get; set; } = LightMasterLimitOption.ExceptionOnOverflow;
         #endregion
 
         /// <summary>

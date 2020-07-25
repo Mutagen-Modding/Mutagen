@@ -19,6 +19,7 @@ namespace Mutagen.Bethesda.Internals
         private readonly HashSet<ModKey> _modKeys = new HashSet<ModKey>();
         private uint _numRecords;
         private uint _nextFormID;
+        private uint _uniqueRecordsFromMod;
         private readonly HashSet<FormKey> _formKeyUniqueness = new HashSet<FormKey>();
 
         private ModHeaderWriteLogic(
@@ -29,11 +30,39 @@ namespace Mutagen.Bethesda.Internals
             _params = param ?? BinaryWriteParameters.Default;
             _modKey = mod.ModKey;
             _nextFormID = modHeader.MinimumCustomFormID;
+        }
+
+        public static void WriteHeader(
+            BinaryWriteParameters? param,
+            MutagenWriter writer,
+            IModGetter mod,
+            IModHeaderCommon modHeader,
+            ModKey modKey)
+        {
+            var modHeaderWriter = new ModHeaderWriteLogic(
+                param: param,
+                mod: mod,
+                modHeader: modHeader);
+            modHeaderWriter.AddProcessors(mod, modHeader);
+            modHeaderWriter.RunProcessors(mod);
+            modHeaderWriter.PostProcessAdjustments(writer, mod, modHeader);
+            modHeader.WriteToBinary(writer);
+        }
+
+        private void AddProcessors(
+            IModGetter mod, 
+            IModHeaderCommon modHeader)
+        {
+            ModifyMasterFlags(modHeader);
             AddMasterCollectionActions(mod);
             AddRecordCount();
             AddNextFormIDActions();
             AddFormIDUniqueness();
+            AddLightMasterFormLimit(modHeader);
+        }
 
+        private void RunProcessors(IModGetter mod)
+        {
             // Do any major record iteration work
             if (_recordIterationActions.Count > 0
                 || _formLinkIterationActions.Count > 0)
@@ -55,22 +84,40 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
-        public static void WriteHeader(
-            BinaryWriteParameters? param,
+        private MasterReferenceReader ConstructWriteMasters(IModGetter mod)
+        {
+            MasterReferenceReader ret = new MasterReferenceReader(mod.ModKey);
+            _modKeys.Remove(mod.ModKey);
+            _modKeys.Remove(ModKey.Null);
+            var modKeysList = _modKeys.ToList();
+            SortMasters(modKeysList);
+            ret.SetTo(modKeysList.Select(m => new MasterReference()
+            {
+                Master = m
+            }));
+            return ret;
+        }
+
+        private void PostProcessAdjustments(
             MutagenWriter writer,
             IModGetter mod,
-            IModHeaderCommon modHeader,
-            ModKey modKey)
+            IModHeaderCommon modHeader)
         {
-            var modHeaderWriter = new ModHeaderWriteLogic(
-                param: param,
-                mod: mod,
-                modHeader: modHeader);
-            writer.MetaData.MasterReferences = modHeaderWriter.ConstructWriteMasters(mod);
-            modHeaderWriter.WriteModHeader(
-                modHeader: modHeader,
-                writer: writer,
-                modKey: modKey);
+            writer.MetaData.MasterReferences = ConstructWriteMasters(mod);
+            modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
+            if (_params.RecordCount != BinaryWriteParameters.RecordCountOption.NoCheck)
+            {
+                modHeader.NumRecords = _numRecords;
+            }
+            if (_params.NextFormID != BinaryWriteParameters.NextFormIDOption.NoCheck)
+            {
+                modHeader.NextFormID = _nextFormID + 1;
+            }
+            if (EnumExt.HasFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.LightMaster)
+                && _uniqueRecordsFromMod > Constants.LightMasterLimit)
+            {
+                throw new ArgumentException($"Light Master Mod contained more originating records than allowed. {_uniqueRecordsFromMod} > {Constants.LightMasterLimit}");
+            }
         }
 
         #region Master Content Sync Logic
@@ -179,51 +226,48 @@ namespace Mutagen.Bethesda.Internals
         }
         #endregion
 
-        private MasterReferenceReader ConstructWriteMasters(IModGetter mod)
-        {
-            MasterReferenceReader ret = new MasterReferenceReader(mod.ModKey);
-            _modKeys.Remove(mod.ModKey);
-            _modKeys.Remove(ModKey.Null);
-            var modKeysList = _modKeys.ToList();
-            SortMasters(modKeysList);
-            ret.SetTo(modKeysList.Select(m => new MasterReference()
-            {
-                Master = m
-            }));
-            return ret;
-        }
-
-        private void WriteModHeader(
-            IModHeaderCommon modHeader,
-            MutagenWriter writer,
-            ModKey modKey)
+        #region Master Flags
+        public void ModifyMasterFlags(IModHeaderCommon header)
         {
             switch (_params.MasterFlag)
             {
                 case BinaryWriteParameters.MasterFlagOption.NoCheck:
                     break;
                 case BinaryWriteParameters.MasterFlagOption.ChangeToMatchModKey:
-                    modHeader.RawFlags = EnumExt.SetFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.Master, modKey.Type == ModType.Master);
+                    header.RawFlags = EnumExt.SetFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master, _modKey.Type == ModType.Master);
+                    if (_modKey.Type != ModType.Plugin)
+                    {
+                        header.RawFlags = EnumExt.SetFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master, true);
+                    }
                     break;
                 case BinaryWriteParameters.MasterFlagOption.ExceptionOnMismatch:
-                    if ((modKey.Type == ModType.Master) != EnumExt.HasFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.Master))
+                    if ((_modKey.Type == ModType.Master) != EnumExt.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master))
                     {
-                        throw new ArgumentException($"Master flag did not match ModKey type. ({modKey})");
+                        throw new ArgumentException($"Master flag did not match ModKey type. ({_modKey})");
+                    }
+                    if ((_modKey.Type == ModType.LightMaster) != EnumExt.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.LightMaster))
+                    {
+                        throw new ArgumentException($"LightMaster flag did not match ModKey type. ({_modKey})");
                     }
                     break;
                 default:
                     break;
             }
-            modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
-            if (_params.RecordCount != BinaryWriteParameters.RecordCountOption.NoCheck)
-            {
-                modHeader.NumRecords = _numRecords;
-            }
-            if (_params.NextFormID != BinaryWriteParameters.NextFormIDOption.NoCheck)
-            {
-                modHeader.NextFormID = _nextFormID + 1;
-            }
-            modHeader.WriteToBinary(writer);
         }
+        #endregion
+
+        #region Light Master Form Limit
+        private void AddLightMasterFormLimit(IModHeaderCommon header)
+        {
+            if (!EnumExt.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.LightMaster)) return;
+            _recordIterationActions.Add(maj =>
+            {
+                if (maj.FormKey.ModKey == _modKey)
+                {
+                    _uniqueRecordsFromMod++;
+                }
+            });
+        }
+        #endregion
     }
 }
