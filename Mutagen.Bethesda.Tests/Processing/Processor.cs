@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Tests
 
             stream.Position = 0;
             var mod = stream.ReadModHeader();
-            if (!EnumExt.HasFlag(mod.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag)) return ListExt.Empty<KeyValuePair<uint, uint>>();
+            if (!EnumExt.HasFlag(mod.Flags, (int)ModHeaderCommonFlag.Localized)) return ListExt.Empty<KeyValuePair<uint, uint>>();
 
             stream.Position = 0;
             var locs = RecordLocator.GetFileLocations(

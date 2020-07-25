@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Generation
             if (objData.UsesStringFiles)
             {
                 fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
-                fg.AppendLine("var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), \"Strings\")) : null);");
+                fg.AppendLine("var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), \"Strings\")) : null);");
             }
             string gameReleaseStr;
             if (objData.GameReleaseOptions == null)
@@ -1379,7 +1379,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
                     }
                     fg.AppendLine($"var flags = reader.GetInt32(offset: 8);");
-                    fg.AppendLine($"if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))");
+                    fg.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);");
@@ -2422,7 +2422,7 @@ namespace Mutagen.Bethesda.Generation
                                     fg.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
                                 }
                                 fg.AppendLine($"var flags = stream.GetInt32(offset: 8);");
-                                fg.AppendLine($"if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))");
+                                fg.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
                                 using (new BraceWrapper(fg))
                                 {
                                     fg.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);");

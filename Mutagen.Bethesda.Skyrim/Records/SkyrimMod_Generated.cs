@@ -6921,7 +6921,7 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException("File stream was too short to parse flags");
                 }
                 var flags = reader.GetInt32(offset: 8);
-                if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
+                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
                     frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
                 }
@@ -6954,7 +6954,7 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException("File stream was too short to parse flags");
                 }
                 var flags = reader.GetInt32(offset: 8);
-                if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
+                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
                     frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
                 }
@@ -7501,7 +7501,7 @@ namespace Mutagen.Bethesda.Skyrim
                 mod: item,
                 path: path);
             bool disposeStrings = param.StringsWriter == null;
-            param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null;
+            param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null;
             using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 SkyrimModCommon.WriteParallel(
@@ -7615,7 +7615,7 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException("File stream was too short to parse flags");
                 }
                 var flags = reader.GetInt32(offset: 8);
-                if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
+                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
                     frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
                 }
@@ -19361,7 +19361,7 @@ namespace Mutagen.Bethesda.Skyrim
                 mod: item,
                 path: path);
             bool disposeStrings = param.StringsWriter == null;
-            var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null);
+            var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null);
             var bundle = new WritingBundle(item.SkyrimRelease.ToGameRelease())
             {
                 StringsWriter = stringsWriter
@@ -20086,7 +20086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 throw new ArgumentException("File stream was too short to parse flags");
             }
             var flags = stream.GetInt32(offset: 8);
-            if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
+            if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
             {
                 meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
             }
