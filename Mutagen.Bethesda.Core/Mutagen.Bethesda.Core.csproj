@@ -49,6 +49,7 @@
     <Compile Include="Enums\StringsSource.cs" />
     <Compile Include="Extensions\EnumerableExt.cs" />
     <Compile Include="Extensions\FormLinkExt.cs" />
+    <Compile Include="Extensions\MutagenEnumExt.cs" />
     <Compile Include="Interfaces\IDuplicatable.cs" />
     <Compile Include="Interfaces\IGameSettingCommon.cs" />
     <Compile Include="Interfaces\IGroup.cs" />

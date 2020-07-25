@@ -29,33 +29,4 @@ namespace Mutagen.Bethesda
         /// </summary>
         int Count { get; }
     }
-
-    /// <summary>
-    /// Class containing extension methods for groups
-    /// </summary>
-    public static class IGroupCommonExt
-    {
-        /// <summary>
-        /// Convenience function to instantiate a new Major Record and add it to the Group.
-        /// FormKey will be automatically assigned.
-        /// </summary>
-        /// <param name="group">Group to add record to</param>
-        /// <returns>New record already added to the Group</returns>
-        public static TMajor AddNew<TMajor>(this AGroup<TMajor> group)
-            where TMajor : IMajorRecordInternal, IBinaryItem, IEquatable<TMajor>
-        {
-            var ret = MajorRecordInstantiator<TMajor>.Activator(group.SourceMod.GetNextFormKey());
-            group.InternalCache.Set(ret);
-            return ret;
-        }
-
-        public static TMajor AddNew<TMajor>(this AGroup<TMajor> group, string editorID)
-            where TMajor : IMajorRecordInternal, IBinaryItem, IEquatable<TMajor>
-        {
-            var ret = MajorRecordInstantiator<TMajor>.Activator(group.SourceMod.GetNextFormKey(editorID));
-            ret.EditorID = editorID;
-            group.InternalCache.Set(ret);
-            return ret;
-        }
-    }
 }

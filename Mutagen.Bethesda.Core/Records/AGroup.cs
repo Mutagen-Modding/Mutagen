@@ -2,6 +2,7 @@ using Ionic.Zlib;
 using Loqui;
 using Loqui.Xml;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -66,6 +67,26 @@ namespace Mutagen.Bethesda
         public override string ToString()
         {
             return $"Group<{typeof(T).Name}>({this.InternalCache.Count})";
+        }
+
+        /// <summary>
+        /// Convenience function to instantiate a new Major Record and add it to the Group.
+        /// FormKey will be automatically assigned.
+        /// </summary>
+        /// <returns>New record already added to the Group</returns>
+        public T AddNew()
+        {
+            var ret = MajorRecordInstantiator<T>.Activator(SourceMod.GetNextFormKey());
+            InternalCache.Set(ret);
+            return ret;
+        }
+
+        public T AddNew(string editorID)
+        {
+            var ret = MajorRecordInstantiator<T>.Activator(SourceMod.GetNextFormKey(editorID));
+            ret.EditorID = editorID;
+            InternalCache.Set(ret);
+            return ret;
         }
 
         public IEnumerator<T> GetEnumerator()
