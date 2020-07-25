@@ -201,6 +201,23 @@ namespace Mutagen.Bethesda
         public FormIDUniquenessOption FormIDUniqueness { get; set; } = FormIDUniquenessOption.Iterate;
         #endregion
 
+        #region Master Flag
+        /// <summary>
+        /// Flag to specify what logic to use to ensure a mod's master flag matches the specified ModKey
+        /// </summary>
+        public enum MasterFlagOption
+        {
+            NoCheck,
+            ChangeToMatchModKey,
+            ExceptionOnMismatch,
+        }
+
+        /// <summary>
+        /// Logic to use to ensure a mod's master flag matches the specified ModKey
+        /// </summary>
+        public MasterFlagOption MasterFlag { get; set; } = MasterFlagOption.ChangeToMatchModKey;
+        #endregion
+
         /// <summary>
         /// Optional StringsWriter override, for mods that are able to localize.
         /// </summary>

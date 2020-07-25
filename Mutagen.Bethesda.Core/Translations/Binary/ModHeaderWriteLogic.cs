@@ -198,7 +198,22 @@ namespace Mutagen.Bethesda.Internals
             MutagenWriter writer,
             ModKey modKey)
         {
-            modHeader.RawFlags = EnumExt.SetFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.Master, modKey.Type == ModType.Master);
+            switch (_params.MasterFlag)
+            {
+                case BinaryWriteParameters.MasterFlagOption.NoCheck:
+                    break;
+                case BinaryWriteParameters.MasterFlagOption.ChangeToMatchModKey:
+                    modHeader.RawFlags = EnumExt.SetFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.Master, modKey.Type == ModType.Master);
+                    break;
+                case BinaryWriteParameters.MasterFlagOption.ExceptionOnMismatch:
+                    if ((modKey.Type == ModType.Master) != EnumExt.HasFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.Master))
+                    {
+                        throw new ArgumentException($"Master flag did not match ModKey type. ({modKey})");
+                    }
+                    break;
+                default:
+                    break;
+            }
             modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
             if (_params.RecordCount != BinaryWriteParameters.RecordCountOption.NoCheck)
             {

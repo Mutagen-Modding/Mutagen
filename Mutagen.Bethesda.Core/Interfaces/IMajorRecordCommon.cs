@@ -48,6 +48,6 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Form Version of the record
         /// </summary>
-        ushort? FormVersion { get; }
+        new ushort? FormVersion { get; }
     }
 }
