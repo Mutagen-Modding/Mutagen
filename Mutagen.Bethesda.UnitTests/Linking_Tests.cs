@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void LoadOrder_OneInEach()
         {
             var prototype1 = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimLE);
-            var prototype2 = new SkyrimMod(new ModKey("Dummy2", true), SkyrimRelease.SkyrimLE);
+            var prototype2 = new SkyrimMod(new ModKey("Dummy2", ModType.Master), SkyrimRelease.SkyrimLE);
             var objEffect1 = prototype1.ObjectEffects.AddNew();
             var objEffect2 = prototype2.ObjectEffects.AddNew();
             using var disp1 = ConvertMod(prototype1, out var mod1);
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void LoadOrder_Overridden()
         {
             var prototype1 = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimLE);
-            var prototype2 = new SkyrimMod(new ModKey("Dummy2", true), SkyrimRelease.SkyrimLE);
+            var prototype2 = new SkyrimMod(new ModKey("Dummy2", ModType.Master), SkyrimRelease.SkyrimLE);
             var unoverriddenRec = prototype1.ObjectEffects.AddNew();
             var overriddenRec = prototype1.ObjectEffects.AddNew();
             var topModRec = prototype2.ObjectEffects.AddNew();

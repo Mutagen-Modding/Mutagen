@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             WarmupOblivion.Init();
             using var folder = new TempFolder();
-            var masterMod = new OblivionMod(new ModKey("Test", master: true));
+            var masterMod = new OblivionMod(new ModKey("Test", ModType.Master));
             var masterPath = Path.Combine(folder.Dir.Path, "Test.esm");
             masterMod.WriteToBinary(masterPath,
                 new BinaryWriteParameters()
@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.UnitTests
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(masterPath);
             Assert.True(reimport.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master));
-            var childMod = new OblivionMod(new ModKey("Test", master: false));
+            var childMod = new OblivionMod(new ModKey("Test", ModType.Plugin));
             var childPath = Path.Combine(folder.Dir.Path, "Test.esp");
             childMod.WriteToBinary(childPath,
                 new BinaryWriteParameters()
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             WarmupOblivion.Init();
             using var folder = new TempFolder();
-            var masterMod = new OblivionMod(new ModKey("Test", master: true));
+            var masterMod = new OblivionMod(new ModKey("Test", ModType.Master));
             var masterPath = Path.Combine(folder.Dir.Path, "Test.esp");
             Assert.Throws<ArgumentException>(() =>
             {
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             WarmupOblivion.Init();
             using var folder = new TempFolder();
-            var masterMod = new OblivionMod(new ModKey("Test", master: false));
+            var masterMod = new OblivionMod(new ModKey("Test", ModType.Plugin));
             var masterPath = Path.Combine(folder.Dir.Path, "Test.esm");
             Assert.Throws<ArgumentException>(() =>
             {
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             WarmupOblivion.Init();
             using var folder = new TempFolder();
-            var masterMod = new OblivionMod(new ModKey("Test", master: true));
+            var masterMod = new OblivionMod(new ModKey("Test", ModType.Master));
             var masterPath = Path.Combine(folder.Dir.Path, "Test.esp");
             masterMod.WriteToBinary(masterPath,
                 new BinaryWriteParameters()
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             WarmupOblivion.Init();
             using var folder = new TempFolder();
-            var masterMod = new OblivionMod(new ModKey("Test", master: false));
+            var masterMod = new OblivionMod(new ModKey("Test", ModType.Plugin));
             var masterPath = Path.Combine(folder.Dir.Path, "Test.esm");
             masterMod.WriteToBinary(masterPath,
                 new BinaryWriteParameters()

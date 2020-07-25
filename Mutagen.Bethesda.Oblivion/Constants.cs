@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public static class Constants
     {
-        public static readonly ModKey Oblivion = new ModKey("Oblivion", master: true);
+        public static readonly ModKey Oblivion = new ModKey("Oblivion", type: ModType.Master);
         public static readonly FormKey Player = new FormKey(Oblivion, id: 0x14);
     }
 }

@@ -9,8 +9,8 @@ namespace Mutagen.Bethesda.UnitTests
 {
     public class Write_Tests
     {
-        public static readonly ModKey WriteKey = new ModKey("Write", false);
-        public static readonly ModKey BadWriteKey = new ModKey("BadWrite", false);
+        public static readonly ModKey WriteKey = new ModKey("Write", ModType.Plugin);
+        public static readonly ModKey BadWriteKey = new ModKey("BadWrite", ModType.Plugin);
 
         public static TempFile GetFile()
         {

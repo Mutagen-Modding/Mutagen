@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (modKey == null)
             {
-                modKey = new ModKey("Flattened", master: false);
+                modKey = new ModKey("Flattened", ModType.Plugin);
             }
             OblivionMod ret = new OblivionMod(modKey.Value);
             foreach (var mod in loadOrder)

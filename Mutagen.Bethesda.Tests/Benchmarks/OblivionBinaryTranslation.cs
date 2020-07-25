@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             System.Console.WriteLine("Target settings: " + Settings.ToString());
 
             // Setup folders and paths
-            ModKey = new ModKey("Oblivion", true);
+            ModKey = new ModKey("Oblivion", ModType.Master);
             TempFolder = new TempFolder(deleteAfter: true);
             DataPath = Path.Combine(Settings.DataFolderLocations.Oblivion, "Oblivion.esm");
             BinaryPath = Path.Combine(TempFolder.Dir.Path, "Oblivion.esm");

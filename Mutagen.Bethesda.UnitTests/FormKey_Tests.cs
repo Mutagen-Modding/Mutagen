@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.True(
                 FormKey.TryFactory("00C51A:Oblivion.esm", out FormKey id));
             Assert.Equal(
-                new FormKey(modKey: new ModKey("Oblivion", true), id: 0x00C51A),
+                new FormKey(modKey: new ModKey("Oblivion", ModType.Master), id: 0x00C51A),
                 id);
         }
 
@@ -28,14 +28,14 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.True(
                 FormKey.TryFactory("00C51A:Oblivion.esm", out FormKey id));
             Assert.Equal(
-                new FormKey(modKey: new ModKey("Oblivion", true), id: 0x00C51A),
+                new FormKey(modKey: new ModKey("Oblivion", ModType.Master), id: 0x00C51A),
                 id);
         }
 
         [Fact]
         public void Import_LoopbackString()
         {
-            var formKey = new FormKey(modKey: new ModKey("Oblivion", true), id: 0x00C51A);
+            var formKey = new FormKey(modKey: new ModKey("Oblivion", ModType.Master), id: 0x00C51A);
             Assert.True(
                 FormKey.TryFactory(formKey.ToString(), out FormKey id));
             Assert.Equal(
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         #region BinaryTranslation
-        public ModKey TargetModKey() => new ModKey("Master2", true);
+        public ModKey TargetModKey() => new ModKey("Master2", ModType.Master);
 
         public MasterReferenceReader TypicalMasters() => 
             new MasterReferenceReader(
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.UnitTests
                 {
                     new MasterReference()
                     {
-                        Master = new ModKey("Master1", true)
+                        Master = new ModKey("Master1", ModType.Master)
                     },
                     new MasterReference()
                     {
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.UnitTests
                     },
                     new MasterReference()
                     {
-                        Master = new ModKey("Master3", false)
+                        Master = new ModKey("Master3", type: ModType.Master)
                     },
                 });
 

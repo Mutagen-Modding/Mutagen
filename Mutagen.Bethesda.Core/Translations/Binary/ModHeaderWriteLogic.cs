@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Internals
             MutagenWriter writer,
             ModKey modKey)
         {
-            modHeader.RawFlags = EnumExt.SetFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.Master, modKey.Master);
+            modHeader.RawFlags = EnumExt.SetFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.Master, modKey.Type == ModType.Master);
             modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
             if (_params.RecordCount != BinaryWriteParameters.RecordCountOption.NoCheck)
             {

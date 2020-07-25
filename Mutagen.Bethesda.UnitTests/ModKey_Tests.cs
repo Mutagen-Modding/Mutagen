@@ -16,7 +16,16 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.True(ModKey.TryFactory("Oblivion.esm", out var modKey));
             Assert.Equal("Oblivion", modKey.Name);
             Assert.Equal("Oblivion.esm", modKey.FileName);
-            Assert.True(modKey.Master);
+            Assert.Equal(ModType.Master, modKey.Type);
+        }
+
+        [Fact]
+        public void TryFactory_TypicalLightMaster()
+        {
+            Assert.True(ModKey.TryFactory("Oblivion.esl", out var modKey));
+            Assert.Equal("Oblivion", modKey.Name);
+            Assert.Equal("Oblivion.esl", modKey.FileName);
+            Assert.Equal(ModType.LightMaster, modKey.Type);
         }
 
         [Fact]
@@ -25,7 +34,7 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.True(ModKey.TryFactory("Knights.esp", out var modKey));
             Assert.Equal("Knights", modKey.Name);
             Assert.Equal("Knights.esp", modKey.FileName);
-            Assert.False(modKey.Master);
+            Assert.Equal(ModType.Plugin, modKey.Type);
         }
 
         [Fact]
@@ -34,7 +43,7 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.True(ModKey.TryFactory("Obliv.ion.esm", out var modKey));
             Assert.Equal("Obliv.ion", modKey.Name);
             Assert.Equal("Obliv.ion.esm", modKey.FileName);
-            Assert.True(modKey.Master);
+            Assert.Equal(ModType.Master, modKey.Type);
         }
 
         [Fact]
@@ -55,11 +64,11 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.True(ModKey.TryFactory("Oblivion.esm", out var modKey));
             Assert.Equal("Oblivion", modKey.Name);
             Assert.Equal("Oblivion.esm", modKey.FileName);
-            Assert.True(modKey.Master);
+            Assert.Equal(ModType.Master, modKey.Type);
             Assert.True(ModKey.TryFactory("Oblivion.esm", out var modKey2));
             Assert.Equal("Oblivion", modKey2.Name);
             Assert.Equal("Oblivion.esm", modKey2.FileName);
-            Assert.True(modKey2.Master);
+            Assert.Equal(ModType.Master, modKey.Type);
             Assert.Same(modKey.Name, modKey2.Name);
         }
 
@@ -69,22 +78,22 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.True(ModKey.TryFactory("Oblivion.esm", out var masterKey));
             Assert.Equal("Oblivion", masterKey.Name);
             Assert.Equal("Oblivion.esm", masterKey.FileName);
-            Assert.True(masterKey.Master);
+            Assert.Equal(ModType.Master, masterKey.Type);
 
             Assert.True(ModKey.TryFactory("Oblivion.esp", out var modKey));
             Assert.Equal("Oblivion", modKey.Name);
             Assert.Equal("Oblivion.esp", modKey.FileName);
-            Assert.False(modKey.Master);
+            Assert.Equal(ModType.Plugin, modKey.Type);
 
             Assert.True(ModKey.TryFactory("Oblivion.esm", out var masterKey2));
             Assert.Equal("Oblivion", masterKey2.Name);
             Assert.Equal("Oblivion.esm", masterKey2.FileName);
-            Assert.True(masterKey2.Master);
+            Assert.Equal(ModType.Master, masterKey2.Type);
 
             Assert.True(ModKey.TryFactory("Oblivion.esp", out var modKey2));
             Assert.Equal("Oblivion", modKey2.Name);
             Assert.Equal("Oblivion.esp", modKey2.FileName);
-            Assert.False(modKey2.Master);
+            Assert.Equal(ModType.Plugin, modKey2.Type);
 
             Assert.Same(masterKey.Name, masterKey2.Name);
             Assert.Same(modKey.Name, modKey2.Name);
@@ -93,8 +102,8 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void CaseEquality()
         {
-            ModKey modKey = new ModKey("Oblivion", true);
-            ModKey modKey2 = new ModKey("OblivioN", true);
+            ModKey modKey = new ModKey("Oblivion", ModType.Master);
+            ModKey modKey2 = new ModKey("OblivioN", ModType.Master);
             Assert.Equal(modKey, modKey2);
             Assert.Equal(modKey.GetHashCode(), modKey2.GetHashCode());
         }
@@ -102,8 +111,8 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void LookupCorrectness()
         {
-            ModKey modKey = new ModKey("Oblivion", true);
-            ModKey modKey2 = new ModKey("OblivioN", true);
+            ModKey modKey = new ModKey("Oblivion", ModType.Master);
+            ModKey modKey2 = new ModKey("OblivioN", ModType.Master);
             var set = new HashSet<ModKey>()
             {
                 modKey
@@ -115,8 +124,8 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void NullHashDesync()
         {
-            var modKey = new ModKey(null, master: false);
-            var modKey2 = new ModKey(string.Empty, master: false);
+            var modKey = new ModKey(null, type: ModType.Master);
+            var modKey2 = new ModKey(string.Empty, type: ModType.Master);
             Assert.Equal(ModKey.Null, modKey);
             Assert.Equal(ModKey.Null.GetHashCode(), modKey.GetHashCode());
             Assert.Equal(ModKey.Null, modKey2);
@@ -220,8 +229,34 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void PathCharsThrow()
         {
-            Assert.Throws<ArgumentException>(() => new ModKey("/hello", true));
-            Assert.Throws<ArgumentException>(() => new ModKey("\\hello", true));
+            Assert.Throws<ArgumentException>(() => new ModKey("/hello", ModType.Master));
+            Assert.Throws<ArgumentException>(() => new ModKey("\\hello", ModType.Master));
         }
+
+        #region ToString
+        [Fact]
+        public void ToString_Null()
+        {
+            Assert.Equal("Null", default(ModKey).ToString());
+        }
+
+        [Fact]
+        public void ToString_Esp()
+        {
+            Assert.Equal("Oblivion.esp", new ModKey("Oblivion", type: ModType.Plugin).ToString());
+        }
+
+        [Fact]
+        public void ToString_Esl()
+        {
+            Assert.Equal("Oblivion.esl", new ModKey("Oblivion", type: ModType.LightMaster).ToString());
+        }
+
+        [Fact]
+        public void ToString_Esm()
+        {
+            Assert.Equal("Oblivion.esm", new ModKey("Oblivion", type: ModType.Master).ToString());
+        }
+        #endregion
     }
 }

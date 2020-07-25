@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// A static readonly singleton representing a null ModKey
         /// </summary>
-        public static readonly ModKey Null = new ModKey(null!, master: false);
+        public static readonly ModKey Null = new ModKey(null!, type: ModType.Master);
 
         private readonly string? name_;
         private readonly int _hash;
@@ -37,9 +37,9 @@ namespace Mutagen.Bethesda
         public string Name => name_ ?? string.Empty;
         
         /// <summary>
-        /// Master flag
+        /// Mod yype
         /// </summary>
-        public bool Master { get; private set; }
+        public ModType Type { get; private set; }
         
         /// <summary>
         /// Convenience accessor to get the appropriate file name
@@ -47,15 +47,15 @@ namespace Mutagen.Bethesda
         public string FileName => this.ToString();
 
         private static readonly char[] InvalidChars = new char[] { '/', '\\' };
-        
+
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="name">Name of mod</param>
-        /// <param name="master">True if mod is a master</param>
+        /// <param name="type">Type of mod</param>
         public ModKey(
             string name,
-            bool master)
+            ModType type)
         {
             if (name != null
                 && -1 != name.IndexOfAny(InvalidChars))
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda
                 throw new ArgumentException($"ModKey name contained path characters: {name}");
             }
             this.name_ = name == null ? null : string.Intern(name);
-            this.Master = master;
+            this.Type = type;
 
             // Cache the hash on construction, as ModKeys are typically created rarely, but hashed often.
             var nameHash = (name_?.Equals(string.Empty) ?? true) ? 0 : name_.GetHashCode(StringComparison.OrdinalIgnoreCase);
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda
             {
                 HashCode hash = new HashCode();
                 hash.Add(nameHash);
-                hash.Add(Master);
+                hash.Add(Type);
                 this._hash = hash.ToHashCode();
             }
             else
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda
         /// <returns>True equal Name and Master value</returns>
         public bool Equals(ModKey other)
         {
-            return this.Master == other.Master
+            return this.Type == other.Type
                 && string.Equals(this.Name, other.Name, StringComparison.CurrentCultureIgnoreCase);
         }
 
@@ -119,7 +119,20 @@ namespace Mutagen.Bethesda
         /// <returns>String representation of ModKey</returns>
         public override string ToString()
         {
-            return string.IsNullOrWhiteSpace(Name) ? "Null" : $"{Name}.{(this.Master ? Constants.Esm : Constants.Esp)}";
+            if (string.IsNullOrWhiteSpace(Name)) return "Null";
+            return string.Create(Name.Length + 4, this, (chars, modKey) =>
+            {
+                modKey.Name.AsSpan().CopyTo(chars);
+                chars[modKey.Name.Length] = '.';
+                var suffix = modKey.Type switch
+                {
+                    ModType.Master => Constants.Esm,
+                    ModType.Plugin => Constants.Esp,
+                    ModType.LightMaster => Constants.Esl,
+                    _ => throw new NotImplementedException()
+                };
+                suffix.AsSpan().CopyTo(chars.Slice(modKey.Name.Length + 1));
+            });
         }
 
         /// <summary>
@@ -144,14 +157,18 @@ namespace Mutagen.Bethesda
                 return false;
             }
             var endSpan = str.Slice(index + 1);
-            bool master;
+            ModType type;
             if (endSpan.Equals(Constants.Esm.AsSpan(), StringComparison.OrdinalIgnoreCase))
             {
-                master = true;
+                type = ModType.Master;
             }
             else if (endSpan.Equals(Constants.Esp.AsSpan(), StringComparison.OrdinalIgnoreCase))
             {
-                master = false;
+                type = ModType.Plugin;
+            }
+            else if (endSpan.Equals(Constants.Esl.AsSpan(), StringComparison.OrdinalIgnoreCase))
+            {
+                type = ModType.LightMaster;
             }
             else
             {
@@ -161,7 +178,7 @@ namespace Mutagen.Bethesda
             var modString = str.Slice(0, index).ToString();
             modKey = new ModKey(
                 name: modString,
-                master: master);
+                type: type);
             return true;
         }
 
@@ -201,11 +218,11 @@ namespace Mutagen.Bethesda
             public readonly static AlphabeticalMastersFirstComparer Instance = new AlphabeticalMastersFirstComparer();
             public override int Compare(ModKey x, ModKey y)
             {
-                if (x.Master == y.Master)
+                if (x.Type == y.Type)
                 {
                     return string.Compare(x.Name, y.Name, StringComparison.OrdinalIgnoreCase);
                 }
-                return x.Master ? -1 : 1;
+                return x.Type.CompareTo(y.Type);
             }
         }
 

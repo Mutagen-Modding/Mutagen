@@ -44,6 +44,7 @@
     <Compile Include="Enums\GameCategory.cs" />
     <Compile Include="Enums\Language.cs" />
     <Compile Include="Enums\ModHeaderCommonFlag.cs" />
+    <Compile Include="Enums\ModType.cs" />
     <Compile Include="Enums\Quadrant.cs" />
     <Compile Include="Enums\StringsFileFormat.cs" />
     <Compile Include="Enums\StringsSource.cs" />

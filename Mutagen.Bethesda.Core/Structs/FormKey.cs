@@ -236,9 +236,9 @@ namespace Mutagen.Bethesda
             public override int Compare(FormKey x, FormKey y)
             {
                 if (_mastersFirst
-                    && x.ModKey.Master != y.ModKey.Master)
+                    && x.ModKey.Type != y.ModKey.Type)
                 {
-                    return x.ModKey.Master ? -1 : 1;
+                    return x.ModKey.Type.CompareTo(y.ModKey.Type);
                 }
 
                 var stringComp = string.Compare(x.ModKey.FileName, y.ModKey.FileName, StringComparison.OrdinalIgnoreCase);
