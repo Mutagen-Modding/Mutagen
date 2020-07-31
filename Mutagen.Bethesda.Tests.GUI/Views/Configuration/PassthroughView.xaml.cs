@@ -24,14 +24,14 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             InitializeComponent();
             this.WhenActivated(disposable =>
             {
-                this.WhenAny(x => x.ViewModel.Path)
+                this.WhenAnyValue(x => x.ViewModel.Path)
                     .BindToStrict(this, x => x.PathPicker.PickerVM)
                     .DisposeWith(disposable);
                 this.BindStrict(this.ViewModel, vm => vm.Do, v => v.DoCheckbox.IsChecked)
                     .DisposeWith(disposable);
 
                 // Wire Delete Button
-                this.WhenAny(x => x.ViewModel.DeleteCommand)
+                this.WhenAnyValue(x => x.ViewModel.DeleteCommand)
                     .BindToStrict(this, v => v.DeleteButton.Command)
                     .DisposeWith(disposable);
             });

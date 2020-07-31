@@ -31,10 +31,10 @@ namespace Mutagen.Bethesda.Tests.GUI
         public PassthroughVM(PassthroughGroupVM group)
         {
             Parent = group;
-            Observable.CombineLatest(
-                    this.WhenAny(x => x.Do),
-                    this.WhenAny(x => x.Parent.Do),
-                    resultSelector: (c, p) => c && p)
+            this.WhenAnyValue(
+                    x => x.Do,
+                    x => x.Parent.Do,
+                    (c, p) => c && p)
                 .ToGuiProperty(this, nameof(Doing), out _Doing);
             DeleteCommand = ReactiveCommand.Create(() =>
             {

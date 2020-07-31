@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Tests.GUI
                 .Bind(_passthroughDisplay)
                 .Subscribe()
                 .DisposeWith(this);
-            _Name = this.WhenAny(x => x.Settings.GameRelease)
+            _Name = this.WhenAnyValue(x => x.Settings.GameRelease)
                 .Select(g => g.ToString())
                 .ToGuiProperty<string>(this, nameof(Name));
             _State = Passthroughs.Connect()

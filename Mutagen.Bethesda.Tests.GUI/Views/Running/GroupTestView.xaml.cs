@@ -28,10 +28,10 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             InitializeComponent();
             this.WhenActivated(disposable =>
             {
-                this.WhenAny(x => x.ViewModel.Name)
+                this.WhenAnyValue(x => x.ViewModel.Name)
                     .BindToStrict(this, x => x.Name.Text)
                     .DisposeWith(disposable);
-                this.WhenAny(x => x.ViewModel.PassthroughDisplay)
+                this.WhenAnyValue(x => x.ViewModel.PassthroughDisplay)
                     .BindToStrict(this, x => x.PassthroughsControl.ItemsSource)
                     .DisposeWith(disposable);
             });

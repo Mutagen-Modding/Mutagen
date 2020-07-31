@@ -30,14 +30,14 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             InitializeComponent();
             this.WhenActivated(disposable =>
             {
-                this.WhenAny(x => x.ViewModel.Name)
+                this.WhenAnyValue(x => x.ViewModel.Name)
                     .BindToStrict(this, x => x.Name.Text)
                     .DisposeWith(disposable);
                 this.TopBorder.Events().MouseUp
                     .Unit()
                     .InvokeCommandStrict(this, x => x.ViewModel.SelectCommand)
                     .DisposeWith(disposable);
-                this.WhenAny(x => x.ViewModel.TimeSpent)
+                this.WhenAnyValue(x => x.ViewModel.TimeSpent)
                     .Select(x =>
                     {
                         if (x == null) return null;

@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             InitializeComponent();
             this.WhenActivated(disposable =>
             {
-                this.WhenAny(x => x.ViewModel.Test)
+                this.WhenAnyValue(x => x.ViewModel.Test)
                     .Select(t =>
                     {
                         if (t.FilePath == null) return t.Name;
