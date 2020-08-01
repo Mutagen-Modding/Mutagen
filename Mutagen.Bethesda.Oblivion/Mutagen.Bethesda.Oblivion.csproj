@@ -43,7 +43,6 @@
     <Compile Include="Enums\SoulLevel.cs" />
     <Compile Include="Enums\Specialization.cs" />
     <Compile Include="Enums\Weekday.cs" />
-    <Compile Include="OblivionPipeline.cs" />
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>

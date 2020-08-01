@@ -149,7 +149,6 @@
     <Compile Include="Load Order\ModListing.cs" />
     <Compile Include="Preprocessing\ModRecordSorter.cs" />
     <Compile Include="Enums\ObjectType.cs" />
-    <Compile Include="Patching\Pipeline.cs" />
     <Compile Include="Utility\RecordInterest.cs" />
     <Compile Include="Utility\RecordLocator.cs" />
     <Compile Include="Records\MajorRecord.cs">
