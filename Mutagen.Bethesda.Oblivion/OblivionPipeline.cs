@@ -37,11 +37,10 @@ namespace Mutagen.Bethesda.Oblivion
                 outModKey: outModKey,
                 loadOrderList: loadOrderList,
                 processor: processor,
-                importer: (FilePath path, ModKey modKey, out OblivionMod mod) =>
+                importer: (ModPath path, out OblivionMod mod) =>
                 {
                     mod = OblivionMod.CreateFromBinary(
-                        path.Path,
-                        modKey,
+                        path,
                         importMask: importMask);
                     return true;
                 });
@@ -62,11 +61,10 @@ namespace Mutagen.Bethesda.Oblivion
             loadOrder.Import(
                 dataFolder,
                 loadOrderListing,
-                importer: (FilePath path, ModKey modKey, out OblivionMod mod) =>
+                importer: (ModPath path, out OblivionMod mod) =>
                 {
                     mod = OblivionMod.CreateFromBinary(
-                        path.Path,
-                        modKey,
+                        path,
                         importMask: importMask);
                     return true;
                 });

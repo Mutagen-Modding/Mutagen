@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda
         /// <param name="modKey">ModKey associated with listing</param>
         /// <param name="mod">Out parameter containing mod object if successful</param>
         /// <returns>True if import successful</returns>
-        public delegate bool Importer(FilePath path, ModKey modKey, [MaybeNullWhen(false)] out TMod mod);
+        public delegate bool Importer(ModPath path, [MaybeNullWhen(false)] out TMod mod);
 
         /// <summary>
         /// Clears load order and fills it with mods constructed by given importer
@@ -297,13 +297,13 @@ namespace Mutagen.Bethesda
             var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod)[loadOrder.Count];
             Parallel.ForEach(loadOrder, (modKey, state, modIndex) =>
             {
-                FilePath modPath = dataFolder.GetFile(modKey.FileName);
-                if (!modPath.Exists)
+                var modPath = new ModPath(modKey, dataFolder.GetFile(modKey.FileName).Path);
+                if (!File.Exists(modPath.Path))
                 {
                     results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Failure);
                     return;
                 }
-                if (!importer(modPath, modKey, out var mod))
+                if (!importer(modPath, out var mod))
                 {
                     results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Failure);
                     return;

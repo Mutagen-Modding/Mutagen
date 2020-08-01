@@ -6902,17 +6902,16 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static SkyrimMod CreateFromBinary(
-            string path,
+            ModPath path,
             SkyrimRelease release,
-            ModKey? modKeyOverride = null,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
             var gameRelease = release.ToGameRelease();
-            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+            using (var reader = new MutagenBinaryReadStream(path.Path, gameRelease))
             {
-                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
+                var modKey = path.ModKey;
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
                 frame.MetaData.Parallel = parallel;
@@ -6923,7 +6922,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path), stringsParam, path.ModKey);
                 }
                 return CreateFromBinary(
                     release: release,
@@ -6934,18 +6933,17 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static SkyrimMod CreateFromBinary(
-            string path,
+            ModPath path,
             SkyrimRelease release,
             ErrorMaskBuilder? errorMask,
-            ModKey? modKeyOverride = null,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
             var gameRelease = release.ToGameRelease();
-            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+            using (var reader = new MutagenBinaryReadStream(path.Path, gameRelease))
             {
-                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
+                var modKey = path.ModKey;
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
                 frame.MetaData.Parallel = parallel;
@@ -6956,7 +6954,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path), stringsParam, path.ModKey);
                 }
                 return CreateFromBinary(
                     release: release,
@@ -7030,14 +7028,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
-            string path,
+            ModPath path,
             SkyrimRelease release,
-            ModKey? modKeyOverride = null,
             StringsReadParameters? stringsParam = null)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 path: path,
-                modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)),
                 stringsParam: stringsParam,
                 release: release);
         }
@@ -7596,17 +7592,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void CopyInFromBinary(
             this ISkyrimMod item,
-            string path,
+            ModPath path,
             SkyrimRelease release,
-            ModKey? modKeyOverride = null,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
             var gameRelease = release.ToGameRelease();
-            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+            using (var reader = new MutagenBinaryReadStream(path.Path, gameRelease))
             {
-                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
+                var modKey = path.ModKey;
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
                 frame.MetaData.Parallel = parallel;
@@ -7617,7 +7612,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path), stringsParam, path.ModKey);
                 }
                 CopyInFromBinary(
                     item: item,
@@ -20069,17 +20064,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static SkyrimModBinaryOverlay SkyrimModFactory(
-            string path,
-            ModKey modKey,
+            ModPath path,
             SkyrimRelease release,
             StringsReadParameters? stringsParam = null)
         {
             var meta = new ParsingBundle(release.ToGameRelease())
             {
-                RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, release.ToGameRelease()))
+                RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path.Path, release.ToGameRelease()))
             };
             var stream = new MutagenBinaryReadStream(
-                path: path,
+                path: path.Path,
                 metaData: meta);
             if (stream.Remaining < 12)
             {
@@ -20088,11 +20082,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var flags = stream.GetInt32(offset: 8);
             if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
             {
-                meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
+                meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path), stringsParam, path.ModKey);
             }
             return SkyrimModFactory(
                 stream: stream,
-                modKey: modKey,
+                path.ModKey,
                 release: release,
                 shouldDispose: true);
         }

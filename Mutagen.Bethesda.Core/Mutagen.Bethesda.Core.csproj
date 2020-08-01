@@ -82,6 +82,7 @@
     <Compile Include="String Lookup\StringsUtility.cs" />
     <Compile Include="String Lookup\StringsWriter.cs" />
     <Compile Include="String Lookup\TranslatedString.cs" />
+    <Compile Include="Structs\ModPath.cs" />
     <Compile Include="TestingPermissions.cs" />
     <Compile Include="Interfaces\IFormVersionGetter.cs" />
     <Compile Include="Translations\Binary\Binary Overlay\FormVersionGetter.cs" />

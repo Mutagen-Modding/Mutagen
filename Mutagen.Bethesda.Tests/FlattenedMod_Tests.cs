@@ -21,9 +21,9 @@ namespace Mutagen.Bethesda.Tests
             loadOrder.Import(
                 dataFolder: testingSettings.DataFolderLocations.Oblivion,
                 loadOrder: loadOrderListing,
-                importer: (FilePath filePath, ModKey modKey, out OblivionMod mod) =>
+                importer: (ModPath path, out OblivionMod mod) =>
                 {
-                    mod = OblivionMod.CreateFromBinary(filePath.Path, modKey);
+                    mod = OblivionMod.CreateFromBinary(path);
                     return true;
                 });
             OblivionMod ret = new OblivionMod(new ModKey("Test", ModType.Plugin));

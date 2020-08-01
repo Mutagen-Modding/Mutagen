@@ -74,40 +74,6 @@ namespace Mutagen.Bethesda.UnitTests
                     });
             });
         }
-
-        [Fact]
-        public void MasterFlagSync_MasterCorrect()
-        {
-            WarmupOblivion.Init();
-            using var folder = new TempFolder();
-            var masterMod = new OblivionMod(new ModKey("Test", ModType.Master));
-            var masterPath = Path.Combine(folder.Dir.Path, "Test.esp");
-            masterMod.WriteToBinary(masterPath,
-                new BinaryWriteParameters()
-                {
-                    ModKey = BinaryWriteParameters.ModKeyOption.CorrectToPath,
-                    MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
-                });
-            var reimport = OblivionMod.CreateFromBinaryOverlay(masterPath);
-            Assert.False(reimport.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master));
-        }
-
-        [Fact]
-        public void MasterFlagSync_ChildCorrect()
-        {
-            WarmupOblivion.Init();
-            using var folder = new TempFolder();
-            var masterMod = new OblivionMod(new ModKey("Test", ModType.Plugin));
-            var masterPath = Path.Combine(folder.Dir.Path, "Test.esm");
-            masterMod.WriteToBinary(masterPath,
-                new BinaryWriteParameters()
-                {
-                    ModKey = BinaryWriteParameters.ModKeyOption.CorrectToPath,
-                    MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
-                });
-            var reimport = OblivionMod.CreateFromBinaryOverlay(masterPath);
-            Assert.True(reimport.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master));
-        }
         #endregion
 
         #region MasterListSync
