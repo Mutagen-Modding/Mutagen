@@ -61,7 +61,8 @@ namespace Mutagen.Bethesda
         /// <typeparam name="TMod">Mod type</typeparam>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ILinkCache CreateLinkCache<TMod>(this LoadOrder<TMod> loadOrder)
+        public static LoadOrderLinkCache<TMod> CreateLinkCache<TMod>(
+            this LoadOrder<TMod> loadOrder)
             where TMod : class, IModGetter
         {
             return new LoadOrderLinkCache<TMod>(loadOrder);

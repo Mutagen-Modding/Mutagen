@@ -1,4 +1,5 @@
 using Loqui;
+using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections;
@@ -137,17 +138,14 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="dataFolder">Path data folder containing mods</param>
         /// <param name="loadOrder">Unique list of mod keys to import</param>
-        /// <param name="importer">Function used to construct a mod</param>
         public static LoadOrder<TMod> Import<TMod>(
             DirectoryPath dataFolder,
-            IReadOnlyList<ModKey> loadOrder,
-            LoadOrder<TMod>.Importer importer)
+            IReadOnlyList<ModKey> loadOrder)
             where TMod : class, IModGetter
         {
             return LoadOrder<TMod>.Import(
                 dataFolder: dataFolder,
-                loadOrder: loadOrder,
-                importer: importer);
+                loadOrder: loadOrder);
         }
     }
 
@@ -292,24 +290,13 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Delegate used for importing mods
-        /// </summary>
-        /// <param name="path">Path to mod file</param>
-        /// <param name="modKey">ModKey associated with listing</param>
-        /// <param name="mod">Out parameter containing mod object if successful</param>
-        /// <returns>True if import successful</returns>
-        public delegate TMod Importer(ModPath path);
-
-        /// <summary>
-        /// Constructs a load order filled with mods constructed by given importer
+        /// Constructs a load order filled with mods
         /// </summary>
         /// <param name="dataFolder">Path data folder containing mods</param>
         /// <param name="loadOrder">Unique list of mod keys to import</param>
-        /// <param name="importer">Function used to construct a mod</param>
         public static LoadOrder<TMod> Import(
             DirectoryPath dataFolder,
-            IReadOnlyList<ModKey> loadOrder,
-            Importer importer)
+            IReadOnlyList<ModKey> loadOrder)
         {
             var ret = new LoadOrder<TMod>();
             var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod)[loadOrder.Count];
@@ -321,7 +308,7 @@ namespace Mutagen.Bethesda
                     results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Failure);
                     return;
                 }
-                var mod = importer(modPath);
+                var mod = ModInstantiator<TMod>.Importer(modPath);
                 results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Succeed(mod));
             });
             foreach (var item in results

@@ -51,6 +51,8 @@ namespace Mutagen.Bethesda
             this._loadOrderMajorRecords = new Dictionary<Type, InternalTypedCache>();
             var firstMod = _loadOrder.FirstOrDefault(m => m.Mod != null);
             this._hasAny = firstMod?.Mod != null;
+            // ToDo
+            // Upgrade to bounce off ModInstantiator systems
             this._gameCategory = firstMod?.Mod?.GameRelease.ToCategory() ?? GameCategory.Oblivion;
         }
 
