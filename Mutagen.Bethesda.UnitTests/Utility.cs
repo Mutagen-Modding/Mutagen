@@ -15,5 +15,7 @@ namespace Mutagen.Bethesda.UnitTests
         public static readonly FormKey Form2 = new FormKey(ModKey, 0x12345F);
         public static readonly FormKey Form3 = new FormKey(ModKey, 0x223456);
         public static readonly string TempFolderPath = "MutagenUnitTests";
+        public static string PathToTestFile = "../../../test.esp";
+        public static string PathToOverrideFile = "../../../override.esp";
     }
 }

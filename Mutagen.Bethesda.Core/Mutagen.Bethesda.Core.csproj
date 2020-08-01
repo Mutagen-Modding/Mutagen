@@ -96,6 +96,7 @@
     <Compile Include="Translations\Binary\ModHeaderWriteLogic.cs" />
     <Compile Include="Translations\Binary\ParseResult.cs" />
     <Compile Include="Translations\XML\TranslatedStringXmlTranslation.cs" />
+    <Compile Include="Utility\ModInstantiator.cs" />
     <Compile Include="Utility\RecordInfoCache.cs" />
     <Compile Include="Persistance\TextFileFormKeyAllocator.cs" />
     <Compile Include="Records\AMod.cs" />
