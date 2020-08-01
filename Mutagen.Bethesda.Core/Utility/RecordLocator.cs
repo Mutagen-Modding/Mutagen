@@ -164,6 +164,7 @@ namespace Mutagen.Bethesda
             if (!reader.TryReadModHeader(out var header))
             {
                 reader.Position = reader.Length;
+                return;
             }
             reader.Position += header.ContentLength;
         }
