@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda
         /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
         /// <returns>List of modkeys in load order, excluding missing mods</returns>
         /// <exception cref="FileNotFoundException">If throwOnMissingMods true and file is missing</exception>
-        public static IExtendedList<ModKey> AlignLoadOrder(
+        public static IExtendedList<ModKey> Align(
             IEnumerable<ModKey> modsToInclude,
             DirectoryPath dataPath,
             bool throwOnMissingMods = false)
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda
         /// <param name="stream">Stream to read from</param>
         /// <returns>List of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin stream is unexpected</exception>
-        public static IExtendedList<ModKey> ProcessLoadOrder(Stream stream)
+        public static IExtendedList<ModKey> FromStream(Stream stream)
         {
             var ret = new ExtendedList<ModKey>();
             using var streamReader = new StreamReader(stream);
@@ -106,10 +106,10 @@ namespace Mutagen.Bethesda
         /// <param name="path">Path of plugin list</param>
         /// <returns>List of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
-        public static IExtendedList<ModKey> ProcessLoadOrder(FilePath path)
+        public static IExtendedList<ModKey> FromPath(FilePath path)
         {
             var stream = new FileStream(path.Path, FileMode.Open, FileAccess.Read);
-            return ProcessLoadOrder(stream);
+            return FromStream(stream);
         }
 
         /// <summary>
@@ -128,8 +128,26 @@ namespace Mutagen.Bethesda
                 throw new FileNotFoundException("Could not locate plugins file");
             }
             
-            IExtendedList<ModKey> mods = ProcessLoadOrder(path);
-            return AlignLoadOrder(mods, dataPath, throwOnMissingMods: !allowMissingMods);
+            IExtendedList<ModKey> mods = FromPath(path);
+            return Align(mods, dataPath, throwOnMissingMods: !allowMissingMods);
+        }
+
+        /// <summary>
+        /// Constructs a load order filled with mods constructed by given importer
+        /// </summary>
+        /// <param name="dataFolder">Path data folder containing mods</param>
+        /// <param name="loadOrder">Unique list of mod keys to import</param>
+        /// <param name="importer">Function used to construct a mod</param>
+        public static LoadOrder<TMod> Import<TMod>(
+            DirectoryPath dataFolder,
+            IReadOnlyList<ModKey> loadOrder,
+            LoadOrder<TMod>.Importer importer)
+            where TMod : class, IModGetter
+        {
+            return LoadOrder<TMod>.Import(
+                dataFolder: dataFolder,
+                loadOrder: loadOrder,
+                importer: importer);
         }
     }
 
@@ -280,20 +298,20 @@ namespace Mutagen.Bethesda
         /// <param name="modKey">ModKey associated with listing</param>
         /// <param name="mod">Out parameter containing mod object if successful</param>
         /// <returns>True if import successful</returns>
-        public delegate bool Importer(ModPath path, [MaybeNullWhen(false)] out TMod mod);
+        public delegate TMod Importer(ModPath path);
 
         /// <summary>
-        /// Clears load order and fills it with mods constructed by given importer
+        /// Constructs a load order filled with mods constructed by given importer
         /// </summary>
         /// <param name="dataFolder">Path data folder containing mods</param>
         /// <param name="loadOrder">Unique list of mod keys to import</param>
         /// <param name="importer">Function used to construct a mod</param>
-        public void Import(
+        public static LoadOrder<TMod> Import(
             DirectoryPath dataFolder,
             IReadOnlyList<ModKey> loadOrder,
             Importer importer)
         {
-            this.Clear();
+            var ret = new LoadOrder<TMod>();
             var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod)[loadOrder.Count];
             Parallel.ForEach(loadOrder, (modKey, state, modIndex) =>
             {
@@ -303,11 +321,7 @@ namespace Mutagen.Bethesda
                     results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Failure);
                     return;
                 }
-                if (!importer(modPath, out var mod))
-                {
-                    results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Failure);
-                    return;
-                }
+                var mod = importer(modPath);
                 results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Succeed(mod));
             });
             foreach (var item in results
@@ -315,34 +329,16 @@ namespace Mutagen.Bethesda
             {
                 if (item.Mod.Succeeded)
                 {
-                    this._modsByLoadOrder.Add(
+                    ret._modsByLoadOrder.Add(
                         new ModListing<TMod>(
                             item.Mod.Value));
                 }
                 else
                 {
-                    this._modsByLoadOrder.Add(
+                    ret._modsByLoadOrder.Add(
                         ModListing<TMod>.UnloadedModListing(item.ModKey));
                 }
             }
-        }
-
-        /// <summary>
-        /// Creates a load order and fills it with mods constructed by given importer
-        /// </summary>
-        /// <param name="dataFolder">Path data folder containing mods</param>
-        /// <param name="loadOrder">Unique list of mod keys to import</param>
-        /// <param name="importer">Function used to construct a mod</param>
-        public static LoadOrder<TMod> ImportFactory(
-            DirectoryPath dataFolder,
-            IReadOnlyList<ModKey> loadOrder,
-            Importer importer)
-        {
-            var ret = new LoadOrder<TMod>();
-            ret.Import(
-                dataFolder,
-                loadOrder,
-                importer);
             return ret;
         }
 
