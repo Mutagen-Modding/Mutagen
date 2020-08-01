@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Authors>Noggog</Authors>
+    <Company>Mutagen</Company>
+    <Product>Mutagen</Product>
+    <Description>A C# library containing the very minimal basics about Bethesda structures.  Meant to be a lightweight import with some basic definitions</Description>
+    <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+</Project>

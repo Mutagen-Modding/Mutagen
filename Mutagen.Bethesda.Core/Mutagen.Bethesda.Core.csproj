@@ -21,7 +21,7 @@
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
-    <Version>0.12</Version>
+    <Version>0.13-dev1</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -41,10 +41,8 @@
   <ItemGroup>
     <Compile Include="Enums\ColorBinaryType.cs" />
     <Compile Include="Enums\FloatIntegerType.cs" />
-    <Compile Include="Enums\GameCategory.cs" />
     <Compile Include="Enums\Language.cs" />
     <Compile Include="Enums\ModHeaderCommonFlag.cs" />
-    <Compile Include="Enums\ModType.cs" />
     <Compile Include="Enums\Quadrant.cs" />
     <Compile Include="Enums\StringsFileFormat.cs" />
     <Compile Include="Enums\StringsSource.cs" />
@@ -82,7 +80,10 @@
     <Compile Include="String Lookup\StringsUtility.cs" />
     <Compile Include="String Lookup\StringsWriter.cs" />
     <Compile Include="String Lookup\TranslatedString.cs" />
-    <Compile Include="Structs\ModPath.cs" />
+    <Compile Include="Structs\FormID.cs" />
+    <Compile Include="Structs\FormKey.cs" />
+    <Compile Include="Structs\ModIndex.cs" />
+    <Compile Include="Structs\RecordType.cs" />
     <Compile Include="TestingPermissions.cs" />
     <Compile Include="Interfaces\IFormVersionGetter.cs" />
     <Compile Include="Translations\Binary\Binary Overlay\FormVersionGetter.cs" />
@@ -131,11 +132,8 @@
     <Compile Include="Preprocessing\ModRecordAligner.cs" />
     <Compile Include="Translations\Binary\BinaryStringUtility.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Enums\GameRelease.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
-    <Compile Include="Structs\FormID.cs" />
-    <Compile Include="Structs\FormKey.cs" />
     <Compile Include="Streams\IMutagenReadStream.cs" />
     <Compile Include="Links\EDIDLink.cs" />
     <Compile Include="Links\FormLink.cs" />
@@ -144,8 +142,6 @@
     <Compile Include="Links\ILinkedFormKeyContainerGetter.cs" />
     <Compile Include="Utility\MasterReferenceReader.cs" />
     <Compile Include="Preprocessing\ModDecompressor.cs" />
-    <Compile Include="Structs\ModIndex.cs" />
-    <Compile Include="Structs\ModKey.cs" />
     <Compile Include="Load Order\ModListing.cs" />
     <Compile Include="Preprocessing\ModRecordSorter.cs" />
     <Compile Include="Enums\ObjectType.cs" />
@@ -154,7 +150,6 @@
     <Compile Include="Records\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
-    <Compile Include="Structs\RecordType.cs" />
     <Compile Include="Translations\Binary\RecordTypeConverter.cs" />
     <Compile Include="Streams\MutagenBinaryReadStream.cs" />
     <Compile Include="Streams\MutagenMemoryReadStream.cs" />
@@ -210,5 +205,8 @@
     <Compile Include="Records\MasterReference_Generated.cs">
       <DependentUpon>MasterReference.xml</DependentUpon>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj" />
   </ItemGroup>
 </Project>
