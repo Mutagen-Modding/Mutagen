@@ -3303,11 +3303,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (type.Name)
             {
                 case "IMajorRecordCommon":
-                case "IMajorRecordCommonGetter":
+                case "IMajorRecord":
                 case "MajorRecord":
                 case "ISkyrimMajorRecord":
-                case "ISkyrimMajorRecordGetter":
                 case "SkyrimMajorRecord":
+                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item;
@@ -3461,6 +3469,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 case "IComplexLocation":
+                {
+                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 case "IComplexLocationGetter":
                 {
                     foreach (var subItem in obj.SubCells)
@@ -3473,6 +3492,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "ILocationTargetable":
+                {
+                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 case "ILocationTargetableGetter":
                 {
                     {
@@ -3495,6 +3535,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IOwner":
+                {
+                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 case "IOwnerGetter":
                 {
                     {
@@ -3517,6 +3578,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "ILinkedReference":
+                {
+                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 case "ILinkedReferenceGetter":
                 {
                     {
@@ -3539,6 +3621,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IPlaced":
+                {
+                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 case "IPlacedGetter":
                 {
                     {
@@ -3561,6 +3664,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IPlacedSimple":
+                {
+                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 case "IPlacedSimpleGetter":
                 {
                     {
@@ -3583,6 +3707,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IPlacedThing":
+                {
+                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 case "IPlacedThingGetter":
                 {
                     {

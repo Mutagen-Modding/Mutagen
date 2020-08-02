@@ -1,6 +1,8 @@
 using Mutagen.Bethesda.Oblivion;
+using Noggog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,19 +10,23 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public class MajorRecordEnumeration_Tests
+    public abstract class AMajorRecordEnumeration_Tests
     {
+        protected abstract IOblivionModGetter ConvertMod(OblivionMod mod);
+
+        public abstract bool Getter { get; }
+
         [Fact]
         public void Empty()
         {
             var mod = new OblivionMod(Utility.ModKey);
-            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords());
-            Assert.Empty(((IOblivionMod)mod).EnumerateMajorRecords());
-            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IMajorRecordCommon>());
-            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IMajorRecordCommonGetter>());
-            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<INpc>());
-            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<INpcGetter>());
-            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<Npc>());
+            var conv = ConvertMod(mod);
+            Assert.Empty(conv.EnumerateMajorRecords());
+            Assert.Empty(conv.EnumerateMajorRecords<IMajorRecordCommon>());
+            Assert.Empty(conv.EnumerateMajorRecords<IMajorRecordCommonGetter>());
+            Assert.Empty(conv.EnumerateMajorRecords<INpc>());
+            Assert.Empty(conv.EnumerateMajorRecords<INpcGetter>());
+            Assert.Empty(conv.EnumerateMajorRecords<Npc>());
         }
 
         [Fact]
@@ -29,8 +35,8 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(Utility.ModKey);
             mod.Npcs.AddNew();
             mod.Ammunitions.AddNew();
-            Assert.Equal(2, ((IOblivionModGetter)mod).EnumerateMajorRecords().Count());
-            Assert.Equal(2, ((IOblivionMod)mod).EnumerateMajorRecords().Count());
+            var conv = ConvertMod(mod);
+            Assert.Equal(2, conv.EnumerateMajorRecords().Count());
         }
 
         [Fact]
@@ -39,8 +45,9 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(Utility.ModKey);
             mod.Npcs.AddNew();
             mod.Ammunitions.AddNew();
-            Assert.Equal(2, ((IOblivionModGetter)mod).EnumerateMajorRecords<IMajorRecordCommon>().Count());
-            Assert.Equal(2, ((IOblivionModGetter)mod).EnumerateMajorRecords<IMajorRecordCommonGetter>().Count());
+            var conv = ConvertMod(mod);
+            Assert.Equal(Getter ? 0 : 2, conv.EnumerateMajorRecords<IMajorRecordCommon>().Count());
+            Assert.Equal(2, conv.EnumerateMajorRecords<IMajorRecordCommonGetter>().Count());
         }
 
         [Fact]
@@ -49,9 +56,10 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(Utility.ModKey);
             mod.Npcs.AddNew();
             mod.Ammunitions.AddNew();
-            Assert.Single(((IOblivionModGetter)mod).EnumerateMajorRecords<INpc>());
-            Assert.Single(((IOblivionModGetter)mod).EnumerateMajorRecords<INpcGetter>());
-            Assert.Single(((IOblivionModGetter)mod).EnumerateMajorRecords<Npc>());
+            var conv = ConvertMod(mod);
+            Assert.Equal(Getter ? 0 : 1, conv.EnumerateMajorRecords<INpc>().Count());
+            Assert.Equal(Getter ? 0 : 1, conv.EnumerateMajorRecords<Npc>().Count());
+            Assert.Single(conv.EnumerateMajorRecords<INpcGetter>());
         }
 
         [Fact]
@@ -59,9 +67,10 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod = new OblivionMod(Utility.ModKey);
             mod.Npcs.AddNew();
-            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IAmmunition>());
-            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IAmmunitionGetter>());
-            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<Ammunition>());
+            var conv = ConvertMod(mod);
+            Assert.Empty(conv.EnumerateMajorRecords<IAmmunition>());
+            Assert.Empty(conv.EnumerateMajorRecords<Ammunition>());
+            Assert.Empty(conv.EnumerateMajorRecords<IAmmunitionGetter>());
         }
 
         [Fact]
@@ -69,8 +78,10 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod = new OblivionMod(Utility.ModKey);
             mod.Factions.AddNew();
-            Assert.NotEmpty(((IOblivionModGetter)mod).EnumerateMajorRecords<IFaction>());
-            Assert.NotEmpty(((IOblivionModGetter)mod).EnumerateMajorRecords<IOwner>());
+            var conv = ConvertMod(mod);
+            Assert.NotEmpty(conv.EnumerateMajorRecords<IFactionGetter>());
+            Assert.NotEmpty(conv.EnumerateMajorRecords<IOwnerGetter>());
+            Assert.Equal(Getter ? 0 : 1, conv.EnumerateMajorRecords<IOwner>().Count());
         }
 
         [Fact]
@@ -79,10 +90,16 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(Utility.ModKey);
             mod.Cells.Records.Add(new CellBlock()
             {
+                BlockNumber = 0,
+                GroupType = GroupTypeEnum.InteriorCellBlock,
+                LastModified = 4,
                 SubBlocks =
                 {
                     new CellSubBlock()
                     {
+                        BlockNumber = 0,
+                        GroupType = GroupTypeEnum.InteriorCellSubBlock,
+                        LastModified = 4,
                         Cells =
                         {
                             new Cell(mod.GetNextFormKey())
@@ -96,8 +113,33 @@ namespace Mutagen.Bethesda.UnitTests
                     }
                 }
             });
-            Assert.NotEmpty(((IOblivionModGetter)mod).EnumerateMajorRecords<ICell>());
-            Assert.NotEmpty(((IOblivionModGetter)mod).EnumerateMajorRecords<IPlaced>());
+            var conv = ConvertMod(mod);
+            Assert.NotEmpty(conv.EnumerateMajorRecords<ICellGetter>());
+            Assert.NotEmpty(conv.EnumerateMajorRecords<IPlacedGetter>());
+            Assert.Equal(Getter ? 0 : 1, conv.EnumerateMajorRecords<IPlaced>().Count());
+        }
+    }
+
+    public class MajorRecordEnumeration_Tests_Direct : AMajorRecordEnumeration_Tests
+    {
+        public override bool Getter => false;
+
+        protected override IOblivionModGetter ConvertMod(OblivionMod mod)
+        {
+            return mod;
+        }
+    }
+
+    public class MajorRecordEnumeration_Tests_Overlay : AMajorRecordEnumeration_Tests
+    {
+        public override bool Getter => true;
+
+        protected override IOblivionModGetter ConvertMod(OblivionMod mod)
+        {
+            var stream = new MemoryTributary();
+            mod.WriteToBinary(stream);
+            stream.Position = 0;
+            return OblivionMod.CreateFromBinaryOverlay(stream, mod.ModKey);
         }
     }
 }

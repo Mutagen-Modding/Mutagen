@@ -608,15 +608,30 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("switch (type.Name)");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"case \"{nameof(IMajorRecordCommon)}\":");
-                        fg.AppendLine($"case \"{nameof(IMajorRecordCommonGetter)}\":");
-                        fg.AppendLine($"case \"{nameof(MajorRecord)}\":");
                         var gameCategory = obj.GetObjectData().GameCategory;
+                        fg.AppendLine($"case \"{nameof(IMajorRecordCommon)}\":");
+                        fg.AppendLine($"case \"{nameof(IMajorRecord)}\":");
+                        fg.AppendLine($"case \"{nameof(MajorRecord)}\":");
                         if (gameCategory != null)
                         {
                             fg.AppendLine($"case \"I{gameCategory}MajorRecord\":");
-                            fg.AppendLine($"case \"I{gameCategory}MajorRecordGetter\":");
                             fg.AppendLine($"case \"{gameCategory}MajorRecord\":");
+                        }
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"if (!{obj.RegistrationName}.SetterType.IsAssignableFrom(obj.GetType())) yield break;");
+                            fg.AppendLine("foreach (var item in this.EnumerateMajorRecords(obj))");
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine("yield return item;");
+                            }
+                            fg.AppendLine("yield break;");
+                        }
+                        fg.AppendLine($"case \"{nameof(IMajorRecordGetter)}\":");
+                        fg.AppendLine($"case \"{nameof(IMajorRecordCommonGetter)}\":");
+                        if (gameCategory != null)
+                        {
+                            fg.AppendLine($"case \"I{gameCategory}MajorRecordGetter\":");
                         }
                         using (new DepthWrapper(fg))
                         {
@@ -799,7 +814,7 @@ namespace Mutagen.Bethesda.Generation
 
                                         if (grup != null)
                                         {
-                                            subFg.AppendLine($"foreach (var item in EnumerateMajorRecords({accessor}, typeof({grup.GetGroupTarget().ObjectName}), throwIfUnknown: throwIfUnknown))");
+                                            subFg.AppendLine($"foreach (var item in EnumerateMajorRecords({accessor}, typeof({grup.GetGroupTarget().Interface(getter: true)}), throwIfUnknown: throwIfUnknown))");
                                             using (new BraceWrapper(subFg))
                                             {
                                                 subFg.AppendLine("yield return item;");
@@ -821,6 +836,12 @@ namespace Mutagen.Bethesda.Generation
                                     if (!subFg.Empty)
                                     {
                                         fg.AppendLine($"case \"{interf.Key}\":");
+                                        using (new BraceWrapper(fg))
+                                        {
+                                            fg.AppendLine($"if (!{obj.RegistrationName}.SetterType.IsAssignableFrom(obj.GetType())) yield break;");
+                                            fg.AppendLines(subFg);
+                                            fg.AppendLine("yield break;");
+                                        }
                                         fg.AppendLine($"case \"{interf.Key}Getter\":");
                                         using (new BraceWrapper(fg))
                                         {

@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda
                     }
                     else
                     {
-                        AddRecords(targetMod, typeof(MajorRecord));
+                        AddRecords(targetMod, typeof(IMajorRecordGetter));
                     }
                     // Check again
                     if (cache.Dictionary.TryGetValue(formKey, out majorRecObj))

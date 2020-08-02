@@ -12265,11 +12265,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (type.Name)
             {
                 case "IMajorRecordCommon":
-                case "IMajorRecordCommonGetter":
+                case "IMajorRecord":
                 case "MajorRecord":
                 case "ISkyrimMajorRecord":
-                case "ISkyrimMajorRecordGetter":
                 case "SkyrimMajorRecord":
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item;
@@ -13379,193 +13387,385 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 case "IIdleRelation":
-                case "IIdleRelationGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ActionRecord), throwIfUnknown: throwIfUnknown))
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IdleAnimation), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIdleAnimationGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IIdleRelationGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIdleAnimationGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "IObjectId":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIdleMarkerGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IScrollGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IShoutGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IObjectIdGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Activator), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ammunition), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Armor), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Book), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Container), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Door), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Faction), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(FormList), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Furniture), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IdleMarker), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIdleMarkerGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ingestible), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Key), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Light), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(MiscItem), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(MoveableStatic), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Npc), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Projectile), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Scroll), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IScrollGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Shout), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IShoutGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(SoundMarker), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Spell), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Static), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(TextureSet), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Weapon), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "IItem":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAlchemicalApparatusGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IScrollGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoulGemGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IItemGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(AlchemicalApparatus), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAlchemicalApparatusGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ammunition), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Armor), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Book), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ingestible), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ingredient), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Key), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledItem), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Light), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(MiscItem), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Scroll), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IScrollGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(SoulGem), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoulGemGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Weapon), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "IOutfitTarget":
-                case "IOutfitTargetGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Armor), throwIfUnknown: throwIfUnknown))
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledItem), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IOutfitTargetGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "IComplexLocation":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWorldspaceGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IComplexLocationGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Worldspace), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWorldspaceGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13576,18 +13776,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IDialog":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IDialogTopicGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IDialogGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(DialogTopic), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IDialogTopicGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "ILocationTargetable":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "ILocationTargetableGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Door), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13602,9 +13826,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IOwner":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IOwnerGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Faction), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13619,178 +13859,350 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IRelatable":
-                case "IRelatableGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Faction), throwIfUnknown: throwIfUnknown))
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Race), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IRelatableGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "IRegionTarget":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFloraGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILandscapeTextureGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITreeGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IRegionTargetGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Flora), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFloraGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(LandscapeTexture), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILandscapeTextureGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(MoveableStatic), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Static), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Tree), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITreeGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "IAliasVoiceType":
-                case "IAliasVoiceTypeGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(FormList), throwIfUnknown: throwIfUnknown))
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Npc), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IAliasVoiceTypeGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "ILockList":
-                case "ILockListGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(FormList), throwIfUnknown: throwIfUnknown))
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Npc), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "ILockListGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "IPlacedTrapTarget":
-                case "IPlacedTrapTargetGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Hazard), throwIfUnknown: throwIfUnknown))
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IHazardGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Projectile), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IPlacedTrapTargetGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IHazardGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "IHarvestTarget":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IHarvestTargetGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ingestible), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ingredient), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledItem), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(MiscItem), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "IKeywordLinkedReference":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IKeywordLinkedReferenceGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Keyword), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "INpcSpawn":
-                case "INpcSpawnGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledNpc), throwIfUnknown: throwIfUnknown))
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Npc), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "INpcSpawnGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "ISpellSpawn":
-                case "ISpellSpawnGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledSpell), throwIfUnknown: throwIfUnknown))
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Spell), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "ISpellSpawnGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "IEmittance":
-                case "IEmittanceGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Light), throwIfUnknown: throwIfUnknown))
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Region), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IRegionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IEmittanceGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IRegionGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "ILocationRecord":
-                case "ILocationRecordGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Location), throwIfUnknown: throwIfUnknown))
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILocationGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(LocationReferenceType), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "ILocationRecordGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILocationGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "IEffectRecord":
-                case "IEffectRecordGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ObjectEffect), throwIfUnknown: throwIfUnknown))
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Spell), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IEffectRecordGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
                 }
                 case "ILinkedReference":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "ILinkedReferenceGetter":
                 {
                     foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
@@ -13804,6 +14216,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IPlaced":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IPlacedGetter":
                 {
                     foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
@@ -13817,6 +14241,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IPlacedSimple":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IPlacedSimpleGetter":
                 {
                     foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
@@ -13830,6 +14266,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IPlacedThing":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IPlacedThingGetter":
                 {
                     foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
@@ -13843,13 +14291,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "ISound":
-                case "ISoundGetter":
                 {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(SoundDescriptor), throwIfUnknown: throwIfUnknown))
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoundDescriptorGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(SoundMarker), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "ISoundGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoundDescriptorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }

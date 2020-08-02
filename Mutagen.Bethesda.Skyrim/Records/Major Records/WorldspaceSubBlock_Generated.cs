@@ -1400,11 +1400,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (type.Name)
             {
                 case "IMajorRecordCommon":
-                case "IMajorRecordCommonGetter":
+                case "IMajorRecord":
                 case "MajorRecord":
                 case "ISkyrimMajorRecord":
-                case "ISkyrimMajorRecordGetter":
                 case "SkyrimMajorRecord":
+                    if (!WorldspaceSubBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item;
@@ -1507,6 +1515,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 case "ILocationTargetable":
+                {
+                    if (!WorldspaceSubBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Items)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 case "ILocationTargetableGetter":
                 {
                     foreach (var subItem in obj.Items)
@@ -1523,6 +1546,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IOwner":
+                {
+                    if (!WorldspaceSubBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Items)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 case "IOwnerGetter":
                 {
                     foreach (var subItem in obj.Items)
@@ -1539,6 +1577,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "ILinkedReference":
+                {
+                    if (!WorldspaceSubBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Items)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 case "ILinkedReferenceGetter":
                 {
                     foreach (var subItem in obj.Items)
@@ -1555,6 +1608,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IPlaced":
+                {
+                    if (!WorldspaceSubBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Items)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 case "IPlacedGetter":
                 {
                     foreach (var subItem in obj.Items)
@@ -1571,6 +1639,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IPlacedSimple":
+                {
+                    if (!WorldspaceSubBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Items)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 case "IPlacedSimpleGetter":
                 {
                     foreach (var subItem in obj.Items)
@@ -1587,6 +1670,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IPlacedThing":
+                {
+                    if (!WorldspaceSubBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Items)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 case "IPlacedThingGetter":
                 {
                     foreach (var subItem in obj.Items)

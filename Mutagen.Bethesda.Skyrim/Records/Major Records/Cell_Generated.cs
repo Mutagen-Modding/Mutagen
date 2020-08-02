@@ -3649,11 +3649,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (type.Name)
             {
                 case "IMajorRecordCommon":
-                case "IMajorRecordCommonGetter":
+                case "IMajorRecord":
                 case "MajorRecord":
                 case "ISkyrimMajorRecord":
-                case "ISkyrimMajorRecordGetter":
                 case "SkyrimMajorRecord":
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item;
@@ -3765,6 +3773,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 case "ILocationTargetable":
+                {
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
                 case "ILocationTargetableGetter":
                 {
                     foreach (var subItem in obj.Persistent)
@@ -3784,6 +3810,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IOwner":
+                {
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
                 case "IOwnerGetter":
                 {
                     foreach (var subItem in obj.Persistent)
@@ -3803,6 +3847,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "ILinkedReference":
+                {
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
                 case "ILinkedReferenceGetter":
                 {
                     foreach (var subItem in obj.Persistent)
@@ -3822,6 +3884,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IPlacedSimple":
+                {
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
                 case "IPlacedSimpleGetter":
                 {
                     foreach (var subItem in obj.Persistent)
@@ -3841,6 +3921,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IPlacedThing":
+                {
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
                 case "IPlacedThingGetter":
                 {
                     foreach (var subItem in obj.Persistent)
