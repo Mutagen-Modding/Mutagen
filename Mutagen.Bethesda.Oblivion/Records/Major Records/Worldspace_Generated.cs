@@ -2233,12 +2233,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IRoadGetter":
                 case "IRoad":
                 case "IRoadInternal":
-                    if (obj.Road.TryGet(out var Roaditem))
                     {
-                        yield return Roaditem;
-                        foreach (var item in Roaditem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.Road.TryGet(out var Roaditem))
                         {
-                            yield return item;
+                            yield return Roaditem;
+                            foreach (var item in Roaditem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     yield break;
@@ -2246,12 +2248,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICellGetter":
                 case "ICell":
                 case "ICellInternal":
-                    if (obj.TopCell.TryGet(out var TopCellitem))
                     {
-                        yield return TopCellitem;
-                        foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.TopCell.TryGet(out var TopCellitem))
                         {
-                            yield return item;
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     foreach (var subItem in obj.SubCells)
@@ -2277,12 +2281,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPathGridGetter":
                 case "IPathGrid":
                 case "IPathGridInternal":
-                    if (obj.TopCell.TryGet(out var PathGridTopCellitem))
                     {
-                        yield return PathGridTopCellitem;
-                        foreach (var item in PathGridTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.TopCell.TryGet(out var PathGridTopCellitem))
                         {
-                            yield return item;
+                            yield return PathGridTopCellitem;
+                            foreach (var item in PathGridTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     foreach (var subItem in obj.SubCells)
@@ -2297,12 +2303,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILandscapeGetter":
                 case "ILandscape":
                 case "ILandscapeInternal":
-                    if (obj.TopCell.TryGet(out var LandscapeTopCellitem))
                     {
-                        yield return LandscapeTopCellitem;
-                        foreach (var item in LandscapeTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.TopCell.TryGet(out var LandscapeTopCellitem))
                         {
-                            yield return item;
+                            yield return LandscapeTopCellitem;
+                            foreach (var item in LandscapeTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     foreach (var subItem in obj.SubCells)
@@ -2317,12 +2325,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedCreatureGetter":
                 case "IPlacedCreature":
                 case "IPlacedCreatureInternal":
-                    if (obj.TopCell.TryGet(out var PlacedCreatureTopCellitem))
                     {
-                        yield return PlacedCreatureTopCellitem;
-                        foreach (var item in PlacedCreatureTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.TopCell.TryGet(out var PlacedCreatureTopCellitem))
                         {
-                            yield return item;
+                            yield return PlacedCreatureTopCellitem;
+                            foreach (var item in PlacedCreatureTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     foreach (var subItem in obj.SubCells)
@@ -2337,12 +2347,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedNpcGetter":
                 case "IPlacedNpc":
                 case "IPlacedNpcInternal":
-                    if (obj.TopCell.TryGet(out var PlacedNpcTopCellitem))
                     {
-                        yield return PlacedNpcTopCellitem;
-                        foreach (var item in PlacedNpcTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.TopCell.TryGet(out var PlacedNpcTopCellitem))
                         {
-                            yield return item;
+                            yield return PlacedNpcTopCellitem;
+                            foreach (var item in PlacedNpcTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     foreach (var subItem in obj.SubCells)
@@ -2357,12 +2369,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    if (obj.TopCell.TryGet(out var PlacedObjectTopCellitem))
                     {
-                        yield return PlacedObjectTopCellitem;
-                        foreach (var item in PlacedObjectTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.TopCell.TryGet(out var PlacedObjectTopCellitem))
                         {
-                            yield return item;
+                            yield return PlacedObjectTopCellitem;
+                            foreach (var item in PlacedObjectTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     foreach (var subItem in obj.SubCells)

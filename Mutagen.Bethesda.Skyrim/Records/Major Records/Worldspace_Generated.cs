@@ -3321,12 +3321,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICellGetter":
                 case "ICell":
                 case "ICellInternal":
-                    if (obj.TopCell.TryGet(out var TopCellitem))
                     {
-                        yield return TopCellitem;
-                        foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.TopCell.TryGet(out var TopCellitem))
                         {
-                            yield return item;
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     foreach (var subItem in obj.SubCells)
@@ -3352,12 +3354,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscapeGetter":
                 case "ILandscape":
                 case "ILandscapeInternal":
-                    if (obj.TopCell.TryGet(out var LandscapeTopCellitem))
                     {
-                        yield return LandscapeTopCellitem;
-                        foreach (var item in LandscapeTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.TopCell.TryGet(out var LandscapeTopCellitem))
                         {
-                            yield return item;
+                            yield return LandscapeTopCellitem;
+                            foreach (var item in LandscapeTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     foreach (var subItem in obj.SubCells)
@@ -3372,12 +3376,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IANavigationMeshGetter":
                 case "IANavigationMesh":
                 case "IANavigationMeshInternal":
-                    if (obj.TopCell.TryGet(out var ANavigationMeshTopCellitem))
                     {
-                        yield return ANavigationMeshTopCellitem;
-                        foreach (var item in ANavigationMeshTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.TopCell.TryGet(out var ANavigationMeshTopCellitem))
                         {
-                            yield return item;
+                            yield return ANavigationMeshTopCellitem;
+                            foreach (var item in ANavigationMeshTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     foreach (var subItem in obj.SubCells)
@@ -3392,12 +3398,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedNpcGetter":
                 case "IPlacedNpc":
                 case "IPlacedNpcInternal":
-                    if (obj.TopCell.TryGet(out var PlacedNpcTopCellitem))
                     {
-                        yield return PlacedNpcTopCellitem;
-                        foreach (var item in PlacedNpcTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.TopCell.TryGet(out var PlacedNpcTopCellitem))
                         {
-                            yield return item;
+                            yield return PlacedNpcTopCellitem;
+                            foreach (var item in PlacedNpcTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     foreach (var subItem in obj.SubCells)
@@ -3412,12 +3420,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    if (obj.TopCell.TryGet(out var PlacedObjectTopCellitem))
                     {
-                        yield return PlacedObjectTopCellitem;
-                        foreach (var item in PlacedObjectTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.TopCell.TryGet(out var PlacedObjectTopCellitem))
                         {
-                            yield return item;
+                            yield return PlacedObjectTopCellitem;
+                            foreach (var item in PlacedObjectTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     foreach (var subItem in obj.SubCells)
@@ -3432,12 +3442,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
                 case "IAPlacedTrapInternal":
-                    if (obj.TopCell.TryGet(out var APlacedTrapTopCellitem))
                     {
-                        yield return APlacedTrapTopCellitem;
-                        foreach (var item in APlacedTrapTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.TopCell.TryGet(out var APlacedTrapTopCellitem))
                         {
-                            yield return item;
+                            yield return APlacedTrapTopCellitem;
+                            foreach (var item in APlacedTrapTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     foreach (var subItem in obj.SubCells)

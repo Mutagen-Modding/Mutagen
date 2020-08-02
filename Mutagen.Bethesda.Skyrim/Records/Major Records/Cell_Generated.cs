@@ -3663,12 +3663,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscapeGetter":
                 case "ILandscape":
                 case "ILandscapeInternal":
-                    if (obj.Landscape.TryGet(out var Landscapeitem))
                     {
-                        yield return Landscapeitem;
-                        foreach (var item in Landscapeitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.Landscape.TryGet(out var Landscapeitem))
                         {
-                            yield return item;
+                            yield return Landscapeitem;
+                            foreach (var item in Landscapeitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     yield break;

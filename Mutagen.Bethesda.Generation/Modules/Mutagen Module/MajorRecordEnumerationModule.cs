@@ -880,10 +880,13 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    fieldGen.AppendLine($"if ({accessor}.{loqui.Name}.TryGet(out var {fieldAccessor}))");
                     using (new BraceWrapper(fieldGen))
                     {
-                        fieldGen.AppendLines(subFg);
+                        fieldGen.AppendLine($"if ({accessor}.{loqui.Name}.TryGet(out var {fieldAccessor}))");
+                        using (new BraceWrapper(fieldGen))
+                        {
+                            fieldGen.AppendLines(subFg);
+                        }
                     }
                 }
             }

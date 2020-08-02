@@ -2888,12 +2888,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPathGridGetter":
                 case "IPathGrid":
                 case "IPathGridInternal":
-                    if (obj.PathGrid.TryGet(out var PathGriditem))
                     {
-                        yield return PathGriditem;
-                        foreach (var item in PathGriditem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.PathGrid.TryGet(out var PathGriditem))
                         {
-                            yield return item;
+                            yield return PathGriditem;
+                            foreach (var item in PathGriditem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     yield break;
@@ -2901,12 +2903,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILandscapeGetter":
                 case "ILandscape":
                 case "ILandscapeInternal":
-                    if (obj.Landscape.TryGet(out var Landscapeitem))
                     {
-                        yield return Landscapeitem;
-                        foreach (var item in Landscapeitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        if (obj.Landscape.TryGet(out var Landscapeitem))
                         {
-                            yield return item;
+                            yield return Landscapeitem;
+                            foreach (var item in Landscapeitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     foreach (var subItem in obj.Persistent)
