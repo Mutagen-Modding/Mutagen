@@ -65,7 +65,24 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Creates a new linking package relative to a load order.
+        /// Creates a Link Cache using a single mod as its link target.  Mod is allowed to be modified afterwards, but
+        /// this comes at a performance cost of not allowing much caching to be done.  If the mod is not expected to
+        /// be modified afterwards, use ImmutableModLinkCache instead.<br/>
+        /// </summary>
+        /// <typeparam name="TMod">Mod type</typeparam>
+        /// <param name="mod">Mod to construct the package relative to</param>
+        /// <returns>LinkPackage attached to given mod</returns>
+        public static MutableModLinkCache<TMod> ToMutableLinkCache<TMod>(this TMod mod)
+            where TMod : class, IModGetter
+        {
+            return new MutableModLinkCache<TMod>(mod);
+        }
+
+        /// <summary>
+        /// Creates a new linking package relative to a load order.<br/>
+        /// Will resolve links to the highest overriding mod containing the record being sought. <br/>
+        /// Modification of the target LoadOrder, or Mods on the LoadOrder is not safe.  Internal caches can become
+        /// incorrect if modifications occur on content already cached.
         /// </summary>
         /// <typeparam name="TMod">Mod type</typeparam>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>

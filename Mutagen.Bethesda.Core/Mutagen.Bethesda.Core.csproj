@@ -67,6 +67,8 @@
     <Compile Include="Links\IFormLink.cs" />
     <Compile Include="Links\ILinkCache.cs" />
     <Compile Include="Links\ImmutableLoadOrderLinkCache.cs" />
+    <Compile Include="Links\MutableModLinkCache.cs" />
+    <Compile Include="Links\MutableLoadOrderLinkCache.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
