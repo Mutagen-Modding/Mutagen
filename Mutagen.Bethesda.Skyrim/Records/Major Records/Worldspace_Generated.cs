@@ -3460,6 +3460,150 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     }
                     yield break;
+                case "IComplexLocation":
+                case "IComplexLocationGetter":
+                {
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "ILocationTargetable":
+                case "ILocationTargetableGetter":
+                {
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "IOwner":
+                case "IOwnerGetter":
+                {
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "ILinkedReference":
+                case "ILinkedReferenceGetter":
+                {
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "IPlaced":
+                case "IPlacedGetter":
+                {
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "IPlacedSimple":
+                case "IPlacedSimpleGetter":
+                {
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "IPlacedThing":
+                case "IPlacedThingGetter":
+                {
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 default:
                     if (throwIfUnknown)
                     {

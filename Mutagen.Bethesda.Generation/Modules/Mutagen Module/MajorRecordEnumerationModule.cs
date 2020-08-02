@@ -723,6 +723,7 @@ namespace Mutagen.Bethesda.Generation
                                 }
                             }
 
+                            HashSet<string> blackList = new HashSet<string>();
                             foreach (var kv in generationDict)
                             {
                                 switch (kv.Key)
@@ -744,6 +745,10 @@ namespace Mutagen.Bethesda.Generation
                                             if (loqui.HasInternalSetInterface)
                                             {
                                                 fg.AppendLine($"case \"{loqui.Interface(getter: false, internalInterface: true)}\":");
+                                            }
+                                            if (loqui.RefType == LoquiType.LoquiRefType.Interface)
+                                            {
+                                                blackList.Add(loqui.SetterInterface);
                                             }
                                         }
                                         break;
@@ -776,54 +781,51 @@ namespace Mutagen.Bethesda.Generation
                                 }
                             }
 
-                            if ((obj.GetObjectType() == ObjectType.Mod
-                                || obj.GetObjectType() == ObjectType.Group))
+                            // Generate for major record marker interfaces 
+                            if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out var interfs))
                             {
-                                // Generate for major record marker interfaces 
-                                if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out var interfs))
+                                foreach (var interf in interfs)
                                 {
-                                    foreach (var interf in interfs)
+                                    if (blackList.Contains(interf.Key)) continue;
+                                    FileGeneration subFg = new FileGeneration();
+                                    HashSet<ObjectGeneration> passedObjects = new HashSet<ObjectGeneration>();
+                                    HashSet<TypeGeneration> deepObjects = new HashSet<TypeGeneration>();
+                                    foreach (var subObj in interf.Value)
                                     {
-                                        FileGeneration subFg = new FileGeneration();
-                                        HashSet<ObjectGeneration> passedObjects = new HashSet<ObjectGeneration>();
-                                        HashSet<TypeGeneration> deepObjects = new HashSet<TypeGeneration>();
-                                        foreach (var subObj in interf.Value)
-                                        {
-                                            var grup = obj.Fields
-                                                .WhereCastable<TypeGeneration, GroupType>()
-                                                .Where(g => g.GetGroupTarget() == subObj)
-                                                .FirstOrDefault();
+                                        var grup = obj.Fields
+                                            .WhereCastable<TypeGeneration, GroupType>()
+                                            .Where(g => g.GetGroupTarget() == subObj)
+                                            .FirstOrDefault();
 
-                                            if (grup != null)
+                                        if (grup != null)
+                                        {
+                                            subFg.AppendLine($"foreach (var item in EnumerateMajorRecords({accessor}, typeof({grup.GetGroupTarget().ObjectName}), throwIfUnknown: throwIfUnknown))");
+                                            using (new BraceWrapper(subFg))
                                             {
-                                                subFg.AppendLine($"foreach (var item in EnumerateMajorRecords({accessor}, typeof({grup.GetGroupTarget().ObjectName}), throwIfUnknown: throwIfUnknown))");
-                                                using (new BraceWrapper(subFg))
-                                                {
-                                                    subFg.AppendLine("yield return item;");
-                                                }
-                                                passedObjects.Add(grup.GetGroupTarget());
+                                                subFg.AppendLine("yield return item;");
                                             }
-                                            else if (deepRecordMapping.TryGetValue(subObj, out var deepRec))
+                                            passedObjects.Add(grup.GetGroupTarget());
+                                        }
+                                        else if (deepRecordMapping.TryGetValue(subObj, out var deepRec))
+                                        {
+                                            foreach (var field in deepRec)
                                             {
-                                                foreach (var field in deepRec)
-                                                {
-                                                    deepObjects.Add(field);
-                                                }
+                                                deepObjects.Add(field);
                                             }
                                         }
-                                        foreach (var deepObj in deepObjects)
+                                    }
+                                    foreach (var deepObj in deepObjects)
+                                    {
+                                        await ApplyIterationLines(deepObj, subFg, accessor, getter, blackList: passedObjects);
+                                    }
+                                    if (!subFg.Empty)
+                                    {
+                                        fg.AppendLine($"case \"{interf.Key}\":");
+                                        fg.AppendLine($"case \"{interf.Key}Getter\":");
+                                        using (new BraceWrapper(fg))
                                         {
-                                            await ApplyIterationLines(deepObj, subFg, accessor, getter, blackList: passedObjects);
-                                        }
-                                        if (!subFg.Empty)
-                                        {
-                                            fg.AppendLine($"case \"{interf.Key}\":");
-                                            fg.AppendLine($"case \"{interf.Key}Getter\":");
-                                            using (new BraceWrapper(fg))
-                                            {
-                                                fg.AppendLines(subFg);
-                                                fg.AppendLine("yield break;");
-                                            }
+                                            fg.AppendLines(subFg);
+                                            fg.AppendLine("yield break;");
                                         }
                                     }
                                 }
