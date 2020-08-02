@@ -682,143 +682,148 @@ namespace Mutagen.Bethesda.Generation
                             await ApplyIterationLines(field, fieldGen, accessor, getter);
                         }
 
-                        // Find and add "Deep" records 
-                        var deepRecordMapping = new Dictionary<ObjectGeneration, HashSet<TypeGeneration>>();
-                        foreach (var field in obj.IterateFields())
-                        {
-                            if (field is LoquiType loqui)
-                            {
-                                var groupType = field as GroupType;
-                                await foreach (var deepObj in IterateMajorRecords(loqui, includeBaseClass: true))
-                                {
-                                    if (groupType != null
-                                        && groupType.GetGroupTarget() == deepObj)
-                                    {
-                                        continue;
-                                    }
-                                    if (loqui.TargetObjectGeneration == deepObj) continue;
-                                    deepRecordMapping.TryCreateValue(deepObj).Add(field);
-                                }
-                            }
-                            else if (field is ContainerType cont)
-                            {
-                                if (!(cont.SubTypeGeneration is LoquiType subLoqui)) continue;
-                                await foreach (var deepObj in IterateMajorRecords(subLoqui, includeBaseClass: true))
-                                {
-                                    if (subLoqui.TargetObjectGeneration == deepObj) continue;
-                                    deepRecordMapping.TryCreateValue(deepObj).Add(field);
-                                }
-                            }
-                        }
-                        foreach (var deepRec in deepRecordMapping)
-                        {
-                            FileGeneration deepFg = generationDict.TryCreateValue(deepRec.Key);
-                            foreach (var field in deepRec.Value)
-                            {
-                                await ApplyIterationLines(field, deepFg, accessor, getter, nickname: deepRec.Key.ObjectName);
-                            }
-                        }
+                        bool doAdditionlDeepLogic = obj.Name != "ListGroup";
 
-                        foreach (var kv in generationDict)
+                        if (doAdditionlDeepLogic)
                         {
-                            switch (kv.Key)
+                            // Find and add "Deep" records 
+                            var deepRecordMapping = new Dictionary<ObjectGeneration, HashSet<TypeGeneration>>();
+                            foreach (var field in obj.IterateFields())
                             {
-                                case LoquiType loqui:
-                                    if (loqui.RefType == LoquiType.LoquiRefType.Generic)
+                                if (field is LoquiType loqui)
+                                {
+                                    var groupType = field as GroupType;
+                                    await foreach (var deepObj in IterateMajorRecords(loqui, includeBaseClass: true))
                                     {
-                                        // Handled in default case  
+                                        if (groupType != null
+                                            && groupType.GetGroupTarget() == deepObj)
+                                        {
+                                            continue;
+                                        }
+                                        if (loqui.TargetObjectGeneration == deepObj) continue;
+                                        deepRecordMapping.TryCreateValue(deepObj).Add(field);
+                                    }
+                                }
+                                else if (field is ContainerType cont)
+                                {
+                                    if (!(cont.SubTypeGeneration is LoquiType subLoqui)) continue;
+                                    await foreach (var deepObj in IterateMajorRecords(subLoqui, includeBaseClass: true))
+                                    {
+                                        if (subLoqui.TargetObjectGeneration == deepObj) continue;
+                                        deepRecordMapping.TryCreateValue(deepObj).Add(field);
+                                    }
+                                }
+                            }
+                            foreach (var deepRec in deepRecordMapping)
+                            {
+                                FileGeneration deepFg = generationDict.TryCreateValue(deepRec.Key);
+                                foreach (var field in deepRec.Value)
+                                {
+                                    await ApplyIterationLines(field, deepFg, accessor, getter, nickname: deepRec.Key.ObjectName);
+                                }
+                            }
+
+                            foreach (var kv in generationDict)
+                            {
+                                switch (kv.Key)
+                                {
+                                    case LoquiType loqui:
+                                        if (loqui.RefType == LoquiType.LoquiRefType.Generic)
+                                        {
+                                            // Handled in default case  
+                                            continue;
+                                        }
+                                        else
+                                        {
+                                            fg.AppendLine($"case \"{loqui.Interface(getter: true)}\":");
+                                            fg.AppendLine($"case \"{loqui.Interface(getter: false)}\":");
+                                            if (loqui.HasInternalGetInterface)
+                                            {
+                                                fg.AppendLine($"case \"{loqui.Interface(getter: true, internalInterface: true)}\":");
+                                            }
+                                            if (loqui.HasInternalSetInterface)
+                                            {
+                                                fg.AppendLine($"case \"{loqui.Interface(getter: false, internalInterface: true)}\":");
+                                            }
+                                        }
+                                        break;
+                                    case ObjectGeneration targetObj:
+                                        fg.AppendLine($"case \"{targetObj.ObjectName}\":");
+                                        fg.AppendLine($"case \"{targetObj.Interface(getter: true)}\":");
+                                        fg.AppendLine($"case \"{targetObj.Interface(getter: false)}\":");
+                                        if (targetObj.HasInternalGetInterface)
+                                        {
+                                            fg.AppendLine($"case \"{targetObj.Interface(getter: true, internalInterface: true)}\":");
+                                        }
+                                        if (targetObj.HasInternalSetInterface)
+                                        {
+                                            fg.AppendLine($"case \"{targetObj.Interface(getter: false, internalInterface: true)}\":");
+                                        }
+                                        break;
+                                    case string str:
+                                        if (str != "default:")
+                                        {
+                                            throw new NotImplementedException();
+                                        }
                                         continue;
-                                    }
-                                    else
-                                    {
-                                        fg.AppendLine($"case \"{loqui.Interface(getter: true)}\":");
-                                        fg.AppendLine($"case \"{loqui.Interface(getter: false)}\":");
-                                        if (loqui.HasInternalGetInterface)
-                                        {
-                                            fg.AppendLine($"case \"{loqui.Interface(getter: true, internalInterface: true)}\":");
-                                        }
-                                        if (loqui.HasInternalSetInterface)
-                                        {
-                                            fg.AppendLine($"case \"{loqui.Interface(getter: false, internalInterface: true)}\":");
-                                        }
-                                    }
-                                    break;
-                                case ObjectGeneration targetObj:
-                                    fg.AppendLine($"case \"{targetObj.ObjectName}\":");
-                                    fg.AppendLine($"case \"{targetObj.Interface(getter: true)}\":");
-                                    fg.AppendLine($"case \"{targetObj.Interface(getter: false)}\":");
-                                    if (targetObj.HasInternalGetInterface)
-                                    {
-                                        fg.AppendLine($"case \"{targetObj.Interface(getter: true, internalInterface: true)}\":");
-                                    }
-                                    if (targetObj.HasInternalSetInterface)
-                                    {
-                                        fg.AppendLine($"case \"{targetObj.Interface(getter: false, internalInterface: true)}\":");
-                                    }
-                                    break;
-                                case string str:
-                                    if (str != "default:")
-                                    {
+                                    default:
                                         throw new NotImplementedException();
-                                    }
-                                    continue;
-                                default:
-                                    throw new NotImplementedException();
-                            }
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLines(kv.Value);
-                                fg.AppendLine("yield break;");
-                            }
-                        }
-
-                        if ((obj.GetObjectType() == ObjectType.Mod
-                            || obj.GetObjectType() == ObjectType.Group))
-                        {
-                            // Generate for major record marker interfaces 
-                            if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out var interfs))
-                            {
-                                foreach (var interf in interfs)
+                                }
+                                using (new DepthWrapper(fg))
                                 {
-                                    FileGeneration subFg = new FileGeneration();
-                                    HashSet<ObjectGeneration> passedObjects = new HashSet<ObjectGeneration>();
-                                    HashSet<TypeGeneration> deepObjects = new HashSet<TypeGeneration>();
-                                    foreach (var subObj in interf.Value)
-                                    {
-                                        var grup = obj.Fields
-                                            .WhereCastable<TypeGeneration, GroupType>()
-                                            .Where(g => g.GetGroupTarget() == subObj)
-                                            .FirstOrDefault();
+                                    fg.AppendLines(kv.Value);
+                                    fg.AppendLine("yield break;");
+                                }
+                            }
 
-                                        if (grup != null)
-                                        {
-                                            subFg.AppendLine($"foreach (var item in EnumerateMajorRecords({accessor}, typeof({grup.GetGroupTarget().ObjectName}), throwIfUnknown: throwIfUnknown))");
-                                            using (new BraceWrapper(subFg))
-                                            {
-                                                subFg.AppendLine("yield return item;");
-                                            }
-                                            passedObjects.Add(grup.GetGroupTarget());
-                                        }
-                                        else if (deepRecordMapping.TryGetValue(subObj, out var deepRec))
-                                        {
-                                            foreach (var field in deepRec)
-                                            {
-                                                deepObjects.Add(field);
-                                            }
-                                        }
-                                    }
-                                    foreach (var deepObj in deepObjects)
+                            if ((obj.GetObjectType() == ObjectType.Mod
+                                || obj.GetObjectType() == ObjectType.Group))
+                            {
+                                // Generate for major record marker interfaces 
+                                if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out var interfs))
+                                {
+                                    foreach (var interf in interfs)
                                     {
-                                        await ApplyIterationLines(deepObj, subFg, accessor, getter, blackList: passedObjects);
-                                    }
-                                    if (!subFg.Empty)
-                                    {
-                                        fg.AppendLine($"case \"{interf.Key}\":");
-                                        fg.AppendLine($"case \"{interf.Key}Getter\":");
-                                        using (new BraceWrapper(fg))
+                                        FileGeneration subFg = new FileGeneration();
+                                        HashSet<ObjectGeneration> passedObjects = new HashSet<ObjectGeneration>();
+                                        HashSet<TypeGeneration> deepObjects = new HashSet<TypeGeneration>();
+                                        foreach (var subObj in interf.Value)
                                         {
-                                            fg.AppendLines(subFg);
-                                            fg.AppendLine("yield break;");
+                                            var grup = obj.Fields
+                                                .WhereCastable<TypeGeneration, GroupType>()
+                                                .Where(g => g.GetGroupTarget() == subObj)
+                                                .FirstOrDefault();
+
+                                            if (grup != null)
+                                            {
+                                                subFg.AppendLine($"foreach (var item in EnumerateMajorRecords({accessor}, typeof({grup.GetGroupTarget().ObjectName}), throwIfUnknown: throwIfUnknown))");
+                                                using (new BraceWrapper(subFg))
+                                                {
+                                                    subFg.AppendLine("yield return item;");
+                                                }
+                                                passedObjects.Add(grup.GetGroupTarget());
+                                            }
+                                            else if (deepRecordMapping.TryGetValue(subObj, out var deepRec))
+                                            {
+                                                foreach (var field in deepRec)
+                                                {
+                                                    deepObjects.Add(field);
+                                                }
+                                            }
+                                        }
+                                        foreach (var deepObj in deepObjects)
+                                        {
+                                            await ApplyIterationLines(deepObj, subFg, accessor, getter, blackList: passedObjects);
+                                        }
+                                        if (!subFg.Empty)
+                                        {
+                                            fg.AppendLine($"case \"{interf.Key}\":");
+                                            fg.AppendLine($"case \"{interf.Key}Getter\":");
+                                            using (new BraceWrapper(fg))
+                                            {
+                                                fg.AppendLines(subFg);
+                                                fg.AppendLine("yield break;");
+                                            }
                                         }
                                     }
                                 }
