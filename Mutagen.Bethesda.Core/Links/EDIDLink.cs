@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Improve to not be a forloop
-            var group = mod.GetGroupGetter<TMajor>();
+            var group = mod.GetTopLevelGroupGetter<TMajor>();
             foreach (var rec in group.Items)
             {
                 if (this.EDID.Type.Equals(rec.EditorID))

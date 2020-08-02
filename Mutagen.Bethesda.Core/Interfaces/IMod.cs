@@ -24,17 +24,18 @@ namespace Mutagen.Bethesda
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
 
         /// <summary>
-        /// Returns the Group getter object associated with the given Major Record Type.
+        /// Returns the top-level Group getter object associated with the given Major Record Type.
         /// </summary>
         /// <returns>Group getter object associated with the given Major Record Type</returns>
         /// <typeparam name="TMajor">The type of Major Record to get the Group for</typeparam>
         /// <exception cref="ArgumentException">
-        /// An unexpected TMajor type will throw an exception.
-        /// Unexpected types include:
-        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)
-        ///   - A setter type is requested from a getter only object.
+        /// An unexpected TMajor type will throw an exception.<br />
+        /// Unexpected types include: <br />
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod) <br />
+        ///   - Nested types, where there is not just one top level group that contains given type (Placed Objects) <br />
+        ///   - A setter type is requested from a getter only object. <br />
         /// </exception>
-        IReadOnlyCache<TMajor, FormKey> GetGroupGetter<TMajor>() where TMajor : IMajorRecordCommonGetter;
+        IReadOnlyCache<TMajor, FormKey> GetTopLevelGroupGetter<TMajor>() where TMajor : IMajorRecordCommonGetter;
 
         /// <summary>
         /// Exports to disk in Bethesda binary format.

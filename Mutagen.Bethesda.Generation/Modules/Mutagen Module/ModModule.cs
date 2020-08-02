@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Generation
             }
 
             // Interfaces
-            fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetGroupGetter)}<T>() => this.GetGroupGetter<T>();");
+            fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroupGetter)}<T>() => this.{nameof(IModGetter.GetTopLevelGroupGetter)}<T>();");
             fg.AppendLine($"ICache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IMod.GetGroup)}<T>() => this.GetGroup<T>();");
             fg.AppendLine($"void IModGetter.WriteToBinary(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
             fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinaryParallel(path, param);");
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (obj.GetObjectType() != ObjectType.Mod) return;
             using (var args = new FunctionWrapper(fg,
-                "public static IReadOnlyCache<T, FormKey> GetGroupGetter<T>"))
+                $"public static IReadOnlyCache<T, FormKey> {nameof(IModGetter.GetTopLevelGroupGetter)}<T>"))
             {
                 args.Wheres.Add($"where T : {nameof(IMajorRecordCommonGetter)}");
                 args.Add($"this {obj.Interface(getter: true)} obj");

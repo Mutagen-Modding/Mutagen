@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda
         public abstract bool CanUseLocalization { get; }
         ICache<T, FormKey> IMod.GetGroup<T>() => throw new NotImplementedException();
         public abstract void SyncRecordCount();
-        IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => throw new NotImplementedException();
+        IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => throw new NotImplementedException();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => throw new NotImplementedException();
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => throw new NotImplementedException();
         IEnumerable<T> IMajorRecordEnumerable.EnumerateMajorRecords<T>() => throw new NotImplementedException();
