@@ -793,7 +793,7 @@ namespace Mutagen.Bethesda.Generation
                                             // Should only happen in unparsed records not listed on the mod yet 
                                             if (grup == null) continue;
 
-                                            fg.AppendLine($"foreach (var item in EnumerateMajorRecords({accessor}, typeof({grup.GetGroupTarget().ObjectName}), throwIfUnknown))");
+                                            fg.AppendLine($"foreach (var item in EnumerateMajorRecords({accessor}, typeof({grup.GetGroupTarget().ObjectName}), throwIfUnknown: throwIfUnknown))");
                                             using (new BraceWrapper(fg))
                                             {
                                                 fg.AppendLine("yield return item;");
@@ -863,7 +863,7 @@ namespace Mutagen.Bethesda.Generation
                 var fieldAccessor = loqui.Nullable ? $"{nickname}{loqui.Name}item" : $"{accessor}.{loqui.Name}";
                 if (loqui.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
                 {
-                    fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecords(type))");
+                    fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))");
                     using (new BraceWrapper(fieldGen))
                     {
                         fieldGen.AppendLine("yield return item;");
@@ -903,7 +903,7 @@ namespace Mutagen.Bethesda.Generation
                                 fieldGen.AppendLine($"yield return ({nameof(IMajorRecordCommonGetter)})item;");
                             }
                         }
-                        fieldGen.AppendLine($"foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))");
+                        fieldGen.AppendLine($"foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))");
                         using (new BraceWrapper(fieldGen))
                         {
                             fieldGen.AppendLine($"yield return subItem;");

@@ -909,7 +909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICellInternal":
                     foreach (var item in obj.Records)
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                         {
                             yield return subItem;
                         }
@@ -921,7 +921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPathGridInternal":
                     foreach (var item in obj.Records)
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                         {
                             yield return subItem;
                         }
@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILandscapeInternal":
                     foreach (var item in obj.Records)
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                         {
                             yield return subItem;
                         }
@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedCreatureInternal":
                     foreach (var item in obj.Records)
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                         {
                             yield return subItem;
                         }
@@ -957,7 +957,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedNpcInternal":
                     foreach (var item in obj.Records)
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                         {
                             yield return subItem;
                         }
@@ -969,7 +969,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPlacedObjectInternal":
                     foreach (var item in obj.Records)
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                         {
                             yield return subItem;
                         }
@@ -978,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     foreach (var item in obj.Records)
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                         {
                             yield return subItem;
                         }

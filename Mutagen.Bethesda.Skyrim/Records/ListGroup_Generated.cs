@@ -934,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICellInternal":
                     foreach (var item in obj.Records)
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                         {
                             yield return subItem;
                         }
@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscapeInternal":
                     foreach (var item in obj.Records)
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                         {
                             yield return subItem;
                         }
@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IANavigationMeshInternal":
                     foreach (var item in obj.Records)
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                         {
                             yield return subItem;
                         }
@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedNpcInternal":
                     foreach (var item in obj.Records)
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                         {
                             yield return subItem;
                         }
@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedObjectInternal":
                     foreach (var item in obj.Records)
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                         {
                             yield return subItem;
                         }
@@ -994,7 +994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAPlacedTrapInternal":
                     foreach (var item in obj.Records)
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                         {
                             yield return subItem;
                         }
@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 default:
                     foreach (var item in obj.Records)
                     {
-                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                         {
                             yield return subItem;
                         }
