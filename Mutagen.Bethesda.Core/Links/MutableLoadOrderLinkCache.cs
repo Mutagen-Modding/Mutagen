@@ -59,5 +59,14 @@ namespace Mutagen.Bethesda
             }
             return _wrappedCache.TryLookup(formKey, out majorRec);
         }
+
+        /// <summary>
+        /// Adds a mutable mod to the end of the load order
+        /// </summary>
+        /// <param name="mod">Mod that is safe to mutate to add to end of load order</param>
+        public void Add(TMod mod)
+        {
+            _mutableMods.Add(mod.ToMutableLinkCache());
+        }
     }
 }

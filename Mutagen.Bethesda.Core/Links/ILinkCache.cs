@@ -55,7 +55,6 @@ namespace Mutagen.Bethesda
         /// Modification of the target Mod is not safe.  Internal caches can become incorrect if 
         /// modifications occur on content already cached.
         /// </summary>
-        /// <typeparam name="TMod">Mod type</typeparam>
         /// <param name="mod">Mod to construct the package relative to</param>
         /// <returns>LinkPackage attached to given mod</returns>
         public static ImmutableModLinkCache<TMod> ToImmutableLinkCache<TMod>(this TMod mod)
@@ -69,7 +68,6 @@ namespace Mutagen.Bethesda
         /// this comes at a performance cost of not allowing much caching to be done.  If the mod is not expected to
         /// be modified afterwards, use ImmutableModLinkCache instead.<br/>
         /// </summary>
-        /// <typeparam name="TMod">Mod type</typeparam>
         /// <param name="mod">Mod to construct the package relative to</param>
         /// <returns>LinkPackage attached to given mod</returns>
         public static MutableModLinkCache<TMod> ToMutableLinkCache<TMod>(this TMod mod)
@@ -84,14 +82,13 @@ namespace Mutagen.Bethesda
         /// Modification of the target LoadOrder, or Mods on the LoadOrder is not safe.  Internal caches can become
         /// incorrect if modifications occur on content already cached.
         /// </summary>
-        /// <typeparam name="TMod">Mod type</typeparam>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache<TMod> ToImmutableLinkCache<TMod>(
-            this LoadOrder<TMod> loadOrder)
-            where TMod : class, IModGetter
+        public static ImmutableLoadOrderLinkCache<TModGetter> ToImmutableLinkCache<TModGetter>(
+            this LoadOrder<TModGetter> loadOrder)
+            where TModGetter : class, IModGetter
         {
-            return new ImmutableLoadOrderLinkCache<TMod>(
+            return new ImmutableLoadOrderLinkCache<TModGetter>(
                 loadOrder
                     .Select(listing => listing.Mod)
                     .NotNull());
@@ -103,14 +100,49 @@ namespace Mutagen.Bethesda
         /// Modification of mods on the load order is not safe.  Internal caches can become
         /// incorrect if modifications occur on content already cached.
         /// </summary>
-        /// <typeparam name="TMod">Mod type</typeparam>
         /// <param name="loadOrder">Enumerable of mods to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache<TMod> ToImmutableLinkCache<TMod>(
-            this IEnumerable<TMod> loadOrder)
-            where TMod : class, IModGetter
+        public static ImmutableLoadOrderLinkCache<TModGetter> ToImmutableLinkCache<TModGetter>(
+            this IEnumerable<TModGetter> loadOrder)
+            where TModGetter : class, IModGetter
         {
-            return new ImmutableLoadOrderLinkCache<TMod>(loadOrder);
+            return new ImmutableLoadOrderLinkCache<TModGetter>(loadOrder);
+        }
+
+        /// <summary>
+        /// Creates a mutable load order link cache by combining an existing immutable load order cache,
+        /// plus a set of mods to be put at the end of the load order and allow to be mutable.
+        /// </summary>
+        /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
+        /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
+        /// <returns>LinkPackage attached to given LoadOrder</returns>
+        public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
+            this LoadOrder<TModGetter> immutableBaseCache, 
+            params TMod[] mutableMods)
+            where TMod : class, IMod, TModGetter
+            where TModGetter : class, IModGetter
+        {
+            return new MutableLoadOrderLinkCache<TMod, TModGetter>(
+                immutableBaseCache.ToImmutableLinkCache(),
+                mutableMods);
+        }
+
+        /// <summary>
+        /// Creates a mutable load order link cache by combining an existing immutable load order cache,
+        /// plus a set of mods to be put at the end of the load order and allow to be mutable.
+        /// </summary>
+        /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
+        /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
+        /// <returns>LinkPackage attached to given LoadOrder</returns>
+        public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
+            this IEnumerable<TModGetter> immutableBaseCache,
+            params TMod[] mutableMods)
+            where TMod : class, IMod, TModGetter
+            where TModGetter : class, IModGetter
+        {
+            return new MutableLoadOrderLinkCache<TMod, TModGetter>(
+                immutableBaseCache.ToImmutableLinkCache(),
+                mutableMods);
         }
     }
 }
