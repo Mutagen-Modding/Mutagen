@@ -6725,7 +6725,7 @@ namespace Mutagen.Bethesda.Skyrim
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
-            var package = this.ToLinkCache();
+            var package = this.ToImmutableLinkCache();
             foreach (var rec in router.Values)
             {
                 rec.RemapLinks(mapping);

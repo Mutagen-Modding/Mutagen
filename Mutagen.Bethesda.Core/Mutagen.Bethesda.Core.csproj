@@ -62,11 +62,11 @@
     <Compile Include="Interfaces\ITranslatedNamed.cs" />
     <Compile Include="Interfaces\ITranslatedNamedRequired.cs" />
     <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
-    <Compile Include="Links\DirectModLinkCache.cs" />
+    <Compile Include="Links\ImmutableModLinkCache.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
     <Compile Include="Links\IFormLink.cs" />
     <Compile Include="Links\ILinkCache.cs" />
-    <Compile Include="Links\LoadOrderLinkCache.cs" />
+    <Compile Include="Links\ImmutableLoadOrderLinkCache.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />

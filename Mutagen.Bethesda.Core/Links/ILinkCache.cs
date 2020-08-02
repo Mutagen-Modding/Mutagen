@@ -21,6 +21,7 @@ namespace Mutagen.Bethesda
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="majorRec">Out parameter containing the record if successful</param>
         /// <returns>True if a matching record was found</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         bool TryLookup(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
@@ -50,15 +51,17 @@ namespace Mutagen.Bethesda
     public static class ILinkCacheExt
     {
         /// <summary>
-        /// Creates a new linking package relative to a mod.
+        /// Creates a Link Cache using a single mod as its link target. <br/>
+        /// Modification of the target Mod is not safe.  Internal caches can become incorrect if 
+        /// modifications occur on content already cached.
         /// </summary>
         /// <typeparam name="TMod">Mod type</typeparam>
         /// <param name="mod">Mod to construct the package relative to</param>
         /// <returns>LinkPackage attached to given mod</returns>
-        public static DirectModLinkCache<TMod> ToLinkCache<TMod>(this TMod mod)
+        public static ImmutableModLinkCache<TMod> ToImmutableLinkCache<TMod>(this TMod mod)
             where TMod : class, IModGetter
         {
-            return new DirectModLinkCache<TMod>(mod);
+            return new ImmutableModLinkCache<TMod>(mod);
         }
 
         /// <summary>
@@ -67,27 +70,30 @@ namespace Mutagen.Bethesda
         /// <typeparam name="TMod">Mod type</typeparam>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static LoadOrderLinkCache<TMod> ToLinkCache<TMod>(
+        public static ImmutableLoadOrderLinkCache<TMod> ToImmutableLinkCache<TMod>(
             this LoadOrder<TMod> loadOrder)
             where TMod : class, IModGetter
         {
-            return new LoadOrderLinkCache<TMod>(
+            return new ImmutableLoadOrderLinkCache<TMod>(
                 loadOrder
                     .Select(listing => listing.Mod)
                     .NotNull());
         }
 
         /// <summary>
-        /// Creates a new linking package relative to a load order.
+        /// Creates a new linking package relative to a load order.<br/>
+        /// Will resolve links to the highest overriding mod containing the record being sought. <br/>
+        /// Modification of mods on the load order is not safe.  Internal caches can become
+        /// incorrect if modifications occur on content already cached.
         /// </summary>
         /// <typeparam name="TMod">Mod type</typeparam>
         /// <param name="loadOrder">Enumerable of mods to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static LoadOrderLinkCache<TMod> ToLinkCache<TMod>(
+        public static ImmutableLoadOrderLinkCache<TMod> ToImmutableLinkCache<TMod>(
             this IEnumerable<TMod> loadOrder)
             where TMod : class, IModGetter
         {
-            return new LoadOrderLinkCache<TMod>(loadOrder);
+            return new ImmutableLoadOrderLinkCache<TMod>(loadOrder);
         }
     }
 }

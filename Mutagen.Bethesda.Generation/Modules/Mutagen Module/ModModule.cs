@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"var router = new Dictionary<FormKey, {nameof(IMajorRecordCommon)}>();");
                 fg.AppendLine($"router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, {nameof(IMajorRecordCommon)}>(dup.OriginalFormKey, dup.Record)));");
                 fg.AppendLine($"var mapping = new Dictionary<FormKey, FormKey>();");
-                fg.AppendLine($"var package = this.ToLinkCache();");
+                fg.AppendLine($"var package = this.{nameof(ILinkCacheExt.ToImmutableLinkCache)}();");
                 fg.AppendLine("foreach (var rec in router.Values)");
                 using (new BraceWrapper(fg))
                 {
