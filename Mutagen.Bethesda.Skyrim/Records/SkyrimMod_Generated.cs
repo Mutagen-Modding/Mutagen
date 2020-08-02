@@ -13380,6 +13380,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(ActionRecord), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13389,8 +13390,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "IObjectId":
                 case "IObjectIdGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(Activator), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13488,8 +13491,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "IItem":
                 case "IItemGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(AlchemicalApparatus), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13543,8 +13548,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "IOutfitTarget":
                 case "IOutfitTargetGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(Armor), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13554,36 +13561,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "IComplexLocation":
                 case "IComplexLocationGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(Worldspace), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
                     yield break;
+                }
                 case "IDialog":
                 case "IDialogGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(DialogTopic), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "ILocationTargetable":
                 case "ILocationTargetableGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(Door), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    yield break;
-                case "IOwner":
-                case "IOwnerGetter":
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(Faction), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
+                case "IOwner":
+                case "IOwnerGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Faction), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IRelatable":
                 case "IRelatableGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(Faction), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13593,8 +13630,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "IRegionTarget":
                 case "IRegionTargetGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(Flora), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13616,8 +13655,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "IAliasVoiceType":
                 case "IAliasVoiceTypeGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(FormList), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13627,8 +13668,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "ILockList":
                 case "ILockListGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(FormList), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13638,8 +13681,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "IPlacedTrapTarget":
                 case "IPlacedTrapTargetGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(Hazard), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13649,8 +13694,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "IHarvestTarget":
                 case "IHarvestTargetGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(Ingestible), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13668,15 +13715,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(Keyword), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
+                }
                 case "INpcSpawn":
                 case "INpcSpawnGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledNpc), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13686,8 +13737,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "ISpellSpawn":
                 case "ISpellSpawnGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledSpell), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13697,8 +13750,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "IEmittance":
                 case "IEmittanceGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(Light), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13708,8 +13763,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "ILocationRecord":
                 case "ILocationRecordGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(Location), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13719,8 +13776,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "IEffectRecord":
                 case "IEffectRecordGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(ObjectEffect), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13730,20 +13789,62 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "ILinkedReference":
                 case "ILinkedReferenceGetter":
+                {
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
                     yield break;
+                }
                 case "IPlaced":
                 case "IPlacedGetter":
+                {
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
                     yield break;
+                }
                 case "IPlacedSimple":
                 case "IPlacedSimpleGetter":
+                {
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
                     yield break;
+                }
                 case "IPlacedThing":
                 case "IPlacedThingGetter":
+                {
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
                     yield break;
+                }
                 case "ISound":
                 case "ISoundGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(SoundDescriptor), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -13753,6 +13854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 default:
                     if (throwIfUnknown)
                     {

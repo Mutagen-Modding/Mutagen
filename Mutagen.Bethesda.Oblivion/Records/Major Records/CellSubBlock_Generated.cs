@@ -1400,6 +1400,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     }
                     yield break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                {
+                    foreach (var subItem in obj.Cells)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 default:
                     if (throwIfUnknown)
                     {

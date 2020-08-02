@@ -975,6 +975,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     }
                     yield break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                {
+                    foreach (var item in obj.Records)
+                    {
+                        foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
                 default:
                     foreach (var item in obj.Records)
                     {

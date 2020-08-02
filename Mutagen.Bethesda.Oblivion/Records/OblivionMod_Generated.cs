@@ -7318,6 +7318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield break;
                 case "IOwner":
                 case "IOwnerGetter":
+                {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(Faction), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -7327,9 +7328,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return item;
                     }
                     yield break;
+                }
                 case "IPlaced":
                 case "IPlacedGetter":
+                {
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
                     yield break;
+                }
                 default:
                     if (throwIfUnknown)
                     {

@@ -63,5 +63,41 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IAmmunitionGetter>());
             Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<Ammunition>());
         }
+
+        [Fact]
+        public void EnumerateLinkInterface()
+        {
+            var mod = new OblivionMod(Utility.ModKey);
+            mod.Factions.AddNew();
+            Assert.NotEmpty(((IOblivionModGetter)mod).EnumerateMajorRecords<IFaction>());
+            Assert.NotEmpty(((IOblivionModGetter)mod).EnumerateMajorRecords<IOwner>());
+        }
+
+        [Fact]
+        public void EnumerateDeepLinkInterface()
+        {
+            var mod = new OblivionMod(Utility.ModKey);
+            mod.Cells.Records.Add(new CellBlock()
+            {
+                SubBlocks =
+                {
+                    new CellSubBlock()
+                    {
+                        Cells =
+                        {
+                            new Cell(mod.GetNextFormKey())
+                            {
+                                Persistent =
+                                {
+                                    new PlacedNpc(mod.GetNextFormKey())
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            Assert.NotEmpty(((IOblivionModGetter)mod).EnumerateMajorRecords<ICell>());
+            Assert.NotEmpty(((IOblivionModGetter)mod).EnumerateMajorRecords<IPlaced>());
+        }
     }
 }

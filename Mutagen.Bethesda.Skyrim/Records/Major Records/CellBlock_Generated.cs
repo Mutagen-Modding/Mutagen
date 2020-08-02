@@ -1439,6 +1439,90 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     }
                     yield break;
+                case "IComplexLocation":
+                case "IComplexLocationGetter":
+                {
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "ILocationTargetable":
+                case "ILocationTargetableGetter":
+                {
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "IOwner":
+                case "IOwnerGetter":
+                {
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "ILinkedReference":
+                case "ILinkedReferenceGetter":
+                {
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "IPlaced":
+                case "IPlacedGetter":
+                {
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "IPlacedSimple":
+                case "IPlacedSimpleGetter":
+                {
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "IPlacedThing":
+                case "IPlacedThingGetter":
+                {
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 default:
                     if (throwIfUnknown)
                     {

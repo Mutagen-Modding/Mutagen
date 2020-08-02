@@ -347,10 +347,10 @@ namespace Mutagen.Bethesda.Generation
         }
 
         private async Task LoquiTypeHandler(
-            FileGeneration fg, 
-            Accessor loquiAccessor, 
+            FileGeneration fg,
+            Accessor loquiAccessor,
             LoquiType loquiType,
-            string generic, 
+            string generic,
             bool checkType)
         {
             // ToDo  
@@ -772,34 +772,54 @@ namespace Mutagen.Bethesda.Generation
                             }
                         }
 
-                        if (obj.GetObjectType() == ObjectType.Mod)
+                        if ((obj.GetObjectType() == ObjectType.Mod
+                            || obj.GetObjectType() == ObjectType.Group))
                         {
                             // Generate for major record marker interfaces 
                             if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out var interfs))
                             {
                                 foreach (var interf in interfs)
                                 {
-                                    fg.AppendLine($"case \"{interf.Key}\":");
-                                    fg.AppendLine($"case \"{interf.Key}Getter\":");
-                                    using (new DepthWrapper(fg))
+                                    FileGeneration subFg = new FileGeneration();
+                                    HashSet<ObjectGeneration> passedObjects = new HashSet<ObjectGeneration>();
+                                    HashSet<TypeGeneration> deepObjects = new HashSet<TypeGeneration>();
+                                    foreach (var subObj in interf.Value)
                                     {
-                                        foreach (var subObj in interf.Value)
+                                        var grup = obj.Fields
+                                            .WhereCastable<TypeGeneration, GroupType>()
+                                            .Where(g => g.GetGroupTarget() == subObj)
+                                            .FirstOrDefault();
+
+                                        if (grup != null)
                                         {
-                                            var grup = obj.Fields
-                                                .WhereCastable<TypeGeneration, GroupType>()
-                                                .Where(g => g.GetGroupTarget() == subObj)
-                                                .FirstOrDefault();
-
-                                            // Should only happen in unparsed records not listed on the mod yet 
-                                            if (grup == null) continue;
-
-                                            fg.AppendLine($"foreach (var item in EnumerateMajorRecords({accessor}, typeof({grup.GetGroupTarget().ObjectName}), throwIfUnknown: throwIfUnknown))");
-                                            using (new BraceWrapper(fg))
+                                            subFg.AppendLine($"foreach (var item in EnumerateMajorRecords({accessor}, typeof({grup.GetGroupTarget().ObjectName}), throwIfUnknown: throwIfUnknown))");
+                                            using (new BraceWrapper(subFg))
                                             {
-                                                fg.AppendLine("yield return item;");
+                                                subFg.AppendLine("yield return item;");
+                                            }
+                                            passedObjects.Add(grup.GetGroupTarget());
+                                        }
+                                        else if (deepRecordMapping.TryGetValue(subObj, out var deepRec))
+                                        {
+                                            foreach (var field in deepRec)
+                                            {
+                                                deepObjects.Add(field);
                                             }
                                         }
-                                        fg.AppendLine("yield break;");
+                                    }
+                                    foreach (var deepObj in deepObjects)
+                                    {
+                                        await ApplyIterationLines(deepObj, subFg, accessor, getter, blackList: passedObjects);
+                                    }
+                                    if (!subFg.Empty)
+                                    {
+                                        fg.AppendLine($"case \"{interf.Key}\":");
+                                        fg.AppendLine($"case \"{interf.Key}Getter\":");
+                                        using (new BraceWrapper(fg))
+                                        {
+                                            fg.AppendLines(subFg);
+                                            fg.AppendLine("yield break;");
+                                        }
                                     }
                                 }
                             }
@@ -856,13 +876,29 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        async Task ApplyIterationLines(TypeGeneration field, FileGeneration fieldGen, Accessor accessor, bool getter, string nickname = null)
+        async Task ApplyIterationLines(
+            TypeGeneration field,
+            FileGeneration fieldGen,
+            Accessor accessor,
+            bool getter,
+            string nickname = null,
+            HashSet<ObjectGeneration> blackList = null)
         {
-            if (field is LoquiType loqui)
+            if (field is GroupType group)
             {
+                if (blackList?.Contains(group.GetGroupTarget()) ?? false) return;
+                fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))");
+                using (new BraceWrapper(fieldGen))
+                {
+                    fieldGen.AppendLine("yield return item;");
+                }
+            }
+            else if (field is LoquiType loqui)
+            {
+                if (blackList?.Contains(loqui.TargetObjectGeneration) ?? false) return;
                 var fieldAccessor = loqui.Nullable ? $"{nickname}{loqui.Name}item" : $"{accessor}.{loqui.Name}";
                 if (loqui.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
-                {
+                { // List groups 
                     fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))");
                     using (new BraceWrapper(fieldGen))
                     {
