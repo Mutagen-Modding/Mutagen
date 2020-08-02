@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     _package,
                                     getter: TypicalGetter,
                                     locs: ParseRecordLocations(
-                                        stream: new OverlayStream(contentSpan.Slice(0, checked((int)(subGroupLocation + subGroupMeta.TotalLength))), stream.MetaData),
+                                        stream: new OverlayStream(contentSpan, stream.MetaData),
                                         triggers: TypicalPlacedTypes,
                                         constants: GameConstants.Oblivion.MajorConstants,
                                         skipHeader: false));
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     _package,
                                     getter: TypicalGetter,
                                     locs: ParseRecordLocations(
-                                        stream: new OverlayStream(contentSpan.Slice(0, checked((int)(subGroupLocation + subGroupMeta.TotalLength))), stream.MetaData),
+                                        stream: new OverlayStream(contentSpan, stream.MetaData),
                                         triggers: TypicalPlacedTypes,
                                         constants: GameConstants.Oblivion.MajorConstants,
                                         skipHeader: false));
