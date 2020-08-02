@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda
                 major = default!;
                 return false;
             }
-            foreach (var mod in package)
+            foreach (var mod in package.PriorityOrder)
             {
                 if (TryLinkToMod(mod, out var item))
                 {

@@ -31,29 +31,33 @@ namespace Mutagen.Bethesda
             public Dictionary<FormKey, object> Dictionary { get; } = new Dictionary<FormKey, object>();
             public int Depth;
         }
-
-        private readonly LoadOrder<TMod> _loadOrder;
         private readonly bool _hasAny;
         private readonly GameCategory _gameCategory;
 
+        private readonly IReadOnlyList<TMod> _listedOrder;
+        private readonly IReadOnlyList<TMod> _priorityOrder;
         private int _processedUntypedDepth = 0;
         private readonly Cache<IMajorRecordCommonGetter, FormKey> _loadOrderUntypedMajorRecords;
         private readonly Dictionary<Type, InternalTypedCache> _loadOrderMajorRecords;
+
+        public IReadOnlyList<IModGetter> ListedOrder => _listedOrder;
+        public IReadOnlyList<IModGetter> PriorityOrder => _priorityOrder;
 
         /// <summary>
         /// Constructs a LoadOrderLinkCache around a target load order
         /// </summary>
         /// <param name="loadOrder">LoadOrder to resolve against when linking</param>
-        public LoadOrderLinkCache(LoadOrder<TMod> loadOrder)
+        public LoadOrderLinkCache(IEnumerable<TMod> loadOrder)
         {
-            this._loadOrder = loadOrder;
+            this._listedOrder = loadOrder.ToList();
+            this._priorityOrder = _listedOrder.Reverse().ToList();
             this._loadOrderUntypedMajorRecords = new Cache<IMajorRecordCommonGetter, FormKey>(m => m.FormKey);
             this._loadOrderMajorRecords = new Dictionary<Type, InternalTypedCache>();
-            var firstMod = _loadOrder.FirstOrDefault(m => m.Mod != null);
-            this._hasAny = firstMod?.Mod != null;
+            var firstMod = _listedOrder.FirstOrDefault();
+            this._hasAny = firstMod != null;
             // ToDo
             // Upgrade to bounce off ModInstantiator systems
-            this._gameCategory = firstMod?.Mod?.GameRelease.ToCategory() ?? GameCategory.Oblivion;
+            this._gameCategory = firstMod?.GameRelease.ToCategory() ?? GameCategory.Oblivion;
         }
 
         /// <summary>
@@ -77,16 +81,15 @@ namespace Mutagen.Bethesda
             lock (this._loadOrderUntypedMajorRecords)
             {
                 if (this._loadOrderUntypedMajorRecords.TryGetValue(formKey, out majorRec)) return true;
-                if (this._processedUntypedDepth >= this._loadOrder.Count) return false;
-                while (this._processedUntypedDepth < this._loadOrder.Count)
+                if (this._processedUntypedDepth >= this._listedOrder.Count) return false;
+                while (this._processedUntypedDepth < this._listedOrder.Count)
                 {
                     // Get next unprocessed mod
-                    var targetIndex = this._loadOrder.Count - _processedUntypedDepth - 1;
-                    var targetMod = this._loadOrder[targetIndex];
+                    var targetIndex = this._listedOrder.Count - _processedUntypedDepth - 1;
+                    var targetMod = this._listedOrder[targetIndex];
                     this._processedUntypedDepth++;
-                    if (targetMod.Mod == null) continue;
                     // Add records from that mod that aren't already cached
-                    foreach (var record in targetMod.Mod.EnumerateMajorRecords())
+                    foreach (var record in targetMod.EnumerateMajorRecords())
                     {
                         if (!_loadOrderUntypedMajorRecords.ContainsKey(record.FormKey))
                         {
@@ -168,19 +171,18 @@ namespace Mutagen.Bethesda
                     majorRec = (majorRecObj as TMajor)!;
                     return majorRec != null;
                 }
-                if (cache.Depth >= this._loadOrder.Count)
+                if (cache.Depth >= this._listedOrder.Count)
                 {
                     majorRec = default!;
                     return false;
                 }
 
-                while (cache.Depth < this._loadOrder.Count)
+                while (cache.Depth < this._listedOrder.Count)
                 {
                     // Get next unprocessed mod
-                    var targetIndex = this._loadOrder.Count - cache.Depth - 1;
-                    var targetMod = this._loadOrder[targetIndex];
+                    var targetIndex = this._listedOrder.Count - cache.Depth - 1;
+                    var targetMod = this._listedOrder[targetIndex];
                     cache.Depth++;
-                    if (targetMod.Mod == null) continue;
                     
                     void AddRecords(TMod mod, Type type)
                     {
@@ -198,12 +200,12 @@ namespace Mutagen.Bethesda
                     {
                         foreach (var objType in objs)
                         {
-                            AddRecords(targetMod.Mod, LoquiRegistration.GetRegister(objType).GetterType);
+                            AddRecords(targetMod, LoquiRegistration.GetRegister(objType).GetterType);
                         }
                     }
                     else
                     {
-                        AddRecords(targetMod.Mod, typeof(MajorRecord));
+                        AddRecords(targetMod, typeof(MajorRecord));
                     }
                     // Check again
                     if (cache.Dictionary.TryGetValue(formKey, out majorRecObj))
@@ -215,32 +217,6 @@ namespace Mutagen.Bethesda
                 // Record doesn't exist
                 majorRec = default!;
                 return false;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            if (!_hasAny)
-            {
-                yield break;
-            }
-
-            foreach (var listing in this._loadOrder)
-            {
-                if (listing.Mod != null) yield return listing.Mod;
-            }
-        }
-
-        IEnumerator<IModGetter> IEnumerable<IModGetter>.GetEnumerator()
-        {
-            if (!_hasAny)
-            {
-                yield break;
-            }
-
-            foreach (var listing in this._loadOrder)
-            {
-                if (listing.Mod != null) yield return listing.Mod;
             }
         }
     }

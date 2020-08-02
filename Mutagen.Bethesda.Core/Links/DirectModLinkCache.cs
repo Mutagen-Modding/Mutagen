@@ -28,6 +28,10 @@ namespace Mutagen.Bethesda
         private readonly Lazy<IReadOnlyCache<IMajorRecordCommonGetter, FormKey>> _untypedMajorRecords;
         private readonly Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, FormKey>> _majorRecords = new Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, FormKey>>();
 
+        public IReadOnlyList<IModGetter> ListedOrder { get; }
+
+        public IReadOnlyList<IModGetter> PriorityOrder => ListedOrder;
+
         /// <summary>
         /// Constructs a DirectModLinkCache around a target mod
         /// </summary>
@@ -38,6 +42,10 @@ namespace Mutagen.Bethesda
             this._untypedMajorRecords = new Lazy<IReadOnlyCache<IMajorRecordCommonGetter, FormKey>>(
                 isThreadSafe: true,
                 valueFactory: () => ConstructCache());
+            this.ListedOrder = new List<IModGetter>()
+            {
+                sourceMod
+            };
         }
 
         /// <summary>
@@ -150,16 +158,6 @@ namespace Mutagen.Bethesda
                 majorRecords.Set(majorRec);
             }
             return majorRecords;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            yield return this._sourceMod;
-        }
-
-        IEnumerator<IModGetter> IEnumerable<IModGetter>.GetEnumerator()
-        {
-            yield return this._sourceMod;
         }
     }
 }

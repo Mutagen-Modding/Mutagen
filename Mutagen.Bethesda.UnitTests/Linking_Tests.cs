@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void Direct_ReadOnlyMechanics()
         {
             var wrapper = Oblivion.OblivionMod.CreateFromBinaryOverlay(Utility.PathToTestFile);
-            var package = wrapper.CreateLinkCache();
+            var package = wrapper.ToLinkCache();
             {
                 Assert.True(package.TryLookup<Oblivion.INpcGetter>(TestFileFormKey, out var rec));
             }
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void LoadOrder_Empty()
         {
-            var package = new LoadOrderLinkCache<SkyrimMod>(new LoadOrder<SkyrimMod>());
+            var package = new LoadOrder<SkyrimMod>().ToLinkCache();
 
             // Test query fails
             Assert.False(package.TryLookup(UnusedFormKey, out var _));
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.UnitTests
             using var disp = ConvertMod(prototype, out var mod);
             var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(mod);
-            var package = new LoadOrderLinkCache<ISkyrimModGetter>(loadOrder);
+            var package = loadOrder.ToLinkCache();
 
             // Test query fails
             Assert.False(package.TryLookup(UnusedFormKey, out var _));
@@ -239,7 +239,7 @@ namespace Mutagen.Bethesda.UnitTests
             using var disp = ConvertMod(prototype, out var mod);
             var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(mod);
-            var package = new LoadOrderLinkCache<ISkyrimModGetter>(loadOrder);
+            var package = loadOrder.ToLinkCache();
 
             // Test query successes
 
@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.UnitTests
             var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(mod1);
             loadOrder.Add(mod2);
-            var package = new LoadOrderLinkCache<ISkyrimModGetter>(loadOrder);
+            var package = loadOrder.ToLinkCache();
 
             // Test query successes
 
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod1,
                 mod2
             };
-            var package = new LoadOrderLinkCache<ISkyrimModGetter>(loadOrder);
+            var package = loadOrder.ToLinkCache();
 
             // Test query successes
 
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.UnitTests
             var loadOrder = new LoadOrder<Oblivion.IOblivionModGetter>();
             loadOrder.Add(wrapper);
             loadOrder.Add(overrideWrapper);
-            var package = loadOrder.CreateLinkCache();
+            var package = loadOrder.ToLinkCache();
             {
                 Assert.True(package.TryLookup<Oblivion.INpcGetter>(TestFileFormKey, out var rec));
                 Assert.True(package.TryLookup<Oblivion.INpcGetter>(TestFileFormKey2, out rec));
@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FormLink_LoadOrder_TryResolve_NoLink()
         {
-            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            var package = TypicalLoadOrder().ToLinkCache();
             FormLink<INpc> formLink = new FormLink<INpc>(UnusedFormKey);
             Assert.False(formLink.TryResolve(package, out var _));
         }
@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            var package = loadOrder.ToLinkCache();
             FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
             Assert.True(formLink.TryResolve(package, out var linkedRec));
             Assert.Same(npc, linkedRec);
@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FormLink_LoadOrder_TryResolve_DeepRecord_NoLink()
         {
-            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            var package = TypicalLoadOrder().ToLinkCache();
             FormLink<IPlacedNpc> formLink = new FormLink<IPlacedNpc>(UnusedFormKey);
             Assert.False(formLink.TryResolve(package, out var _));
         }
@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            var package = loadOrder.ToLinkCache();
             FormLink<IPlacedNpc> placedFormLink = new FormLink<IPlacedNpc>(placedNpc.FormKey);
             Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
             Assert.Same(placedNpc, linkedPlacedNpc);
@@ -826,7 +826,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FormLink_LoadOrder_Resolve_NoLink()
         {
-            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            var package = TypicalLoadOrder().ToLinkCache();
             FormLink<INpc> formLink = new FormLink<INpc>(UnusedFormKey);
             Assert.Null(formLink.Resolve(package));
         }
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            var package = loadOrder.ToLinkCache();
             FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
             Assert.Same(npc, formLink.Resolve(package));
         }
@@ -850,7 +850,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void FormLink_LoadOrder_Resolve_DeepRecord_NoLink()
         {
             FormLink<IPlacedNpc> formLink = new FormLink<IPlacedNpc>(UnusedFormKey);
-            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            var package = TypicalLoadOrder().ToLinkCache();
             Assert.Null(formLink.Resolve(package));
         }
 
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            var package = loadOrder.ToLinkCache();
             FormLink<IPlacedNpc> placedFormLink = new FormLink<IPlacedNpc>(placedNpc.FormKey);
             Assert.Same(placedNpc, placedFormLink.Resolve(package));
             FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
@@ -891,7 +891,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            var package = loadOrder.ToLinkCache();
             FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(spell.FormKey);
             Assert.True(formLink.TryResolve(package, out var linkedRec));
             Assert.Same(spell, linkedRec);
@@ -901,7 +901,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void FormLink_LoadOrder_TryResolve_MarkerInterface_NoLink()
         {
             FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(UnusedFormKey);
-            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            var package = TypicalLoadOrder().ToLinkCache();
             Assert.False(formLink.TryResolve(package, out var _));
         }
 
@@ -909,7 +909,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void FormLink_LoadOrder_TryResolve_MarkerInterface_DeepRecord_NoLink()
         {
             FormLink<IPlaced> formLink = new FormLink<IPlaced>(UnusedFormKey);
-            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            var package = TypicalLoadOrder().ToLinkCache();
             Assert.False(formLink.TryResolve(package, out var _));
         }
 
@@ -931,7 +931,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            var package = loadOrder.ToLinkCache();
             FormLink<IPlaced> placedFormLink = new FormLink<IPlaced>(placedNpc.FormKey);
             Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
             Assert.Same(placedNpc, linkedPlacedNpc);
@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            var package = loadOrder.ToLinkCache();
             FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(spell.FormKey);
             Assert.Same(spell, formLink.Resolve(package));
         }
@@ -962,7 +962,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void FormLink_LoadOrder_Resolve_MarkerInterface_NoLink()
         {
             FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(UnusedFormKey);
-            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            var package = TypicalLoadOrder().ToLinkCache();
             Assert.Null(formLink.Resolve(package));
         }
 
@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void FormLink_LoadOrder_Resolve_MarkerInterface_DeepRecord_NoLink()
         {
             FormLink<IPlaced> formLink = new FormLink<IPlaced>(UnusedFormKey);
-            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            var package = TypicalLoadOrder().ToLinkCache();
             Assert.Null(formLink.Resolve(package));
         }
 
@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            var package = loadOrder.ToLinkCache();
             FormLink<IPlaced> placedFormLink = new FormLink<IPlaced>(placedNpc.FormKey);
             Assert.Same(placedNpc, placedFormLink.Resolve(package));
             FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
