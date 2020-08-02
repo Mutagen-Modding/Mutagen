@@ -3742,11 +3742,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
-            IMutagenReadStream stream,
+            Stream stream,
             ModKey modKey)
         {
             return OblivionModBinaryOverlay.OblivionModFactory(
-                stream: stream,
+                stream: new MutagenBinaryReadStream(stream, GameRelease.Oblivion),
                 modKey: modKey,
                 shouldDispose: false);
         }

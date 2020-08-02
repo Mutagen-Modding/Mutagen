@@ -8,6 +8,7 @@ using Mutagen.Bethesda.Binary;
 using Noggog;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Core;
+using System.IO;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -976,7 +977,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new FunctionWrapper(fg,
                 $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
-                args.Add($"{nameof(IMutagenReadStream)} stream");
+                args.Add($"{nameof(Stream)} stream");
                 if (objData.GameReleaseOptions != null)
                 {
                     args.Add($"{ModModule.ReleaseEnumName(obj)} release");
@@ -988,7 +989,16 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new ArgsWrapper(fg,
                     $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
                 {
-                    args.AddPassArg($"stream");
+                    string gameReleaseStr;
+                    if (obj.GetObjectData().GameReleaseOptions == null)
+                    {
+                        gameReleaseStr = $"{nameof(GameRelease)}.{obj.GetObjectData().GameCategory}";
+                    }
+                    else
+                    {
+                        gameReleaseStr = $"release.ToGameRelease()";
+                    }
+                    args.Add($"stream: new {nameof(MutagenBinaryReadStream)}(stream, {gameReleaseStr})");
                     args.AddPassArg("modKey");
                     if (objData.GameReleaseOptions != null)
                     {

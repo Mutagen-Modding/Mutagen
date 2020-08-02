@@ -7039,12 +7039,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
-            IMutagenReadStream stream,
+            Stream stream,
             SkyrimRelease release,
             ModKey modKey)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
-                stream: stream,
+                stream: new MutagenBinaryReadStream(stream, release.ToGameRelease()),
                 modKey: modKey,
                 release: release,
                 shouldDispose: false);
