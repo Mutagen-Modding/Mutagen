@@ -43,19 +43,19 @@ namespace Mutagen.Bethesda
         /// Constructs a load order from a list of mods and a data folder.
         /// Load Order is sorted to the order the game will load the mod files: by file's date modified timestamp.
         /// </summary>
-        /// <param name="modsToInclude">Mods to include</param>
+        /// <param name="incomingLoadOrder">Mods to include</param>
         /// <param name="dataPath">Path to data folder</param>
         /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
         /// <returns>List of modkeys in load order, excluding missing mods</returns>
         /// <exception cref="FileNotFoundException">If throwOnMissingMods true and file is missing</exception>
-        public static IExtendedList<ModKey> Align(
-            IEnumerable<ModKey> modsToInclude,
+        public static IExtendedList<ModKey> AlignToTimestamps(
+            IEnumerable<ModKey> incomingLoadOrder,
             DirectoryPath dataPath,
-            bool throwOnMissingMods = false)
+            bool throwOnMissingMods = true)
         {
             List<(ModKey ModKey, DateTime Write)> list = new List<(ModKey ModKey, DateTime Write)>();
             var loadOrder = new ExtendedList<ModKey>();
-            foreach (var key in modsToInclude)
+            foreach (var key in incomingLoadOrder)
             {
                 FilePath file = new FilePath(
                     Path.Combine(dataPath.Path, key.ToString()));
@@ -70,6 +70,36 @@ namespace Mutagen.Bethesda
                 .OrderBy(i => i.Write)
                 .Select(i => i.ModKey));
             return loadOrder;
+        }
+
+        /// <summary>
+        /// Modifies time stamps of files to match the given ordering
+        /// <param name="loadOrder">Order to conform files to</param>
+        /// <param name="dataPath">Path to data folder</param>
+        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
+        /// <param name="startDate">Date to give the first file</param>
+        /// <param name="interval">Time interval to space between each file's date</param>
+        /// </summary>
+        public static void AlignTimestamps(
+            IEnumerable<ModKey> loadOrder,
+            DirectoryPath dataPath,
+            bool throwOnMissingMods = true,
+            DateTime? startDate = null,
+            TimeSpan? interval = null)
+        {
+            startDate ??= DateTime.Today.AddDays(-1);
+            interval ??= TimeSpan.FromMinutes(1);
+            foreach (var mod in loadOrder)
+            {
+                var path = Path.Combine(dataPath.Path, mod.FileName);
+                if (!File.Exists(path))
+                {
+                    if (throwOnMissingMods) throw new FileNotFoundException($"Expected mod was missing: {path}");
+                    continue;
+                }
+                File.SetLastWriteTime(path, startDate.Value);
+                startDate = startDate.Value.Add(interval.Value);
+            }
         }
 
         /// <summary>
@@ -130,7 +160,7 @@ namespace Mutagen.Bethesda
             }
             
             IExtendedList<ModKey> mods = FromPath(path);
-            return Align(mods, dataPath, throwOnMissingMods: !allowMissingMods);
+            return AlignToTimestamps(mods, dataPath, throwOnMissingMods: !allowMissingMods);
         }
 
         /// <summary>
