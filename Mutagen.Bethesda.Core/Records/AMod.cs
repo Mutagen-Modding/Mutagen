@@ -3,12 +3,14 @@ using System;
 using Noggog;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 namespace Mutagen.Bethesda
 {
     /// <summary> 
     /// An abstract base class for Mods to inherit from for some common functionality 
     /// </summary> 
+    [DebuggerDisplay("{GameRelease} {ModKey.ToString()}")]
     public abstract class AMod : IMod
     {
         /// <summary> 

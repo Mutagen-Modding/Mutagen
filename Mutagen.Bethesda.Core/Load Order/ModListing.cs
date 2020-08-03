@@ -52,6 +52,11 @@ namespace Mutagen.Bethesda
         {
             return ModKey.ToString();
         }
+
+        public static implicit operator ModListing<TMod>(TMod mod)
+        {
+            return new ModListing<TMod>(mod);
+        }
     }
 
     public interface IModListing<out TMod> : IModKeyed
