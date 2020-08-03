@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Generation
                         gameConstantsStr = "gameConstants";
                     }
                     fg.AppendLine("if (group.RecordCache.Count == 0) return;");
-                    fg.AppendLine($"var cuts = group.Records.Cut(CutCount).ToArray();");
+                    fg.AppendLine($"var cuts = group.Cut(CutCount).ToArray();");
                     fg.AppendLine($"Stream[] subStreams = new Stream[cuts.Length + 1];");
                     fg.AppendLine($"byte[] groupBytes = new byte[{gameConstantsStr}.GroupConstants.HeaderLength];");
                     fg.AppendLine($"BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);");

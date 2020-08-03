@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Oblivion
                     GroupBinaryWriteTranslation.WriteEmbedded<IWorldspaceGetter>(group, stream);
                 }
                 streams[0] = groupByteStream;
-                Parallel.ForEach(group.Records, (worldspace, worldspaceState, worldspaceCounter) =>
+                Parallel.ForEach(group, (worldspace, worldspaceState, worldspaceCounter) =>
                 {
                     var worldTrib = new MemoryTributary();
                     using (var writer = new MutagenWriter(worldTrib, bundle, dispose: false))

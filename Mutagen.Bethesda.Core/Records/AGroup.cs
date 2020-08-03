@@ -44,7 +44,14 @@ namespace Mutagen.Bethesda
 
         IReadOnlyCache<TMajor, FormKey> IGroupCommonGetter<TMajor>.RecordCache => InternalCache;
 
+        /// <inheritdoc />
         public ICache<TMajor, FormKey> RecordCache => InternalCache;
+
+        /// <inheritdoc />
+        public IEnumerable<FormKey> FormKeys => InternalCache.Keys;
+
+        /// <inheritdoc />
+        public TMajor this[FormKey key] => InternalCache[key];
 
         protected AGroup()
         {
@@ -73,11 +80,7 @@ namespace Mutagen.Bethesda
             return $"Group<{typeof(TMajor).Name}>({this.InternalCache.Count})";
         }
 
-        /// <summary>
-        /// Convenience function to instantiate a new Major Record and add it to the Group.
-        /// FormKey will be automatically assigned.
-        /// </summary>
-        /// <returns>New record already added to the Group</returns>
+        /// <inheritdoc />
         public TMajor AddNew()
         {
             var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey());
@@ -85,12 +88,7 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        /// <summary>
-        /// Convenience function to instantiate a new Major Record and add it to the Group.
-        /// FormKey will be automatically assigned based on 
-        /// </summary>
-        /// <param name="editorID">Editor ID to assign the new record.</param>
-        /// <returns>New record already added to the Group</returns>
+        /// <inheritdoc />
         public TMajor AddNew(string editorID)
         {
             var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey(editorID));
@@ -99,15 +97,38 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
+        /// <inheritdoc />
         public IEnumerator<TMajor> GetEnumerator()
         {
             return InternalCache.Items.GetEnumerator();
         }
 
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator()
         {
             return InternalCache.GetEnumerator();
         }
+
+        /// <inheritdoc />
+        public void Add(TMajor item) => InternalCache.Add(item);
+
+        /// <inheritdoc />
+        public void Set(TMajor item) => InternalCache.Set(item);
+
+        /// <inheritdoc />
+        public void Set(IEnumerable<TMajor> items) => InternalCache.Set(items);
+
+        /// <inheritdoc />
+        public bool Remove(FormKey key) => InternalCache.Remove(key);
+
+        /// <inheritdoc />
+        public void Remove(IEnumerable<FormKey> keys) => InternalCache.Remove(keys);
+
+        /// <inheritdoc />
+        public void Clear() => InternalCache.Clear();
+
+        /// <inheritdoc />
+        public bool ContainsKey(FormKey key) => InternalCache.ContainsKey(key);
     }
 
     namespace Internals
@@ -234,26 +255,27 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public class AGroupBinaryOverlay<T> : BinaryOverlay, IReadOnlyCache<T, FormKey>
+        public class AGroupBinaryOverlay<TMajor> : BinaryOverlay, IGroupCommonGetter<TMajor>
+            where TMajor : IMajorRecordCommonGetter, IBinaryItem
         {
-            protected GroupMajorRecordCacheWrapper<T>? _RecordCache;
+            protected GroupMajorRecordCacheWrapper<TMajor>? _RecordCache;
 
-            public T this[FormKey key] => _RecordCache![key];
-            public IReadOnlyCache<T, FormKey> RecordCache => _RecordCache!;
+            public TMajor this[FormKey key] => _RecordCache![key];
+            public IReadOnlyCache<TMajor, FormKey> RecordCache => _RecordCache!;
             public IMod SourceMod => throw new NotImplementedException();
-            public IEnumerable<T> Records => RecordCache.Items;
+            public IEnumerable<TMajor> Records => RecordCache.Items;
             public int Count => this.RecordCache.Count;
-            public IEnumerable<FormKey> Keys => _RecordCache!.Keys;
-            public IEnumerable<T> Items => _RecordCache!.Items;
+            public IEnumerable<FormKey> FormKeys => _RecordCache!.Keys;
+            public IEnumerable<TMajor> Items => _RecordCache!.Items;
 
             public bool ContainsKey(FormKey key)
             {
                 return _RecordCache!.ContainsKey(key);
             }
 
-            public IEnumerator<IKeyValue<T, FormKey>> GetEnumerator()
+            public IEnumerator<TMajor> GetEnumerator()
             {
-                return _RecordCache!.GetEnumerator();
+                return _RecordCache!.Items.GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()

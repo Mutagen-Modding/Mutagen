@@ -10971,7 +10971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             where T : class, ISkyrimMajorRecordGetter, IBinaryItem
         {
             if (group.RecordCache.Count == 0) return;
-            var cuts = group.Records.Cut(CutCount).ToArray();
+            var cuts = group.Cut(CutCount).ToArray();
             Stream[] subStreams = new Stream[cuts.Length + 1];
             byte[] groupBytes = new byte[gameConstants.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);

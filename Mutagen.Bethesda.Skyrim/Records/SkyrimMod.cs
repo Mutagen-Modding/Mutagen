@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Skyrim
                     GroupBinaryWriteTranslation.WriteEmbedded<IWorldspaceGetter>(group, stream);
                 }
                 streams[0] = groupByteStream;
-                Parallel.ForEach(group.Records, (worldspace, worldspaceState, worldspaceCounter) =>
+                Parallel.ForEach(group, (worldspace, worldspaceState, worldspaceCounter) =>
                 {
                     var worldTrib = new MemoryTributary();
                     using (var writer = new MutagenWriter(worldTrib, bundle, dispose: false))
@@ -288,7 +288,7 @@ namespace Mutagen.Bethesda.Skyrim
                 where T : class, ISkyrimMajorRecordGetter, IBinaryItem
             {
                 if (group.RecordCache.Count == 0) return;
-                var cuts = group.Records.Cut(CutCount).ToArray();
+                var cuts = group.Cut(CutCount).ToArray();
                 Stream[] subStreams = new Stream[cuts.Length + 1];
                 byte[] groupBytes = new byte[gameConstants.GroupConstants.HeaderLength];
                 BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
