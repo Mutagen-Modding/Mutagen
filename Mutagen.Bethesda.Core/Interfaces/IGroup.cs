@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface that Group Record objects implement to hook into the common systems
     /// </summary>
-    public interface IGroupCommon<out TMajor>
+    public interface IGroupCommonGetter<out TMajor>
         where TMajor : IMajorRecordCommonGetter, IBinaryItem
     {
         /// <summary>

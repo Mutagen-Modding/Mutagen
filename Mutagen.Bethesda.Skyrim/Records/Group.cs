@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override ICache<T, FormKey> ProtectedCache => this.RecordCache;
     }
 
-    public partial interface IGroupGetter<out T> : IGroupCommon<T>
+    public partial interface IGroupGetter<out T> : IGroupCommonGetter<T>
         where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
     }

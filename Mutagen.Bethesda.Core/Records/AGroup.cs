@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An abstract base class for Groups to inherit from for some common functionality
     /// </summary>
-    public abstract class AGroup<T> : IEnumerable<T>, IGroupCommon<T>
+    public abstract class AGroup<T> : IEnumerable<T>, IGroupCommonGetter<T>
         where T : IMajorRecordInternal, IBinaryItem
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
