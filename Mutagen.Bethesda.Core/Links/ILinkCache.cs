@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static ImmutableLoadOrderLinkCache<TModGetter> ToImmutableLinkCache<TModGetter>(
-            this LoadOrder<ModListing<TModGetter>> loadOrder)
+            this LoadOrder<IModListing<TModGetter>> loadOrder)
             where TModGetter : class, IModGetter
         {
             return new ImmutableLoadOrderLinkCache<TModGetter>(
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
-            this LoadOrder<ModListing<TModGetter>> immutableBaseCache,
+            this LoadOrder<IModListing<TModGetter>> immutableBaseCache,
             params TMod[] mutableMods)
             where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter

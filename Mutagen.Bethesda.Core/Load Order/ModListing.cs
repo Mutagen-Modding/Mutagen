@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// Class associating a ModKey with a Mod object that may or may not exist.
     /// </summary>
-    public class ModListing<TMod> : IModKeyed
+    public class ModListing<TMod> : IModListing<TMod>
         where TMod : class, IModGetter
     {
         /// <summary>
@@ -52,5 +52,14 @@ namespace Mutagen.Bethesda
         {
             return ModKey.ToString();
         }
+    }
+
+    public interface IModListing<out TMod> : IModKeyed
+        where TMod : class, IModGetter
+    {
+        /// <summary>
+        /// Mod object
+        /// </summary>
+        TMod? Mod { get; }
     }
 }

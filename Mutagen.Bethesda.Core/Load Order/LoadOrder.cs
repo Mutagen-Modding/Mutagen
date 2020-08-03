@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="dataFolder">Path data folder containing mods</param>
         /// <param name="loadOrder">Unique list of mod keys to import</param>
-        public static LoadOrder<ModListing<TMod>> Import<TMod>(
+        public static LoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
             IReadOnlyList<ModKey> loadOrder)
             where TMod : class, IModGetter
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda
                 var mod = ModInstantiator<TMod>.Importer(modPath);
                 results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Succeed(mod));
             });
-            return new LoadOrder<ModListing<TMod>>(results
+            return new LoadOrder<IModListing<TMod>>(results
                 .OrderBy(i => i.ModIndex)
                 .Select(item =>
                 {
