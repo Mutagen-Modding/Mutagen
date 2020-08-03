@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface that Mod objects implement to hook into the common getter systems
     /// </summary>
-    public interface IModGetter : IMajorRecordGetterEnumerable, ILinkedFormKeyContainerGetter
+    public interface IModGetter : IMajorRecordGetterEnumerable, ILinkedFormKeyContainerGetter, IModKeyed
     {
         /// <summary>
         /// The associated game release
@@ -53,11 +53,6 @@ namespace Mutagen.Bethesda
         /// <param name="path">Path to export to</param>
         /// <param name="param">Optional customization parameters</param>
         void WriteToBinaryParallel(string path, BinaryWriteParameters? param = null);
-
-        /// <summary>
-        /// The key associated with this mod
-        /// </summary>
-        ModKey ModKey { get; }
 
         /// <summary>
         /// Whether a mod supports localization features

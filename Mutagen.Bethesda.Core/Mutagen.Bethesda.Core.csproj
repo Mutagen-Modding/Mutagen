@@ -57,6 +57,7 @@
     <Compile Include="Interfaces\IMajorRecordEnumerable.cs" />
     <Compile Include="Interfaces\IMod.cs" />
     <Compile Include="Interfaces\IModHeaderCommon.cs" />
+    <Compile Include="Interfaces\IModKeyed.cs" />
     <Compile Include="Interfaces\INamed.cs" />
     <Compile Include="Interfaces\INamedRequired.cs" />
     <Compile Include="Interfaces\ITranslatedNamed.cs" />

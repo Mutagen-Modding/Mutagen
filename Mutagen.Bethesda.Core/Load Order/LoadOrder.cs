@@ -138,167 +138,11 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="dataFolder">Path data folder containing mods</param>
         /// <param name="loadOrder">Unique list of mod keys to import</param>
-        public static LoadOrder<TMod> Import<TMod>(
+        public static LoadOrder<ModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
             IReadOnlyList<ModKey> loadOrder)
             where TMod : class, IModGetter
         {
-            return LoadOrder<TMod>.Import(
-                dataFolder: dataFolder,
-                loadOrder: loadOrder);
-        }
-    }
-
-    /// <summary>
-    /// A container for Mod objects in an order that can optionally exist.
-    /// For a load order of just ModKeys in an order with no optionality, it is usually preferable to just use a normal List of ModKeys.
-    /// LoadOrder does not need to be disposed for proper use, but rather can optionally be disposed of which will dispose any contained mods that implement IDisposable
-    /// </summary>
-    public class LoadOrder<TMod> : IReadOnlyList<ModListing<TMod>>, IDisposable
-        where TMod : class, IModGetter
-    {
-        private readonly List<ModListing<TMod>> _modsByLoadOrder = new List<ModListing<TMod>>();
-
-        /// <summary>
-        /// Number of mods
-        /// </summary>
-        public int Count => _modsByLoadOrder.Count;
-
-        /// <summary>
-        /// Access a mod at a given index
-        /// </summary>
-        public ModListing<TMod> this[int index] => _modsByLoadOrder[index];
-
-        /// <summary>
-        /// Attempts to retrive a mod listing given a ModKey
-        /// </summary>
-        /// <param name="key">ModKey to query for</param>
-        /// <param name="result">Result containing located index, and a reference to the listing</param>
-        /// <returns>True if matching mod located</returns>
-        public bool TryGetListing(ModKey key, out (int Index, ModListing<TMod> Listing) result)
-        {
-            for (int i = 0; i < _modsByLoadOrder.Count; i++)
-            {
-                var item = _modsByLoadOrder[i];
-                if (item.Key.Equals(key))
-                {
-                    result = (i, _modsByLoadOrder[i]);
-                    return true;
-                }
-            }
-            result = default(ValueTuple<int, ModListing<TMod>>);
-            return false;
-        }
-
-        /// <summary>
-        /// Attempts to retrive a mod object given a ModKey
-        /// </summary>
-        /// <param name="key">ModKey to query for</param>
-        /// <param name="result">Result containing located index, and a reference to the mod object</param>
-        /// <returns>True if matching mod located</returns>
-        public bool TryGetMod(ModKey key, out (int Index, TMod Mod) result)
-        {
-            if (!this.TryGetListing(key, out var listing)
-                || listing.Listing.Mod == null)
-            {
-                result = default((int, TMod));
-                return false;
-            }
-            result = (listing.Index, listing.Listing.Mod);
-            return true;
-        }
-
-        /// <summary>
-        /// Attempts to retrive a mod listing given an index
-        /// </summary>
-        /// <param name="index">Index to retrieve</param>
-        /// <param name="result">Reference to the mod listing</param>
-        /// <returns>True if index in range</returns>
-        public bool TryGetListing(int index, [MaybeNullWhen(false)] out ModListing<TMod> result)
-        {
-            if (!_modsByLoadOrder.InRange(index))
-            {
-                result = default!;
-                return false;
-            }
-            result = _modsByLoadOrder[index];
-            return result != null;
-        }
-
-        /// <summary>
-        /// Adds a mod to the end of the load order
-        /// </summary>
-        /// <param name="mod">Mod to add</param>
-        /// <exception cref="ArgumentException">If mod with same key exists already</exception>
-        public void Add(TMod mod)
-        {
-            if (this.Contains(mod.ModKey))
-            {
-                throw new ArgumentException("Mod was already present on the mod list.");
-            }
-            _modsByLoadOrder.Add(new ModListing<TMod>(mod));
-        }
-
-        /// <summary>
-        /// Adds a mod at the given index
-        /// </summary>
-        /// <param name="mod">Mod to add</param>
-        /// <param name="index">Index to insert at</param>
-        /// <exception cref="ArgumentException">If mod with same key exists already</exception>
-        public void Add(TMod mod, int index)
-        {
-            if (this.Contains(mod.ModKey))
-            {
-                throw new ArgumentException("Mod was already present on the mod list.");
-            }
-            _modsByLoadOrder.Insert(index, new ModListing<TMod>(mod));
-        }
-
-        /// <summary>
-        /// Checks if a mod exists with given key
-        /// </summary>
-        /// <param name="key">Key to query</param>
-        /// <returns>True if mod on list with key</returns>
-        public bool Contains(ModKey key)
-        {
-            return IndexOf(key) != -1;
-        }
-
-        /// <summary>
-        /// Locates index of a mod with given key
-        /// </summary>
-        /// <param name="key">Key to query</param>
-        /// <returns>Index of mod on list with key. -1 if not located</returns>
-        public int IndexOf(ModKey key)
-        {
-            for (int i = 0; i < _modsByLoadOrder.Count; i++)
-            {
-                if (_modsByLoadOrder[i].Key.Equals(key))
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        /// <summary>
-        /// Clears load order of all mods
-        /// </summary>
-        public void Clear()
-        {
-            this._modsByLoadOrder.Clear();
-        }
-
-        /// <summary>
-        /// Constructs a load order filled with mods
-        /// </summary>
-        /// <param name="dataFolder">Path data folder containing mods</param>
-        /// <param name="loadOrder">Unique list of mod keys to import</param>
-        public static LoadOrder<TMod> Import(
-            DirectoryPath dataFolder,
-            IReadOnlyList<ModKey> loadOrder)
-        {
-            var ret = new LoadOrder<TMod>();
             var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod)[loadOrder.Count];
             Parallel.ForEach(loadOrder, (modKey, state, modIndex) =>
             {
@@ -311,48 +155,246 @@ namespace Mutagen.Bethesda
                 var mod = ModInstantiator<TMod>.Importer(modPath);
                 results[modIndex] = (modKey, (int)modIndex, TryGet<TMod>.Succeed(mod));
             });
-            foreach (var item in results
-                .OrderBy(i => i.ModIndex))
+            return new LoadOrder<ModListing<TMod>>(results
+                .OrderBy(i => i.ModIndex)
+                .Select(item =>
+                {
+                    if (item.Mod.Succeeded)
+                    {
+                        return new ModListing<TMod>(item.Mod.Value);
+                    }
+                    else
+                    {
+                        return ModListing<TMod>.UnloadedModListing(item.ModKey);
+                    }
+                }));
+        }
+    }
+
+    /// <summary>
+    /// A container for objects with in a specific load order, that are associated with ModKeys.
+    /// LoadOrder does not need to be disposed for proper use, but rather can optionally be disposed of which will dispose any contained items that implement IDisposable
+    /// </summary>
+    public class LoadOrder<TItem> : IReadOnlyList<KeyValuePair<ModKey, TItem>>, IReadOnlyDictionary<ModKey, TItem>, IDisposable
+        where TItem : IModKeyed
+    {
+        private readonly List<ItemContainer> _byLoadOrder = new List<ItemContainer>();
+        private readonly Dictionary<ModKey, ItemContainer> _byModKey = new Dictionary<ModKey, ItemContainer>();
+
+        /// <inheritdoc />
+        public int Count => _byLoadOrder.Count;
+
+        /// <inheritdoc />
+        public TItem this[int index] => _byLoadOrder[index].Item;
+
+        /// <inheritdoc />
+        public IEnumerable<ModKey> Keys => _byModKey.Keys;
+
+        IEnumerable<TItem> IReadOnlyDictionary<ModKey, TItem>.Values => _byLoadOrder.Select(i => i.Item);
+
+        public IEnumerable<TItem> ListedOrder => _byLoadOrder.Select(i => i.Item);
+
+        public IEnumerable<TItem> PriorityOrder => ((IEnumerable<ItemContainer>)_byLoadOrder).Reverse().Select(i => i.Item);
+
+        KeyValuePair<ModKey, TItem> IReadOnlyList<KeyValuePair<ModKey, TItem>>.this[int index]
+        {
+            get
             {
-                if (item.Mod.Succeeded)
+                var cont = _byLoadOrder[index];
+                return new KeyValuePair<ModKey, TItem>(cont.Item.ModKey, cont.Item);
+            }
+        }
+
+        /// <inheritdoc />
+        public TItem this[ModKey key] => _byModKey[key].Item;
+
+        public LoadOrder()
+        {
+        }
+
+        public LoadOrder(IEnumerable<TItem> items)
+        {
+            int index = 0;
+            _byLoadOrder.AddRange(items.Select(i => new ItemContainer(i, index++)));
+            foreach (var item in _byLoadOrder)
+            {
+                try
                 {
-                    ret._modsByLoadOrder.Add(
-                        new ModListing<TMod>(
-                            item.Mod.Value));
+                    _byModKey.Add(item.Item.ModKey, item);
                 }
-                else
+                catch (ArgumentException)
                 {
-                    ret._modsByLoadOrder.Add(
-                        ModListing<TMod>.UnloadedModListing(item.ModKey));
+                    throw new ArgumentException($"ModKey was already present: {item.Item.ModKey}");
                 }
             }
-            return ret;
         }
 
         /// <summary>
-        /// Iterates through all mod listings in load order
+        /// Attempts to retrive an item given a ModKey
         /// </summary>
-        public IEnumerator<ModListing<TMod>> GetEnumerator()
+        /// <param name="key">ModKey to query for</param>
+        /// <param name="value">Result containing located index, and a reference to the item</param>
+        /// <returns>True if matching key located</returns>
+        public bool TryGetValue(ModKey key, [MaybeNullWhen(false)] out (int Index, TItem Item) value)
         {
-            return _modsByLoadOrder.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
+            if (_byModKey.TryGetValue(key, out var container))
+            {
+                value = (container.Index, container.Item);
+                return true;
+            }
+            value = default;
+            return false;
         }
 
         /// <summary>
-        /// Disposes all contained mods that implement IDisposable
+        /// Attempts to retrive an item given a ModKey
+        /// </summary>
+        /// <param name="key">ModKey to query for</param>
+        /// <param name="value">Result reference to the item</param>
+        /// <returns>True if matching key located</returns>
+        public bool TryGetValue(ModKey key, [MaybeNullWhen(false)] out TItem value)
+        {
+            if (_byModKey.TryGetValue(key, out var container))
+            {
+                value = container.Item;
+                return true;
+            }
+            value = default;
+            return false;
+        }
+
+        bool IReadOnlyDictionary<ModKey, TItem>.TryGetValue(ModKey key, out TItem value)
+        {
+            return this.TryGetValue(key, out value!);
+        }
+
+        /// <summary>
+        /// Attempts to retrive an item given an index
+        /// </summary>
+        /// <param name="index">Index to retrieve</param>
+        /// <param name="result">Reference to the item</param>
+        /// <returns>True if index in range</returns>
+        public bool TryGetIndex(int index, [MaybeNullWhen(false)] out TItem result)
+        {
+            if (!_byLoadOrder.InRange(index))
+            {
+                result = default!;
+                return false;
+            }
+            result = _byLoadOrder[index].Item;
+            return true;
+        }
+
+        /// <summary>
+        /// Adds an item to the end of the load order
+        /// </summary>
+        /// <param name="item">Item to put at end of load order</param>
+        /// <exception cref="ArgumentException">If an item with same ModKey exists already</exception>
+        public void Add(TItem item)
+        {
+            var index = _byLoadOrder.Count;
+            var container = new ItemContainer(item, index);
+            try
+            {
+                _byModKey.Add(item.ModKey, container);
+            }
+            catch (ArgumentException)
+            {
+                throw new ArgumentException($"ModKey was already present: {item.ModKey}");
+            }
+            _byLoadOrder.Add(container);
+        }
+
+        /// <summary>
+        /// Adds an item at the given index in load order, with the given ModKey
+        /// </summary>
+        /// <param name="item">Item to put at end of load order</param>
+        /// <param name="index">Index to insert at</param>
+        /// <exception cref="ArgumentException">If an item with same ModKey exists already</exception>
+        public void Add(TItem item, int index)
+        {
+            if (!_byLoadOrder.InRange(index))
+            {
+                throw new ArgumentException("Tried to insert at an out of range index.");
+            }
+            var container = new ItemContainer(item, index);
+            try
+            {
+                _byModKey.Add(item.ModKey, container);
+            }
+            catch (ArgumentException)
+            {
+                throw new ArgumentException($"ModKey was already present: {item.ModKey}");
+            }
+            _byLoadOrder.Add(container);
+            for (int i = index + 1; i < _byLoadOrder.Count; i++)
+            {
+                _byLoadOrder[i].Index += 1;
+            }
+        }
+
+        /// <inheritdoc />
+        public bool ContainsKey(ModKey key)
+        {
+            return IndexOf(key) != -1;
+        }
+
+        /// <summary>
+        /// Locates index of an item with given key
+        /// </summary>
+        /// <param name="key">Key to query</param>
+        /// <returns>Index of item on list with key. -1 if not located</returns>
+        public int IndexOf(ModKey key)
+        {
+            if (!_byModKey.TryGetValue(key, out var container))
+            {
+                return -1;
+            }
+            return container.Index;
+        }
+
+        /// <summary>
+        /// Clears load order of all items
+        /// </summary>
+        public void Clear()
+        {
+            this._byLoadOrder.Clear();
+            this._byModKey.Clear();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+
+        /// <summary>
+        /// Disposes all contained items that implement IDisposable
         /// </summary>
         public void Dispose()
         {
-            foreach (var mod in _modsByLoadOrder)
+            foreach (var item in _byLoadOrder)
             {
-                if (mod.Mod is IDisposable disp)
+                if (item.Item is IDisposable disp)
                 {
                     disp.Dispose();
                 }
+            }
+        }
+
+        public IEnumerator<KeyValuePair<ModKey, TItem>> GetEnumerator()
+        {
+            foreach (var item in _byLoadOrder)
+            {
+                yield return new KeyValuePair<ModKey, TItem>(item.Item.ModKey, item.Item);
+            }
+        }
+
+        private class ItemContainer
+        {
+            public readonly TItem Item;
+            public int Index;
+
+            public ItemContainer(TItem item, int index)
+            {
+                Item = item;
+                Index = index;
             }
         }
     }

@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// Class associating a ModKey with a Mod object that may or may not exist.
     /// </summary>
-    public class ModListing<TMod>
+    public class ModListing<TMod> : IModKeyed
         where TMod : class, IModGetter
     {
         /// <summary>
@@ -20,11 +20,11 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// ModKey associated with listing
         /// </summary>
-        public ModKey Key { get; private set; }
+        public ModKey ModKey { get; private set; }
 
         private ModListing(ModKey key, TMod? mod)
         {
-            this.Key = key;
+            this.ModKey = key;
             this.Mod = mod;
         }
 
@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         public ModListing(TMod mod)
         {
-            this.Key = mod.ModKey;
+            this.ModKey = mod.ModKey;
             this.Mod = mod;
         }
 
@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda
         /// <inheritdoc/>
         public override string ToString()
         {
-            return Key.ToString();
+            return ModKey.ToString();
         }
     }
 }
