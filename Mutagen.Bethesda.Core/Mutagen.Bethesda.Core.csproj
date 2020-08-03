@@ -71,6 +71,7 @@
     <Compile Include="Links\MutableModLinkCache.cs" />
     <Compile Include="Links\MutableLoadOrderLinkCache.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
+    <Compile Include="Extensions\OverrideIterationMixIns.cs" />
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Streams\WritingBundle.cs" />
