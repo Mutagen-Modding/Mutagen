@@ -17,19 +17,19 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An abstract base class for Groups to inherit from for some common functionality
     /// </summary>
-    public abstract class AGroup<T> : IEnumerable<T>, IGroupCommonGetter<T>
-        where T : IMajorRecordInternal, IBinaryItem
+    public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroupCommon<TMajor>
+        where TMajor : class, IMajorRecordInternal, IBinaryItem
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected abstract ICache<T, FormKey> ProtectedCache { get; }
+        protected abstract ICache<TMajor, FormKey> ProtectedCache { get; }
         
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        internal ICache<T, FormKey> InternalCache => this.ProtectedCache;
+        internal ICache<TMajor, FormKey> InternalCache => this.ProtectedCache;
         
         /// <summary>
         /// An enumerable of all the records contained by the group.
         /// </summary>
-        public IEnumerable<T> Records => ProtectedCache.Items;
+        public IEnumerable<TMajor> Records => ProtectedCache.Items;
         
         /// <summary>
         /// Number of records contained in the group.
@@ -41,6 +41,10 @@ namespace Mutagen.Bethesda
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IMod SourceMod { get; private set; }
+
+        IReadOnlyCache<TMajor, FormKey> IGroupCommonGetter<TMajor>.RecordCache => InternalCache;
+
+        public ICache<TMajor, FormKey> RecordCache => InternalCache;
 
         protected AGroup()
         {
@@ -66,7 +70,7 @@ namespace Mutagen.Bethesda
         /// <returns>String in format: "Group(_record_count_)"</returns>
         public override string ToString()
         {
-            return $"Group<{typeof(T).Name}>({this.InternalCache.Count})";
+            return $"Group<{typeof(TMajor).Name}>({this.InternalCache.Count})";
         }
 
         /// <summary>
@@ -74,22 +78,28 @@ namespace Mutagen.Bethesda
         /// FormKey will be automatically assigned.
         /// </summary>
         /// <returns>New record already added to the Group</returns>
-        public T AddNew()
+        public TMajor AddNew()
         {
-            var ret = MajorRecordInstantiator<T>.Activator(SourceMod.GetNextFormKey());
+            var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey());
             InternalCache.Set(ret);
             return ret;
         }
 
-        public T AddNew(string editorID)
+        /// <summary>
+        /// Convenience function to instantiate a new Major Record and add it to the Group.
+        /// FormKey will be automatically assigned based on 
+        /// </summary>
+        /// <param name="editorID">Editor ID to assign the new record.</param>
+        /// <returns>New record already added to the Group</returns>
+        public TMajor AddNew(string editorID)
         {
-            var ret = MajorRecordInstantiator<T>.Activator(SourceMod.GetNextFormKey(editorID));
+            var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey(editorID));
             ret.EditorID = editorID;
             InternalCache.Set(ret);
             return ret;
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public IEnumerator<TMajor> GetEnumerator()
         {
             return InternalCache.Items.GetEnumerator();
         }

@@ -2,6 +2,7 @@ using Loqui;
 using Loqui.Xml;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,9 +25,17 @@ namespace Mutagen.Bethesda
         /// </summary>
         IEnumerable<TMajor> Records { get; }
 
+        IReadOnlyCache<TMajor, FormKey> RecordCache { get; }
+
         /// <summary>
         /// Number of contained records
         /// </summary>
         int Count { get; }
+    }
+
+    public interface IGroupCommon<TMajor> : IGroupCommonGetter<TMajor>
+        where TMajor : IMajorRecordCommonGetter, IBinaryItem
+    {
+        new ICache<TMajor, FormKey> RecordCache { get; }
     }
 }

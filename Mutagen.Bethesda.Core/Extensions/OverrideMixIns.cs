@@ -1,4 +1,5 @@
-﻿using Noggog;
+﻿using Mutagen.Bethesda.Binary;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public static class OverrideIterationMixIns
+    public static class OverrideMixIns
     {
         public static IEnumerable<TMajor> WinningOverrides<TMajor, TMod>(this LoadOrder<TMod> loadOrder)
             where TMod : class, IModGetter
@@ -63,6 +64,26 @@ namespace Mutagen.Bethesda
                     yield return record;
                 }
             }
+        }
+
+        /// <summary>
+        /// Takes in an existing record definition, and either returns the existing override definition
+        /// from the Group, or copies the given record, inserts it, and then returns it as an override.
+        /// </summary>
+        /// <param name="group">Group to retrieve and/or insert from</param>
+        /// <param name="major">Major record to query and potententially copy</param>
+        /// <returns>Existing override record, or a copy of the given record that has already been inserted into the group</returns>
+        public static TMajor GetOrAddAsOverride<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter major)
+            where TMajor : class, IMajorRecordInternal, TMajorGetter
+            where TMajorGetter : class, IMajorRecordGetter, IBinaryItem
+        {
+            if (group.RecordCache.TryGetValue(major.FormKey, out var existingMajor))
+            {
+                return existingMajor;
+            }
+            existingMajor = (major.DeepCopy() as TMajor)!;
+            group.RecordCache.Set(existingMajor);
+            return existingMajor;
         }
     }
 }
