@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Generation
                     var name = node.GetAttribute("name", throwException: true);
                     foreach (var impl in node.Elements(XName.Get("Implements")))
                     {
-                        interfaceInheritenceMappings.TryCreateValue(name).Add(impl.Value);
+                        interfaceInheritenceMappings.GetOrAdd(name).Add(impl.Value);
                     }
                 }
             }
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 foreach (var item in obj.Node.Elements(XName.Get("LinkInterface", LoquiGenerator.Namespace)))
                 {
-                    ObjectMappings.TryCreateValue(proto.Protocol).TryCreateValue(item.Value).Add(obj);
+                    ObjectMappings.GetOrAdd(proto.Protocol).GetOrAdd(item.Value).Add(obj);
                 }
             }
 

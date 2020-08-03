@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Tests
                     }
                     _moveRanges.Add(section);
                     _moves[section] = loc;
-                    _sameLocMoves.TryCreateValue(loc).Add(section);
+                    _sameLocMoves.GetOrAdd(loc).Add(section);
                     if (_moveRanges.IsEncapsulated(loc))
                     {
                         throw new ArgumentException($"Cannot move to a section that is marked to be moved: {loc}");
@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda.Tests
                     }
 
                     var moveLoc = config._moves[moveRange];
-                    this._activeMoves.TryCreate(moveLoc).Add((moveRange, moveContents));
+                    this._activeMoves.GetOrAdd(moveLoc).Add((moveRange, moveContents));
                     if (targetSection.IsInRange(moveLoc))
                     {
                         PreSortedListExt.Set<long>(moveToKeys, moveLoc);

@@ -43,11 +43,11 @@ namespace Mutagen.Bethesda.Preprocessing
                         foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream))
                         {
                             MajorRecordHeader majorMeta = inputStream.GetMajorRecord();
-                            storage.TryCreateValue(rec.FormID).Add(inputStream.ReadMemory(checked((int)majorMeta.TotalLength), readSafe: true));
+                            storage.GetOrAdd(rec.FormID).Add(inputStream.ReadMemory(checked((int)majorMeta.TotalLength), readSafe: true));
                             if (grupFrame.Complete) continue;
                             if (inputStream.TryGetGroup(out var subGroupMeta))
                             {
-                                storage.TryCreateValue(rec.FormID).Add(inputStream.ReadMemory(checked((int)subGroupMeta.TotalLength), readSafe: true));
+                                storage.GetOrAdd(rec.FormID).Add(inputStream.ReadMemory(checked((int)subGroupMeta.TotalLength), readSafe: true));
                             }
                         }
                     }

@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
     {
         public override Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
         {
-            var data = field.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenFieldData(field)) as MutagenFieldData;
+            var data = field.CustomData.GetOrAdd(Constants.DataKey, () => new MutagenFieldData(field)) as MutagenFieldData;
             if (node.TryGetAttribute("recordType", out string recordAttr))
             {
                 data.RecordType = new RecordType(recordAttr);
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Generation
                 && contType.SubTypeGeneration is LoquiType contLoqui)
             {
                 var nullable = contType.SubTypeGeneration.Nullable;
-                var subData = contLoqui.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenFieldData(contLoqui)) as MutagenFieldData;
+                var subData = contLoqui.CustomData.GetOrAdd(Constants.DataKey, () => new MutagenFieldData(contLoqui)) as MutagenFieldData;
                 await SetRecordTrigger(
                     obj,
                     contLoqui,
@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda.Generation
                     case DictMode.KeyedValue:
                         if (dictType.ValueTypeGen is LoquiType dictLoqui)
                         {
-                            var subData = dictLoqui.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenFieldData(dictLoqui)) as MutagenFieldData;
+                            var subData = dictLoqui.CustomData.GetOrAdd(Constants.DataKey, () => new MutagenFieldData(dictLoqui)) as MutagenFieldData;
                             await SetRecordTrigger(
                                 obj,
                                 dictLoqui,
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    var subData = listType.SubTypeGeneration.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenFieldData(listType.SubTypeGeneration)) as MutagenFieldData;
+                    var subData = listType.SubTypeGeneration.CustomData.GetOrAdd(Constants.DataKey, () => new MutagenFieldData(listType.SubTypeGeneration)) as MutagenFieldData;
                     await SetRecordTrigger(obj, listType.SubTypeGeneration, subData);
                     if (subData.HasTrigger)
                     {
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    var subData = dictType.ValueTypeGen.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenFieldData(dictType.ValueTypeGen)) as MutagenFieldData;
+                    var subData = dictType.ValueTypeGen.CustomData.GetOrAdd(Constants.DataKey, () => new MutagenFieldData(dictType.ValueTypeGen)) as MutagenFieldData;
                     await SetRecordTrigger(obj, dictType.ValueTypeGen, subData);
                     if (subData.HasTrigger)
                     {

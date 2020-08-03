@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
         {
-            var data = field.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenFieldData(field)) as MutagenFieldData;
+            var data = field.CustomData.GetOrAdd(Constants.DataKey, () => new MutagenFieldData(field)) as MutagenFieldData;
             data.Binary = node.GetAttribute<BinaryGenerationType>(Constants.Binary, BinaryGenerationType.Normal);
             data.BinaryOverlay = node.GetAttribute<BinaryGenerationType?>(Constants.BinaryOverlay, default);
             ModifyGRUPAttributes(field);

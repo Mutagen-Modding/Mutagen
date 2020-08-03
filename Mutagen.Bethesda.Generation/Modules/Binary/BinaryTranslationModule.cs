@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Generation
                                 if (gen.Key.Count() > 1) continue;
                                 LoquiType loqui = gen.Value as LoquiType;
                                 if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
-                                doubleUsages.TryCreateValue(gen.Key.First()).Add(field);
+                                doubleUsages.GetOrAdd(gen.Key.First()).Add(field);
                             }
                         }
                         foreach (var item in doubleUsages.ToList())
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Generation
                                     }
                                     else
                                     {
-                                        fg.AppendLine($"switch (recordParseCount?.TryCreateValue(nextRecordType) ?? 0)");
+                                        fg.AppendLine($"switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)");
                                         using (new BraceWrapper(fg))
                                         {
                                             int count = 0;
@@ -2970,7 +2970,7 @@ namespace Mutagen.Bethesda.Generation
                                     if (gen.Key.Count() > 1) continue;
                                     LoquiType loqui = gen.Value as LoquiType;
                                     if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
-                                    doubleUsages.TryCreateValue(gen.Key.First()).Add(field);
+                                    doubleUsages.GetOrAdd(gen.Key.First()).Add(field);
                                 }
                             }
                             foreach (var item in doubleUsages.ToList())
@@ -3057,7 +3057,7 @@ namespace Mutagen.Bethesda.Generation
                                         }
                                         else
                                         {
-                                            fg.AppendLine($"switch (recordParseCount?.TryCreateValue(type) ?? 0)");
+                                            fg.AppendLine($"switch (recordParseCount?.GetOrAdd(type) ?? 0)");
                                             using (new BraceWrapper(fg))
                                             {
                                                 int count = 0;

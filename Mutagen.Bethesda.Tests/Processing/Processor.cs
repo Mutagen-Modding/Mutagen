@@ -140,20 +140,20 @@ namespace Mutagen.Bethesda.Tests
 
         protected void AddDynamicProcessing(RecordType type, DynamicProcessor processor)
         {
-            DynamicProcessors.TryCreateValue(type).Add(processor);
+            DynamicProcessors.GetOrAdd(type).Add(processor);
         }
 
         protected void AddDynamicProcessing(DynamicProcessor processor, params RecordType[] types)
         {
             foreach (var type in types)
             {
-                DynamicProcessors.TryCreateValue(type).Add(processor);
+                DynamicProcessors.GetOrAdd(type).Add(processor);
             }
         }
 
         protected void AddDynamicProcessing(RecordType type, DynamicStreamProcessor processor)
         {
-            DynamicStreamProcessors.TryCreateValue(type).Add(processor);
+            DynamicStreamProcessors.GetOrAdd(type).Add(processor);
         }
 
         protected void ProcessDynamicType(RecordType type, Func<IMutagenReadStream> streamGetter)

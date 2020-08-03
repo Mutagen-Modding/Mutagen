@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Generation
     {
         public static MutagenFieldData GetFieldData(this TypeGeneration typeGen)
         {
-            return typeGen.CustomData.TryCreateValue(Mutagen.Bethesda.Generation.Constants.DataKey, () => new MutagenFieldData(typeGen)) as MutagenFieldData;
+            return typeGen.CustomData.GetOrAdd(Mutagen.Bethesda.Generation.Constants.DataKey, () => new MutagenFieldData(typeGen)) as MutagenFieldData;
         }
 
         public static bool NeedsRecordConverter(this TypeGeneration typeGen)

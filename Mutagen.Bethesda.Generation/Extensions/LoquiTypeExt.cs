@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Generation
                 if (subRecs.Failed) continue;
                 foreach (var subRec in subRecs.Value)
                 {
-                    data.SubLoquiTypes.TryCreateValue(subRec).Add(subObj);
+                    data.SubLoquiTypes.GetOrAdd(subRec).Add(subObj);
                 }
             }
         }

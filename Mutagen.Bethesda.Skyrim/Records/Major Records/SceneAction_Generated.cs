@@ -2321,7 +2321,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ANAM:
                 {
-                    switch (recordParseCount?.TryCreateValue(nextRecordType) ?? 0)
+                    switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
                     {
                         case 0:
                             if (lastParsed.HasValue && lastParsed.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
@@ -2369,7 +2369,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    switch (recordParseCount?.TryCreateValue(nextRecordType) ?? 0)
+                    switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
                     {
                         case 0:
                             frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2640,7 +2640,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ANAM:
                 {
-                    switch (recordParseCount?.TryCreateValue(type) ?? 0)
+                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
                     {
                         case 0:
                             if (lastParsed.HasValue && lastParsed.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
@@ -2680,7 +2680,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    switch (recordParseCount?.TryCreateValue(type) ?? 0)
+                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
                     {
                         case 0:
                             _StartPhaseLocation = (stream.Position - offset);

@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
     {
         public static MutagenObjData GetObjectData(this ObjectGeneration objGen)
         {
-            return (MutagenObjData)objGen.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenObjData(objGen));
+            return (MutagenObjData)objGen.CustomData.GetOrAdd(Constants.DataKey, () => new MutagenObjData(objGen));
         }
 
         public static RecordType GetRecordType(this ObjectGeneration objGen)

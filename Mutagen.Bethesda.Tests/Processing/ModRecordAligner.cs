@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Tests
 
             public void AddAlignments(RecordType type, params AlignmentRule[] rules)
             {
-                var dict = Alignments.TryCreateValue(type);
+                var dict = Alignments.GetOrAdd(type);
                 foreach (var rule in rules)
                 {
                     dict[rule.RecordType] = rule;
@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Tests
 
             public void SetGroupAlignment(GroupTypeEnum group, params RecordType[] recTypes)
             {
-                GroupAlignment.TryCreateValue(group).SetTo(recTypes);
+                GroupAlignment.GetOrAdd(group).SetTo(recTypes);
             }
         }
 
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Tests
                         var type = majorMeta.RecordType;
                         if (groupRules.Contains(type))
                         {
-                            storage.TryCreateValue(type).Add(bytes);
+                            storage.GetOrAdd(type).Add(bytes);
                         }
                         else
                         {

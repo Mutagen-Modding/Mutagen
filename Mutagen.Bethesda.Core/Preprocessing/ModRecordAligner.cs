@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Preprocessing
 
             public void AddAlignments(RecordType type, params AlignmentRule[] rules)
             {
-                var dict = Alignments.TryCreateValue(type);
+                var dict = Alignments.GetOrAdd(type);
                 foreach (var rule in rules)
                 {
                     dict[rule.RecordType] = rule;
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Preprocessing
 
             public void SetGroupAlignment(int group, params RecordType[] recTypes)
             {
-                GroupTypeAlignment.TryCreateValue(group).SetTo(recTypes);
+                GroupTypeAlignment.GetOrAdd(group).SetTo(recTypes);
             }
         }
 
@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Preprocessing
                         var type = majorMeta.RecordType;
                         if (groupRules.Contains(type))
                         {
-                            storage.TryCreateValue(type).Add(bytes);
+                            storage.GetOrAdd(type).Add(bytes);
                         }
                         else
                         {

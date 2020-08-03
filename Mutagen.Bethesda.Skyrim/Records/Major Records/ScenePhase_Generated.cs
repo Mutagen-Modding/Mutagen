@@ -1769,7 +1769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.HNAM:
                 {
-                    switch (recordParseCount?.TryCreateValue(nextRecordType) ?? 0)
+                    switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
                     {
                         case 0:
                             frame.ReadSubrecordFrame();
@@ -1798,7 +1798,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    switch (recordParseCount?.TryCreateValue(nextRecordType) ?? 0)
+                    switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
                     {
                         case 0:
                             ScenePhaseBinaryCreateTranslation.FillBinaryCompletionConditionsCustom(
@@ -1997,7 +1997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.HNAM:
                 {
-                    switch (recordParseCount?.TryCreateValue(type) ?? 0)
+                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
                     {
                         case 0:
                             stream.ReadSubrecordFrame();
@@ -2026,7 +2026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    switch (recordParseCount?.TryCreateValue(type) ?? 0)
+                    switch (recordParseCount?.GetOrAdd(type) ?? 0)
                     {
                         case 0:
                             CompletionConditionsCustomParse(

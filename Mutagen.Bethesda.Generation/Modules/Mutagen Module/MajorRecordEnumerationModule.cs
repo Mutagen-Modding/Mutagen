@@ -658,11 +658,11 @@ namespace Mutagen.Bethesda.Generation
 
                                 if (loqui.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
                                 {
-                                    fieldGen = generationDict.TryCreateValue(loqui.GetGroupTarget());
+                                    fieldGen = generationDict.GetOrAdd(loqui.GetGroupTarget());
                                 }
                                 else
                                 {
-                                    fieldGen = generationDict.TryCreateValue(((object)loqui?.TargetObjectGeneration) ?? loqui);
+                                    fieldGen = generationDict.GetOrAdd(((object)loqui?.TargetObjectGeneration) ?? loqui);
                                 }
                             }
                             else if (field is ContainerType cont)
@@ -670,11 +670,11 @@ namespace Mutagen.Bethesda.Generation
                                 if (!(cont.SubTypeGeneration is LoquiType contLoqui)) continue;
                                 if (contLoqui.RefType == LoquiType.LoquiRefType.Generic)
                                 {
-                                    fieldGen = generationDict.TryCreateValue("default:");
+                                    fieldGen = generationDict.GetOrAdd("default:");
                                 }
                                 else
                                 {
-                                    fieldGen = generationDict.TryCreateValue(((object)contLoqui?.TargetObjectGeneration) ?? contLoqui);
+                                    fieldGen = generationDict.GetOrAdd(((object)contLoqui?.TargetObjectGeneration) ?? contLoqui);
                                 }
                             }
                             else if (field is DictType dict)
@@ -683,11 +683,11 @@ namespace Mutagen.Bethesda.Generation
                                 if (!(dict.ValueTypeGen is LoquiType dictLoqui)) continue;
                                 if (dictLoqui.RefType == LoquiType.LoquiRefType.Generic)
                                 {
-                                    fieldGen = generationDict.TryCreateValue("default:");
+                                    fieldGen = generationDict.GetOrAdd("default:");
                                 }
                                 else
                                 {
-                                    fieldGen = generationDict.TryCreateValue(((object)dictLoqui?.TargetObjectGeneration) ?? dictLoqui);
+                                    fieldGen = generationDict.GetOrAdd(((object)dictLoqui?.TargetObjectGeneration) ?? dictLoqui);
                                 }
                             }
                             else
@@ -716,7 +716,7 @@ namespace Mutagen.Bethesda.Generation
                                             continue;
                                         }
                                         if (loqui.TargetObjectGeneration == deepObj) continue;
-                                        deepRecordMapping.TryCreateValue(deepObj).Add(field);
+                                        deepRecordMapping.GetOrAdd(deepObj).Add(field);
                                     }
                                 }
                                 else if (field is ContainerType cont)
@@ -725,13 +725,13 @@ namespace Mutagen.Bethesda.Generation
                                     await foreach (var deepObj in IterateMajorRecords(subLoqui, includeBaseClass: true))
                                     {
                                         if (subLoqui.TargetObjectGeneration == deepObj) continue;
-                                        deepRecordMapping.TryCreateValue(deepObj).Add(field);
+                                        deepRecordMapping.GetOrAdd(deepObj).Add(field);
                                     }
                                 }
                             }
                             foreach (var deepRec in deepRecordMapping)
                             {
-                                FileGeneration deepFg = generationDict.TryCreateValue(deepRec.Key);
+                                FileGeneration deepFg = generationDict.GetOrAdd(deepRec.Key);
                                 foreach (var field in deepRec.Value)
                                 {
                                     await ApplyIterationLines(field, deepFg, accessor, getter, nickname: deepRec.Key.ObjectName);

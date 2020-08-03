@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Generation
         public override async Task Load(XElement node, bool requireName = true)
         {
             this.Node = node;
-            var data = this.CustomData.TryCreateValue(Mutagen.Bethesda.Generation.Constants.DataKey, () => new MutagenFieldData(this)) as MutagenFieldData;
+            var data = this.CustomData.GetOrAdd(Mutagen.Bethesda.Generation.Constants.DataKey, () => new MutagenFieldData(this)) as MutagenFieldData;
             if (node.TryGetAttribute("recordType", out var recType))
             {
                 data.RecordType = new RecordType(recType.Value);

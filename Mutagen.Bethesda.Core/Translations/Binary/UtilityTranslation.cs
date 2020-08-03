@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda
                     {
                         recordParseCount = new Dictionary<RecordType, int>();
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                 }
                 if (targetFrame.Position < finalPos)
                 {
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda
                     {
                         recordParseCount = new Dictionary<RecordType, int>();
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                 }
                 if (frame.Position < finalPos)
                 {
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda
                     {
                         recordParseCount = new Dictionary<RecordType, int>();
                     }
-                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.GetOrAdd(parsed.DuplicateParseMarker!.Value) + 1;
                 }
                 lastParsed = parsed.ParsedIndex;
             }

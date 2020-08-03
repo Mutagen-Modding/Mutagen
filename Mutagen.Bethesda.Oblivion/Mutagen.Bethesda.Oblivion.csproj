@@ -919,8 +919,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Loqui" Version="1.1.21" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.36" />
+    <PackageReference Include="Loqui" Version="1.1.22" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.37" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
