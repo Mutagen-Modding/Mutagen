@@ -11,10 +11,10 @@ namespace Mutagen.Bethesda
     public enum GameRelease
     {
         [Description("Oblivion")]
-        Oblivion,
+        Oblivion = 0,
         [Description("Skyrim Legendary Edition")]
-        SkyrimLE,
+        SkyrimLE = 1,
         [Description("Skyrim Special Edition")]
-        SkyrimSE
+        SkyrimSE = 2
     }
 }

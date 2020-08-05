@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             foreach (var opt in objData.GameReleaseOptions)
                             {
-                                comma.Add(opt.ToString());
+                                comma.Add($"{opt} = {(int)opt}");
                             }
                         }
                     }

@@ -16945,8 +16945,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public enum SkyrimRelease
     {
-        SkyrimLE,
-        SkyrimSE
+        SkyrimLE = 1,
+        SkyrimSE = 2
     }
 
     public static class SkyrimReleaseExt
