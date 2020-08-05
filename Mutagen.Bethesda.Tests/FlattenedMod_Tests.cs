@@ -19,7 +19,8 @@ namespace Mutagen.Bethesda.Tests
             };
             var loadOrder = LoadOrder.Import<OblivionMod>(
                 dataFolder: testingSettings.DataFolderLocations.Oblivion,
-                loadOrder: loadOrderListing);
+                loadOrder: loadOrderListing,
+                gameRelease: GameRelease.Oblivion);
             OblivionMod ret = new OblivionMod(new ModKey("Test", ModType.Plugin));
             foreach (var listing in loadOrder.ListedOrder)
             {
