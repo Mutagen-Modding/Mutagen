@@ -32,8 +32,8 @@ namespace Mutagen.Bethesda.UnitTests
     public abstract class Linking_Abstract_Tests : IClassFixture<LinkingInit>
     {
         public static FormKey UnusedFormKey = new FormKey(Utility.ModKey, 123456);
-        public static FormKey TestFileFormKey = new FormKey(ModKey.Factory("test.esp"), 0xD62);
-        public static FormKey TestFileFormKey2 = new FormKey(ModKey.Factory("test.esp"), 0xD63);
+        public static FormKey TestFileFormKey = new FormKey(Utility.OblivionTestMod.ModKey, 0xD62);
+        public static FormKey TestFileFormKey2 = new FormKey(Utility.OblivionTestMod.ModKey, 0xD63);
 
         public abstract IDisposable ConvertMod(SkyrimMod mod, out ISkyrimModGetter getter);
         public abstract bool ReadOnly { get; }
@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Direct_ReadOnlyMechanics()
         {
-            var wrapper = Oblivion.OblivionMod.CreateFromBinaryOverlay(Utility.PathToTestFile);
+            var wrapper = Oblivion.OblivionMod.CreateFromBinaryOverlay(Utility.OblivionTestMod);
             var package = GetLinkCache(wrapper);
             {
                 Assert.True(package.TryLookup<Oblivion.INpcGetter>(TestFileFormKey, out var rec));
@@ -533,8 +533,8 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void LoadOrder_ReadOnlyMechanics()
         {
-            var wrapper = Oblivion.OblivionMod.CreateFromBinaryOverlay(Utility.PathToTestFile);
-            var overrideWrapper = Oblivion.OblivionMod.CreateFromBinaryOverlay(Utility.PathToOverrideFile);
+            var wrapper = Oblivion.OblivionMod.CreateFromBinaryOverlay(Utility.OblivionTestMod);
+            var overrideWrapper = Oblivion.OblivionMod.CreateFromBinaryOverlay(Utility.OblivionOverrideMod);
             var loadOrder = new LoadOrder<Oblivion.IOblivionModGetter>();
             loadOrder.Add(wrapper);
             loadOrder.Add(overrideWrapper);

@@ -67,28 +67,25 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Mod_Import_Direct()
         {
-            var modKey = new ModKey("Test", ModType.Plugin);
-            var ret = ModInstantiator<OblivionMod>.Importer(new ModPath(modKey, Utility.PathToTestFile));
+            var ret = ModInstantiator<OblivionMod>.Importer(Utility.OblivionTestMod);
             Assert.IsType<OblivionMod>(ret);
-            Assert.Equal(modKey, ret.ModKey);
+            Assert.Equal(Utility.OblivionTestMod.ModKey, ret.ModKey);
         }
 
         [Fact]
         public void Mod_Import_Setter()
         {
-            var modKey = new ModKey("Test", ModType.Plugin);
-            var ret = ModInstantiator<IOblivionMod>.Importer(new ModPath(modKey, Utility.PathToTestFile));
+            var ret = ModInstantiator<IOblivionMod>.Importer(Utility.OblivionTestMod);
             Assert.IsType<OblivionMod>(ret);
-            Assert.Equal(modKey, ret.ModKey);
+            Assert.Equal(Utility.OblivionTestMod.ModKey, ret.ModKey);
         }
 
         [Fact]
         public void Mod_Import_Getter()
         {
-            var modKey = new ModKey("Test", ModType.Plugin);
-            var ret = ModInstantiator<IOblivionModGetter>.Importer(new ModPath(modKey, Utility.PathToTestFile));
+            var ret = ModInstantiator<IOblivionModGetter>.Importer(Utility.OblivionTestMod);
             Assert.IsType<OblivionModBinaryOverlay>(ret);
-            Assert.Equal(modKey, ret.ModKey);
+            Assert.Equal(Utility.OblivionTestMod.ModKey, ret.ModKey);
         }
     }
 }

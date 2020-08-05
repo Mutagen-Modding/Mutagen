@@ -9,11 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="override.esp" />
-    <None Remove="test.esp" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Loqui" Version="1.1.22" />
     <PackageReference Include="Noggog.CSharpExt" Version="1.0.37" />
     <PackageReference Include="xunit" Version="2.4.1" />
