@@ -21,6 +21,7 @@
     <DocumentationFile>Mutagen.Bethesda.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Extensions\GameCategoryExt.cs" />
     <Compile Include="Records\ProtocolDefinition_All.cs" />
     <Compile Include="WarmupAll_Generated.cs" />
   </ItemGroup>
