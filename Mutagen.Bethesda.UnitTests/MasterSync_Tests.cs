@@ -82,9 +82,9 @@ namespace Mutagen.Bethesda.UnitTests
         {
             WarmupOblivion.Init();
             using var folder = new TempFolder();
-            var obliv = ModKey.Factory("Oblivion.esm");
-            var knights = ModKey.Factory("Knights.esm");
-            var other = ModKey.Factory("Other.esp");
+            var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
+            var knights = ModKey.FromNameAndExtension("Knights.esm");
+            var other = ModKey.FromNameAndExtension("Other.esp");
             var mod = new OblivionMod(obliv);
             var otherNpc = new Npc(new FormKey(other, 0x123456));
             mod.Potions.RecordCache.Set(new Potion(new FormKey(obliv, 0x123456)));
@@ -108,14 +108,14 @@ namespace Mutagen.Bethesda.UnitTests
         {
             WarmupOblivion.Init();
             using var folder = new TempFolder();
-            var obliv = ModKey.Factory("Oblivion.esm");
-            var knights = ModKey.Factory("Knights.esm");
+            var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
+            var knights = ModKey.FromNameAndExtension("Knights.esm");
             var mod = new OblivionMod(obliv);
             mod.Potions.RecordCache.Set(new Potion(new FormKey(obliv, 0x123456)));
             mod.Npcs.RecordCache.Set(new Npc(new FormKey(knights, 0x123456)));
             mod.ModHeader.MasterReferences.Add(new MasterReference()
             {
-                Master = ModKey.Factory("Other.esp")
+                Master = ModKey.FromNameAndExtension("Other.esp")
             });
             var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
             mod.WriteToBinary(modPath,
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             WarmupOblivion.Init();
             using var folder = new TempFolder();
-            var obliv = ModKey.Factory("Oblivion.esm");
+            var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
             var mod = new OblivionMod(obliv);
             var npc = mod.Npcs.AddNew();
             npc.Race = FormKey.Null;
@@ -160,9 +160,9 @@ namespace Mutagen.Bethesda.UnitTests
         {
             WarmupOblivion.Init();
             using var folder = new TempFolder();
-            var obliv = ModKey.Factory("Oblivion.esm");
-            var knights = ModKey.Factory("Knights.esm");
-            var other = ModKey.Factory("Other.esp");
+            var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
+            var knights = ModKey.FromNameAndExtension("Knights.esm");
+            var other = ModKey.FromNameAndExtension("Other.esp");
             var mod = new OblivionMod(obliv);
             var knightsNpc = new Npc(new FormKey(knights, 0x123456));
             mod.Npcs.RecordCache.Set(knightsNpc);
@@ -190,9 +190,9 @@ namespace Mutagen.Bethesda.UnitTests
         {
             WarmupOblivion.Init();
             using var folder = new TempFolder();
-            var obliv = ModKey.Factory("Oblivion.esm");
-            var first = ModKey.Factory("First.esp");
-            var second = ModKey.Factory("Second.esp");
+            var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
+            var first = ModKey.FromNameAndExtension("First.esp");
+            var second = ModKey.FromNameAndExtension("Second.esp");
             var mod = new OblivionMod(obliv);
             var secondNpc = new Npc(new FormKey(second, 0x123456));
             mod.Npcs.RecordCache.Set(secondNpc);
@@ -221,9 +221,9 @@ namespace Mutagen.Bethesda.UnitTests
         {
             WarmupOblivion.Init();
             using var folder = new TempFolder();
-            var obliv = ModKey.Factory("Oblivion.esm");
-            var esm = ModKey.Factory("First.esm");
-            var esp = ModKey.Factory("Second.esp");
+            var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
+            var esm = ModKey.FromNameAndExtension("First.esm");
+            var esp = ModKey.FromNameAndExtension("Second.esp");
             var mod = new OblivionMod(obliv);
             var espNpc = new Npc(new FormKey(esp, 0x123456));
             mod.Npcs.RecordCache.Set(espNpc);

@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda
 
         public static ModPath FromPath(string path)
         {
-            var modKey = ModKey.Factory(System.IO.Path.GetFileName(path));
+            var modKey = ModKey.FromNameAndExtension(System.IO.Path.GetFileName(path));
             return new ModPath(modKey, path);
         }
 

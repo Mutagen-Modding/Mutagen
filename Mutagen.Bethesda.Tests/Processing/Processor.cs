@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Tests
         protected string SourcePath;
         protected TempFolder TempFolder;
         public bool DoMultithreading = true;
-        public ModKey ModKey => ModKey.Factory(Path.GetFileName(SourcePath));
+        public ModKey ModKey => ModKey.FromNameAndExtension(Path.GetFileName(SourcePath));
         public delegate void DynamicProcessor(MajorRecordFrame majorFrame, long fileOffset);
         public delegate void DynamicStreamProcessor(IMutagenReadStream stream, MajorRecordFrame majorFrame, long fileOffset);
         protected Dictionary<RecordType, List<DynamicProcessor>> DynamicProcessors = new Dictionary<RecordType, List<DynamicProcessor>>();
@@ -642,7 +642,7 @@ namespace Mutagen.Bethesda.Tests
 
             var outFolder = Path.Combine(this.TempFolder.Dir.Path, "Strings/Processed");
             var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(dataFolder.FullName, null, modKey);
-            using var writer = new StringsWriter(ModKey.Factory(Path.GetFileName(this.SourcePath)), outFolder);
+            using var writer = new StringsWriter(ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath)), outFolder);
             var dict = stringsOverlay.Get(source);
             foreach (var lang in dict)
             {

@@ -802,7 +802,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 yield return TaskExt.Run(DoMultithreading, () =>
                 {
-                    return ProcessStringsFilesIndices(streamGetter, new DirectoryInfo(Path.GetDirectoryName(this.SourcePath)), Language.English, source, ModKey.Factory(Path.GetFileName(this.SourcePath)));
+                    return ProcessStringsFilesIndices(streamGetter, new DirectoryInfo(Path.GetDirectoryName(this.SourcePath)), Language.English, source, ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath)));
                 });
             }
         }

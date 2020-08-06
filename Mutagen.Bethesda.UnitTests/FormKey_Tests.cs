@@ -204,8 +204,8 @@ namespace Mutagen.Bethesda.UnitTests
         {
             List<ModKey> modKeys = new List<ModKey>()
             {
-                ModKey.Factory("Oblivion.esm"),
-                ModKey.Factory("Knights.esm"),
+                ModKey.FromNameAndExtension("Oblivion.esm"),
+                ModKey.FromNameAndExtension("Knights.esm"),
             };
             FormKey k1 = FormKey.Factory("00C51A:Oblivion.esm");
             FormKey k2 = FormKey.Factory("00C51A:Knights.esm");
@@ -218,8 +218,8 @@ namespace Mutagen.Bethesda.UnitTests
         {
             List<ModKey> modKeys = new List<ModKey>()
             {
-                ModKey.Factory("Oblivion.esm"),
-                ModKey.Factory("Knights.esm"),
+                ModKey.FromNameAndExtension("Oblivion.esm"),
+                ModKey.FromNameAndExtension("Knights.esm"),
             };
             FormKey k1 = FormKey.Factory("00C51A:Oblivion.esm");
             FormKey k2 = FormKey.Factory("00C51A:Knights.esm");
@@ -232,8 +232,8 @@ namespace Mutagen.Bethesda.UnitTests
         {
             List<ModKey> modKeys = new List<ModKey>()
             {
-                ModKey.Factory("Oblivion.esm"),
-                ModKey.Factory("Knights.esm"),
+                ModKey.FromNameAndExtension("Oblivion.esm"),
+                ModKey.FromNameAndExtension("Knights.esm"),
             };
             FormKey k1 = FormKey.Factory("00C51A:Oblivion.esm");
             FormKey k2 = FormKey.Factory("00C51B:Oblivion.esm");
@@ -246,8 +246,8 @@ namespace Mutagen.Bethesda.UnitTests
         {
             List<ModKey> modKeys = new List<ModKey>()
             {
-                ModKey.Factory("Oblivion.esm"),
-                ModKey.Factory("Knights.esm"),
+                ModKey.FromNameAndExtension("Oblivion.esm"),
+                ModKey.FromNameAndExtension("Knights.esm"),
             };
             FormKey k1 = FormKey.Factory("00C51A:Oblivion.esm");
             FormKey k2 = FormKey.Factory("00C51B:Oblivion.esm");
@@ -260,8 +260,8 @@ namespace Mutagen.Bethesda.UnitTests
         {
             List<ModKey> modKeys = new List<ModKey>()
             {
-                ModKey.Factory("Oblivion.esm"),
-                ModKey.Factory("Knights.esm"),
+                ModKey.FromNameAndExtension("Oblivion.esm"),
+                ModKey.FromNameAndExtension("Knights.esm"),
             };
             FormKey k1 = FormKey.Factory("00C51A:MyMod.esm");
             FormKey k2 = FormKey.Factory("00C51B:Oblivion.esm");
@@ -275,8 +275,8 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var loadOrder = new LoadOrder<OblivionMod>()
             {
-                new OblivionMod(ModKey.Factory("Oblivion.esm")),
-                new OblivionMod(ModKey.Factory("Knights.esm")),
+                new OblivionMod(ModKey.FromNameAndExtension("Oblivion.esm")),
+                new OblivionMod(ModKey.FromNameAndExtension("Knights.esm")),
             };
             FormKey k1 = FormKey.Factory("00C51A:Oblivion.esm");
             FormKey k2 = FormKey.Factory("00C51A:Knights.esm");
@@ -289,8 +289,8 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var loadOrder = new LoadOrder<OblivionMod>()
             {
-                new OblivionMod(ModKey.Factory("Oblivion.esm")),
-                new OblivionMod(ModKey.Factory("Knights.esm")),
+                new OblivionMod(ModKey.FromNameAndExtension("Oblivion.esm")),
+                new OblivionMod(ModKey.FromNameAndExtension("Knights.esm")),
             };
             FormKey k1 = FormKey.Factory("00C51A:Oblivion.esm");
             FormKey k2 = FormKey.Factory("00C51A:Knights.esm");
@@ -303,8 +303,8 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var loadOrder = new LoadOrder<OblivionMod>()
             {
-                new OblivionMod(ModKey.Factory("Oblivion.esm")),
-                new OblivionMod(ModKey.Factory("Knights.esm")),
+                new OblivionMod(ModKey.FromNameAndExtension("Oblivion.esm")),
+                new OblivionMod(ModKey.FromNameAndExtension("Knights.esm")),
             };
             FormKey k1 = FormKey.Factory("00C51A:Oblivion.esm");
             FormKey k2 = FormKey.Factory("00C51B:Oblivion.esm");
@@ -317,8 +317,8 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var loadOrder = new LoadOrder<OblivionMod>()
             {
-                new OblivionMod(ModKey.Factory("Oblivion.esm")),
-                new OblivionMod(ModKey.Factory("Knights.esm")),
+                new OblivionMod(ModKey.FromNameAndExtension("Oblivion.esm")),
+                new OblivionMod(ModKey.FromNameAndExtension("Knights.esm")),
             };
             FormKey k1 = FormKey.Factory("00C51A:Oblivion.esm");
             FormKey k2 = FormKey.Factory("00C51B:Oblivion.esm");
@@ -331,8 +331,8 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var loadOrder = new LoadOrder<OblivionMod>()
             {
-                new OblivionMod(ModKey.Factory("Oblivion.esm")),
-                new OblivionMod(ModKey.Factory("Knights.esm")),
+                new OblivionMod(ModKey.FromNameAndExtension("Oblivion.esm")),
+                new OblivionMod(ModKey.FromNameAndExtension("Knights.esm")),
             };
             FormKey k1 = FormKey.Factory("00C51A:MyMod.esm");
             FormKey k2 = FormKey.Factory("00C51B:Oblivion.esm");

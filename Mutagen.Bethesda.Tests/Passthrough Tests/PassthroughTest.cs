@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Tests
         public string AlignedFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Aligned");
         public string OrderedFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
         public string ProcessedPath(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
-        public ModKey ModKey => ModKey.Factory(this.FilePath.Name);
+        public ModKey ModKey => ModKey.FromNameAndExtension(this.FilePath.Name);
         public abstract GameRelease GameRelease { get; }
         public readonly GameConstants Meta;
         protected abstract Processor ProcessorFactory();

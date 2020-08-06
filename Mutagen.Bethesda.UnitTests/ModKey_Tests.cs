@@ -139,8 +139,8 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Comparer_Alphabetical_ByMaster()
         {
-            ModKey k1 = ModKey.Factory("Oblivion.esm");
-            ModKey k2 = ModKey.Factory("Oblivion.esp");
+            ModKey k1 = ModKey.FromNameAndExtension("Oblivion.esm");
+            ModKey k2 = ModKey.FromNameAndExtension("Oblivion.esp");
             var compare = ModKey.AlphabeticalAndMastersFirst;
             Assert.True(compare.Compare(k1, k2) < 0);
         }
@@ -148,8 +148,8 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Comparer_Alphabetical_ByMasterGreater()
         {
-            ModKey k1 = ModKey.Factory("Oblivion.esm");
-            ModKey k2 = ModKey.Factory("Oblivion.esp");
+            ModKey k1 = ModKey.FromNameAndExtension("Oblivion.esm");
+            ModKey k2 = ModKey.FromNameAndExtension("Oblivion.esp");
             var compare = ModKey.AlphabeticalAndMastersFirst;
             Assert.True(compare.Compare(k2, k1) > 0);
         }
@@ -157,8 +157,8 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Comparer_Alphabetical_ByName()
         {
-            ModKey k1 = ModKey.Factory("Knights.esm");
-            ModKey k2 = ModKey.Factory("Oblivion.esm");
+            ModKey k1 = ModKey.FromNameAndExtension("Knights.esm");
+            ModKey k2 = ModKey.FromNameAndExtension("Oblivion.esm");
             var compare = ModKey.AlphabeticalAndMastersFirst;
             Assert.True(compare.Compare(k1, k2) < 0);
         }
@@ -166,8 +166,8 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Comparer_Alphabetical_ByNameGreater()
         {
-            ModKey k1 = ModKey.Factory("Knights.esm");
-            ModKey k2 = ModKey.Factory("Oblivion.esm");
+            ModKey k1 = ModKey.FromNameAndExtension("Knights.esm");
+            ModKey k2 = ModKey.FromNameAndExtension("Oblivion.esm");
             var compare = ModKey.AlphabeticalAndMastersFirst;
             Assert.True(compare.Compare(k2, k1) > 0);
         }
@@ -175,8 +175,8 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Comparer_Alphabetical_Equal()
         {
-            ModKey k1 = ModKey.Factory("Oblivion.esm");
-            ModKey k2 = ModKey.Factory("Oblivion.esm");
+            ModKey k1 = ModKey.FromNameAndExtension("Oblivion.esm");
+            ModKey k2 = ModKey.FromNameAndExtension("Oblivion.esm");
             var compare = ModKey.AlphabeticalAndMastersFirst;
             Assert.Equal(0, compare.Compare(k2, k1));
         }
@@ -187,11 +187,11 @@ namespace Mutagen.Bethesda.UnitTests
         {
             List<ModKey> modKeys = new List<ModKey>()
             {
-                ModKey.Factory("Oblivion.esm"),
-                ModKey.Factory("Knights.esm"),
+                ModKey.FromNameAndExtension("Oblivion.esm"),
+                ModKey.FromNameAndExtension("Knights.esm"),
             };
-            ModKey k1 = ModKey.Factory("Oblivion.esm");
-            ModKey k2 = ModKey.Factory("Knights.esm");
+            ModKey k1 = ModKey.FromNameAndExtension("Oblivion.esm");
+            ModKey k2 = ModKey.FromNameAndExtension("Knights.esm");
             var compare = ModKey.LoadOrderComparer(modKeys);
             Assert.True(compare.Compare(k1, k2) < 0);
         }
@@ -201,11 +201,11 @@ namespace Mutagen.Bethesda.UnitTests
         {
             List<ModKey> modKeys = new List<ModKey>()
             {
-                ModKey.Factory("Oblivion.esm"),
-                ModKey.Factory("Knights.esm"),
+                ModKey.FromNameAndExtension("Oblivion.esm"),
+                ModKey.FromNameAndExtension("Knights.esm"),
             };
-            ModKey k1 = ModKey.Factory("Oblivion.esm");
-            ModKey k2 = ModKey.Factory("Knights.esm");
+            ModKey k1 = ModKey.FromNameAndExtension("Oblivion.esm");
+            ModKey k2 = ModKey.FromNameAndExtension("Knights.esm");
             var compare = ModKey.LoadOrderComparer(modKeys);
             Assert.True(compare.Compare(k2, k1) > 0);
         }
@@ -215,11 +215,11 @@ namespace Mutagen.Bethesda.UnitTests
         {
             List<ModKey> modKeys = new List<ModKey>()
             {
-                ModKey.Factory("Oblivion.esm"),
-                ModKey.Factory("Knights.esm"),
+                ModKey.FromNameAndExtension("Oblivion.esm"),
+                ModKey.FromNameAndExtension("Knights.esm"),
             };
-            ModKey k1 = ModKey.Factory("MyMod.esm");
-            ModKey k2 = ModKey.Factory("Oblivion.esm");
+            ModKey k1 = ModKey.FromNameAndExtension("MyMod.esm");
+            ModKey k2 = ModKey.FromNameAndExtension("Oblivion.esm");
             var compare = ModKey.LoadOrderComparer(modKeys);
             Assert.Throws<ArgumentOutOfRangeException>(() => compare.Compare(k1, k2));
         }

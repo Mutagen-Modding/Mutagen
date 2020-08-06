@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda
         /// <param name="str">String to parse</param>
         /// <returns>Converted ModKey</returns>
         /// <exception cref="ArgumentException">If string malformed</exception>
-        public static ModKey Factory(ReadOnlySpan<char> str)
+        public static ModKey FromNameAndExtension(ReadOnlySpan<char> str)
         {
             if (TryFactory(str, out var key))
             {
@@ -209,6 +209,11 @@ namespace Mutagen.Bethesda
         public static bool operator !=(ModKey? a, ModKey? b)
         {
             return !EqualityComparer<ModKey?>.Default.Equals(a, b);
+        }
+
+        public static implicit operator ModKey(string nameAndExtension)
+        {
+            return ModKey.FromNameAndExtension(nameAndExtension);
         }
 
         #region Comparers
