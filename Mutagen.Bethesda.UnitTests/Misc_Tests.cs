@@ -14,15 +14,6 @@ namespace Mutagen.Bethesda.UnitTests
     public class Misc_Tests
     {
         [Fact]
-        public void GroupErrTest()
-        {
-            Group.ErrorMask<Npc.ErrorMask> group_ErrorMask = new Group.ErrorMask<Npc.ErrorMask>();
-            group_ErrorMask.SetNthMask(
-                (int)Group_FieldIndex.RecordCache,
-                new MaskItem<Exception, IEnumerable<MaskItem<Exception, Npc.ErrorMask>>>(null, null));
-        }
-
-        [Fact]
         public void RegistrationTest()
         {
             Assert.True(LoquiRegistration.TryLocateRegistration(typeof(Mutagen.Bethesda.Oblivion.INpcGetter), out var regis));

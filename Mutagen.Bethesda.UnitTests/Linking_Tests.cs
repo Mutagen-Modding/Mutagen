@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Xunit;
+#nullable disable
 
 namespace Mutagen.Bethesda.UnitTests
 {

@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void NullHashDesync()
         {
-            var modKey = new ModKey(null, type: ModType.Master);
+            var modKey = new ModKey(null!, type: ModType.Master);
             var modKey2 = new ModKey(string.Empty, type: ModType.Master);
             Assert.Equal(ModKey.Null, modKey);
             Assert.Equal(ModKey.Null.GetHashCode(), modKey.GetHashCode());
