@@ -46,9 +46,9 @@ namespace Mutagen.Bethesda.Skyrim
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region Reference
-        public FormLink<INpcSpawn> Reference { get; set; } = new FormLink<INpcSpawn>();
+        public FormLink<IItem> Reference { get; set; } = new FormLink<IItem>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FormLink<INpcSpawnGetter> ILeveledItemEntryDataGetter.Reference => this.Reference.ToGetter<INpcSpawn, INpcSpawnGetter>();
+        FormLink<IItemGetter> ILeveledItemEntryDataGetter.Reference => this.Reference.ToGetter<IItem, IItemGetter>();
         #endregion
         #region Count
         public Int16 Count { get; set; } = default;
@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Int16 Level { get; set; }
         new Int16 Unknown { get; set; }
-        new FormLink<INpcSpawn> Reference { get; set; }
+        new FormLink<IItem> Reference { get; set; }
         new Int16 Count { get; set; }
         new Int16 Unknown2 { get; set; }
     }
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => LeveledItemEntryData_Registration.Instance;
         Int16 Level { get; }
         Int16 Unknown { get; }
-        FormLink<INpcSpawnGetter> Reference { get; }
+        FormLink<IItemGetter> Reference { get; }
         Int16 Count { get; }
         Int16 Unknown2 { get; }
 
@@ -903,7 +903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LeveledItemEntryData_FieldIndex.Unknown:
                     return typeof(Int16);
                 case LeveledItemEntryData_FieldIndex.Reference:
-                    return typeof(FormLink<INpcSpawn>);
+                    return typeof(FormLink<IItem>);
                 case LeveledItemEntryData_FieldIndex.Count:
                     return typeof(Int16);
                 case LeveledItemEntryData_FieldIndex.Unknown2:
@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Level = default;
             item.Unknown = default;
-            item.Reference = FormLink<INpcSpawn>.Null;
+            item.Reference = FormLink<IItem>.Null;
             item.Count = default;
             item.Unknown2 = default;
         }
@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<INpcSpawn>(rhs.Reference.FormKey);
+                item.Reference = new FormLink<IItem>(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItemEntryData_FieldIndex.Count) ?? true))
             {
@@ -1367,7 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
-        public FormLink<INpcSpawnGetter> Reference => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public FormLink<IItemGetter> Reference => new FormLink<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Int16 Count => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
         public Int16 Unknown2 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));
         partial void CustomFactoryEnd(

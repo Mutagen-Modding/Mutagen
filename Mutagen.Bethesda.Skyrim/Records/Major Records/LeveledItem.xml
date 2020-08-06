@@ -24,7 +24,7 @@
       <Int16 name="Level" />
       <Int16 name="Unknown" />
       <FormLink name="Reference" >
-        <Interface>INpcSpawn</Interface>
+        <Interface>IItem</Interface>
       </FormLink>
       <Int16 name="Count" />
       <Int16 name="Unknown2" />
