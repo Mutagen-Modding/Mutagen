@@ -1056,6 +1056,29 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Same(effect, link.Resolve(package));
         }
         #endregion
+
+        #region Subtype Linking
+        [Fact]
+        public void SubtypeLinking_Typical()
+        {
+            var prototype = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimLE);
+            var armor = prototype.Armors.AddNew();
+            var llist = prototype.LeveledItems.AddNew();
+            llist.Entries = new ExtendedList<LeveledItemEntry>()
+            {
+                new LeveledItemEntry()
+                {
+                    Data = new LeveledItemEntryData()
+                    {
+                        Reference = armor.FormKey
+                    }
+                }
+            };
+            using var disp = ConvertMod(prototype, out var mod);
+            var package = GetLinkCache(mod);
+            Assert.True(mod.LeveledItems.First().Entries[0].Data.Reference.TryResolve(package, out IArmorGetter armorGetterLink));
+        }
+        #endregion
     }
 
     public class Linking_ImmutableDirect_Tests : Linking_Abstract_Tests
