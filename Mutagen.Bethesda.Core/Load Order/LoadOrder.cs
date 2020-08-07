@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda
         /// <param name="dataPath">Path to data folder</param>
         /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
         /// <returns>List of modkeys in load order, excluding missing mods</returns>
-        /// <exception cref="FileNotFoundException">If throwOnMissingMods true and file is missing</exception>
+        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
         public static IExtendedList<ModKey> AlignToTimestamps(
             IEnumerable<ModKey> incomingLoadOrder,
             DirectoryPath dataPath,
@@ -57,14 +57,13 @@ namespace Mutagen.Bethesda
             var loadOrder = new ExtendedList<ModKey>();
             foreach (var key in incomingLoadOrder)
             {
-                FilePath file = new FilePath(
-                    Path.Combine(dataPath.Path, key.ToString()));
-                if (!file.Exists)
+                ModPath modPath = new ModPath(key, Path.Combine(dataPath.Path, key.ToString()));
+                if (!File.Exists(modPath.Path))
                 {
-                    if (throwOnMissingMods) throw new FileNotFoundException($"Expected mod was missing: {file}");
+                    if (throwOnMissingMods) throw new MissingModException(modPath);
                     continue;
                 }
-                list.Add((key, file.Info.LastWriteTime));
+                list.Add((key, File.GetLastWriteTime(modPath.Path)));
             }
             loadOrder.AddRange(list
                 .OrderBy(i => i.Write)
@@ -79,6 +78,7 @@ namespace Mutagen.Bethesda
         /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
         /// <param name="startDate">Date to give the first file</param>
         /// <param name="interval">Time interval to space between each file's date</param>
+        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
         /// </summary>
         public static void AlignTimestamps(
             IEnumerable<ModKey> loadOrder,
@@ -91,13 +91,13 @@ namespace Mutagen.Bethesda
             interval ??= TimeSpan.FromMinutes(1);
             foreach (var mod in loadOrder)
             {
-                var path = Path.Combine(dataPath.Path, mod.FileName);
-                if (!File.Exists(path))
+                ModPath modPath = new ModPath(mod, Path.Combine(dataPath.Path, mod.FileName));
+                if (!File.Exists(modPath.Path))
                 {
-                    if (throwOnMissingMods) throw new FileNotFoundException($"Expected mod was missing: {path}");
+                    if (throwOnMissingMods) throw new MissingModException(modPath);
                     continue;
                 }
-                File.SetLastWriteTime(path, startDate.Value);
+                File.SetLastWriteTime(modPath.Path, startDate.Value);
                 startDate = startDate.Value.Add(interval.Value);
             }
         }
@@ -148,11 +148,15 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="game">Game type</param>
         /// <param name="dataPath">Path to game's data folder</param>
-        /// <param name="allowMissingMods">Whether to skip missing mods</param>
+        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
         /// <returns>List of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
-        /// <exception cref="FileNotFoundException">If plugin file not located, or if allowMissingMods false and file is missing</exception>
-        public static IExtendedList<ModKey> GetUsualLoadOrder(GameRelease game, DirectoryPath dataPath, bool allowMissingMods)
+        /// <exception cref="FileNotFoundException">If plugin file not located</exception>
+        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
+        public static IExtendedList<ModKey> GetUsualLoadOrder(
+            GameRelease game,
+            DirectoryPath dataPath,
+            bool throwOnMissingMods = true)
         {
             if (!TryGetPluginsFile(game, out var path))
             {
@@ -160,7 +164,7 @@ namespace Mutagen.Bethesda
             }
             
             IExtendedList<ModKey> mods = FromPath(path);
-            return AlignToTimestamps(mods, dataPath, throwOnMissingMods: !allowMissingMods);
+            return AlignToTimestamps(mods, dataPath, throwOnMissingMods: throwOnMissingMods);
         }
 
         /// <summary>
