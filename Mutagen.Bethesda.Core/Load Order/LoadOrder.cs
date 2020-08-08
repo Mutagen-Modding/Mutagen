@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
         public static IExtendedList<ModKey> FromPath(FilePath path)
         {
-            var stream = new FileStream(path.Path, FileMode.Open, FileAccess.Read);
+            using var stream = new FileStream(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
             return FromStream(stream);
         }
 
