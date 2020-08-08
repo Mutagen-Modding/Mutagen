@@ -46,15 +46,14 @@ namespace Mutagen.Bethesda
         /// <param name="incomingLoadOrder">Mods to include</param>
         /// <param name="dataPath">Path to data folder</param>
         /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
-        /// <returns>List of modkeys in load order, excluding missing mods</returns>
+        /// <returns>Enumerable of modkeys in load order, excluding missing mods</returns>
         /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
-        public static IExtendedList<ModKey> AlignToTimestamps(
+        public static IEnumerable<ModKey> AlignToTimestamps(
             IEnumerable<ModKey> incomingLoadOrder,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            List<(ModKey ModKey, DateTime Write)> list = new List<(ModKey ModKey, DateTime Write)>();
-            var loadOrder = new ExtendedList<ModKey>();
+            var list = new List<(ModKey ModKey, DateTime Write)>();
             foreach (var key in incomingLoadOrder)
             {
                 ModPath modPath = new ModPath(key, Path.Combine(dataPath.Path, key.ToString()));
@@ -65,10 +64,23 @@ namespace Mutagen.Bethesda
                 }
                 list.Add((key, File.GetLastWriteTime(modPath.Path)));
             }
-            loadOrder.AddRange(list
-                .OrderBy(i => i.Write)
-                .Select(i => i.ModKey));
-            return loadOrder;
+            return list
+                .OrderBy(i => i, new LoadOrderTimestampComparer(incomingLoadOrder.ToList()))
+                .Select(i => i.ModKey);
+        }
+
+        /// <summary>
+        /// Constructs a load order from a list of mods and a data folder.
+        /// Load Order is sorted to the order the game will load the mod files: by file's date modified timestamp.
+        /// </summary>
+        /// <param name="incomingLoadOrder">Mods and their write timestamps</param>
+        /// <returns>Enumerable of modkeys in load order, excluding missing mods</returns>
+        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
+        public static IEnumerable<ModKey> AlignToTimestamps(IEnumerable<(ModKey ModKey, DateTime Write)> incomingLoadOrder)
+        {
+            return incomingLoadOrder
+                .OrderBy(i => i, new LoadOrderTimestampComparer(incomingLoadOrder.Select(i => i.ModKey).ToList()))
+                .Select(i => i.ModKey);
         }
 
         /// <summary>
@@ -108,9 +120,8 @@ namespace Mutagen.Bethesda
         /// <param name="stream">Stream to read from</param>
         /// <returns>List of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin stream is unexpected</exception>
-        public static IExtendedList<ModKey> FromStream(Stream stream)
+        public static IEnumerable<ModKey> FromStream(Stream stream)
         {
-            var ret = new ExtendedList<ModKey>();
             using var streamReader = new StreamReader(stream);
             while (!streamReader.EndOfStream)
             {
@@ -126,21 +137,20 @@ namespace Mutagen.Bethesda
                 {
                     throw new ArgumentException($"Load order file had malformed line: {str}");   
                 }
-                ret.Add(key);
+                yield return key;
             }
-            return ret;
         }
-        
+
         /// <summary>
         /// Parses a file to retrieve all ModKeys in expected plugin file format
         /// </summary>
         /// <param name="path">Path of plugin list</param>
-        /// <returns>List of modkeys representing a load order</returns>
+        /// <returns>Enumerable of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
-        public static IExtendedList<ModKey> FromPath(FilePath path)
+        public static IList<ModKey> FromPath(FilePath path)
         {
             using var stream = new FileStream(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            return FromStream(stream);
+            return FromStream(stream).ToList();
         }
 
         /// <summary>
@@ -149,11 +159,11 @@ namespace Mutagen.Bethesda
         /// <param name="game">Game type</param>
         /// <param name="dataPath">Path to game's data folder</param>
         /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
-        /// <returns>List of modkeys representing a load order</returns>
+        /// <returns>Enumerable of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
         /// <exception cref="FileNotFoundException">If plugin file not located</exception>
         /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
-        public static IExtendedList<ModKey> GetUsualLoadOrder(
+        public static IEnumerable<ModKey> GetUsualLoadOrder(
             GameRelease game,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
@@ -163,7 +173,7 @@ namespace Mutagen.Bethesda
                 throw new FileNotFoundException("Could not locate plugins file");
             }
             
-            IExtendedList<ModKey> mods = FromPath(path);
+            var mods = FromPath(path);
             return AlignToTimestamps(mods, dataPath, throwOnMissingMods: throwOnMissingMods);
         }
 
