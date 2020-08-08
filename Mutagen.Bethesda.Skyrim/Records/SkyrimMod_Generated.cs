@@ -19975,6 +19975,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
+    [DebuggerDisplay("{GameRelease} {ModKey.ToString()}")]
     public partial class SkyrimModBinaryOverlay : ISkyrimModDisposableGetter
     {
         #region Common Routing

@@ -2111,6 +2111,10 @@ namespace Mutagen.Bethesda.Generation
             var needsMasters = await obj.GetNeedsMasters();
             var anyHasRecordTypes = (await obj.EntireClassTree()).Any(c => HasRecordTypeFields(c));
 
+            if (obj.GetObjectType() == ObjectType.Mod)
+            {
+                fg.AppendLine("[DebuggerDisplay(\"{GameRelease} {ModKey.ToString()}\")]");
+            }
             using (var args = new ClassWrapper(fg, $"{BinaryOverlayClass(obj)}"))
             {
                 args.Partial = true;

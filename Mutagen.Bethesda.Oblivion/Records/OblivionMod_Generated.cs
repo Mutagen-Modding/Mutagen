@@ -10317,6 +10317,7 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
+    [DebuggerDisplay("{GameRelease} {ModKey.ToString()}")]
     public partial class OblivionModBinaryOverlay : IOblivionModDisposableGetter
     {
         #region Common Routing
