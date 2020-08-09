@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Kernel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace Mutagen.Bethesda
     /// 
     /// General practice is to use ModKey.TryFactory on a mod's file name when at all possible
     /// </summary>
+    [DebuggerDisplay("ModKey {FileName}")]
     public struct ModKey : IEquatable<ModKey>
     {
         /// <summary>
