@@ -40,6 +40,24 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
+        /// Returns whether given game needs timestamp alignment for its load order
+        /// </summary>
+        /// <param name="game">Game to check</param>
+        /// <returns>True if file located</returns>
+        public static bool NeedsTimestampAlignment(GameCategory game)
+        {
+            switch (game)
+            {
+                case GameCategory.Oblivion:
+                    return true;
+                case GameCategory.Skyrim:
+                    return false;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
         /// Constructs a load order from a list of mods and a data folder.
         /// Load Order is sorted to the order the game will load the mod files: by file's date modified timestamp.
         /// </summary>
@@ -174,7 +192,14 @@ namespace Mutagen.Bethesda
             }
             
             var mods = FromPath(path);
-            return AlignToTimestamps(mods, dataPath, throwOnMissingMods: throwOnMissingMods);
+            if (NeedsTimestampAlignment(game.ToCategory()))
+            {
+                return AlignToTimestamps(mods, dataPath, throwOnMissingMods: throwOnMissingMods);
+            }
+            else
+            {
+                return mods;
+            }
         }
 
         /// <summary>
