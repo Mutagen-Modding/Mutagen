@@ -1,4 +1,3 @@
-using Wabbajack.Compression.BSA;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Wabbajack.Common;
+using Compression.BSA;
 
 namespace Mutagen.Bethesda
 {

@@ -2,7 +2,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Noggog;
-using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;

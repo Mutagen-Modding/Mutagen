@@ -1,6 +1,5 @@
 using Loqui.Internal;
 using Noggog;
-using ReactiveUI;
 using System;
 
 namespace Mutagen.Bethesda.Binary

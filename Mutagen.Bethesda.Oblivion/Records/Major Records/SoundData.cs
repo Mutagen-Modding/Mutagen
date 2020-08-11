@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Mutagen.Bethesda.Binary;
 using Loqui.Internal;
-using ReactiveUI;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Internals;
 
