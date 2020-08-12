@@ -1,6 +1,7 @@
 using Loqui.Internal;
 using Noggog;
 using System;
+using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Binary
 {
@@ -10,6 +11,7 @@ namespace Mutagen.Bethesda.Binary
         public readonly static EnumBinaryTranslation<E> Instance = new EnumBinaryTranslation<E>();
         public readonly static UnderlyingType Underlying;
         public readonly static int EnumSize = EnumExt.GetSize<E>();
+        public readonly static IReadOnlyList<E> Values = EnumExt.GetValues<E>().ToExtendedList();
 
         public enum UnderlyingType
         {
