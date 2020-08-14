@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using System.IO;
 
 namespace Mutagen.Bethesda
 {
-    public class ModPath
+    public class ModPath : IEquatable<ModPath>
     {
         public readonly ModKey ModKey;
         public readonly string Path;
@@ -47,6 +48,31 @@ namespace Mutagen.Bethesda
         public static implicit operator ModKey(ModPath p)
         {
             return p.ModKey;
+        }
+
+        public override string ToString()
+        {
+            return $"{ModKey} => {Path}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ModPath modPath && Equals(modPath);
+        }
+
+        public bool Equals(ModPath other)
+        {
+            if (!ModKey.Equals(other.ModKey)) return false;
+            if (string.Equals(Path, other.Path, StringComparison.OrdinalIgnoreCase)) return false;
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            HashCode hash = new HashCode();
+            hash.Add(ModKey);
+            hash.Add(Path.GetHashCode(StringComparison.OrdinalIgnoreCase));
+            return hash.ToHashCode();
         }
     }
 }
